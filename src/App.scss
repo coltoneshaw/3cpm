@@ -1,0 +1,49 @@
+
+
+#sidebar {
+    flex-basis: 5%;
+    background-color: #8BBABC;
+    min-width: 50px;
+    max-width: 75px;
+
+    height: 100%;
+    min-height: 100vh;
+    flex-shrink: 0;
+    box-sizing: border-box;
+
+}
+
+
+.mainWindow{
+    flex-grow: 1;
+    background-color: #E7EAEE;
+    padding: 3%;
+    overflow: scroll;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row{
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column{
+    display: flex;
+    flex-direction: column;
+}
+
+.padding button {
+    margin: 10px
+}
+
+.boxData {
+    border-radius: 15px;
+    background-color: #F3F5F7;
+    text-align: center;
+    color: #212B3B;
+    box-shadow: 0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);
+    padding: 2%;
+    overflow: hidden;
+}
