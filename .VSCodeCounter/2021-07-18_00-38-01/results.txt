@@ -1,0 +1,108 @@
+Date : 2021-07-18 00:38:01
+Directory : /Users/coltonshaw/Desktop/botmanager
+Total : 59 files,  101280 codes, 11872 comments, 11751 blanks, all 124903 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JavaScript |         29 |     45,105 |     11,848 |     11,646 |     68,599 |
+| Database   |          1 |     38,437 |          0 |         41 |     38,478 |
+| JSON       |          6 |     17,256 |          0 |          4 |     17,260 |
+| XML        |         14 |        240 |          0 |         18 |        258 |
+| SCSS       |          6 |        143 |          0 |         40 |        183 |
+| Python     |          1 |         77 |          1 |          1 |         79 |
+| HTML       |          1 |         21 |         23 |          1 |         45 |
+| Markdown   |          1 |          1 |          0 |          0 |          1 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                              | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                 |         59 |    101,280 |     11,872 |     11,751 |    124,903 |
+| build                                                                             |          1 |         77 |          1 |          1 |         79 |
+| database                                                                          |          3 |     38,438 |          0 |         42 |     38,480 |
+| public                                                                            |         12 |     44,273 |     11,729 |     11,348 |     67,350 |
+| public/assets                                                                     |          7 |        120 |          0 |          9 |        129 |
+| src                                                                               |         38 |      1,215 |        139 |        357 |      1,711 |
+| src/Components                                                                    |         29 |        789 |          4 |        211 |      1,004 |
+| src/Components/Backtesting                                                        |          1 |          9 |          0 |          4 |         13 |
+| src/Components/BotManager                                                         |          4 |        200 |          3 |         82 |        285 |
+| src/Components/DataCards                                                          |          2 |         27 |          0 |          7 |         34 |
+| src/Components/Donate                                                             |          1 |         10 |          0 |          4 |         14 |
+| src/Components/Settings                                                           |          2 |        152 |          0 |         46 |        198 |
+| src/Components/Sidebar                                                            |         18 |        382 |          1 |         64 |        447 |
+| src/Components/Sidebar/Icons                                                      |          7 |        168 |          0 |         26 |        194 |
+| src/Components/Sidebar/svg                                                        |          7 |        120 |          0 |          9 |        129 |
+| src/Components/Stats                                                              |          1 |          9 |          0 |          4 |         13 |
+| src/server                                                                        |          4 |        178 |        129 |         78 |        385 |
+| src/server/threeC                                                                 |          2 |         74 |         26 |         38 |        138 |
+| src/utils                                                                         |          1 |        108 |          6 |         30 |        144 |
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                          | language   | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| /Users/coltonshaw/Desktop/botmanager/README.md                                    | Markdown   |          1 |          0 |          0 |          1 |
+| /Users/coltonshaw/Desktop/botmanager/build/config.gypi                            | Python     |         77 |          1 |          1 |         79 |
+| /Users/coltonshaw/Desktop/botmanager/config.json                                  | JSON       |         19 |          0 |          0 |         19 |
+| /Users/coltonshaw/Desktop/botmanager/database/accounts.json                       | JSON       |          0 |          0 |          1 |          1 |
+| /Users/coltonshaw/Desktop/botmanager/database/db.sqlite3                          | Database   |     38,437 |          0 |         41 |     38,478 |
+| /Users/coltonshaw/Desktop/botmanager/database/deals.json                          | JSON       |          1 |          0 |          0 |          1 |
+| /Users/coltonshaw/Desktop/botmanager/package-lock.json                            | JSON       |     17,165 |          0 |          1 |     17,166 |
+| /Users/coltonshaw/Desktop/botmanager/package.json                                 | JSON       |         46 |          0 |          1 |         47 |
+| /Users/coltonshaw/Desktop/botmanager/public/app.js                                | JavaScript |     44,028 |     11,692 |     11,312 |     67,032 |
+| /Users/coltonshaw/Desktop/botmanager/public/assets/backwardClock.svg              | XML        |          4 |          0 |          1 |          5 |
+| /Users/coltonshaw/Desktop/botmanager/public/assets/botmanager.svg                 | XML        |         37 |          0 |          2 |         39 |
+| /Users/coltonshaw/Desktop/botmanager/public/assets/coffee.svg                     | XML        |          1 |          0 |          0 |          1 |
+| /Users/coltonshaw/Desktop/botmanager/public/assets/cog.svg                        | XML        |          3 |          0 |          0 |          3 |
+| /Users/coltonshaw/Desktop/botmanager/public/assets/moon.svg                       | XML        |         12 |          0 |          2 |         14 |
+| /Users/coltonshaw/Desktop/botmanager/public/assets/pieChart.svg                   | XML        |         21 |          0 |          2 |         23 |
+| /Users/coltonshaw/Desktop/botmanager/public/assets/sun.svg                        | XML        |         42 |          0 |          2 |         44 |
+| /Users/coltonshaw/Desktop/botmanager/public/index.html                            | HTML       |         21 |         23 |          1 |         45 |
+| /Users/coltonshaw/Desktop/botmanager/public/main.js                               | JavaScript |         43 |         14 |         19 |         76 |
+| /Users/coltonshaw/Desktop/botmanager/public/manifest.json                         | JSON       |         25 |          0 |          1 |         26 |
+| /Users/coltonshaw/Desktop/botmanager/public/preload.js                            | JavaScript |         36 |          0 |          6 |         42 |
+| /Users/coltonshaw/Desktop/botmanager/src/App.js                                   | JavaScript |         64 |          0 |         14 |         78 |
+| /Users/coltonshaw/Desktop/botmanager/src/App.scss                                 | SCSS       |         38 |          0 |         11 |         49 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Backtesting/Backtesting.js    | JavaScript |          9 |          0 |          4 |         13 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/BotManager/BotManager.js      | JavaScript |        100 |          3 |         44 |        147 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/BotManager/BotManager.scss    | SCSS       |         19 |          0 |          7 |         26 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/BotManager/DataTable.js       | JavaScript |         47 |          0 |         24 |         71 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/BotManager/Risk.js            | JavaScript |         34 |          0 |          7 |         41 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/DataCards/Card.js             | JavaScript |         11 |          0 |          4 |         15 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/DataCards/Card.scss           | SCSS       |         16 |          0 |          3 |         19 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Donate/Donate.js              | JavaScript |         10 |          0 |          4 |         14 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Settings/Settings.js          | JavaScript |        138 |          0 |         42 |        180 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Settings/Settings.scss        | SCSS       |         14 |          0 |          4 |         18 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/DisplaySwitcher.js    | JavaScript |         24 |          0 |          8 |         32 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/Icons/BotManager.js   | JavaScript |         42 |          0 |          3 |         45 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/Icons/Clock.js        | JavaScript |         10 |          0 |          4 |         14 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/Icons/Coffee.js       | JavaScript |         14 |          0 |          2 |         16 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/Icons/Cog.js          | JavaScript |         10 |          0 |          2 |         12 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/Icons/Moon.js         | JavaScript |         17 |          0 |          5 |         22 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/Icons/PieChart.js     | JavaScript |         27 |          0 |          4 |         31 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/Icons/Sun.js          | JavaScript |         48 |          0 |          6 |         54 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/Sidebar.js            | JavaScript |         24 |          1 |          8 |         33 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/Sidebar.scss          | SCSS       |         28 |          0 |          7 |         35 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/SidebarOption.js      | JavaScript |         18 |          0 |          6 |         24 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/svg/backwardClock.svg | XML        |          4 |          0 |          1 |          5 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/svg/botmanager.svg    | XML        |         37 |          0 |          2 |         39 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/svg/coffee.svg        | XML        |          1 |          0 |          0 |          1 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/svg/cog.svg           | XML        |          3 |          0 |          0 |          3 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/svg/moon.svg          | XML        |         12 |          0 |          2 |         14 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/svg/pieChart.svg      | XML        |         21 |          0 |          2 |         23 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Sidebar/svg/sun.svg           | XML        |         42 |          0 |          2 |         44 |
+| /Users/coltonshaw/Desktop/botmanager/src/Components/Stats/Stats.js                | JavaScript |          9 |          0 |          4 |         13 |
+| /Users/coltonshaw/Desktop/botmanager/src/index.js                                 | JavaScript |         10 |          0 |          5 |         15 |
+| /Users/coltonshaw/Desktop/botmanager/src/index.scss                               | SCSS       |         28 |          0 |          8 |         36 |
+| /Users/coltonshaw/Desktop/botmanager/src/server/database.js                       | JavaScript |         33 |         95 |         16 |        144 |
+| /Users/coltonshaw/Desktop/botmanager/src/server/localdatabase.js                  | JavaScript |         71 |          8 |         24 |        103 |
+| /Users/coltonshaw/Desktop/botmanager/src/server/threeC/api.js                     | JavaScript |         66 |         17 |         33 |        116 |
+| /Users/coltonshaw/Desktop/botmanager/src/server/threeC/index.js                   | JavaScript |          8 |          9 |          5 |         22 |
+| /Users/coltonshaw/Desktop/botmanager/src/utils/config.js                          | JavaScript |        108 |          6 |         30 |        144 |
+| /Users/coltonshaw/Desktop/botmanager/webpack.common.js                            | JavaScript |         46 |          3 |          1 |         50 |
+| Total                                                                             |            |    101,280 |     11,872 |     11,751 |    124,903 |
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

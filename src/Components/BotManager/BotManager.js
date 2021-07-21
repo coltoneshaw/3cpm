@@ -1,4 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, propTypes } from 'react';
+import { Consumer } from '../../Context';
+
 
 import DataTable from './DataTable';
 import './BotManager.scss';
@@ -22,7 +24,6 @@ class BotManager extends Component {
     }
 
     handleOnOff = (e) => {
-        console.log(e)
         let newRows = this.state.rows.map(row => {
             if (e.target.name == row.id) {
                 row.enabled = !row.enabled
@@ -53,42 +54,46 @@ class BotManager extends Component {
 
     getData = async () => {
         console.log('test')
-        
+
     }
 
 
     async fetchData() {
-   
-        await electron.data.fetch()
-        .then(data => {
-            console.log('ran a new call')
-            return data.map(row => {
-                return { id: row.id, name: row.name, pairs: row.pairs, tp: row.take_profit, bo: row.base_order_volume, so: row.safety_order_volume, maxSO: row.max_safety_orders, sos: row.safety_order_step_percentage, ss: row.martingale_step_coefficient, os: row.martingale_volume_coefficient, enabled: row.is_enabled }
-            })
 
-        })
-        .then(
-            (result) => {
-                this.setState({
-                    isLoaded: true,
-                    rows: result
-                });
-            },
-            // Note: it's important to handle errors here
-            // instead of a catch() block so that we don't swallow
-            // exceptions from actual bugs in components.
-            (error) => {
-                this.setState({
-                    isLoaded: true,
-                    error
-                });
-            }
-        )
+        await electron.data.fetch()
+            .then(data => {
+                console.log('ran a new call')
+                return data.map(row => {
+                    return { id: row.id, name: row.name, pairs: row.pairs, tp: row.take_profit, bo: row.base_order_volume, so: row.safety_order_volume, maxSO: row.max_safety_orders, sos: row.safety_order_step_percentage, ss: row.martingale_step_coefficient, os: row.martingale_volume_coefficient, enabled: row.is_enabled }
+                })
+
+            })
+            .then(
+                (result) => {
+                    this.setState({
+                        isLoaded: true,
+                        rows: result
+                    });
+                },
+                // Note: it's important to handle errors here
+                // instead of a catch() block so that we don't swallow
+                // exceptions from actual bugs in components.
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
 
     }
 
-    async componentDidMount(){
+    async componentDidMount() {
         this.fetchData()
+    }
+
+    async database() {
+        console.log(await electron.database.fetch())
     }
 
 
@@ -98,40 +103,54 @@ class BotManager extends Component {
     render() {
 
         return (
-            <div className="mainWindow" >
-                <h1>Bot Manager</h1>
-                <div className="flex-row padding">
-                    <Button
-                        variant="outlined"
-                        endIcon={<SyncIcon />}
-                        onClick={() => {
-                            this.fetchData();
-                        }}
-                    >
-                        {/* Need to make this pull the data, but the data control needs to be a bit higher up. */}
-                        Pull New Data
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        endIcon={<SaveIcon />}
-                        onClick={() => { alert('set me to POST the data') }}
-                    >
-                        Save and Sync
-                    </Button>
+            <Consumer>
+                {context => {
+                        return (
+                            <div className="mainWindow" >
+                                <h1>Bot Manager</h1>
+                                <div className="flex-row padding">
+                                    <Button
+                                        variant="outlined"
+                                        endIcon={<SyncIcon />}
+                                        onClick={() => {
+                                            this.database();
+                                        }}
+                                    >
+                                        {/* Need to make this pull the data, but the data control needs to be a bit higher up. */}
+                                        Pull New Data
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        endIcon={<SaveIcon />}
+                                        onClick={() => { alert('set me to POST the data') }}
+                                    >
+                                        Save and Sync
+                                    </Button>
 
 
-                </div>
+                                </div>
 
-                <Risk />
-                <DataTable
-                    classes={this.props.classes}
-                    data={this.state.rows}
-                    handleOnOff={this.handleOnOff}
-                    handleEditCellChangeCommitted={this.handleEditCellChangeCommitted} />
+                                <Risk />
+                                <DataTable
+                                    classes={context.actions.classes}
+                                    data={this.state.rows}
+                                    handleOnOff={this.handleOnOff}
+                                    handleEditCellChangeCommitted={this.handleEditCellChangeCommitted} />
 
 
-            </div>
+                            </div>
+
+
+                        )
+
+
+
+                    }
+                }
+
+            </Consumer>
+
         )
 
     }

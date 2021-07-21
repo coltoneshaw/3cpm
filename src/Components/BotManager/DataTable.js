@@ -20,11 +20,12 @@ class DataTable extends Component {
     const columns = [
       {
         field: 'enabled', headerName: 'Enabled?', flex: .75, headerAlign: 'center', align: 'center', sortable: true, renderCell: (params) => (
+          
           <Switch
             checked={params.row.enabled}
             color="primary"
             onClick={handleOnOff}
-            name={params.row.id}
+            name={params.row.id.toString()}
             inputProps={{ 'aria-label': 'secondary checkbox' }}
           />
         )

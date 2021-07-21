@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Card from '../DataCards/Card';
+import Card from '../Charts/DataCards/Card';
 
 const metricData = [
     {
@@ -29,7 +29,7 @@ const metricData = [
 const Risk = () => {
 
     return (
-        <div id="riskDiv">
+        <div className="riskDiv">
 
         {
             metricData.map(data => ( <Card title={data.title} metric={data.metric} key={data.key} />))
