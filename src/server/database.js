@@ -9,7 +9,10 @@ const db_type = config.get('database.type');
 console.log(`Database type: ${db_type}`)
 const db = new Database(path.join(__dirname, '../../database', 'db.sqlite3'), { fileMustExist: true, });
 
-
+/**
+ * TODO 
+ * - Swap the  profitPercent table to be hourly_per_unit_profit_percent since this is divided by the hours.
+ */
 function initializeDealTable() {
     const stmt = db.prepare(`
         CREATE TABLE deals (
@@ -152,13 +155,10 @@ async function update(table, data) {
         return newRow
     })
 
-    console.log(normalizedData[0])
 
     const KEYS = Object.keys(normalizedData[0]).map(e => normalizeData(e)).join()
     const valueKey = Object.keys(normalizedData[0]).map(key => '@' + key).map(e => normalizeData(e)).join()
 
-
-    console.log(`INSERT OR REPLACE INTO ${table} (${KEYS}) VALUES (${valueKey})`)
     const statement = db.prepare(`INSERT OR REPLACE INTO ${table} (${KEYS}) VALUES (${valueKey})`)
 
     const insertMany = db.transaction((dataArray) => {
