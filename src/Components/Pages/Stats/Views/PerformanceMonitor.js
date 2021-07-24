@@ -9,10 +9,13 @@ import { DealAllocationBar } from '../../../Charts/Bar';
 import Card from '../../../Charts/DataCards/Card';
 
 import {parseNumber} from '../../../../utils/number_formatting';
+import { useGlobalData } from '../../../../Context/DataContext';
 
-const PerformanceMonitor = (props) => {
+const PerformanceMonitor = () => {
 
-    const { performanceData } = props
+    const state = useGlobalData();
+    const { data: { performanceData }  } = state;
+
     const boughtVolume = performanceData.map(deal => deal.bought_volume).reduce((sum, item) => sum + item)
     const totalProfit = performanceData.map(deal => deal.total_profit).reduce((sum, item) => sum + item)
     const totalDeals = parseNumber(performanceData.map(deal => deal.number_of_deals).reduce((sum, item) => sum + item))

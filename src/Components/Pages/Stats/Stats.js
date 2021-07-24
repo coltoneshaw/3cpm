@@ -1,12 +1,11 @@
-import React, { PureComponent } from 'react';
+import React, {  useState, useEffect } from 'react';
+import { useGlobalData } from '../../../Context/DataContext';
 
 import { Button, ButtonGroup } from '@material-ui/core';
 import SyncIcon from '@material-ui/icons/Sync';
 
 import { RiskMonitor, SummaryStatistics, PerformanceMonitor, ActiveDeals } from './Views/Index';
-
 import { parseNumber } from '../../../utils/number_formatting'
-import { fetchDealDataFunction, fetchPerformanceDataFunction, getActiveDealsFunction, updateThreeCData, getAccountDataFunction } from '../../../utils/3Commas'
 
 import Card from '../../Charts/DataCards/Card';
 
@@ -43,212 +42,100 @@ const buttonElements = [
  * 
  */
 
-class StatsPage extends PureComponent {
+const StatsPage = () => {
 
-    state = {
-        dealData: [],
-        activeDeals: [],
-        accountData: [],
-        performanceData: [],
-        balance: {
-            on_orders: 0,
-            position: 0,
-            sum: 0
-        },
-        metrics: {
-            activeSum: 0,
-            maxRisk: 0,
-            totalProfit: 0,
-            maxRiskPercent: 0,
-            bankrollAvailable: 0
-        },
-        currentView: 'summary-stats',
-        account_id: '',
-        accountName: '',
-        startDate: '',
-        defaultCurrency: '',
-        loaded: false
+    const state = useGlobalData()
+    const { data :{metricsData } } = state
+
+    const { activeDealCount, activeSum, maxRisk, position, on_orders, totalProfit  } = metricsData
+
+    const [currentView, changeView] = useState('summary-stats')
+
+    //     updatePage = async () => {
+//                 await updateThreeCData()
+//         await this.queryAndUpdate()
+//     }
+
+
+
+    // this needs to stay on this page
+    const viewChanger = (newView) => {
+        changeView(newView)
     }
-
-    fetchDealData = async () => {
-        let data = await fetchDealDataFunction();
-        console.log(data)
-        this.setState(data)
-
-    }
-
-    fetchPerformanceData = async () => {
-        const performanceData = await fetchPerformanceDataFunction()
-        this.setState({ performanceData: performanceData })
-
-    }
-
-    getActiveDeals = async () => {
-        const data = await getActiveDealsFunction()
-        this.setState(prevState => {
-            return ({
-                activeDeals: data.activeDeals,
-                metrics: {
-                    ...prevState.metrics,
-                    activeSum: data.activeSum,
-                    maxRisk: data.maxRisk
-                }
-            })
-        })
-
-
-    }
-
-    getAccountData = async () => {
-        let data = await getAccountDataFunction(this.props.config.general.defaultCurrency)
-        const { accountData, balance } = data
-
-        this.setState({
-            accountData,
-            balance: {
-                on_orders: balance.on_orders,
-                position: balance.position,
-                sum: balance.sum
-            },
-            accountName: accountData.find(account => account.account_id === this.props.config.statSettings.account_id).account_name,
-            account_id: this.props.config.statSettings.account_id
-        })
-    }
-
-    calculateMetrics = async () => {
-        this.setState(prevState => {
-            return ({
-                metrics: {
-                    ...prevState.metrics,
-                    maxRiskPercent: ((parseInt(prevState.metrics.maxRisk) / (parseInt(prevState.balance.sum) + parseInt(prevState.metrics.activeSum))) * 100).toFixed(0),
-                    bankrollAvailable: ((parseInt(prevState.balance.sum) / (parseInt(prevState.balance.sum) + parseInt(prevState.metrics.activeSum))) * 100).toFixed(0)
-                }
-            })
-        })
-    }
-
-    viewChanger = (currentView) => {
-        console.log(currentView)
-        this.setState({ currentView })
-    }
-
-    currentView() {
-        const currentView = this.state.currentView
+    // this needs to stay on this page
+    const currentViewRender = () => {
         if (currentView === 'risk-monitor') {
-            return <RiskMonitor activeDeals={this.state.activeDeals} metrics={this.state.metrics} balance={this.state.balance} />
+            return <RiskMonitor
+            // activeDeals={this.state.activeDeals} metrics={this.state.metrics} balance={this.state.balance} 
+            />
         } else if (currentView === 'performance-monitor') {
-            return <PerformanceMonitor performanceData={this.state.performanceData} />
+            return <PerformanceMonitor
+            // performanceData={this.state.performanceData} 
+
+            />
         } else if (currentView === 'active-deals') {
             return <ActiveDeals />
         }
 
-        return <SummaryStatistics dealData={this.state.dealData} />
+        return <SummaryStatistics
+        //dealData={this.state.dealData} 
+
+        />
     }
 
-    updatePage = async () => {
-        await updateThreeCData()
-        await this.queryAndUpdate()
-    }
+    return (
+        <>
+            <h1>Stats</h1>
+            <div className="flex-row padding">
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => updateThreeCData()}
+                    endIcon={<SyncIcon />}
+                >
+                    Update Data
+                </Button>
+            </div>
 
-    queryAndUpdate = async () => {
-        await this.fetchDealData()
-        await this.fetchPerformanceData()
-        await this.getActiveDeals()
-        await this.updateSettings()
-        await this.getAccountData()
-        await this.calculateMetrics()
-        console.log({ state: this.state })
-    }
+            <div className="flex-column" style={{ alignItems: 'center' }}>
 
-    updateSettings = () => {
-        const config = this.state.config
-       
+                {/* This needs to be it's own div to prevent the buttons from taking on the flex properties. */}
+                <div>
+                    <ButtonGroup aria-label="outlined primary button group" disableElevation disableRipple>
+                        {
+                            buttonElements.map(button => {
+                                if (button.id === currentView) return <Button onClick={() => viewChanger(button.id)} color="primary" >{button.name}</Button>
+                                return <Button onClick={() => viewChanger(button.id)} >{button.name}</Button>
 
-        if (config) {
-            const { startDate, account_id } = config.statSettings
-            const { defaultCurrency } = config.general
-
-            this.setState({
-                startDate,
-                account_id,
-                defaultCurrency
-            })
-        }
-    }
-
-
-    componentDidMount = async () => {
-        await this.queryAndUpdate()
-        
-
-        this.setState({
-            loaded: true
-        })
-
-    }
-
-
-    render() {
-        return (
-            <>
-                <h1>Stats</h1>
-                <div className="flex-row padding">
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        onClick={() => updateThreeCData()}
-                        endIcon={<SyncIcon />}
-                    >
-                        Update Data
-                    </Button>
+                            })
+                        }
+                    </ButtonGroup>
                 </div>
 
-                <div className="flex-column" style={{ alignItems: 'center' }}>
-
-                    {/* This needs to be it's own div to prevent the buttons from taking on the flex properties. */}
-                    <div>
-                        <ButtonGroup aria-label="outlined primary button group" disableElevation disableRipple>
-                            {
-                                buttonElements.map(button => {
-                                    if (button.id === this.state.currentView) return <Button onClick={() => this.viewChanger(button.id)} color="primary" >{button.name}</Button>
-                                    return <Button onClick={() => this.viewChanger(button.id)} >{button.name}</Button>
-
-                                })
-                            }
-                        </ButtonGroup>
-                    </div>
-
-                    <div>
-                        <h3>{this.state.accountName}</h3>
-                        <h3>{this.state.startDate}</h3>
-                        <h3>{this.state.defaultCurrency}</h3>
-                    </div>
-
-
-                </div>
-
+                {/* <div>
+                    <h3>{this.state.accountName}</h3>
+                    <h3>{this.state.startDate}</h3>
+                    <h3>{this.state.defaultCurrency}</h3>
+                </div> */}
 
                 <div className="riskDiv">
-                    <Card title="Active Deals" metric={this.state.activeDeals.length} />
-                    <Card title="$ In Deals" metric={"$" + parseNumber(this.state.metrics.activeSum)} />
-                    <Card title="DCA Max" metric={"$" + parseNumber(this.state.metrics.maxRisk)} />
-                    <Card title="Remaining Bankroll" metric={"$" + parseNumber((this.state.balance.position - this.state.balance.on_orders))} />
-                    <Card title="Total Profit" metric={"$" + parseNumber(this.state.metrics.totalProfit)} />
+                    <Card title="Active Deals" metric={activeDealCount} />
+                    <Card title="$ In Deals" metric={"$" + parseNumber(activeSum)} />
+                    <Card title="DCA Max" metric={"$" + parseNumber(maxRisk)} />
+                    <Card title="Remaining Bankroll" metric={"$" + parseNumber((position - on_orders))} />
+                    <Card title="Total Profit" metric={"$" + parseNumber(totalProfit)} />
                 </div>
 
-                {
-                    this.currentView()
-                }
+            </div>
 
 
+            {/* // Returning the current view rendered in the function above. */}
+            {currentViewRender()}
+        </>
 
-            </>
-
-
-        )
-
-    }
-
+    )
 }
+
+
 
 export default StatsPage;

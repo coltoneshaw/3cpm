@@ -35,7 +35,7 @@ const CurrencySelector = () => {
 
     const state = useGlobalState()
 
-    const { refs: { currencySelector }, config , currencySelectorState, updateCurrency} = state
+    const { refs: { currencySelector }, config } = state
 
     const test = (t) => {
         if(dotProp.has(t, 'general.defaultCurrency')) return t.general.defaultCurrency
@@ -47,9 +47,9 @@ const CurrencySelector = () => {
 
 
     
-    // useEffect(() =>{
-    //     changeSelect(test(config));
-    // }, [config])
+    useEffect(() =>{
+        changeSelect(test(config));
+    }, [ dotProp.get(config, 'general.defaultCurrency') ] )
 
 
     //  useEffect(()=>{
@@ -59,7 +59,6 @@ const CurrencySelector = () => {
 
 
      const onChange = (e) => {
-        updateCurrency(e.target.value)
         changeSelect(e.target.value)
         console.log(config.general.defaultCurrency)
         // console.log(configSet.general.defaultCurrency)
@@ -74,7 +73,7 @@ const CurrencySelector = () => {
             <Select
                 value={select}
                 inputRef={currencySelector}
-                defaultValue={currencySelectorState}
+                defaultValue={test(config)}
                 onChange={onChange}
             >
                 {currencyArray.map(currency => <MenuItem value={currency.value} key={currency.key}>{currency.name}</MenuItem>)}

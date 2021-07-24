@@ -32,9 +32,9 @@ const fetchDealDataFunction = async () => {
     })
 
     return {
-        dealData: profitArray,
+        profitData: profitArray,
         metrics: {
-            totalProfit: profitArray[profitArray.length - 1].runningSum.toLocaleString(undefined, { 'minimumFractionDigits': 0, 'maximumFractionDigits': 0 })
+            totalProfit: parseInt( profitArray[profitArray.length - 1].runningSum )
         }
     }
 
@@ -43,6 +43,7 @@ const fetchDealDataFunction = async () => {
 /**
      * TODO
      * - Does this need to be everything, or just things that are not null?
+     * - Need to add account / currency filters on this.
      */
 const fetchPerformanceDataFunction = async () => {
     // Filtering by only closed.
@@ -79,9 +80,6 @@ const fetchPerformanceDataFunction = async () => {
         }
     })
 
-    console.log({ totalProfitSummary, boughtVolumeSummary })
-    console.log(performanceData)
-
     return performanceData
 }
 
@@ -98,8 +96,11 @@ const getActiveDealsFunction = async () => {
         console.log(activeDeals)
         return {
             activeDeals,
-            activeSum: activeDeals.map(deal => deal.bought_volume).reduce((sum, item) => sum + item),
-            maxRisk: activeDeals.map(deal => deal.max_deal_funds).reduce((sum, item) => sum + item)
+            metrics: {
+                activeSum: activeDeals.map(deal => deal.bought_volume).reduce((sum, item) => sum + item),
+                maxRisk: activeDeals.map(deal => deal.max_deal_funds).reduce((sum, item) => sum + item)
+            }
+            
         }
 
     }

@@ -6,25 +6,27 @@ import { Grid } from '@material-ui/core';
 // custom charts
 import { DealSoUtalizationBar, SoDistribution } from '../../../Charts/Bar'
 import SpeedometerDiv from '../Components/SpeedometerDiv';
+import { useGlobalData } from '../../../../Context/DataContext';
 
 
 
-const RiskMonitor = ({activeDeals, metrics, balance}) => {
+const RiskMonitor = () => {
 
-    console.log(metrics)
+    const state = useGlobalData();
+    const { data: { activeDeals, metricsData, balanceData } } = state;
     return (
         <>
         <SpeedometerDiv
                     metrics={{
-                        maxRiskPercent: metrics.maxRiskPercent,
-                        bankrollAvailable:  metrics.bankrollAvailable,
-                        activeSum: metrics.activeSum
+                        maxRiskPercent: metricsData.maxRiskPercent,
+                        bankrollAvailable:  metricsData.bankrollAvailable,
+                        activeSum: metricsData.activeSum
                     }}
-                        balance={balance}
+                        balance={balanceData}
                     />
         <Grid item xs={12}>
             <DealSoUtalizationBar data={activeDeals} title="Current Deal SO Utalization" />
-            <SoDistribution  data={activeDeals} title="Current Deal SO Distribution" metrics={metrics}/>
+            <SoDistribution  data={activeDeals} title="Current Deal SO Distribution" metrics={metricsData}/>
         </Grid>
         </>
         

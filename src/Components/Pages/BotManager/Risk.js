@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
-import { ConfigContext } from '../../../Context/Config';
 
 import Card from '../../Charts/DataCards/Card';
+
+import { useGlobalData } from '../../../Context/DataContext';
+
 
 const metricData = [
     {
@@ -30,7 +32,9 @@ const metricData = [
 // Need to import metric contexts here
 const Risk = () => {
 
-    const value = useContext(ConfigContext)
+    const state = useGlobalData();
+    const {  } = state;
+
 
     return (
         <div className="riskDiv">

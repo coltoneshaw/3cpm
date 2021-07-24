@@ -5,18 +5,23 @@ import { Grid } from '@material-ui/core';
 
 // custom charts
 import { ProfitByDay, SummaryProfitByDay } from '../../../Charts/Area'
+import { useGlobalData } from '../../../../Context/DataContext';
 
 
 
-const RiskMonitor = ({dealData}) => {
+const SummaryStatistics = () => {
+
+    const state = useGlobalData();
+    const { data: { profitData } } = state;
+
     return (
         <>
         <Grid container spacing={12}>
                     <Grid item xs={6}>
-                        <ProfitByDay data={dealData} X="profit" />
+                        <ProfitByDay data={profitData} X="profit" />
                     </Grid>
                     <Grid item xs={6}>
-                        <SummaryProfitByDay data={dealData} X="runningSum" />
+                        <SummaryProfitByDay data={profitData} X="runningSum" />
                     </Grid>
                 </Grid>
         </>
@@ -24,4 +29,4 @@ const RiskMonitor = ({dealData}) => {
     )
 }
 
-export default RiskMonitor
+export default SummaryStatistics
