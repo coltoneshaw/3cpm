@@ -16,7 +16,7 @@ import { useGlobalData } from '../../../Context/DataContext';
 const BotManagerPage = (props) => {
 
     const state = useGlobalData();
-    const { actions: { runTestData, fetchBotData, calculateMetrics} } = state;
+    const { actions: { fetchBotData} } = state;
 
 
     /**
@@ -36,8 +36,7 @@ const BotManagerPage = (props) => {
                 <Button
                     variant="outlined"
                     endIcon={<SyncIcon />}
-                    // onClick={fetchBotData}
-                    onClick={calculateMetrics}
+                    onClick={fetchBotData}
                 >
                     Pull New Data
                 </Button>
@@ -45,8 +44,7 @@ const BotManagerPage = (props) => {
                     variant="outlined"
                     color="primary"
                     endIcon={<SaveIcon />}
-                    // onClick={() => { console.log(value) }}
-                    onClick={runTestData}
+                    onClick={() => { console.log(value) }}
                 >
                     Save and Sync
                 </Button>

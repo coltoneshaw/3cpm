@@ -103,7 +103,7 @@ function initializeDealTable() {
 
 }
 
-//initializeDealTable();
+// initializeDealTable();
 
 function initializeAccountTable() {
     const stmt = db.prepare(`

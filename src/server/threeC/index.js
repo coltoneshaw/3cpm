@@ -3,7 +3,7 @@
  */
 
 const { bots, getAccountDetail, deals } = require('./api');
-//const database = require('../database')
+const database = require('../database')
 
 
 const config = require('../../utils/old-config')
@@ -18,7 +18,11 @@ console.log(config.all())
 async function update() {
 
     await deals()
-        .then(data => database.update('deals', data))
+        .then(data => {
+            console.log('made it back here')
+            database.update('deals', data)
+        }
+           )
 
     await getAccountDetail()
         .then(data => database.update('accountData', data))

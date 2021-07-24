@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import dotProp from 'dot-prop';
 
-
 // Contect Providers
 import { useGlobalState } from './Config';
 const DataContext = createContext();
@@ -175,10 +174,6 @@ const DataProvider = ({ children }) => {
             })
     }
 
-    // const updateDataWithMetrics = async (config) => {
-    //     await getAccountData(config)
-        
-    // }
 
     const calculateMetrics = () => {
         updateMetricsData(prevState => {
@@ -201,15 +196,20 @@ const DataProvider = ({ children }) => {
     }
 
     const updateAllData = () => {
-        fetchBotData()
-        fetchProfitMetrics()
-        fetchPerformanceData()
-        getActiveDeals()
+        updateThreeCData()
+            .then(() => {
+                fetchBotData()
+                fetchProfitMetrics()
+                fetchPerformanceData()
+                getActiveDeals()
+        
+                if(config && dotProp.has(config,'general.defaultCurrency')) {
+                    console.log('ran this')
+                    getAccountData(config)
+                }
 
-        if(config && dotProp.has(config,'general.defaultCurrency')) {
-            console.log('ran this')
-            getAccountData(config)
-        }
+            })
+        
 
     }
 
@@ -222,7 +222,8 @@ const DataProvider = ({ children }) => {
             getActiveDeals,
             getAccountData,
             fetchBotData,
-            calculateMetrics
+            calculateMetrics,
+            updateAllData
         },
         data: {
             botData,

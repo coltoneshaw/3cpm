@@ -1,5 +1,6 @@
 import React, {  useState, useEffect } from 'react';
 import { useGlobalData } from '../../../Context/DataContext';
+import { format } from 'date-fns';
 
 import { Button, ButtonGroup } from '@material-ui/core';
 import SyncIcon from '@material-ui/icons/Sync';
@@ -11,6 +12,8 @@ import Card from '../../Charts/DataCards/Card';
 
 
 import './Stats.scss'
+import { useGlobalState } from '../../../Context/Config';
+import dotProp from 'dot-prop';
 
 /**
  * TODO 
@@ -43,18 +46,22 @@ const buttonElements = [
  */
 
 const StatsPage = () => {
-
+    const configState = useGlobalState()
+    const { config } = configState
     const state = useGlobalData()
-    const { data :{metricsData } } = state
+    const { data :{metricsData, accountData }, actions: {updateAllData} } = state
 
     const { activeDealCount, activeSum, maxRisk, position, on_orders, totalProfit  } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')
+    const date = dotProp.get(config, 'statSettings.startDate')
+    const account_id = dotProp.get(config, 'statSettings.account_id')
 
-    //     updatePage = async () => {
+
+//         updatePage = async () => {
 //                 await updateThreeCData()
 //         await this.queryAndUpdate()
-//     }
+// //     }
 
 
 
@@ -90,7 +97,7 @@ const StatsPage = () => {
                 <Button
                     variant="outlined"
                     color="primary"
-                    onClick={() => updateThreeCData()}
+                    onClick={() => updateAllData()}
                     endIcon={<SyncIcon />}
                 >
                     Update Data
@@ -112,11 +119,11 @@ const StatsPage = () => {
                     </ButtonGroup>
                 </div>
 
-                {/* <div>
-                    <h3>{this.state.accountName}</h3>
-                    <h3>{this.state.startDate}</h3>
-                    <h3>{this.state.defaultCurrency}</h3>
-                </div> */}
+                <div className="flex-row filters">
+                    <p><strong>Account Name: </strong>{ (account_id) ? accountData.find(a => a.account_id === account_id).account_name : null }</p>
+                    <p><strong>Start Date: </strong>{ (date) ? format(date , "MM/dd/yyyy")  : date } </p>
+                    <p><strong>Default Currency: </strong>{dotProp.get(config, 'general.defaultCurrency' )}</p>
+                </div>
 
                 <div className="riskDiv">
                     <Card title="Active Deals" metric={activeDealCount} />
