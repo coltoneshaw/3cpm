@@ -1,18 +1,16 @@
 import React, { PureComponent } from 'react';
-import { Provider } from './Context';
 
 import './App.scss';
 import Sidebar from './Components/Sidebar/Sidebar';
 
-import { HashRouter, Route, Redirect } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 
 import { createTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 
-import BotManager from './Components/BotManager/BotManager';
-import Settings from './Components/Settings/Settings';
-import Donate from './Components/Donate/Donate';
-import Stats from './Components/Stats/Stats';
-import Backtesting from './Components/Backtesting/Backtesting';
+import MainWindow from "./Components/MainWindow"
+
+// import Settings from './Components/Settings/Settings';
+// import Backtesting from './Components/Pages/TradingView/TradingView';
 
 const theme = createTheme({
   overrides: {
@@ -52,24 +50,7 @@ const useStyles = makeStyles(
 );
 
 
-
-
 class App extends PureComponent {
-
-  state = {
-    config: ''
-  }
-
-  config = async () => {
-    const config = await electron.config.get()
-    this.setState({ config })
-  }
-
-  componentDidMount(){
-    this.config()
-  }
-
-
 
   render() {
 
@@ -77,25 +58,10 @@ class App extends PureComponent {
       <HashRouter>
         <ThemeProvider theme={theme}>
         {/* Need to update this to properly pass down the config from the app to the components.*/}
-          <Provider value={{
-            actions: {
-              config: {
-                set: '',
-              },
-              classes: this.props.classes
-            }
-          }}>
-            <Sidebar />
-            <Route path='/'>
-              <Redirect to="/botmanager" />
-            </Route>
-            <Route exact path="/botmanager" render={() => <BotManager />} />
-            <Route exact path="/settings" render={() => <Settings config={ this.state.config } />} />
-            <Route exact path="/donate" render={() => <Donate />} />
-            <Route exact path="/stats" render={() => <Stats config={ this.state.config } />} />
-            <Route exact path="/backtesting" render={() => <Backtesting />} />
-          </Provider>
 
+            <Sidebar />
+            <MainWindow classes={this.props.classes}/>
+            
         </ThemeProvider>
       </HashRouter>
 

@@ -9,13 +9,13 @@ const SidebarOption = (props) => {
 
     return (
         <div className="sidebarOption">
-            <NavLink exact to={link} > 
+            <NavLink exact to={link} >
                 <Tooltip title={name} placement="right" arrow>
-                <span>
-                <Icon />
-                </span>
+                    <span>
+                        <Icon />
+                    </span>
                 </Tooltip>
-          </NavLink>
+            </NavLink>
         </div>
     )
 

@@ -2,12 +2,13 @@
  * This is the file responsible for updating and storing the 3 Commas information.
  */
 
-const api = require('./api');
-const database = require('../database')
+const { bots, getAccountDetail, deals } = require('./api');
+//const database = require('../database')
 
 
+const config = require('../../utils/old-config')
 
-
+console.log(config.all())
 /**
  * 
  * TODO
@@ -16,12 +17,15 @@ const database = require('../database')
  */
 async function update() {
 
-    await api.deals()
+    await deals()
         .then(data => database.update('deals', data))
 
-    await api.getAccountDetail()
+    await getAccountDetail()
         .then(data => database.update('accountData', data))
 }
 
 
-exports.update = update
+module.exports = {
+    update,
+    bots
+}

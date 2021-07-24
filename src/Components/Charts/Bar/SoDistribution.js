@@ -90,7 +90,6 @@ export default class SoDistribution extends PureComponent {
                         />
                         <YAxis
                             tickFormatter={tick => tick * 100 + "%"}
-                            min
 
                         />
                         

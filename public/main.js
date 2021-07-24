@@ -4,9 +4,12 @@ const {
   ipcMain,
   Notification
 } = require("electron");
+
 const path = require("path");
 
 const isDev = !app.isPackaged;
+
+
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -69,7 +72,33 @@ app.on('activate', () => {
 })
 
 
-
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+const Store = require('electron-store');
+
+// establishing a config store.
+const config = new Store();
+
+ipcMain.handle('allConfig', (event, value) => {
+  if(value != null) return config.get(value)
+	return config.store
+});
+
+ipcMain.handle('setStoreValue', (event, key, value) => {
+  if(key === null) return config.set(value);
+	return config.set(key, value);
+});
+
+ipcMain.handle('setBulkValues', (event, values) => {
+  const newThings = config.set(values)
+
+  console.log(newThings)
+	return newThings
+});
+
+ipcMain.handle('resetConfigValues', (event, defaultConfig) => {
+	config.clear()
+  return config.set(defaultConfig)
+});
 

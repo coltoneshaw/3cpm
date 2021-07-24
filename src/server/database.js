@@ -3,10 +3,12 @@ const dotProp = require('dot-prop');
 const fs = require('fs');
 
 const Database = require('better-sqlite3');
+
+const config = require('../utils/old-config')
 //config file.
-const config = require('../utils/config');
-const db_type = config.get('database.type');
+const db_type = config.get('database.type')
 console.log(`Database type: ${db_type}`)
+
 const db = new Database(path.join(__dirname, '../../database', 'db.sqlite3'), { fileMustExist: true, });
 
 /**
@@ -28,6 +30,7 @@ function initializeDealTable() {
             created_at TEXT,
             updated_at TEXT,
             closed_at TEXT,
+            closed_at_iso_string NUMBER,
             finished BOOLEAN,
             current_active_safety_orders_count BOOLEAN,
             current_active_safety_orders NUMBER,

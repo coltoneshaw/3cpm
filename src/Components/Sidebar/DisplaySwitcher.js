@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
-import Moon from './Icons/Moon'
-import Sun from './Icons/Sun'
+import { Moon, Sun } from './Icons'
 
 class DisplaySwitcher extends Component {
 

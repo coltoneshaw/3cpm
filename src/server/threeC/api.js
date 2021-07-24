@@ -1,15 +1,17 @@
 const threeCommasAPI = require('3commas-api-node')
-const config = require('../../utils/config');
 
-//fetching the config keys from storage.
+
+const config = require('../../utils/old-config')
+
 const configValues = config.all()
-const globalDealLimit = configValues.general.globalLimit;
-console.log(configValues)
-
+//config file.
+// const API_DATA = electron.config.get('apis.threeC')
 const api = new threeCommasAPI({
   apiKey: configValues.apis.threeC.key,
   apiSecret: configValues.apis.threeC.secret,
 })
+
+
 
 async function bots() {
   let data = await api.getBots()
@@ -87,11 +89,11 @@ async function getDealsUpdate(limit) {
 
   let responseArray = [];
   let response;
-  let offsetMax = (!limit) ? globalDealLimit : limit;
+  let offsetMax = (!limit) ? config.get('general.globalLimit') : limit;
   let oldestDate, newLastSyncTime;
 
   // converting the incoming dateUTC to the right format in case it's not done properly.
-  let lastSyncTime = configValues.syncStatus.deals.lastSyncTime;
+  let lastSyncTime = config.get('syncStatus.deals.lastSyncTime');
 
   for (offset = 0; offset < offsetMax; offset += 500) {
 
@@ -201,6 +203,7 @@ async function deals() {
       max_deal_funds: (activeDeal) ? await max_deal_funds(id, bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, active_manual_safety_orders) : null,
       profitPercent: (activeDeal) ? null : ( (final_profit_percentage / 100) / +deal_hours).toFixed(3),
       impactFactor: (activeDeal) ? (((bought_average_price - current_price) / bought_average_price) * (415 / (bought_volume ** 0.618))) / (actual_usd_profit / actual_profit) : null,
+      closed_at_iso_string: (activeDeal) ? null : new Date(closed_at).getTime()
     }
 
 
@@ -291,10 +294,16 @@ function calculateMaxFunds_Deals(bought_volume, base_order_volume, safety_order_
   return maxTotal
 }
 
+module.exports = {
+  bots,
+  getDealsBulk,
+  getDealsUpdate,
+  getAccountDetail,
+  deals
+}
 
-
-exports.bots = bots
-exports.getDealsBulk = getDealsBulk;
-exports.getDealsUpdate = getDealsUpdate;
-exports.getAccountDetail = getAccountDetail;
-exports.deals = deals;
+// exports.bots = bots
+// exports.getDealsBulk = getDealsBulk;
+// exports.getDealsUpdate = getDealsUpdate;
+// exports.getAccountDetail = getAccountDetail;
+// exports.deals = deals;

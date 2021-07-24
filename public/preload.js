@@ -1,50 +1,77 @@
-const { ipcRenderer, contextBridge } = require('electron');
-const api = require('../src/server/threeC/api')
-const threeC = require('../src/server/threeC/index')
+const { contextBridge, ipcRenderer } = require('electron')
+// const api = require('../src/server/threeC/api')
+// const Store = require('electron-store');
 
-const config = require('../src/utils/config')
-const database = require('../src/server/database');
+// establishing a config store.
+const { update, bots } = require('../src/server/threeC/index')
+// console.log(config.store)
 
-contextBridge.exposeInMainWorld('electron', {
-  data: {
-    async fetch() {
-      console.log('fetching shit')
-      return await api.bots()
+const database = require('../src/server/database')
+
+async function setupContextBridge() {
+  // const foo = await ipcRenderer.invoke('getStoreValue');
+
+  contextBridge.exposeInMainWorld('electron', {
+    api: {
+      async update() {
+        console.log('Updating 3Commas data.')
+        await update()
+        alert(`Updated Data`)
+
+      },
+      async updateBots() {
+        console.log('Fetching Bot Data')
+        return await bots()
+      }
+
+    },
+    config: {
+      async get(value) {
+        console.log('fetching Config')
+        return await ipcRenderer.invoke('allConfig', value);;
+      },
+      async reset(defaultConfig) {
+        /**
+         * TODO
+         * - Add error handling for default config here.
+         */
+        await ipcRenderer.invoke('resetConfigValues', defaultConfig);
+        alert(`Config has been reset`)
+
+      },
+      async set(key, value) {
+        console.log('writing Config')
+        return await ipcRenderer.invoke('setStoreValue', key, value);
+
+      },
+      async bulk(changes) {
+        console.log('writing Config bulk')
+        await await ipcRenderer.invoke('setStoreValue', null, changes);
+      }
+    },
+    database: {
+      async query(queryString) {
+        console.log('running database query')
+        return await database.query(queryString)
+
+      }
     }
-  },
-  api : {
-    async update(){
-      console.log('Updating 3Commas data.')
-      await threeC.update()
-    }
 
-  },
-  config: {
-    async get() {
-      console.log('fetching Config')
-      return await config.all();
+  })
+}
 
-    },
-    async reset() {
-      console.log('fetching Config')
-      await config.reset();
-    },
-    async set(key, value) {
-      console.log('writing Config')
-      return await config.set(key, value);
-    },
-    async bulk(changes) {
-      console.log('writing Config bulk')
-      await config.bulk(changes);
-    },
+setupContextBridge()
 
-  },
-  database: {
-    async query(queryString) {
-      console.log('running database query')
-      return await database.query(queryString)
 
-    }
-  }
+// const database = require('../src/server/database');
 
-})
+// // const Store = require('electron-store');
+
+// // // establishing a config store.
+// // const config = new Store();
+
+
+// //fetching from the general set of utils
+// // const { config } = require('../src/utils/General')
+
+

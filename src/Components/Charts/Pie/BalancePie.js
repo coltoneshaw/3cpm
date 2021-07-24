@@ -38,7 +38,7 @@ class BalancePie extends PureComponent {
                     width: '300px',
                     height: '200px'
                 }}>
-                    <h3 className="chartTitle" style={{ 'padding-bottom': '25px' }}>{title}</h3>
+                    <h3 className="chartTitle" style={{ 'paddingBottom': '25px' }}>{title}</h3>
 
 
                     <ResponsiveContainer width="100%" height="100%">

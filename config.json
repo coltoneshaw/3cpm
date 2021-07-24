@@ -11,10 +11,14 @@
     },
     "syncStatus": {
         "deals": {
-            "lastSyncTime": 1626874563889
+            "lastSyncTime": 1626958843865
         }
     },
     "database": {
         "type": "local"
+    },
+    "statSettings": {
+        "startDate" : "",
+        "account_id" : ""
     }
 }
