@@ -22,16 +22,15 @@ const findData = (config, path) => {
 
 export default function StartDatePicker(props) {
   const state = useGlobalState()
-    const {  config, state: {date, updateDate} } = state
+    const {  state: {date, updateDate} } = state
 
-  const [selectedDate, setSelectedDate] = useState(() => new Date());
+  // const [selectedDate, setSelectedDate] = useState(() => new Date());
 
-  useEffect(() =>{
-    setSelectedDate( findData(config, startDatePath));
-}, [config])
+//   useEffect(() =>{
+//     setSelectedDate( findData(config, startDatePath));
+// }, [config])
 
   const handleDateChange = (date) => {
-    setSelectedDate(date);
     updateDate(getTime(date));
     
     console.log('changing the date')
@@ -46,12 +45,8 @@ export default function StartDatePicker(props) {
           margin="normal"
           id="date-picker-inline"
           label="Stats Start Date"
-          value={selectedDate}
-          // inputRef={startDatePicker}
-          // ref={startDatePicker}
+          value={date}
           onChange={handleDateChange}
-          // inputRef={startDatePicker}
-          // forwardRef={startDatePicker}
           KeyboardButtonProps={{
             'aria-label': 'change date',
           }}

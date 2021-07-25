@@ -41,28 +41,25 @@ const AccountDropdown = () => {
         accountDataAll()
             .then(data => {
                 if (mounted) {
-
                     // removing duplicate accounts
                     data = Array.from(new Set(data.map(a => a.account_id)))
                         .map(id => data.find(a => a.account_id === id))
-                    
                     changeAccountData(data)
                 }
-
             })
         return () => mounted = false
     }, [])
 
     useEffect(() => {
-        let defaultAccountID = findData(config, accountIdPath)
+        // let defaultAccountID = findData(config, accountIdPath)
 
-        if(defaultAccountID == "" && accountData.length > 0){
-            selectElement( accountData[0].account_id )
-        } else {
+        // if(defaultAccountID == "" && accountData.length > 0){
+        //     selectElement( accountData[0].account_id )
+        // } else {
             selectElement(findData(config, accountIdPath))
-        }
+        // 
         
-    }, [accountData])
+    }, [config])
 
     const [select, selectElement ] = useState(() => accountID)
 

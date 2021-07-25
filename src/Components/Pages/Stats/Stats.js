@@ -120,7 +120,7 @@ const StatsPage = () => {
                 </div>
 
                 <div className="flex-row filters">
-                    <p><strong>Account Name: </strong>{ (account_id) ? accountData.find(a => a.account_id === account_id).account_name : null }</p>
+                    <p><strong>Account Name: </strong>{ (account_id) ? accountData.find(a => a.account_id === account_id).account_name : "not set" }</p>
                     <p><strong>Start Date: </strong>{ (date) ? format(date , "MM/dd/yyyy")  : date } </p>
                     <p><strong>Default Currency: </strong>{dotProp.get(config, 'general.defaultCurrency' )}</p>
                 </div>

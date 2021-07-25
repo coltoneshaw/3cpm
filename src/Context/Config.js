@@ -18,10 +18,12 @@ const findData = (config, path) => {
 
 const ConfigProvider = ({ children }) => {
     const [ config, updateConfig ] = useState(() => defaultConfig)
-    const [ date , updateDate ] = useState('')
+
+    // setting the default state to be 90 days in the past.
+    const [ date , updateDate ] = useState(() => getTime( sub(new Date(), {days: 90})))
     const [ apiData, updateApiData ] = useState({key: '', secret: ''})
-    const [ currency, updateCurrency ] = useState()
-    const [ accountID, updateAccountID ] = useState();
+    const [ currency, updateCurrency ] = useState("USD")
+    const [ accountID, updateAccountID ] = useState("");
 
 
 
@@ -58,7 +60,7 @@ const ConfigProvider = ({ children }) => {
                 startDate: date
             }
 
-            // prevConfig.general.defaultCurrency = currency;
+            prevConfig.general.defaultCurrency = currency;
             prevConfig.statSettings = statSettings;
             prevConfig.apis.threeC = keys
 
@@ -114,6 +116,11 @@ const ConfigProvider = ({ children }) => {
         if(config && dotProp.has(config,'statSettings.account_id')) {
             console.log('Updated threeC')
             updateAccountID(dotProp.get(config,'statSettings.account_id'))
+        }
+
+        if(config && dotProp.has(config,'statSettings.startDate')) {
+            console.log('Updated start Date')
+            updateAccountID(config.statSettings.startDate)
         }
     }, [config])
 
