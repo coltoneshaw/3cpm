@@ -152,8 +152,14 @@ const DataProvider = ({ children }) => {
         getAccountDataFunction(config.general.defaultCurrency)
             .then(data => {
                 const { accountData, balance } = data
+
+                const filteredAccount = accountData.find(account => account.account_id === config.statSettings.account_id)
+
+                /** TODO
+                 * - Add error handling here to properly know what to return if there is no matching accounts
+                 */
                 const defaultData = {
-                    accountName: accountData.find(account => account.account_id === config.statSettings.account_id).account_name,
+                    accountName: (filteredAccount) ? filteredAccount.name : "No matching accounts"
                 }
                 setAccountData(accountData)
                 setBalanceData(balance)

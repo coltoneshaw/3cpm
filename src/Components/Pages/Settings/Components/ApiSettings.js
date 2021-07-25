@@ -10,18 +10,18 @@ import { useGlobalState } from '../../../../Context/Config';
 
 const ApiSettings = () => {
     const state = useGlobalState();
-    const { refs: { apiSecret, apiKey }, config } = state
+    const { state: { updateApiData, apiData }, config } = state
 
     const updateKeys = (config) => {
         if(dotProp.has(config, 'apis.threeC')) return config.apis.threeC
         return {key: '', secret: ''}
     }
 
-    const [ apiKeyState, updateKey ] = useState(updateKeys(config))
+    // const [ apiKeyState, updateKey ] = useState(updateKeys(config))
 
 
     useEffect(()=>{
-        updateKey(updateKeys(config));
+        updateApiData(updateKeys(config));
      },[config]);
 
 
@@ -31,14 +31,12 @@ const ApiSettings = () => {
             <TextField
                 id="key"
                 label="Key"
-                inputRef={apiKey}
-                defaultValue={apiKeyState.key}
+                defaultValue={apiData.key}
             />
             <TextField
                 id="secret"
                 label="Secret"
-                inputRef={apiSecret}
-                defaultValue={apiKeyState.secret}
+                defaultValue={apiData.secret}
             />
         </div>
     )

@@ -5,6 +5,7 @@ const {
   Notification
 } = require("electron");
 
+
 const path = require("path");
 
 const isDev = !app.isPackaged;
@@ -21,13 +22,16 @@ function createWindow()  {
   win = new BrowserWindow({
     width: 2500,
     height: 1500,
+    title: "Bot Portfolio Manager",
     webPreferences: {
       nodeIntegration: false, // is default value after Electron v5
       contextIsolation: true, // protect against prototype pollution
       enableRemoteModule: false, // turn off remote
       worldSafeExecuteJavaScript: true,
-      preload: path.join(__dirname,'preload.js')
-    }
+      preload: path.join(__dirname,'preload.js'),
+    },
+    icon: path.join(__dirname,'robot.png')
+
   });
 
   // Load app

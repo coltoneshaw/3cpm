@@ -1,3 +1,5 @@
+import { sub, getTime } from 'date-fns'
+
 const defaultConfig = {
     "apis": {
         "threeC": {
@@ -18,11 +20,9 @@ const defaultConfig = {
         "type": "local"
     },
     "statSettings": {
-        "startDate" : "",
+        "startDate" : getTime( sub(new Date(), {days: 90})),
         "account_id" : ""
     }
 }
 
-module.exports = {
-    defaultConfig
-}
+export { defaultConfig }

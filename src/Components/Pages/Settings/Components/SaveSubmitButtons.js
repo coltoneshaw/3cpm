@@ -4,7 +4,7 @@ import { Button } from '@material-ui/core';
 
 import { ConfigContext } from '../../../../Context/Config';
 const SaveSubmitButtons = () => {
-    const { reset, updateConfig, setConfigBulk } = useContext(ConfigContext)
+    const { reset, setConfigBulk } = useContext(ConfigContext)
 
     return (
         <div className="flex-row padding">

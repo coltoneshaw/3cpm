@@ -50,7 +50,7 @@ const StatSettingElements = () => {
 
             <StartDatePicker
                 // onChangeEvent={props.onChangeEvent} 
-                defaultStartDate={new Date()}
+                // defaultStartDate={new Date()}
              />
 
             <AccountDropdown 

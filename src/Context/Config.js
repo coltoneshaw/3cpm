@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import dotProp from 'dot-prop';
+import { sub, getTime } from 'date-fns'
 // const GlobalStateContext = React.createContext();
 // const GlobalDispatchContext = React.createContext();
 const ConfigContext = createContext();
@@ -16,20 +17,30 @@ const findData = (config, path) => {
 
 
 const ConfigProvider = ({ children }) => {
+    const [ config, updateConfig ] = useState(() => defaultConfig)
     const [ date , updateDate ] = useState('')
+    const [ apiData, updateApiData ] = useState({key: '', secret: ''})
+    const [ currency, updateCurrency ] = useState()
+    const [ accountID, updateAccountID ] = useState();
 
-
-    let apiKey = React.createRef();
-    let apiSecret = React.createRef();
-    let currencySelector = React.createRef();
-    let startDatePicker = React.createRef();
-    let accountIDPicker = React.createRef()
 
 
     // responsible for getting the config from electron and updating it in the state
     const getConfig = async () => {
-        const config = await electron.config.get()
-        updateConfig(config)
+        electron.config.get()
+            .then(config => {
+                updateConfig(config)
+
+                const api = {
+                    key: dotProp.get(config, 'apis.threeC.key'),
+                    secret: dotProp.get(config, 'apis.threeC.secret') 
+                }
+        
+                updateCurrency( dotProp.get(config, 'general.defaultCurrency') )
+                updateApiData( api )
+                updateAccountID(dotProp.get(config, 'statSettings.account_id') )
+
+            })
     }
 
     const setConfigBulk = async () => {
@@ -37,45 +48,74 @@ const ConfigProvider = ({ children }) => {
 
         updateConfig((prevConfig) => {
 
-            console.log({startDatePicker, accountIDPicker})
-
-            let newConfig = prevConfig
-
             const keys = {
-                key: apiKey.current.value,
-                secret: apiSecret.current.value,
+                key: apiData.key,
+                secret: apiData.secret,
             }
 
             const statSettings = {
-                account_id: accountIDPicker.current.value,
+                account_id: accountID,
                 startDate: date
             }
 
+            // prevConfig.general.defaultCurrency = currency;
+            prevConfig.statSettings = statSettings;
+            prevConfig.apis.threeC = keys
 
-            dotProp.set(newConfig, 'general.defaultCurrency', currencySelector.current.value)
-            dotProp.set(newConfig, 'statSettings', statSettings)
-            dotProp.set(newConfig, 'apis.threeC', keys)
 
             // sending the config over to Electron and returning the response
-            electron.config.bulk(newConfig)
-            return newConfig
+            electron.config.bulk(prevConfig)
+            return prevConfig
 
         })
     }
 
-
     // reset button is confirmed working at the moment.
     const reset = () => {
-        console.log('reset the config!!')
-        electron.config.reset(defaultConfig)
-        updateConfig(defaultConfig)
 
-        // currencySelector.current.value = "USD"
-        apiKey.current.value = dotProp.get(defaultConfig, 'apis.threeC.key')
-        apiSecret.current.value = dotProp.get(defaultConfig, 'apis.threeC.secret')
+        updateConfig(prevConfig => {
+            const newConfig = {...defaultConfig}
+            console.log('reset the config!!')
+            electron.config.reset(newConfig)
+    
+            const api = {
+                key: newConfig.apis.threeC.key,
+                secret: newConfig.apis.threeC.key
+            }
+    
+            updateCurrency( newConfig.general.defaultCurrency )
+            updateApiData( api )
+            updateAccountID( newConfig.statSettings.account_id  )
+
+            return newConfig
+        })
+
+
+        
     }
 
-    const [config, updateConfig] = useState(() => getConfig())
+    useState( () => {
+        getConfig()
+    }, [])
+
+    useEffect(() => {
+        // console.log({config}, 'yolo')
+        // console.log()
+        if(config && dotProp.has(config,'general.defaultCurrency')) {
+            console.log('ran this')
+            updateCurrency(dotProp.get(config,'general.defaultCurrency'))
+        }
+
+        if(config && dotProp.has(config,'apis.threeC')) {
+            console.log('Updated threeC')
+            updateApiData(dotProp.get(config,'apis.threeC'))
+        }
+
+        if(config && dotProp.has(config,'statSettings.account_id')) {
+            console.log('Updated threeC')
+            updateAccountID(dotProp.get(config,'statSettings.account_id'))
+        }
+    }, [config])
 
 
     return (
@@ -85,14 +125,15 @@ const ConfigProvider = ({ children }) => {
                 updateConfig,
                 setConfigBulk,
                 reset,
-                date,
-                updateDate,
-                refs: {
-                    apiKey,
-                    apiSecret,
-                    currencySelector,
-                    startDatePicker,
-                    accountIDPicker
+                state: {
+                    accountID,
+                    updateAccountID,
+                    date,
+                    updateDate,
+                    currency,
+                    updateCurrency,
+                    updateApiData,
+                    apiData
                 }
             }}>
             {children}

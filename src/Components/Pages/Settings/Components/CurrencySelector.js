@@ -35,33 +35,11 @@ const CurrencySelector = () => {
 
     const state = useGlobalState()
 
-    const { refs: { currencySelector }, config } = state
-
-    const test = (t) => {
-        if(dotProp.has(t, 'general.defaultCurrency')) return t.general.defaultCurrency
-        return ""
-    }
-
-    // const [ config, updateConfig ] = useState()
-    const [ select, changeSelect ] = useState(() => test(config))
-
-
-    
-    useEffect(() =>{
-        changeSelect(test(config));
-    }, [ dotProp.get(config, 'general.defaultCurrency') ] )
-
-
-    //  useEffect(()=>{
-    //     changeSelect(test(configSet));
-    //     console.log('the state config has changed!!!!!!!!!!!!!!!')        
-    //  },[configSet]);
-
+    const { config, state: { currency, updateCurrency } } = state
 
      const onChange = (e) => {
-        changeSelect(e.target.value)
-        console.log(config.general.defaultCurrency)
-        // console.log(configSet.general.defaultCurrency)
+        updateCurrency(e.target.value)
+        console.log(`Changing the default currency from ${config.general.defaultCurrency} to ${e.target.value}`)
      }
 
 
@@ -69,11 +47,10 @@ const CurrencySelector = () => {
 
         <FormControl >
             <InputLabel>Currency</InputLabel>
-            {/* <h2>{context.config} </h2> */}
             <Select
-                value={select}
-                inputRef={currencySelector}
-                defaultValue={test(config)}
+                value={currency}
+                // inputRef={currencySelector}
+                // defaultValue={select}
                 onChange={onChange}
             >
                 {currencyArray.map(currency => <MenuItem value={currency.value} key={currency.key}>{currency.name}</MenuItem>)}

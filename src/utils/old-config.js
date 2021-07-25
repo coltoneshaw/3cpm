@@ -14,7 +14,7 @@ const defaultConfig = {
         }
     },
     general: {
-        defaultCurrency: "",
+        defaultCurrency: "blue",
     },
     status: {
         deals: {

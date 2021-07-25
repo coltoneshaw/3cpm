@@ -10,6 +10,7 @@ import {
 
 import { accountDataAll } from '../../../../utils/3Commas';
 import { useGlobalState } from '../../../../Context/Config';
+import { defaultConfig } from '../../../../utils/defaultConfig';
 const accountIdPath = 'statSettings.account_id'
 
 // finding the data that exists based on the dotprop.
@@ -27,11 +28,13 @@ const findData = (config, path) => {
 
 const AccountDropdown = () => {
     const state = useGlobalState()
-    const { config, refs: { accountIDPicker } } = state;
+    const { config, state: { accountID, updateAccountID }} = state;
 
-    const [select, changeSelect] = useState("")
 
-    // fetching account Data
+    /**
+     * TODO 
+     * - Move this into the config element and pass it down, or pull from the data element.
+     */
     const [accountData, changeAccountData] = useState([])
     useEffect(() => {
         let mounted = true
@@ -50,19 +53,24 @@ const AccountDropdown = () => {
         return () => mounted = false
     }, [])
 
-    /**
-     * TODO
-     * - Update this to move update from the config each time it changes. Right now it's only on the FIRST ress
-     */
     useEffect(() => {
-        changeSelect(findData(config, accountIdPath))
-    }, [config])
+        let defaultAccountID = findData(config, accountIdPath)
+
+        if(defaultAccountID == "" && accountData.length > 0){
+            selectElement( accountData[0].account_id )
+        } else {
+            selectElement(findData(config, accountIdPath))
+        }
+        
+    }, [accountData])
+
+    const [select, selectElement ] = useState(() => accountID)
 
 
     // changing the select value
     const handleChange = (event) => {
-        changeSelect(event.target.value)
-        console.log(accountData)
+        updateAccountID(event.target.value)
+        selectElement(event.target.value)
         console.log('changing the default account ID')
     };
 
@@ -72,9 +80,9 @@ const AccountDropdown = () => {
             <Select
                 value={select}
                 onChange={handleChange}
-                inputRef={accountIDPicker}
+                // inputRef={accountIDPicker}
             >
-             <MenuItem value="">    </MenuItem>
+             <MenuItem value=""></MenuItem>
 
                 {/* Add filter here that if it's an array of 1 or the value is not defined in the config then we just pick accounts[0] */}
                 {accountData.map(a => <MenuItem value={a.account_id} key={a.account_id}>{a.account_name}</MenuItem>)}
