@@ -1,4 +1,31 @@
 
+const getFiltersQueryString = async () => {
+    const config = await electron.config.get()
+    const { statSettings: { startDate, account_id }, general: { defaultCurrency } } = config
+
+    // always will have a start date of 90 days out. There should not be a time that this is null
+    const startString = `closed_at_iso_string > ${startDate}`
+
+    // may not always have an account_id if it's not been configured, this needs to detect null or not.
+    const accountIdString = (account_id) ? `and account_id = ${account_id}` : ""
+
+    // should never have a time where there is not a currency.
+    const currencyString = `and currency = '${defaultCurrency}'`
+
+    // combining the above filters
+    // no OR starting the string.
+    const fullQueryString = `${startString} ${accountIdString} ${currencyString}`
+
+    return {
+        fullQueryString,
+        currencyString,
+        accountIdString,
+        startString
+    }
+
+}
+
+
 /**
  * @description This kicks off the update process that updates all 3Commas data within the database.
  */
@@ -9,8 +36,12 @@ const updateThreeCData = async () => {
 // Filtering by only closed.
 // This can most likely be moved to the performance dashboard or upwards to the app header.
 const fetchDealDataFunction = async () => {
-    let dataArray = await electron.database.query("select final_profit, closed_at, id from deals where closed_at != null or closed_at != '@closed_at' or finished = 1 order by closed_at asc;")
+    const filtersQueryString = await getFiltersQueryString()
+    console.log(`select final_profit, closed_at, id from deals where closed_at != null or finished = 1 and ${filtersQueryString.fullQueryString} order by closed_at asc;`)
+    let dataArray = await electron.database.query(`select final_profit, closed_at, id from deals where closed_at != null or finished = 1 and ${filtersQueryString.fullQueryString} order by closed_at asc;`)
     let dates = Array.from(new Set(dataArray.map(row => { if (row.closed_at) { return row.closed_at.split('T')[0] } })))
+
+    console.log({ dates })
 
     let profitArray = []
 
@@ -34,7 +65,7 @@ const fetchDealDataFunction = async () => {
     return {
         profitData: profitArray,
         metrics: {
-            totalProfit: parseInt( profitArray[profitArray.length - 1].runningSum )
+            totalProfit: (profitArray.length > 0) ? parseInt(profitArray[profitArray.length - 1].runningSum) : 0
         }
     }
 
@@ -46,6 +77,9 @@ const fetchDealDataFunction = async () => {
      * - Need to add account / currency filters on this.
      */
 const fetchPerformanceDataFunction = async () => {
+    const filtersQueryString = await getFiltersQueryString()
+
+
     // Filtering by only closed.
     // This can most likely be moved to the performance dashboard or upwards to the app header.
 
@@ -63,28 +97,42 @@ const fetchPerformanceDataFunction = async () => {
                     deals 
                 WHERE
                     profitPercent is not null
+                    and ${filtersQueryString.fullQueryString}
                 GROUP BY 
                     performance_id;`
+    
+                    console.log(queryString)
+    let databaseQuery = await electron.database.query(queryString);
 
-    let databaseQuery = await electron.database.query(queryString)
+    if (databaseQuery.length > 0) {
+        const totalProfitSummary = databaseQuery.map(deal => deal.total_profit).reduce((sum, item) => sum + item)
+        const boughtVolumeSummary = databaseQuery.map(deal => deal.bought_volume).reduce((sum, item) => sum + item)
 
-    const totalProfitSummary = databaseQuery.map(deal => deal.total_profit).reduce((sum, item) => sum + item)
-    const boughtVolumeSummary = databaseQuery.map(deal => deal.bought_volume).reduce((sum, item) => sum + item)
+        const performanceData = databaseQuery.map(perfData => {
+            const { bought_volume, total_profit } = perfData
+            return {
+                ...perfData,
+                percentTotalVolume: (bought_volume / boughtVolumeSummary) * 100,
+                percentTotalProfit: (total_profit / totalProfitSummary) * 100,
+            }
+        })
 
-    const performanceData = databaseQuery.map(perfData => {
-        const { bought_volume, total_profit } = perfData
-        return {
-            ...perfData,
-            percentTotalVolume: (bought_volume / boughtVolumeSummary) * 100,
-            percentTotalProfit: (total_profit / totalProfitSummary) * 100,
-        }
-    })
+        return performanceData
+    } else {
+        return []
+    }
 
-    return performanceData
+
 }
 
 const getActiveDealsFunction = async () => {
-    let activeDeals = await electron.database.query("select * from deals where finished = 0 ")
+    const filtersQueryString = await getFiltersQueryString()
+
+    const { currencyString, accountIdString } = filtersQueryString
+    console.log(`select * from deals where finished = 0 ${currencyString} ${accountIdString} `)
+
+
+    let activeDeals = await electron.database.query(`select * from deals where finished = 0 ${currencyString} ${accountIdString} `)
     if (activeDeals.length > 0) {
         activeDeals = activeDeals.map(row => {
             const so_volume_remaining = row.max_deal_funds - row.bought_volume
@@ -100,9 +148,18 @@ const getActiveDealsFunction = async () => {
                 activeSum: activeDeals.map(deal => deal.bought_volume).reduce((sum, item) => sum + item),
                 maxRisk: activeDeals.map(deal => deal.max_deal_funds).reduce((sum, item) => sum + item)
             }
-            
+
         }
 
+    } else {
+        return {
+            activeDeals: [],
+            metrics: {
+                activeSum: 0,
+                maxRisk: 0
+            }
+
+        }
     }
 }
 

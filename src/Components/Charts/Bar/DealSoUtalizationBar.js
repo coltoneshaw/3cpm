@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+import NoData from '../../Pages/Stats/Components/NoData';
+
 const legendFind = (value) => {
     if (value == "bought_volume") return "Bought Volume"
     return "SO Volume Remaining"
@@ -26,49 +28,55 @@ export default class DealSoUtalizationBar extends PureComponent {
     render() {
         const { title, data } = this.props
 
+        const renderChart = () => {
+            if (data.length === 0) {
+                return (<NoData />)
+            } else {
+                return (<ResponsiveContainer width="100%" aspect={5}>
+                <BarChart
+                    width={500}
+                    height={200}
+                    data={data}
+                    margin={{
+                        top: 20,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                    }}
+                    stackOffset="expand"
+                >
+                <Legend
+                        formatter={value => legendFind(value)}
+                    />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <Tooltip
+                        content={<CustomTooltip />}
+                    />
+                    <XAxis dataKey="pair"
+                        angle={45}
+                        dx={15}
+                        dy={20}
+                        minTickGap={-200}
+                        axisLine={false}
+                        height={75}
+                    />
+                    <YAxis
+                        tickFormatter={tick => tick * 100 + "%"}
 
+                    />
+                    
+                    
+                    <Bar dataKey="bought_volume" stackId="a" fill="#8884d8" />
+                    <Bar dataKey="so_volume_remaining" stackId="a" fill="#82ca9d" />
+                </BarChart>
+            </ResponsiveContainer>)
+            }
+        }
 
         return (
             <div className="boxData" style={{ 'margin': '25px' }}>
                 <h3 className="chartTitle">{title}</h3>
-                <ResponsiveContainer width="100%" aspect={5}>
-                    <BarChart
-                        width={500}
-                        height={200}
-                        data={data}
-                        margin={{
-                            top: 20,
-                            right: 30,
-                            left: 20,
-                            bottom: 5,
-                        }}
-                        stackOffset="expand"
-                    >
-                    <Legend
-                            formatter={value => legendFind(value)}
-                        />
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <Tooltip
-                            content={<CustomTooltip />}
-                        />
-                        <XAxis dataKey="pair"
-                            angle={45}
-                            dx={15}
-                            dy={20}
-                            minTickGap={-200}
-                            axisLine={false}
-                            height={75}
-                        />
-                        <YAxis
-                            tickFormatter={tick => tick * 100 + "%"}
-
-                        />
-                        
-                        
-                        <Bar dataKey="bought_volume" stackId="a" fill="#8884d8" />
-                        <Bar dataKey="so_volume_remaining" stackId="a" fill="#82ca9d" />
-                    </BarChart>
-                </ResponsiveContainer>
+                {renderChart()}
             </div>
         )
     }

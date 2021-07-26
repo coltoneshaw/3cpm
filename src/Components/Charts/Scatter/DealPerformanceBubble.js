@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis, LabelList } from 'recharts';
+
+import NoData from '../../Pages/Stats/Components/NoData';
 import { scaleLog } from 'd3-scale';
 const scale = scaleLog().base(Math.E);
 // const data = [
@@ -36,67 +38,75 @@ export default class DealPerformanceBubble extends PureComponent {
 
         performanceData = performanceData.filter( row => row.percentTotalVolume > .15)
 
+        const renderChart = () => {
+            if (performanceData.length === 0) {
+                return (<NoData />)
+            } else {
+                return (<ResponsiveContainer width="100%" aspect={3}>
+                <ScatterChart
+                    width={400}
+                    height={400}
+                    margin={{
+                        top: 20,
+                        right: 20,
+                        bottom: 20,
+                        left: 20,
+                    }}
+                >
+                    <CartesianGrid />
+
+                    {/* 
+                        X - Average Deal Hours
+                        Y - Average Hourly Profit
+                        Z - Number of deals completed
+                        Cell Color - Base Order Start
+                    
+                     */}
+                    <XAxis 
+                        type="number" 
+                        dataKey="averageDealHours" 
+                        height={50}
+                        name="Avg. Deal Hours"
+                        tickCount={9}
+                        domain={[dataMin => (0 - Math.abs(dataMin)).toFixed(0), 10]}
+                        allowDataOverflow={true}
+                    >
+                        <Label value="Average Deal Hours" offset={0} position="insideBottom" />
+                    </XAxis>
+
+                    <YAxis 
+                        type="number" 
+                        dataKey="averageHourlyProfitPercent"  
+                        width={100}
+                        name="Avg. Hourly Profit %"
+
+                        >
+                    <Label value="Avg. Hourly Profit %" angle={-90} offset={0} position='center' />
+
+                    </YAxis>
+                    {/* Range is lowest number and highest number. */}
+                    <ZAxis type="number" dataKey="number_of_deals" range={[0, Math.max(...performanceData.map(deal => deal.total_profit )) ]} name="score" name="# of Deals Completed"/>
+
+
+                    <Tooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltip />}/>
+                    <Scatter name="Deal Performance" data={performanceData} >
+                    {/* <LabelList dataKey="pair" /> */}
+
+                        {
+                            performanceData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={colors[0]} />
+                            ))
+                        }
+                    </Scatter>
+                </ScatterChart>
+            </ResponsiveContainer>)
+            }
+        }
+
         return (
             <div className="boxData" style={{ 'margin': '25px' }}>
                 <h3 className="chartTitle">{title}</h3>
-                <ResponsiveContainer width="100%" aspect={3}>
-                    <ScatterChart
-                        width={400}
-                        height={400}
-                        margin={{
-                            top: 20,
-                            right: 20,
-                            bottom: 20,
-                            left: 20,
-                        }}
-                    >
-                        <CartesianGrid />
-
-                        {/* 
-                            X - Average Deal Hours
-                            Y - Average Hourly Profit
-                            Z - Number of deals completed
-                            Cell Color - Base Order Start
-                        
-                         */}
-                        <XAxis 
-                            type="number" 
-                            dataKey="averageDealHours" 
-                            height={50}
-                            name="Avg. Deal Hours"
-                            tickCount={9}
-                            domain={[dataMin => (0 - Math.abs(dataMin)).toFixed(0), 10]}
-                            allowDataOverflow={true}
-                        >
-                            <Label value="Average Deal Hours" offset={0} position="insideBottom" />
-                        </XAxis>
-
-                        <YAxis 
-                            type="number" 
-                            dataKey="averageHourlyProfitPercent"  
-                            width={100}
-                            name="Avg. Hourly Profit %"
-
-                            >
-                        <Label value="Avg. Hourly Profit %" angle={-90} offset={0} position='center' />
-
-                        </YAxis>
-                        {/* Range is lowest number and highest number. */}
-                        <ZAxis type="number" dataKey="number_of_deals" range={[0, Math.max(...performanceData.map(deal => deal.total_profit )) ]} name="score" name="# of Deals Completed"/>
-
-
-                        <Tooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltip />}/>
-                        <Scatter name="Deal Performance" data={performanceData} >
-                        {/* <LabelList dataKey="pair" /> */}
-
-                            {
-                                performanceData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={colors[0]} />
-                                ))
-                            }
-                        </Scatter>
-                    </ScatterChart>
-                </ResponsiveContainer>
+                {renderChart()}
             </div>
         )
     }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // material UI components
 import { Grid } from '@material-ui/core';
@@ -8,24 +8,25 @@ import { DealPerformanceBubble } from '../../../Charts/Scatter';
 import { DealAllocationBar } from '../../../Charts/Bar';
 import Card from '../../../Charts/DataCards/Card';
 
-import {parseNumber} from '../../../../utils/number_formatting';
+import { parseNumber } from '../../../../utils/number_formatting';
 import { useGlobalData } from '../../../../Context/DataContext';
 
 const PerformanceMonitor = () => {
 
     const state = useGlobalData();
-    const { data: { performanceData }  } = state;
+    const { data: { performanceData, metricsData } } = state;
+    console.log(performanceData)
 
-    const boughtVolume = performanceData.map(deal => deal.bought_volume).reduce((sum, item) => sum + item)
-    const totalProfit = performanceData.map(deal => deal.total_profit).reduce((sum, item) => sum + item)
-    const totalDeals = parseNumber(performanceData.map(deal => deal.number_of_deals).reduce((sum, item) => sum + item))
+    const { totalDeals, boughtVolume, totalProfit_perf } = metricsData
+
+
 
     return (
         <>
             <div className="riskDiv">
                 <Card title="Total Bought Volume" metric={"$" + parseNumber(boughtVolume)} />
-                <Card title="Total Deals" metric={ totalDeals }/>
-                <Card title="Total ROI" metric={(( totalProfit/ boughtVolume) * 100 ).toFixed(2) + "%" } />
+                <Card title="Total Deals" metric={ parseNumber( totalDeals) } />
+                <Card title="Total ROI" metric={((totalProfit_perf / boughtVolume) * 100).toFixed(2) + "%"} />
                 <Card title="Avg. Daily Profit (USD)" metric="$50" />
                 <Card title="Avg. Deal Hours" metric="1.5" />
 

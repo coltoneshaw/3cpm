@@ -9,6 +9,9 @@ const {
 const path = require("path");
 
 const isDev = !app.isPackaged;
+const appDataPath = app.getPath('appData')
+
+
 
 
 
@@ -16,7 +19,7 @@ const isDev = !app.isPackaged;
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
-function createWindow()  {
+function createWindow() {
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -28,9 +31,9 @@ function createWindow()  {
       contextIsolation: true, // protect against prototype pollution
       enableRemoteModule: false, // turn off remote
       worldSafeExecuteJavaScript: true,
-      preload: path.join(__dirname,'preload.js'),
+      preload: path.join(__dirname, 'preload.js'),
     },
-    icon: path.join(__dirname,'robot.png')
+    icon: path.join(__dirname, 'robot.png')
 
   });
 
@@ -43,12 +46,12 @@ function createWindow()  {
 
 if (isDev) {
   require('electron-reload')(__dirname, {
-        electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
-      });
+    electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+  });
 }
 
 ipcMain.on('notify', (_, message) => {
-  new Notification({title: 'Notifiation', body: message}).show();
+  new Notification({ title: 'Notifiation', body: message }).show();
 })
 
 // This method will be called when Electron has finished
@@ -69,7 +72,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  
+
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
@@ -85,24 +88,102 @@ const Store = require('electron-store');
 const config = new Store();
 
 ipcMain.handle('allConfig', (event, value) => {
-  if(value != null) return config.get(value)
-	return config.store
+  if (value != null) return config.get(value)
+  return config.store
 });
 
 ipcMain.handle('setStoreValue', (event, key, value) => {
-  if(key === null) return config.set(value);
-	return config.set(key, value);
+  if (key === null) return config.set(value);
+  return config.set(key, value);
 });
 
 ipcMain.handle('setBulkValues', (event, values) => {
   const newThings = config.set(values)
 
   console.log(newThings)
-	return newThings
+  return newThings
 });
 
 ipcMain.handle('resetConfigValues', (event, defaultConfig) => {
-	config.clear()
+  config.clear()
   return config.set(defaultConfig)
 });
 
+/**
+ * 
+ *      Database Functions
+ * 
+ */
+
+
+const Database = require('better-sqlite3');
+const { update, query } = require('../src/server/database')
+
+//config file.
+const db_type = config.get('database.type')
+console.log(`Database type: ${db_type}`)
+
+
+const db = new Database(path.join(appDataPath, 'bot-manager', 'db.sqlite3'));
+// console.log(db)
+
+ipcMain.handle('query-database', (event, queryString) => {
+  return query(queryString)
+});
+
+ipcMain.handle('update-database', (event, table, updateData) => {
+  return update(db, table, updateData)
+});
+
+
+/**
+ * 
+ *      3C API functions
+ * 
+ */
+
+const threeCommasAPI = require('3commas-api-node')
+
+const api = new threeCommasAPI({
+  apiKey: config.get('apis.threeC.key'),
+  apiSecret: config.get('apis.threeC.secret')
+})
+
+const { getDealsBulk,
+  getDealsUpdate,
+  getAccountDetail,
+  deals } = require('../src/server/threeC/api')
+
+const { updateAPI, bots } = require('../src/server/threeC/index')
+
+
+ipcMain.handle('api-getDealsBulk', (event, limit) => {
+  return getDealsBulk(api, limit)
+});
+
+ipcMain.handle('api-getDealsUpdate', (event, limit) => {
+  return getDealsUpdate(api, config, limit)
+});
+
+/**
+ * this manages the updating of data. It kicks off a process to update deals and account details.
+ * 
+ * Can be broken into another file if needed, but would need to pass the proper functions here.
+ */
+ipcMain.handle('api-updateData', async (event, limit) => {
+  await deals(api, config, limit)
+    .then(data => {
+      console.log('made it back here')
+      update(db, 'deals', data)
+    })
+
+  await getAccountDetail(api)
+    .then(data => {
+      update(db, 'accountData', data)
+    })
+});
+
+
+ipcMain.handle('api-getBots', async (event) => {
+  return await bots(api)
+});

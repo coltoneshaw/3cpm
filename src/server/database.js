@@ -1,15 +1,28 @@
+// const path = require("path");
+// const dotProp = require('dot-prop');
+// const fs = require('fs');
+const {
+    app
+  } = require("electron");
+
+
+const appDataPath = app.getPath('appData');
+
 const path = require("path");
-const dotProp = require('dot-prop');
-const fs = require('fs');
 
 const Database = require('better-sqlite3');
 
-const config = require('../utils/old-config')
-//config file.
-const db_type = config.get('database.type')
-console.log(`Database type: ${db_type}`)
 
-const db = new Database(path.join(__dirname, '../../database', 'db.sqlite3'), { fileMustExist: true, });
+const db = new Database(path.join(appDataPath, 'bot-manager', 'db.sqlite3'));
+
+// const Database = require('better-sqlite3');
+
+// // const config = require('../utils/old-config')
+// // //config file.
+// // const db_type = config.get('database.type')
+// // console.log(`Database type: ${db_type}`)
+
+// const database = new Database(path.join(__dirname, '../../database', 'db.sqlite3'), { fileMustExist: true, });
 
 /**
  * TODO 
@@ -103,8 +116,6 @@ function initializeDealTable() {
 
 }
 
-// initializeDealTable();
-
 function initializeAccountTable() {
     const stmt = db.prepare(`
         CREATE TABLE accountData (
@@ -123,6 +134,11 @@ function initializeAccountTable() {
 
     const info = stmt.run();
 
+}
+
+function setupDatabase(){
+    initializeDealTable();
+    initializeAccountTable();
 }
 
 
@@ -146,7 +162,7 @@ function normalizeData(data) {
  * 
  * @description Inserting data into a table. Data coming in needs to be an array of objects.
  */
-async function update(table, data) {
+async function update(database, table, data) {
     let normalizedData = data.map(row => {
 
         let newRow = {};
@@ -162,9 +178,9 @@ async function update(table, data) {
     const KEYS = Object.keys(normalizedData[0]).map(e => normalizeData(e)).join()
     const valueKey = Object.keys(normalizedData[0]).map(key => '@' + key).map(e => normalizeData(e)).join()
 
-    const statement = db.prepare(`INSERT OR REPLACE INTO ${table} (${KEYS}) VALUES (${valueKey})`)
+    const statement = database.prepare(`INSERT OR REPLACE INTO ${table} (${KEYS}) VALUES (${valueKey})`)
 
-    const insertMany = db.transaction((dataArray) => {
+    const insertMany = database.transaction((dataArray) => {
         for (const row of dataArray) {
             statement.run(row)
 

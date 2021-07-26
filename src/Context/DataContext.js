@@ -47,15 +47,17 @@ const DataProvider = ({ children }) => {
     const [metricsData, updateMetricsData] = useState(() => defaultMetrics)
     const [additionalData, setAdditionalData] = useState([])
 
-    
+
 
     useEffect(() => {
         // console.log({config}, 'yolo')
         // console.log()
-        if(config && dotProp.has(config,'general.defaultCurrency')) {
+        if (config && dotProp.has(config, 'general.defaultCurrency')) {
             console.log('ran this')
             getAccountData(config)
         }
+
+
     }, [config])
 
     useEffect(() => {
@@ -63,7 +65,7 @@ const DataProvider = ({ children }) => {
         fetchProfitMetrics()
         fetchPerformanceData()
         getActiveDeals()
-    }, [])
+    }, [config])
 
     /**
      * checking if any of the numbers needed have changed, if so then we pull the data.
@@ -114,6 +116,14 @@ const DataProvider = ({ children }) => {
             .then(data => {
                 console.log('updated Performance Data!')
                 updatePerformanceData(data)
+                updateMetricsData(prevData => {
+                    return {
+                        ...prevData,
+                        boughtVolume: (data.length > 0) ? data.map(deal => deal.bought_volume).reduce((sum, item) => sum + item) : 0,
+                        totalProfit_perf: (data.length > 0) ? data.map(deal => deal.total_profit).reduce((sum, item) => sum + item) : 0,
+                        totalDeals : (data.length > 0) ? data.map(deal => deal.number_of_deals).reduce((sum, item) => sum + item) : 0
+                    }
+                })
             })
     }
 
@@ -185,14 +195,16 @@ const DataProvider = ({ children }) => {
         updateMetricsData(prevState => {
             const { maxRisk, sum, activeSum } = prevState
             console.log(prevState)
-            console.log({maxRiskPercent: ((parseInt(maxRisk) / (parseInt(sum) + parseInt(activeSum))) * 100).toFixed(0),
-                bankrollAvailable: ((parseInt(sum) / (parseInt(sum) + parseInt(activeSum))) * 100).toFixed(0)})
+            console.log({
+                maxRiskPercent: ((parseInt(maxRisk) / (parseInt(sum) + parseInt(activeSum))) * 100).toFixed(0),
+                bankrollAvailable: ((parseInt(sum) / (parseInt(sum) + parseInt(activeSum))) * 100).toFixed(0)
+            })
 
 
             return {
                 ...prevState,
-                maxRiskPercent: parseInt( ((parseInt(maxRisk) / (parseInt(sum) + parseInt(activeSum))) * 100).toFixed(0)),
-                bankrollAvailable: parseInt( ((parseInt(sum) / (parseInt(sum) + parseInt(activeSum))) * 100).toFixed(0) )
+                maxRiskPercent: parseInt(((parseInt(maxRisk) / (parseInt(sum) + parseInt(activeSum))) * 100).toFixed(0)),
+                bankrollAvailable: parseInt(((parseInt(sum) / (parseInt(sum) + parseInt(activeSum))) * 100).toFixed(0))
             }
         })
     }
@@ -208,16 +220,27 @@ const DataProvider = ({ children }) => {
                 fetchProfitMetrics()
                 fetchPerformanceData()
                 getActiveDeals()
-        
-                if(config && dotProp.has(config,'general.defaultCurrency')) {
+
+                if (config && dotProp.has(config, 'general.defaultCurrency')) {
                     console.log('ran this')
                     getAccountData(config)
                 }
 
             })
-        
-
     }
+
+    const refreshData = () => {
+        fetchBotData()
+        fetchProfitMetrics()
+        fetchPerformanceData()
+        getActiveDeals()
+
+        if (config && dotProp.has(config, 'general.defaultCurrency')) {
+            console.log('ran this')
+            getAccountData(config)
+        }
+    }
+
 
 
     const values = {
@@ -229,7 +252,8 @@ const DataProvider = ({ children }) => {
             getAccountData,
             fetchBotData,
             calculateMetrics,
-            updateAllData
+            updateAllData,
+            refreshData
         },
         data: {
             botData,

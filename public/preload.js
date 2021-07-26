@@ -3,25 +3,32 @@ const { contextBridge, ipcRenderer } = require('electron')
 // const Store = require('electron-store');
 
 // establishing a config store.
-const { update, bots } = require('../src/server/threeC/index')
+// const { update, bots } = require('../src/server/threeC/index')
 // console.log(config.store)
 
-const database = require('../src/server/database')
+// const database = require('../src/server/database')
 
 async function setupContextBridge() {
   // const foo = await ipcRenderer.invoke('getStoreValue');
 
   contextBridge.exposeInMainWorld('electron', {
     api: {
-      async update() {
+      async update(limit) {
         console.log('Updating 3Commas data.')
-        await update()
+        await ipcRenderer.invoke('api-updateData', limit);
         alert(`Updated Data`)
-
       },
       async updateBots() {
         console.log('Fetching Bot Data')
-        return await bots()
+        return await ipcRenderer.invoke('api-getBots');
+      },
+      async getDealsBulk(limit) {
+        // console.log('updating the database.')
+        return await ipcRenderer.invoke('api-getDealsBulk', limit);
+      },
+      async getDealsUpdate(limit) {
+        console.log('updating threeC deals.')
+        return await ipcRenderer.invoke('api-getDealsUpdate', limit);
       }
 
     },
@@ -46,32 +53,22 @@ async function setupContextBridge() {
       },
       async bulk(changes) {
         console.log('writing Config bulk')
-        await await ipcRenderer.invoke('setStoreValue', null, changes);
+        return await ipcRenderer.invoke('setStoreValue', null, changes);
       }
     },
     database: {
       async query(queryString) {
         console.log('running database query')
-        return await database.query(queryString)
-
+        return await ipcRenderer.invoke('query-database', queryString);
       }
-    }
+    },
+      async update(table, updateData) {
+        console.log('updating the database.')
+        return await ipcRenderer.invoke('update-database', table, updateData);
+      }
 
   })
 }
 
 setupContextBridge()
-
-
-// const database = require('../src/server/database');
-
-// // const Store = require('electron-store');
-
-// // // establishing a config store.
-// // const config = new Store();
-
-
-// //fetching from the general set of utils
-// // const { config } = require('../src/utils/General')
-
 

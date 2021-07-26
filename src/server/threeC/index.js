@@ -3,33 +3,32 @@
  */
 
 const { bots, getAccountDetail, deals } = require('./api');
-const database = require('../database')
+// const database = require('../database')
 
 
-const config = require('../../utils/old-config')
+// const config = require('../../utils/old-config')
 
-console.log(config.all())
+// console.log(config.all())
 /**
  * 
  * TODO
  * - Inspect if the lastSyncTime is set. If it is, then need to run bulk. If it's not, need to run update. This might need to go into
  * the code for threeC
  */
-async function update() {
+// async function updateAPI(api, database, config, limit) {
 
-    await deals()
-        .then(data => {
-            console.log('made it back here')
-            database.update('deals', data)
-        }
-           )
+//     // await deals(api, config, limit)
+//     //     .then((data, database) => {
+//     //         console.log('made it back here')
+//     //         database.update('deals', data)
+//     //     }
+//     //        )
 
-    await getAccountDetail()
-        .then(data => database.update('accountData', data))
-}
+//     // const accountData = await getAccountDetail(api)
+//     // await database.update('accountData', accountData)
+// }
 
 
 module.exports = {
-    update,
     bots
 }

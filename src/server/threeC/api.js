@@ -1,19 +1,20 @@
-const threeCommasAPI = require('3commas-api-node')
+// const threeCommasAPI = require('3commas-api-node')
+
+// const { electron } = require("webpack")
+
+// console.log('this is me testing the remote location.')
+// const config = require('../../utils/old-config')
+
+// const configValues = config.all()
+// //config file.
+// // const API_DATA = electron.config.get('apis.threeC')
+// const api = new threeCommasAPI({
+//   apiKey: configValues.apis.threeC.key,
+//   apiSecret: configValues.apis.threeC.secret,
+// })
 
 
-const config = require('../../utils/old-config')
-
-const configValues = config.all()
-//config file.
-// const API_DATA = electron.config.get('apis.threeC')
-const api = new threeCommasAPI({
-  apiKey: configValues.apis.threeC.key,
-  apiSecret: configValues.apis.threeC.secret,
-})
-
-
-
-async function bots() {
+async function bots(api) {
   let data = await api.getBots()
   return data
 }
@@ -24,7 +25,7 @@ async function bots() {
    * @description Fetching market orders for bots that are active and have active market orders
    * @api_docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/deals_api.md#deal-safety-orders-permission-bots_read-security-signed
    */
-async function getMarketOrders(deal_id) {
+async function getMarketOrders(api, deal_id) {
 
   // this is the /market_orders endpoint.
   let apiCall = await api.getDealSafetyOrders(deal_id)
@@ -43,16 +44,22 @@ async function getMarketOrders(deal_id) {
   return dataArray
 }
 
-
-async function getDealsBulk(limit) {
+/**
+ * 
+ * @param {*} api 
+ * @param {*} limit 
+ * @returns 
+ * @description - DO NOT USE THIS FUNCTION AT THE MOMENT
+ */
+async function getDealsBulk(api, config, limit) {
 
   let responseArray = [];
   let response;
-  let offsetMax = (!limit) ? globalDealLimit : limit;
+  let offsetMax = (!limit) ? 250000 : limit;
 
   for (offset = 0; offset < offsetMax; offset += 1000) {
 
-    response = await api.getDeals({ scope: 'completed', limit: 1000 })
+    response = await api.getDeals({ scope: 'completed', limit: 1000, offset })
 
     // limiting the offset to just 5000 here. This can be adjusted but made for some issues with writing to Sheets.
     if (response.length > 0) {
@@ -85,7 +92,7 @@ async function getDealsBulk(limit) {
  * @param {number} limit - This sets the max amount of deals to sync. Default is at 250k as a global param
  * @returns object array of deals.
  */
-async function getDealsUpdate(limit) {
+async function getDealsUpdate(api, config, limit) {
 
   let responseArray = [];
   let response;
@@ -93,18 +100,32 @@ async function getDealsUpdate(limit) {
   let oldestDate, newLastSyncTime;
 
   // converting the incoming dateUTC to the right format in case it's not done properly.
-  let lastSyncTime = config.get('syncStatus.deals.lastSyncTime');
+  // let lastSyncTime = await config.get('syncStatus.deals.lastSyncTime');
 
-  for (offset = 0; offset < offsetMax; offset += 500) {
+  /**
+   * FIX THIS BEFORE RELEASING. THIS IS HARD CODING THE DATE
+   */
+  let lastSyncTime = 1617249600000;
+
+  console.error('the date has been hard coded. Fix this before releasing. Additionally, change the limit back to 500')
+
+
+  for (offset = 0; offset < offsetMax; offset += 1000) {
 
     // can look into using the from tag to filter on the last created deal.
-    response = await api.getDeals({ limit: 500, order: 'updated_at', order_direction: 'desc', offset })
+    response = await api.getDeals({ limit: 1000, order: 'updated_at', order_direction: 'desc', offset })
 
     // limiting the offset to just 5000 here. This can be adjusted but made for some issues with writing to Sheets.
     if (response.length > 0) { responseArray.push(...response) }
 
+    console.log(response[0].updated_at)
+    console.log(response[response.length - 1].updated_at)
+
+
+
     // this pulls the oldest date of the final item in the array.
     oldestDate = new Date(response[response.length - 1].updated_at).getTime()
+
 
     if (offset == 0) {
       // desc order, so this is the most recent last sync time.
@@ -125,7 +146,7 @@ async function getDealsUpdate(limit) {
 
     // breaking out of the loop if it's not a full payload OR the oldest deal is oldest deal comes before the last sync time.
     // This is not needed if 3C gives us the ability to sync based on an updatedAt date.
-    if (response.length != 500 || oldestDate <= lastSyncTime) { break; }
+    if (response.length != 1000 || oldestDate <= lastSyncTime) { break; }
 
   }
 
@@ -137,9 +158,10 @@ async function getDealsUpdate(limit) {
 
 }
 
-async function deals() {
-  let deals = await getDealsUpdate();
-  let botData = await bots();
+
+async function deals(api, config, limit) {
+  let deals = await getDealsUpdate(api, config, limit);
+  let botData = await bots(api);
 
   let dealArray = [];
 
@@ -155,12 +177,12 @@ async function deals() {
     const activeDeal = (closed_at === null) ? true : false;
 
 
-    const max_deal_funds = async (id, bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, active_manual_safety_orders) => {
+    const max_deal_funds = async (api, id, bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, active_manual_safety_orders) => {
       let market_order_data;
 
       // fetching market order information for any deals that are not closed.
       if (active_manual_safety_orders > 0) {
-        market_order_data = await getMarketOrders(id)
+        market_order_data = await getMarketOrders(api, id)
       }
       return calculateMaxFunds_Deals(bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, market_order_data)
     }
@@ -184,14 +206,14 @@ async function deals() {
       let endDate;
 
       if (closed_at === null) {
-          endDate = Date.now()
+        endDate = Date.now()
       } else {
-          endDate = Date.parse(closed_at)
+        endDate = Date.parse(closed_at)
       }
       let milliseconds = Math.abs(created_at - endDate);
       const hours = milliseconds / 36e5;
       return +hours.toFixed(2)
-  }
+    }
     const deal_hours = deal_hours_function(created_at, closed_at)
 
     let tempObject = {
@@ -200,8 +222,8 @@ async function deals() {
       pair: pair.split("_")[1],
       currency: pair.split("_")[0],
       bot_name: bot_name_function(botData, pair, bot_id, bot_name),
-      max_deal_funds: (activeDeal) ? await max_deal_funds(id, bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, active_manual_safety_orders) : null,
-      profitPercent: (activeDeal) ? null : ( (final_profit_percentage / 100) / +deal_hours).toFixed(3),
+      max_deal_funds: (activeDeal) ? await max_deal_funds(api, id, bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, active_manual_safety_orders) : null,
+      profitPercent: (activeDeal) ? null : ((final_profit_percentage / 100) / +deal_hours).toFixed(3),
       impactFactor: (activeDeal) ? (((bought_average_price - current_price) / bought_average_price) * (415 / (bought_volume ** 0.618))) / (actual_usd_profit / actual_profit) : null,
       closed_at_iso_string: (activeDeal) ? null : new Date(closed_at).getTime()
     }
@@ -218,8 +240,6 @@ async function deals() {
   return dealArray
 }
 
-// deals()
-
 
 /**
  * 
@@ -227,13 +247,12 @@ async function deals() {
  * 
  * @docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/accounts_api.md#information-about-all-user-balances-on-specified-exchange--permission-accounts_read-security-signed
  */
-async function getAccountDetail() {
+async function getAccountDetail(api) {
   let accountData = await api.accounts()
   let array = [];
 
   for (account of accountData) {
     let data = await api.accountTableData(account.id)
-    console.log(data)
 
     const { name: account_name, exchange_name, market_code } = account
     // Load data into new array with only the columns we want and format them
@@ -264,42 +283,42 @@ async function getAccountDetail() {
 function calculateMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient) {
   let maxTotal = +base_order_volume
   for (so_count = 0; so_count < max_safety_orders; so_count++)
-      maxTotal += safety_order_volume * martingale_volume_coefficient ** so_count
+    maxTotal += safety_order_volume * martingale_volume_coefficient ** so_count
   return maxTotal
 }
 
 
 function calculateMaxFunds_Deals(bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders, martingale_volume_coefficient, market_order_data) {
   if (+bought_volume > 0)
-      maxTotal = +bought_volume;
+    maxTotal = +bought_volume;
   else
-      maxTotal = +base_order_volume
+    maxTotal = +base_order_volume
 
   for (so_count = completed_safety_orders + 1; so_count <= max_safety_orders; so_count++) {
-      maxTotal += safety_order_volume * martingale_volume_coefficient ** (so_count - 1)
+    maxTotal += safety_order_volume * martingale_volume_coefficient ** (so_count - 1)
   }
 
   // add unfilled manual safety orders
   if (!(typeof market_order_data === 'undefined')) {
-      for (order of market_order_data) {
-          let {
-              deal_order_type, status_string, quantity, quantity_remaining, total, rate, average_price
-          } = order
+    for (order of market_order_data) {
+      let {
+        deal_order_type, status_string, quantity, quantity_remaining, total, rate, average_price
+      } = order
 
-          if (status_string == "Active") {
-              maxTotal += quantity_remaining * +rate
-          }
+      if (status_string == "Active") {
+        maxTotal += quantity_remaining * +rate
       }
+    }
   }
   return maxTotal
 }
 
 module.exports = {
-  bots,
   getDealsBulk,
   getDealsUpdate,
   getAccountDetail,
-  deals
+  deals,
+  bots
 }
 
 // exports.bots = bots

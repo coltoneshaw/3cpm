@@ -49,7 +49,7 @@ const StatsPage = () => {
     const configState = useGlobalState()
     const { config } = configState
     const state = useGlobalData()
-    const { data :{metricsData, accountData }, actions: {updateAllData} } = state
+    const { data :{metricsData, accountData }, actions: {updateAllData, refreshData} } = state
 
     const { activeDealCount, activeSum, maxRisk, position, on_orders, totalProfit  } = metricsData
 
@@ -102,6 +102,14 @@ const StatsPage = () => {
                 >
                     Update Data
                 </Button>
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => refreshData()}
+                    endIcon={<SyncIcon />}
+                >
+                    Refresh Chart Data
+                </Button>
             </div>
 
             <div className="flex-column" style={{ alignItems: 'center' }}>
@@ -120,7 +128,7 @@ const StatsPage = () => {
                 </div>
 
                 <div className="flex-row filters">
-                    <p><strong>Account Name: </strong>{ (account_id) ? accountData.find(a => a.account_id === account_id).account_name : "not set" }</p>
+                    <p><strong>Account: </strong>{ (account_id) ? accountData.find(a => a.account_id === account_id).account_name : "All" }</p>
                     <p><strong>Start Date: </strong>{ (date) ? format(date , "MM/dd/yyyy")  : date } </p>
                     <p><strong>Default Currency: </strong>{dotProp.get(config, 'general.defaultCurrency' )}</p>
                 </div>

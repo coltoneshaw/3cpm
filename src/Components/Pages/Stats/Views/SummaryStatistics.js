@@ -14,18 +14,19 @@ const SummaryStatistics = () => {
     const state = useGlobalData();
     const { data: { profitData } } = state;
 
+
     return (
         <>
-        <Grid container spacing={12}>
-                    <Grid item xs={6}>
-                        <ProfitByDay data={profitData} X="profit" />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <SummaryProfitByDay data={profitData} X="runningSum" />
-                    </Grid>
+            <Grid container spacing={12}>
+                <Grid item xs={6}>
+                    <ProfitByDay data={profitData} X="profit" />
                 </Grid>
+                <Grid item xs={6}>
+                    <SummaryProfitByDay data={profitData} X="runningSum" />
+                </Grid>
+            </Grid>
         </>
-        
+
     )
 }
 

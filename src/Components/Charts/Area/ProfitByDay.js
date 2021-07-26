@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
+import NoData from '../../Pages/Stats/Components/NoData';
+
 import { parseISO, format } from 'date-fns'
 
 
@@ -25,15 +27,12 @@ export default class ProfitByDay extends PureComponent {
         };
         const off = gradientOffset();
 
-        if (this.props.data == []) {
-            return (<div>Loading...</div>)
-        }
 
-        return (
-            <div className="boxData" style={{ 'margin': '25px' }}>
-            <h3 className="chartTitle">Profit by day </h3>
-
-            <ResponsiveContainer width="100%" aspect={2} >
+        const renderChart = () => {
+            if (this.props.data.length === 0) {
+                return (<NoData />)
+            } else {
+                return (<ResponsiveContainer width="100%" aspect={2} >
                 <AreaChart
                     width={500}
                     height={300}
@@ -76,7 +75,14 @@ export default class ProfitByDay extends PureComponent {
                     <Area type="monotone" dataKey={this.props.X} stroke="#212B3B" strokeWidth={1.75} fill="url(#splitColor)" />
                 </AreaChart>
 
-            </ResponsiveContainer>
+            </ResponsiveContainer>)
+            }
+        }
+        return (
+            <div className="boxData" style={{ 'margin': '25px' }}>
+            <h3 className="chartTitle">Profit by day </h3>
+            {renderChart()}
+            
             </div>
         )
 
