@@ -99,14 +99,12 @@ ipcMain.handle('setStoreValue', (event, key, value) => {
 
 ipcMain.handle('setBulkValues', (event, values) => {
   const newThings = config.set(values)
-
   console.log(newThings)
   return newThings
 });
 
-ipcMain.handle('resetConfigValues', (event, defaultConfig) => {
-  config.clear()
-  return config.set(defaultConfig)
+ipcMain.handle('config-clear', (event, defaultConfig) => {
+  return config.clear()
 });
 
 // ipcMain.handle('config-checkConfigIsValid', (event) => {

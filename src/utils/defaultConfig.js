@@ -17,9 +17,7 @@ const configSchema = {
                     }
                 }
             }
-
         }
-
     },
     general: {
         type: "object",
@@ -67,8 +65,8 @@ const configSchema = {
 const defaultConfig = {
     "apis": {
         "threeC": {
-            "key": null,
-            "secret": null
+            "key": "",
+            "secret": ""
         }
     },
     "general": {

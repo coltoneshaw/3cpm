@@ -37,9 +37,11 @@ const updateThreeCData = async () => {
 // This can most likely be moved to the performance dashboard or upwards to the app header.
 const fetchDealDataFunction = async () => {
     const filtersQueryString = await getFiltersQueryString()
-    console.log(`select final_profit, closed_at, id from deals where closed_at != null or finished = 1 and ${filtersQueryString.fullQueryString} order by closed_at asc;`)
-    let dataArray = await electron.database.query(`select final_profit, closed_at, id from deals where closed_at != null or finished = 1 and ${filtersQueryString.fullQueryString} order by closed_at asc;`)
+    console.log(`select final_profit, closed_at, id, deal_hours from deals where closed_at != null or finished = 1 and ${filtersQueryString.fullQueryString} order by closed_at asc;`)
+    let dataArray = await electron.database.query(`select final_profit, closed_at, id, deal_hours from deals where closed_at != null or finished = 1 and ${filtersQueryString.fullQueryString} order by closed_at asc;`)
     let dates = Array.from(new Set(dataArray.map(row => { if (row.closed_at) { return row.closed_at.split('T')[0] } })))
+
+    let totalDealHours = dataArray.map( deal => deal.deal_hours).reduce((sum, hours) => sum + hours)
 
     console.log({ dates })
 
@@ -62,10 +64,16 @@ const fetchDealDataFunction = async () => {
         profitArray.push(dateObject)
     })
 
+    const totalProfit = (profitArray.length > 0) ? parseInt(profitArray[profitArray.length - 1].runningSum) : 0
+    const averageDailyProfit = (profitArray.length > 0) ? totalProfit / ( profitArray.length + 1) : 0;
+    const averageDealHours = (profitArray.length > 0 ) ? totalDealHours / ( dataArray.length + 1 ) : 0;
+
     return {
         profitData: profitArray,
         metrics: {
-            totalProfit: (profitArray.length > 0) ? parseInt(profitArray[profitArray.length - 1].runningSum) : 0
+            totalProfit,
+            averageDailyProfit,
+            averageDealHours
         }
     }
 
@@ -173,14 +181,27 @@ const getAccountDataFunction = async (defaultCurrency) => {
 
     let balanceData = accountData.filter(row => row.currency_code === defaultCurrency)[0]
 
-    return {
-        accountData,
-        balance: {
-            on_orders: balanceData.on_orders,
-            position: balanceData.position,
-            sum: ((balanceData.on_orders + balanceData.position))
+    if(accountData.length > 0) {
+        return {
+            accountData,
+            balance: {
+                on_orders: balanceData.on_orders,
+                position: balanceData.position,
+                sum: ((balanceData.on_orders + balanceData.position))
+            }
         }
     }
+
+    return {
+        accountData: [],
+        balance: {
+            on_orders: 0,
+            position: 0,
+            sum: 0
+        }
+    }
+
+    
 }
 
 const accountDataAll = async () => {

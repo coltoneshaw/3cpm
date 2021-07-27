@@ -17,7 +17,7 @@ const PerformanceMonitor = () => {
     const { data: { performanceData, metricsData } } = state;
     console.log(performanceData)
 
-    const { totalDeals, boughtVolume, totalProfit_perf } = metricsData
+    const { totalDeals, boughtVolume, totalProfit_perf, averageDailyProfit, averageDealHours } = metricsData
 
 
 
@@ -27,8 +27,8 @@ const PerformanceMonitor = () => {
                 <Card title="Total Bought Volume" metric={"$" + parseNumber(boughtVolume)} />
                 <Card title="Total Deals" metric={ parseNumber( totalDeals) } />
                 <Card title="Total ROI" metric={((totalProfit_perf / boughtVolume) * 100).toFixed(2) + "%"} />
-                <Card title="Avg. Daily Profit (USD)" metric="$50" />
-                <Card title="Avg. Deal Hours" metric="1.5" />
+                <Card title="Avg. Daily Profit (USD)" metric={"$" + parseNumber(averageDailyProfit)} />
+                <Card title="Avg. Deal Hours" metric={ averageDealHours.toFixed(2)} />
 
 
             </div>

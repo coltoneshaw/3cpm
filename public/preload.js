@@ -37,14 +37,14 @@ async function setupContextBridge() {
         console.log('fetching Config')
         return await ipcRenderer.invoke('allConfig', value);;
       },
-      async reset(defaultConfig) {
+      async reset() {
         /**
          * TODO
          * - Add error handling for default config here.
          */
-        await ipcRenderer.invoke('resetConfigValues', defaultConfig);
+        console.log('attempting to reset the config to default values.')
+        await ipcRenderer.invoke('config-clear')
         alert(`Config has been reset`)
-
       },
       async set(key, value) {
         console.log('writing Config')
@@ -74,7 +74,6 @@ async function setupContextBridge() {
 
 async function  databaseSetup(){
   await ipcRenderer.invoke('database-checkOrMakeTables');
-  // await ipcRenderer.invoke('config-checkConfigIsValid');
 }
 
 

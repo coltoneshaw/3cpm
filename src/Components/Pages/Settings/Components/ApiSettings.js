@@ -24,6 +24,26 @@ const ApiSettings = () => {
         updateApiData(updateKeys(config));
      },[config]);
 
+    const handleKeyChange = (e) => {
+        console.log(e.target.value)
+        updateApiData(prevState => {
+            return {
+                ...prevState,
+                key: e.target.value
+            }
+        })
+    }
+
+    const handleSecretChange = (e) => {
+        console.log(e.target.value)
+        updateApiData(prevState => {
+            return {
+                ...prevState,
+                secret: e.target.value
+            }
+        })
+    }
+
 
     return (
         <div className=" flex-column">
@@ -32,11 +52,13 @@ const ApiSettings = () => {
                 id="key"
                 label="Key"
                 defaultValue={apiData.key}
+                onChange={handleKeyChange}
             />
             <TextField
                 id="secret"
                 label="Secret"
                 defaultValue={apiData.secret}
+                onChange={handleSecretChange}
             />
         </div>
     )

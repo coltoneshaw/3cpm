@@ -1,21 +1,34 @@
 // const { app } = require("electron");
 const threeCommasAPI = require('3commas-api-node')
 // const path = require("path");
-
 // const appDataPath = app.getPath('appData');
 
 
 const { config } = require('../../utils/config')
 
+/**
+ * 
+ * @param {object} config This is the config string at the time of calling this function.
+ * @returns the 3Commas API object.
+ * 
+ * @description - required at the moment so when you make a config change on the frontend you're not using old data.
+ */
+function threeCapi(config){
+  const api = new threeCommasAPI({
+    apiKey: config.get('apis.threeC.key'),
+    apiSecret: config.get('apis.threeC.secret')
+  })
 
-const api = new threeCommasAPI({
-  apiKey: config.get('apis.threeC.key'),
-  apiSecret: config.get('apis.threeC.secret')
-})
+  return api
+}
+
+
 
 
 
 async function bots() {
+  const api = threeCapi(config)
+
   let data = await api.getBots()
   return data
 }
@@ -27,6 +40,7 @@ async function bots() {
    * @api_docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/deals_api.md#deal-safety-orders-permission-bots_read-security-signed
    */
 async function getMarketOrders(deal_id) {
+  const api = threeCapi(config)
 
   // this is the /market_orders endpoint.
   let apiCall = await api.getDealSafetyOrders(deal_id)
@@ -94,11 +108,14 @@ async function getDealsBulk(limit) {
  * @returns object array of deals.
  */
 async function getDealsUpdate(limit) {
+  const api = threeCapi(config)
 
   let responseArray = [];
   let response;
   let offsetMax = (!limit) ? config.get('general.globalLimit') : limit;
   let oldestDate, newLastSyncTime;
+
+
 
   // converting the incoming dateUTC to the right format in case it's not done properly.
   // let lastSyncTime = await config.get('syncStatus.deals.lastSyncTime');
@@ -109,7 +126,6 @@ async function getDealsUpdate(limit) {
   let lastSyncTime = 1617249600000;
 
   console.error('the date has been hard coded. Fix this before releasing. Additionally, change the limit back to 500')
-
 
   for (offset = 0; offset < offsetMax; offset += 1000) {
 
@@ -249,6 +265,8 @@ async function deals(limit) {
  * @docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/accounts_api.md#information-about-all-user-balances-on-specified-exchange--permission-accounts_read-security-signed
  */
 async function getAccountDetail() {
+  const api = threeCapi(config)
+
   let accountData = await api.accounts()
   let array = [];
 

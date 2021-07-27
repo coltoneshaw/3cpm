@@ -23,10 +23,6 @@ function testTable() {
             )`);
 
     const info = stmt.run();
-
-    console.log(info)
-
-
 }
 
 

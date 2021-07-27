@@ -9,7 +9,7 @@ const { bots, getAccountDetail, deals, getDealsBulk, getDealsUpdate } = require(
  */
 async function updateAPI(limit) {
 
-    await deals(limit)
+  await deals(limit)
     .then(data => {
       console.log('made it back here')
       update('deals', data)
@@ -23,7 +23,7 @@ async function updateAPI(limit) {
 
 
 module.exports = {
-    bots,
-    updateAPI,
-    getAccountDetail, deals, getDealsBulk, getDealsUpdate 
+  bots,
+  updateAPI,
+  getAccountDetail, deals, getDealsBulk, getDealsUpdate
 }

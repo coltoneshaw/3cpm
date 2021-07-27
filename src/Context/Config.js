@@ -14,31 +14,10 @@ const findData = (config, path) => {
     return ""
 }
 
+// pulling in the default config from the config store for use once it's been reset.
+import { defaultConfig } from '../utils/defaultConfig'
 
-const defaultConfig = {
-    "apis": {
-        "threeC": {
-            "key": "21b6a7f20eb0448e8c642aa1a98180ca5ca6d27477484139aea5881d7ba5c034",
-            "secret": "1edbe2e48e11674e0fcc53d64ae540d8fbb81314b3d3ae155d45eec48069d3be731183119eb7c54ebaedc58e038aac394de6f975cdcd74a2215fe9830c8a53fc9816679599f6efbfd23a0435549bfb41334a5c1bebb71db3d2d701accaa94360c0b33008"
-        }
-    },
-    "general": {
-        "defaultCurrency": "USD",
-        "globalLimit": 250000
-    },
-    "syncStatus": {
-        "deals": {
-            "lastSyncTime": 1626958843865
-        }
-    },
-    "database": {
-        "type": "local"
-    },
-    "statSettings": {
-        "startDate": getTime(sub(new Date(), { days: 90 })),
-        "account_id": ""
-    }
-}
+
 
 
 const ConfigProvider = ({ children }) => {
@@ -80,6 +59,8 @@ const ConfigProvider = ({ children }) => {
                 secret: apiData.secret,
             }
 
+            console.log(keys)
+
             const statSettings = {
                 account_id: accountID,
                 startDate: date
@@ -103,7 +84,7 @@ const ConfigProvider = ({ children }) => {
         updateConfig(prevConfig => {
             const newConfig = {...defaultConfig}
             console.log('reset the config!!')
-            electron.config.reset(newConfig)
+            electron.config.reset()
     
             const api = {
                 key: newConfig.apis.threeC.key,
@@ -125,29 +106,29 @@ const ConfigProvider = ({ children }) => {
         getConfig()
     }, [])
 
-    useEffect(() => {
-        // console.log({config}, 'yolo')
-        // console.log()
-        if(config && dotProp.has(config,'general.defaultCurrency')) {
-            console.log('ran this')
-            updateCurrency(dotProp.get(config,'general.defaultCurrency'))
-        }
+    // useEffect(() => {
+    //     // console.log({config}, 'yolo')
+    //     // console.log()
+    //     if(config && dotProp.has(config,'general.defaultCurrency')) {
+    //         console.log('ran this')
+    //         updateCurrency(dotProp.get(config,'general.defaultCurrency'))
+    //     }
 
-        if(config && dotProp.has(config,'apis.threeC')) {
-            console.log('Updated threeC')
-            updateApiData(dotProp.get(config,'apis.threeC'))
-        }
+    //     if(config && dotProp.has(config,'apis.threeC')) {
+    //         console.log('Updated threeC')
+    //         updateApiData(dotProp.get(config,'apis.threeC'))
+    //     }
 
-        if(config && dotProp.has(config,'statSettings.account_id')) {
-            console.log('Updated threeC')
-            updateAccountID(dotProp.get(config,'statSettings.account_id'))
-        }
+    //     if(config && dotProp.has(config,'statSettings.account_id')) {
+    //         console.log('Updated threeC')
+    //         updateAccountID(dotProp.get(config,'statSettings.account_id'))
+    //     }
 
-        if(config && dotProp.has(config,'statSettings.startDate')) {
-            console.log('Updated start Date')
-            updateAccountID(config.statSettings.startDate)
-        }
-    }, [config])
+    //     if(config && dotProp.has(config,'statSettings.startDate')) {
+    //         console.log('Updated start Date')
+    //         updateAccountID(config.statSettings.startDate)
+    //     }
+    // }, [config])
 
 
     return (

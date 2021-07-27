@@ -80,7 +80,12 @@ const DataProvider = ({ children }) => {
             .then(
                 (result) => {
                     // alert('Bot data is updated')
-                    updateBotData(result)
+                    if(result.length > 0) {
+                        updateBotData(result)
+                    } else {
+                        updateBotData([])
+                    }
+                    
                 })
 
     }
