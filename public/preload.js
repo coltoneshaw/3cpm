@@ -70,5 +70,14 @@ async function setupContextBridge() {
   })
 }
 
-setupContextBridge()
 
+
+async function  databaseSetup(){
+  await ipcRenderer.invoke('database-checkOrMakeTables');
+  // await ipcRenderer.invoke('config-checkConfigIsValid');
+}
+
+
+databaseSetup();
+
+setupContextBridge();
