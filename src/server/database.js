@@ -1,28 +1,34 @@
-// const path = require("path");
-// const dotProp = require('dot-prop');
-// const fs = require('fs');
-const {
-    app
-  } = require("electron");
 
-
+const { app } = require("electron");
 const appDataPath = app.getPath('appData');
-
 const path = require("path");
-
 const Database = require('better-sqlite3');
-
-
 const db = new Database(path.join(appDataPath, 'bot-manager', 'db.sqlite3'));
 
-// const Database = require('better-sqlite3');
 
-// // const config = require('../utils/old-config')
-// // //config file.
-// // const db_type = config.get('database.type')
-// // console.log(`Database type: ${db_type}`)
+function testTable() {
+    const stmt = db.prepare(`
+        CREATE TABLE TEST (
+            id TEXT PRIMARY KEY UNIQUE,
+            account_id NUMBER,
+            account_name TEXT,
+            exchange_name TEXT,
+            currency_code TEXT,
+            percentage NUMBER,
+            position NUMBER,
+            on_orders NUMBER,
+            btc_value NUMBER,
+            usd_value NUMBER,
+            market_code TEXT
+            )`);
 
-// const database = new Database(path.join(__dirname, '../../database', 'db.sqlite3'), { fileMustExist: true, });
+    const info = stmt.run();
+
+    console.log(info)
+
+
+}
+
 
 /**
  * TODO 
@@ -136,10 +142,29 @@ function initializeAccountTable() {
 
 }
 
-function setupDatabase(){
+function initialDatabaseSetup(){
     initializeDealTable();
     initializeAccountTable();
+    testTable();
 }
+
+
+async function checkOrMakeTables(){
+    
+    // checking if the tables exist.
+    const existingTables = await query("SELECT name FROM sqlite_master WHERE type='table';")
+
+    if(existingTables.length > 0 ){
+        const tableNames = existingTables.map(table => table.name)
+        if(!tableNames.includes('deals')) initializeDealTable()
+        if(!tableNames.includes('accountData')) initializeAccountTable()
+        if(!tableNames.includes('TEST')) testTable()
+    } else {
+        initialDatabaseSetup()
+    }
+
+}
+
 
 
 function normalizeData(data) {
@@ -155,6 +180,12 @@ function normalizeData(data) {
 }
 
 
+/********************************************
+ * 
+ *        Database Action Commands
+ * 
+ ********************************************/
+
 /**
  * 
  * @param {object} data Array of Objects. 
@@ -162,15 +193,12 @@ function normalizeData(data) {
  * 
  * @description Inserting data into a table. Data coming in needs to be an array of objects.
  */
-async function update(database, table, data) {
+async function update(table, data) {
     let normalizedData = data.map(row => {
-
         let newRow = {};
-
         Object.keys(row).forEach(item => {
             newRow[normalizeData(item)] = normalizeData(row[item])
         })
-
         return newRow
     })
 
@@ -178,12 +206,11 @@ async function update(database, table, data) {
     const KEYS = Object.keys(normalizedData[0]).map(e => normalizeData(e)).join()
     const valueKey = Object.keys(normalizedData[0]).map(key => '@' + key).map(e => normalizeData(e)).join()
 
-    const statement = database.prepare(`INSERT OR REPLACE INTO ${table} (${KEYS}) VALUES (${valueKey})`)
+    const statement = db.prepare(`INSERT OR REPLACE INTO ${table} (${KEYS}) VALUES (${valueKey})`)
 
-    const insertMany = database.transaction((dataArray) => {
+    const insertMany = db.transaction((dataArray) => {
         for (const row of dataArray) {
             statement.run(row)
-
         }
     });
 
@@ -200,11 +227,13 @@ async function update(database, table, data) {
  * ### TODO 
  * - Can add the ability to set custom filters to be returned. Not sure the exact benefit of this but it's possible.
  */
-function query(query) {
-    const row = db.prepare(query)
-    return row.all()
+async function  query(query) {
+    const row = await db.prepare(query)
+    return await row.all()
 }
 
 
 exports.update = update;
 exports.query = query;
+
+exports.checkOrMakeTables = checkOrMakeTables;
