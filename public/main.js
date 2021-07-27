@@ -10,9 +10,7 @@ const path = require("path");
 
 const isDev = !app.isPackaged;
 const appDataPath = app.getPath('appData')
-
-
-
+console.log(appDataPath)
 
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -82,10 +80,12 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-const Store = require('electron-store');
+// const Store = require('electron-store');
 
-// establishing a config store.
-const config = new Store();
+// // establishing a config store.
+// const config = new Store();
+
+const { config } = require('../src/utils/config')
 
 ipcMain.handle('allConfig', (event, value) => {
   if (value != null) return config.get(value)
@@ -109,6 +109,11 @@ ipcMain.handle('resetConfigValues', (event, defaultConfig) => {
   return config.set(defaultConfig)
 });
 
+// ipcMain.handle('config-checkConfigIsValid', (event) => {
+//   return config.set(defaultConfig)
+// });
+
+
 /**
  * 
  *      Database Functions
@@ -116,23 +121,19 @@ ipcMain.handle('resetConfigValues', (event, defaultConfig) => {
  */
 
 
-const Database = require('better-sqlite3');
-const { update, query } = require('../src/server/database')
-
-//config file.
-const db_type = config.get('database.type')
-console.log(`Database type: ${db_type}`)
-
-
-const db = new Database(path.join(appDataPath, 'bot-manager', 'db.sqlite3'));
-// console.log(db)
+const { update, query, checkOrMakeTables } = require('../src/server/database')
 
 ipcMain.handle('query-database', (event, queryString) => {
   return query(queryString)
 });
 
 ipcMain.handle('update-database', (event, table, updateData) => {
-  return update(db, table, updateData)
+  return update(table, updateData)
+});
+
+ipcMain.handle('database-checkOrMakeTables', (event) => {
+  console.log('attempting to check if tables exist yet.')
+  checkOrMakeTables()
 });
 
 
@@ -142,48 +143,22 @@ ipcMain.handle('update-database', (event, table, updateData) => {
  * 
  */
 
-const threeCommasAPI = require('3commas-api-node')
 
-const api = new threeCommasAPI({
-  apiKey: config.get('apis.threeC.key'),
-  apiSecret: config.get('apis.threeC.secret')
-})
-
-const { getDealsBulk,
-  getDealsUpdate,
-  getAccountDetail,
-  deals } = require('../src/server/threeC/api')
-
-const { updateAPI, bots } = require('../src/server/threeC/index')
+const { updateAPI, bots, getDealsBulk, getDealsUpdate } = require('../src/server/threeC/index')
 
 
 ipcMain.handle('api-getDealsBulk', (event, limit) => {
-  return getDealsBulk(api, limit)
+  return getDealsBulk(limit)
 });
 
 ipcMain.handle('api-getDealsUpdate', (event, limit) => {
-  return getDealsUpdate(api, config, limit)
+  return getDealsUpdate(limit)
 });
 
-/**
- * this manages the updating of data. It kicks off a process to update deals and account details.
- * 
- * Can be broken into another file if needed, but would need to pass the proper functions here.
- */
 ipcMain.handle('api-updateData', async (event, limit) => {
-  await deals(api, config, limit)
-    .then(data => {
-      console.log('made it back here')
-      update(db, 'deals', data)
-    })
-
-  await getAccountDetail(api)
-    .then(data => {
-      update(db, 'accountData', data)
-    })
+  await updateAPI(limit)
 });
-
 
 ipcMain.handle('api-getBots', async (event) => {
-  return await bots(api)
+  return await bots()
 });

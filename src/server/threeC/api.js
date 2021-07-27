@@ -1,20 +1,21 @@
-// const threeCommasAPI = require('3commas-api-node')
+// const { app } = require("electron");
+const threeCommasAPI = require('3commas-api-node')
+// const path = require("path");
 
-// const { electron } = require("webpack")
-
-// console.log('this is me testing the remote location.')
-// const config = require('../../utils/old-config')
-
-// const configValues = config.all()
-// //config file.
-// // const API_DATA = electron.config.get('apis.threeC')
-// const api = new threeCommasAPI({
-//   apiKey: configValues.apis.threeC.key,
-//   apiSecret: configValues.apis.threeC.secret,
-// })
+// const appDataPath = app.getPath('appData');
 
 
-async function bots(api) {
+const { config } = require('../../utils/config')
+
+
+const api = new threeCommasAPI({
+  apiKey: config.get('apis.threeC.key'),
+  apiSecret: config.get('apis.threeC.secret')
+})
+
+
+
+async function bots() {
   let data = await api.getBots()
   return data
 }
@@ -25,7 +26,7 @@ async function bots(api) {
    * @description Fetching market orders for bots that are active and have active market orders
    * @api_docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/deals_api.md#deal-safety-orders-permission-bots_read-security-signed
    */
-async function getMarketOrders(api, deal_id) {
+async function getMarketOrders(deal_id) {
 
   // this is the /market_orders endpoint.
   let apiCall = await api.getDealSafetyOrders(deal_id)
@@ -51,7 +52,7 @@ async function getMarketOrders(api, deal_id) {
  * @returns 
  * @description - DO NOT USE THIS FUNCTION AT THE MOMENT
  */
-async function getDealsBulk(api, config, limit) {
+async function getDealsBulk(limit) {
 
   let responseArray = [];
   let response;
@@ -92,7 +93,7 @@ async function getDealsBulk(api, config, limit) {
  * @param {number} limit - This sets the max amount of deals to sync. Default is at 250k as a global param
  * @returns object array of deals.
  */
-async function getDealsUpdate(api, config, limit) {
+async function getDealsUpdate(limit) {
 
   let responseArray = [];
   let response;
@@ -159,9 +160,9 @@ async function getDealsUpdate(api, config, limit) {
 }
 
 
-async function deals(api, config, limit) {
-  let deals = await getDealsUpdate(api, config, limit);
-  let botData = await bots(api);
+async function deals(limit) {
+  let deals = await getDealsUpdate(limit);
+  let botData = await bots();
 
   let dealArray = [];
 
@@ -177,12 +178,12 @@ async function deals(api, config, limit) {
     const activeDeal = (closed_at === null) ? true : false;
 
 
-    const max_deal_funds = async (api, id, bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, active_manual_safety_orders) => {
+    const max_deal_funds = async (id, bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, active_manual_safety_orders) => {
       let market_order_data;
 
       // fetching market order information for any deals that are not closed.
       if (active_manual_safety_orders > 0) {
-        market_order_data = await getMarketOrders(api, id)
+        market_order_data = await getMarketOrders(id)
       }
       return calculateMaxFunds_Deals(bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, market_order_data)
     }
@@ -222,7 +223,7 @@ async function deals(api, config, limit) {
       pair: pair.split("_")[1],
       currency: pair.split("_")[0],
       bot_name: bot_name_function(botData, pair, bot_id, bot_name),
-      max_deal_funds: (activeDeal) ? await max_deal_funds(api, id, bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, active_manual_safety_orders) : null,
+      max_deal_funds: (activeDeal) ? await max_deal_funds(id, bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, active_manual_safety_orders) : null,
       profitPercent: (activeDeal) ? null : ((final_profit_percentage / 100) / +deal_hours).toFixed(3),
       impactFactor: (activeDeal) ? (((bought_average_price - current_price) / bought_average_price) * (415 / (bought_volume ** 0.618))) / (actual_usd_profit / actual_profit) : null,
       closed_at_iso_string: (activeDeal) ? null : new Date(closed_at).getTime()
@@ -247,7 +248,7 @@ async function deals(api, config, limit) {
  * 
  * @docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/accounts_api.md#information-about-all-user-balances-on-specified-exchange--permission-accounts_read-security-signed
  */
-async function getAccountDetail(api) {
+async function getAccountDetail() {
   let accountData = await api.accounts()
   let array = [];
 
@@ -320,9 +321,3 @@ module.exports = {
   deals,
   bots
 }
-
-// exports.bots = bots
-// exports.getDealsBulk = getDealsBulk;
-// exports.getDealsUpdate = getDealsUpdate;
-// exports.getAccountDetail = getAccountDetail;
-// exports.deals = deals;
