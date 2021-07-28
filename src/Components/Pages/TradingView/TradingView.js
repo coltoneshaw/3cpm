@@ -8,13 +8,9 @@ const TradingViewPage = () => {
 
     useEffect(() => {
         const script = document.createElement("script");
-
         script.type = "text/javascript"
         script.src = "https://s3.tradingview.com/tv.js"
-        script.async = true
-
         const script2 = document.createElement("script");
-
         script2.type = "text/javascript"
         script2.async = true
         script2.text = `new TradingView.widget(
@@ -37,7 +33,7 @@ const TradingViewPage = () => {
         tvContainer.current.appendChild(script);
         tvContainer.current.appendChild(script2);
 
-    }, [])
+    })
 
 
 

@@ -12,7 +12,7 @@ import { useGlobalData } from '../../../Context/DataContext';
 const Risk = ({ localBotData }) => {
 
     const state = useGlobalData();
-    const { data: { metricsData: { sum }}} = state;
+    const { data: { metricsData: { sum } } } = state;
 
     /**
      * Bankroll - sum, on_orders, position all added together. Needs to come from global state most likely.
@@ -21,19 +21,29 @@ const Risk = ({ localBotData }) => {
      * DCA Max risk - sum of the max_bot_usage.
      */
 
-        const enabledDeals = localBotData.filter( deal => deal.is_enabled)
+    const enabledDeals = localBotData.filter(deal => deal.is_enabled)
+    console.log({enabledDeals})
 
-        let maxDCA = (enabledDeals.length > 0) ? enabledDeals.map(deal => deal.max_funds).reduce((sum, max) => sum + max) : 0;
-        let bankroll = sum
-        let risk = ( maxDCA / bankroll  ) * 100
-        let botCount = localBotData.filter( deal => deal.is_enabled).length
+    let maxDCA = (enabledDeals.length > 0) ? enabledDeals.map(deal => deal.max_funds).reduce((sum, max) => sum + max) : 0;
+    let bankroll = sum
+    let risk = (maxDCA / bankroll) * 100
+    let botCount = localBotData.filter(deal => deal.is_enabled).length
 
-        
+    const sumDropCoverage = (enabledDeals.length > 0) ?  parseInt ( enabledDeals.map(deal => parseInt( deal.maxCoveragePercent ) ).reduce((sum, max) => sum + max) ) : 0;
+    let dropCoverage = sumDropCoverage / enabledDeals.length
+
+    console.log({sumDropCoverage, dropCoverage})
+
+
+    
+
+
+
 
     const metricData = [
         {
             title: "Bank Roll",
-            metric: "$" + parseNumber( bankroll ),
+            metric: "$" + parseNumber(bankroll),
             key: 1
         },
         {
@@ -48,16 +58,21 @@ const Risk = ({ localBotData }) => {
         },
         {
             title: "Max DCA",
-            metric: parseNumber( maxDCA ),
+            metric: parseNumber(maxDCA),
             key: 4
         },
-    
+        {
+            title: "Drop Coverage",
+            metric: dropCoverage.toFixed(2) + "%",
+            key: 5
+        },
+
     ]
-  
+
 
     return (
         <div className="riskDiv">
-        { metricData.map(data => ( <Card title={data.title} metric={data.metric} key={data.key} />)) }
+            {metricData.map(data => (<Card title={data.title} metric={data.metric} key={data.key} />))}
         </div>
     )
 }

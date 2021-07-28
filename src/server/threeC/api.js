@@ -6,6 +6,16 @@ const threeCommasAPI = require('3commas-api-node')
 
 const { config } = require('../../utils/config')
 
+const { 
+  calc_deviation, 
+  calc_DealMaxFunds_bot, 
+  calc_maxInactiveFunds, 
+  calc_maxDealFunds_Deals, 
+  calc_dealHours, 
+  getBotName,
+  calc_maxBotFunds
+} = require('../../utils/formulas')
+
 /**
  * 
  * @param {object} config This is the config string at the time of calling this function.
@@ -22,41 +32,21 @@ function threeCapi(config) {
   return api
 }
 
+/**
+ * 
+ * 
+ * 
+ */
 
+ const max_deal_funds = async (id, bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, active_manual_safety_orders) => {
+  let market_order_data;
 
-function calculateMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient) {
-  let maxTotal = +base_order_volume
-  for (so_count = 0; so_count < max_safety_orders; so_count++)
-    maxTotal += safety_order_volume * martingale_volume_coefficient ** so_count
-  return maxTotal
-}
-
-
-function calculateMaxFunds_Deals(bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders, martingale_volume_coefficient, market_order_data) {
-  if (+bought_volume > 0)
-    maxTotal = +bought_volume;
-  else
-    maxTotal = +base_order_volume
-
-  for (so_count = completed_safety_orders + 1; so_count <= max_safety_orders; so_count++) {
-    maxTotal += safety_order_volume * martingale_volume_coefficient ** (so_count - 1)
+  // fetching market order information for any deals that are not closed.
+  if (active_manual_safety_orders > 0) {
+    market_order_data = await getMarketOrders(id)
   }
-
-  // add unfilled manual safety orders
-  if (!(typeof market_order_data === 'undefined')) {
-    for (order of market_order_data) {
-      let {
-        deal_order_type, status_string, quantity, quantity_remaining, total, rate, average_price
-      } = order
-
-      if (status_string == "Active") {
-        maxTotal += quantity_remaining * +rate
-      }
-    }
-  }
-  return maxTotal
+  return calc_maxDealFunds_Deals(bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, market_order_data)
 }
-
 
 
 
@@ -84,9 +74,12 @@ async function bots() {
       enabled_inactive_funds, strategy
     } = bot
 
-    let maxDealFunds = calculateMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
+    let maxDealFunds = calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
+    let max_inactive_funds = calc_maxInactiveFunds( maxDealFunds, max_active_deals, active_deals_count )
 
-    let max_inactive_funds = maxDealFunds * (max_active_deals - active_deals_count)
+
+    
+
 
     const tempObject = {
       id,
@@ -94,13 +87,13 @@ async function bots() {
       account_id,
       account_name,
       name,
-      pairs: pairs.map( p => p.split('_')[1] ).join(),
+      pairs: pairs.map(p => p.split('_')[1]).join(),
       active_deals_count,
       active_deals_usd_profit,
       active_safety_orders_count,
       base_order_volume,
       base_order_volume_type,
-      created_at, 
+      created_at,
       updated_at,
       'enabled_inactive_funds': (is_enabled == true) ? +max_inactive_funds : 0,
       'enabled_active_funds': (is_enabled == true) ? +maxDealFunds * active_deals_count : 0,
@@ -111,7 +104,7 @@ async function bots() {
       martingale_volume_coefficient,
       martingale_step_coefficient,
       max_active_deals,
-      'max_funds': maxDealFunds * max_active_deals,
+      'max_funds': calc_maxBotFunds( maxDealFunds, max_active_deals),
       'max_funds_per_deal': maxDealFunds,
       max_inactive_funds,
       max_safety_orders,
@@ -125,7 +118,9 @@ async function bots() {
       take_profit,
       take_profit_type,
       trailing_deviation,
-      type
+      type,
+      drawdown: 0,
+      price_deviation: calc_deviation( +max_safety_orders, +safety_order_step_percentage, +martingale_step_coefficient)
     }
 
     dataArray.push(tempObject)
@@ -293,53 +288,14 @@ async function deals(limit) {
       current_price, actual_profit, bot_name
     } = deal
     const activeDeal = (closed_at === null) ? true : false;
-
-
-    const max_deal_funds = async (id, bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, active_manual_safety_orders) => {
-      let market_order_data;
-
-      // fetching market order information for any deals that are not closed.
-      if (active_manual_safety_orders > 0) {
-        market_order_data = await getMarketOrders(id)
-      }
-      return calculateMaxFunds_Deals(bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, market_order_data)
-    }
-
-    const bot_name_function = (botData, pair, bot_id, bot_name) => {
-
-      let bot_type = botData.find(bot => bot.id === bot_id)
-      if (bot_type != undefined) {
-        bot_type = bot_type.type.split('::')[1]
-      } else {
-        bot_type = "deleted"
-      }
-
-      return (bot_type === 'SingleBot') ? bot_name : `${bot_name} - ${pair}`
-
-    }
-
-    const deal_hours_function = (created_at, closed_at) => {
-
-      created_at = Date.parse(created_at)
-      let endDate;
-
-      if (closed_at === null) {
-        endDate = Date.now()
-      } else {
-        endDate = Date.parse(closed_at)
-      }
-      let milliseconds = Math.abs(created_at - endDate);
-      const hours = milliseconds / 36e5;
-      return +hours.toFixed(2)
-    }
-    const deal_hours = deal_hours_function(created_at, closed_at)
+    const deal_hours = calc_dealHours(created_at, closed_at)
 
     let tempObject = {
       realized_actual_profit_usd: (activeDeal) ? null : +actual_usd_profit,
       deal_hours,
       pair: pair.split("_")[1],
       currency: pair.split("_")[0],
-      bot_name: bot_name_function(botData, pair, bot_id, bot_name),
+      bot_name: getBotName(botData, pair, bot_id, bot_name),
       max_deal_funds: (activeDeal) ? await max_deal_funds(id, bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, active_manual_safety_orders) : null,
       profitPercent: (activeDeal) ? null : ((final_profit_percentage / 100) / +deal_hours).toFixed(3),
       impactFactor: (activeDeal) ? (((bought_average_price - current_price) / bought_average_price) * (415 / (bought_volume ** 0.618))) / (actual_usd_profit / actual_profit) : null,

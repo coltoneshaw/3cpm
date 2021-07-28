@@ -11,6 +11,8 @@ import SaveIcon from '@material-ui/icons/Save';
 import AddIcon from '@material-ui/icons/Add';
 import { useGlobalData } from '../../../Context/DataContext';
 
+import { calc_dropCoverage } from '../../../utils/formulas'
+
 
 const BotManagerPage = (props) => {
 
@@ -18,9 +20,30 @@ const BotManagerPage = (props) => {
     const { actions: { fetchBotData }, data: { botData }  } = state;
   
     const [ localBotData, updateLocalBotData ] = useState([{test:'test', id:'1'}])
+
+    const addMetrics = () => {
+        updateLocalBotData(prevBotData => {
+            const enabledBots = prevBotData.filter(bot => bot.is_enabled)
+            const fundsAvailable = 15000 / enabledBots.length
+            return prevBotData.map(bot => {
+                const dropMetrics = calc_dropCoverage(fundsAvailable, bot)
+                return {
+                    ...bot,
+                    ...dropMetrics
+                }
+            })
+        })
+    }
   
     useEffect(() => {
+
+        /**
+         * Calculate the money available per bot - bankroll / enabledBots
+         */
+
+
       updateLocalBotData(botData)
+      if(localBotData.length > 0) addMetrics()
     }, [botData])
 
     const blankObject = {
@@ -30,17 +53,18 @@ const BotManagerPage = (props) => {
         is_enabled: false,
         pairs: '',
         from_currency: 'USD',
-        take_profit: '1',
-        base_order_volume: '10',
-        safety_order_volume: '20',
-        max_safety_orders: '30',
-        safety_order_step_percentage: '2',
-        martingale_volume_coefficient: '1.05',
-        martingale_step_coefficient: '1.0',
-        max_active_deals: 0,
-        max_funds_per_deal: 0,
-        max_funds: 0,
-        max_inactive_funds: 0
+        take_profit: 1,
+        base_order_volume: 10,
+        safety_order_volume: 20,
+        max_safety_orders: 30,
+        safety_order_step_percentage: 2,
+        martingale_volume_coefficient: 1.05,
+        martingale_step_coefficient: 1.0,
+        max_active_deals: 1,
+        max_inactive_funds: 0,
+        price_deviation: 60,
+        max_funds_per_deal: 1339,
+        max_funds: 1339,
     }
 
     const addToTable = () => {

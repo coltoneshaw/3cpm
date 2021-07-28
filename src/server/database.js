@@ -64,7 +64,8 @@ function initializeBotsTable() {
             take_profit TEXT,
             take_profit_type TEXT,
             trailing_deviation NUMBER,
-            type TEXT
+            type TEXT,
+            price_deviation NUMBER
             )`);
 
     const info = stmt.run();
