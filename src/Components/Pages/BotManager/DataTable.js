@@ -45,8 +45,7 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }) => {
 
   }
 
-  const handleEditCellChangeCommitted = (params) => {
-    console.log(e)
+  const handleEditCellChangeCommitted = (e) => {
     let newRows = localBotData.map(row => {
       if (e.id == row.id) {
         row[e.field] = e.props.value
