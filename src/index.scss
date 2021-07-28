@@ -8,10 +8,12 @@ body {
 
 html, body, #root {
   height: 100%;
-  overflow: hidden;
+  // overflow: hidden;
   margin: 0;
-  overscroll-behavior: none;
+  // overscroll-behavior: none;
   min-height: 100vh;
+  min-height: 1000px;
+  min-width: 1200px;
   width: 100vw;
 }
 

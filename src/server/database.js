@@ -25,6 +25,51 @@ function testTable() {
     const info = stmt.run();
 }
 
+function initializeBotsTable() {
+    const stmt = db.prepare(`
+        CREATE TABLE bots (
+            id NUMBER PRIMARY KEY UNIQUE, 
+            origin TEXT,
+            account_id NUMBER,
+            account_name TEXT,
+            name TEXT,
+            pairs TEXT,
+            active_deals_count NUMBER,
+            active_deals_usd_profit NUMBER,
+            active_safety_orders_count NUMBER,
+            base_order_volume NUMBER,
+            base_order_volume_type TEXT,
+            created_at TEXT,
+            updated_at TEXT,
+            enabled_active_funds NUMBER,
+            enabled_inactive_funds NUMBER,
+            finished_deals_count NUMBER,
+            finished_deals_profit_usd NUMBER,
+            from_currency TEXT,
+            is_enabled BOOLEAN,
+            martingale_coefficient NUMBER,
+            martingale_volume_coefficient NUMBER,
+            martingale_step_coefficient NUMBER,
+            max_active_deals NUMBER,
+            max_funds NUMBER,
+            max_funds_per_deal NUMBER,
+            max_inactive_funds NUMBER,
+            max_safety_orders NUMBER,
+            profit_currency TEXT,
+            safety_order_step_percentage NUMBER,
+            safety_order_volume NUMBER,
+            safety_order_volume_type TEXT,
+            stop_loss_percentage NUMBER,
+            strategy TEXT,
+            take_profit TEXT,
+            take_profit_type TEXT,
+            trailing_deviation NUMBER,
+            type TEXT
+            )`);
+
+    const info = stmt.run();
+
+}
 
 /**
  * TODO 
@@ -141,6 +186,7 @@ function initializeAccountTable() {
 function initialDatabaseSetup(){
     initializeDealTable();
     initializeAccountTable();
+    initializeBotsTable();
     testTable();
 }
 
@@ -154,6 +200,8 @@ async function checkOrMakeTables(){
         const tableNames = existingTables.map(table => table.name)
         if(!tableNames.includes('deals')) initializeDealTable()
         if(!tableNames.includes('accountData')) initializeAccountTable()
+        if(!tableNames.includes('bots')) initializeBotsTable()
+
         if(!tableNames.includes('TEST')) testTable()
     } else {
         initialDatabaseSetup()
@@ -228,8 +276,15 @@ async function  query(query) {
     return await row.all()
 }
 
+async function run(query) {
+    const stmt = db.prepare(query);
+    await stmt.run()
+}
+
 
 exports.update = update;
 exports.query = query;
+
+exports.run = run;
 
 exports.checkOrMakeTables = checkOrMakeTables;

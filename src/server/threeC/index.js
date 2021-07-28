@@ -21,9 +21,17 @@ async function updateAPI(limit) {
     })
 }
 
+async function getAndStoreBotData(){
+  await bots()
+    .then( data => {
+      console.log('fetched bot Data')
+      update('bots', data)
+    })
+}
 
 module.exports = {
   bots,
+  getAndStoreBotData,
   updateAPI,
   getAccountDetail, deals, getDealsBulk, getDealsUpdate
 }

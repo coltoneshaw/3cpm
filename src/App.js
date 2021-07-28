@@ -38,13 +38,26 @@ const useStyles = makeStyles(
       },
       '& .MuiDataGrid-columnHeaderTitle': {
         fontWeight: 700,
-        paddingLeft: 20,
+        
         overflow: "visible",
-        textOverflow: "initial"
+        textOverflow: "initial",
+        whiteSpace: "pre-wrap",
+        wordWrap: "break-word",
+        lineHeight: "1.1em"
       },
       '& .MuiDataGrid-columnHeaderTitleContainer': {
         textOverflow: "initial",
+        padding: 0
       },
+      '& .MuiDataGrid-columnHeader': {
+        padding: 0
+      }, 
+      '& .MuiDataGrid-iconButtonContainer': {
+        display: "none"
+      }, 
+      '& .MuiDataGrid-columnHeaderWrapper': {
+        overflow: "visible"
+      }, 
     },
   }),
 );

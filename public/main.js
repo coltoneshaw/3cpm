@@ -119,7 +119,7 @@ ipcMain.handle('config-clear', (event, defaultConfig) => {
  */
 
 
-const { update, query, checkOrMakeTables } = require('../src/server/database')
+const { update, query, checkOrMakeTables, run } = require('../src/server/database')
 
 ipcMain.handle('query-database', (event, queryString) => {
   return query(queryString)
@@ -127,6 +127,10 @@ ipcMain.handle('query-database', (event, queryString) => {
 
 ipcMain.handle('update-database', (event, table, updateData) => {
   return update(table, updateData)
+});
+
+ipcMain.handle('run-database', (event, table, updateData) => {
+  return run(table, updateData)
 });
 
 ipcMain.handle('database-checkOrMakeTables', (event) => {
@@ -142,7 +146,7 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
  */
 
 
-const { updateAPI, bots, getDealsBulk, getDealsUpdate } = require('../src/server/threeC/index')
+const { updateAPI, bots, getDealsBulk, getDealsUpdate, getAndStoreBotData } = require('../src/server/threeC/index')
 
 
 ipcMain.handle('api-getDealsBulk', (event, limit) => {
@@ -158,5 +162,5 @@ ipcMain.handle('api-updateData', async (event, limit) => {
 });
 
 ipcMain.handle('api-getBots', async (event) => {
-  return await bots()
+  await getAndStoreBotData()
 });

@@ -77,6 +77,7 @@ const DataProvider = ({ children }) => {
 
     const fetchBotData = async () => {
         await electron.api.updateBots()
+        await electron.database.query('select * from bots;')
             .then(
                 (result) => {
                     // alert('Bot data is updated')

@@ -13,7 +13,7 @@ const { config } = require('../../utils/config')
  * 
  * @description - required at the moment so when you make a config change on the frontend you're not using old data.
  */
-function threeCapi(config){
+function threeCapi(config) {
   const api = new threeCommasAPI({
     apiKey: config.get('apis.threeC.key'),
     apiSecret: config.get('apis.threeC.secret')
@@ -24,13 +24,114 @@ function threeCapi(config){
 
 
 
+function calculateMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient) {
+  let maxTotal = +base_order_volume
+  for (so_count = 0; so_count < max_safety_orders; so_count++)
+    maxTotal += safety_order_volume * martingale_volume_coefficient ** so_count
+  return maxTotal
+}
+
+
+function calculateMaxFunds_Deals(bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders, martingale_volume_coefficient, market_order_data) {
+  if (+bought_volume > 0)
+    maxTotal = +bought_volume;
+  else
+    maxTotal = +base_order_volume
+
+  for (so_count = completed_safety_orders + 1; so_count <= max_safety_orders; so_count++) {
+    maxTotal += safety_order_volume * martingale_volume_coefficient ** (so_count - 1)
+  }
+
+  // add unfilled manual safety orders
+  if (!(typeof market_order_data === 'undefined')) {
+    for (order of market_order_data) {
+      let {
+        deal_order_type, status_string, quantity, quantity_remaining, total, rate, average_price
+      } = order
+
+      if (status_string == "Active") {
+        maxTotal += quantity_remaining * +rate
+      }
+    }
+  }
+  return maxTotal
+}
+
+
 
 
 async function bots() {
   const api = threeCapi(config)
+  let data = await api.getBots();
 
-  let data = await api.getBots()
-  return data
+  const dataArray = []
+
+  for (bot of data) {
+
+    let {
+      id, account_id, account_name, is_enabled,
+      max_safety_orders, active_safety_orders_count,
+      max_active_deals, active_deals_count,
+      name, take_profit, take_profit_type, created_at, updated_at,
+      base_order_volume, safety_order_volume, base_order_volume_type,
+      safety_order_step_percentage, type,
+      martingale_volume_coefficient, martingale_step_coefficient,
+      martingale_coefficient, safety_order_volume_type,
+      profit_currency, finished_deals_profit_usd,
+      finished_deals_count, pairs, trailing_deviation,
+      active_deals_usd_profit, stop_loss_percentage,
+      enabled_active_funds, from_currency,
+      enabled_inactive_funds, strategy
+    } = bot
+
+    let maxDealFunds = calculateMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
+
+    let max_inactive_funds = maxDealFunds * (max_active_deals - active_deals_count)
+
+    const tempObject = {
+      id,
+      origin: 'sync',
+      account_id,
+      account_name,
+      name,
+      pairs: pairs.map( p => p.split('_')[1] ).join(),
+      active_deals_count,
+      active_deals_usd_profit,
+      active_safety_orders_count,
+      base_order_volume,
+      base_order_volume_type,
+      created_at, 
+      updated_at,
+      'enabled_inactive_funds': (is_enabled == true) ? +max_inactive_funds : 0,
+      'enabled_active_funds': (is_enabled == true) ? +maxDealFunds * active_deals_count : 0,
+      finished_deals_count,
+      finished_deals_profit_usd,
+      from_currency,
+      is_enabled,
+      martingale_coefficient,
+      martingale_volume_coefficient,
+      martingale_step_coefficient,
+      max_active_deals,
+      'max_funds': maxDealFunds * max_active_deals,
+      'max_funds_per_deal': maxDealFunds,
+      max_inactive_funds,
+      max_safety_orders,
+      profit_currency: pairs[0].split('_')[0],
+      safety_order_step_percentage,
+      safety_order_volume,
+      safety_order_volume_type,
+      stop_loss_percentage,
+      strategy,
+      take_profit,
+      take_profit_type,
+      trailing_deviation,
+      type
+    }
+
+    dataArray.push(tempObject)
+  }
+
+  return dataArray
 }
 
 /**
@@ -47,7 +148,7 @@ async function getMarketOrders(deal_id) {
 
   let dataArray = []
 
-  for (order of apiCall.data) {
+  for (order of apiCall) {
     let { deal_order_type, status_string, quantity, quantity_remaining, total, rate, average_price } = order
 
     if (deal_order_type === "Manual Safety") {
@@ -299,38 +400,6 @@ async function getAccountDetail() {
 }
 
 
-function calculateMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient) {
-  let maxTotal = +base_order_volume
-  for (so_count = 0; so_count < max_safety_orders; so_count++)
-    maxTotal += safety_order_volume * martingale_volume_coefficient ** so_count
-  return maxTotal
-}
-
-
-function calculateMaxFunds_Deals(bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders, martingale_volume_coefficient, market_order_data) {
-  if (+bought_volume > 0)
-    maxTotal = +bought_volume;
-  else
-    maxTotal = +base_order_volume
-
-  for (so_count = completed_safety_orders + 1; so_count <= max_safety_orders; so_count++) {
-    maxTotal += safety_order_volume * martingale_volume_coefficient ** (so_count - 1)
-  }
-
-  // add unfilled manual safety orders
-  if (!(typeof market_order_data === 'undefined')) {
-    for (order of market_order_data) {
-      let {
-        deal_order_type, status_string, quantity, quantity_remaining, total, rate, average_price
-      } = order
-
-      if (status_string == "Active") {
-        maxTotal += quantity_remaining * +rate
-      }
-    }
-  }
-  return maxTotal
-}
 
 module.exports = {
   getDealsBulk,
