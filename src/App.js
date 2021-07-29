@@ -30,7 +30,7 @@ const useStyles = makeStyles(
       border: 0,
       padding: 0,
       fontFamily: 'Open Sans',
-      minWidth: 1000,
+      minWidth: 1500,
       overflowX: "auto",
       overflowY: "scroll",
       '& .MuiDataGrid-iconSeparator': {

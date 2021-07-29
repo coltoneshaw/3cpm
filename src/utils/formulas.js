@@ -28,14 +28,14 @@ const calc_deviation = (max_safety_orders, safety_order_step_percentage, marting
  * @param {number} martingale_volume_coefficient os - the volume each SO will be multiplied by
  * @returns maxTotal that a single bot deal can consume
  */
- function calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient) {
+function calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient) {
     let maxTotal = +base_order_volume
     for (so_count = 0; so_count < max_safety_orders; so_count++)
         maxTotal += safety_order_volume * martingale_volume_coefficient ** so_count
     return maxTotal
 }
 
-function calc_maxBotFunds( maxDealFunds, max_active_deals ) {
+function calc_maxBotFunds(maxDealFunds, max_active_deals) {
     return maxDealFunds * max_active_deals
 }
 
@@ -47,18 +47,18 @@ function calc_maxSOReached(moneyAvailable, max_safety_orders, base_order_volume,
     let maxTotal = base_order_volume + safety_order_volume
     let so_count = 2
 
-    for (so_count; so_count <= max_safety_orders; so_count++){
+    for (so_count; so_count <= max_safety_orders; so_count++) {
         maxTotal += safety_order_volume * martingale_volume_coefficient ** (so_count - 1)
 
-        if(maxTotal > moneyAvailable){
+        if (maxTotal > moneyAvailable) {
             return so_count - 1
         }
     }
-    return so_count -1
+    return so_count - 1
 }
 
 
-const calc_dropCoverage = ( totalFundsAvailable, bot ) => {
+const calc_dropCoverage = (totalFundsAvailable, bot) => {
     /*
     take the total bankroll / total enabled bots = money available for this bot
 
@@ -73,20 +73,19 @@ const calc_dropCoverage = ( totalFundsAvailable, bot ) => {
     - Make this return the funds available so they can be used in other calculations.
     */
 
-    const { 
-        safety_order_step_percentage, 
-        martingale_step_coefficient, 
-        max_safety_orders, 
-        base_order_volume, 
-        safety_order_volume, 
+    const {
+        safety_order_step_percentage,
+        martingale_step_coefficient,
+        max_safety_orders,
+        base_order_volume,
+        safety_order_volume,
         martingale_volume_coefficient
-     } = bot
+    } = bot
 
-    console.log(bot)
     const maxSoReached = calc_maxSOReached(+totalFundsAvailable, +max_safety_orders, +base_order_volume, +safety_order_volume, +martingale_volume_coefficient)
-    
+
     const maxCoveragePercent = calc_deviation(+maxSoReached, +safety_order_step_percentage, +martingale_step_coefficient)
-    console.log({maxCoveragePercent, maxSoReached, totalFundsAvailable})
+    // console.log({ maxCoveragePercent, maxSoReached, totalFundsAvailable })
 
     return {
         maxCoveragePercent,
@@ -176,12 +175,29 @@ const getBotName = (botData, pair, bot_id, bot_name) => {
 
     let bot_type = botData.find(bot => bot.id === bot_id)
     if (bot_type != undefined) {
-      bot_type = bot_type.type.split('::')[1]
+        bot_type = bot_type.type.split('::')[1]
     } else {
-      bot_type = "deleted"
+        bot_type = "deleted"
     }
     return (bot_type === 'SingleBot') ? bot_name : `${bot_name} - ${pair}`
-  }
+}
+
+const calc_dropMetrics = (bankRoll, botData) => {
+    /**
+     * This function is responsible for taking the bot data, bankroll and outputting the new bot array with the metrics added.
+     */
+    if(botData.length === 0) return [];
+
+     const enabledBots = botData.filter(bot => bot.is_enabled)
+     const fundsAvailable = bankRoll / enabledBots.length
+     return botData.map(bot => {
+         const dropMetrics = calc_dropCoverage(fundsAvailable, bot)
+         return {
+             ...bot,
+             ...dropMetrics
+         }
+     })
+}
 
 module.exports = {
     calc_deviation,
@@ -189,7 +205,8 @@ module.exports = {
     calc_maxInactiveFunds,
     calc_maxDealFunds_Deals,
     calc_dealHours,
-    getBotName,
     calc_maxBotFunds,
-    calc_dropCoverage
+    calc_dropCoverage,
+    calc_dropMetrics,
+    getBotName
 }

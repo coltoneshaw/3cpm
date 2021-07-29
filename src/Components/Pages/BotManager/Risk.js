@@ -25,20 +25,14 @@ const Risk = ({ localBotData }) => {
     console.log({enabledDeals})
 
     let maxDCA = (enabledDeals.length > 0) ? enabledDeals.map(deal => deal.max_funds).reduce((sum, max) => sum + max) : 0;
+
+
     let bankroll = sum
     let risk = (maxDCA / bankroll) * 100
     let botCount = localBotData.filter(deal => deal.is_enabled).length
 
     const sumDropCoverage = (enabledDeals.length > 0) ?  parseInt ( enabledDeals.map(deal => parseInt( deal.maxCoveragePercent ) ).reduce((sum, max) => sum + max) ) : 0;
     let dropCoverage = sumDropCoverage / enabledDeals.length
-
-    console.log({sumDropCoverage, dropCoverage})
-
-
-    
-
-
-
 
     const metricData = [
         {

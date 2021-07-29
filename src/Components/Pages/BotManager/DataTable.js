@@ -6,7 +6,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { useGlobalData } from '../../../Context/DataContext';
 
 import { parseNumber } from '../../../utils/number_formatting';
-import { calc_deviation, calc_DealMaxFunds_bot, calc_maxInactiveFunds, calc_maxBotFunds, calc_dropCoverage } from '../../../utils/formulas';
+import { calc_deviation, calc_DealMaxFunds_bot, calc_maxInactiveFunds, calc_maxBotFunds, calc_dropCoverage, calc_dropMetrics } from '../../../utils/formulas';
 
 
 /**
@@ -15,74 +15,75 @@ import { calc_deviation, calc_DealMaxFunds_bot, calc_maxInactiveFunds, calc_maxB
  */
 const DataTable = ({ classes, localBotData, updateLocalBotData }) => {
 
+  const state = useGlobalData()
+  const { data: { metricsData: { sum } } } = state;
 
+  // sum combines position + on_orders + available.
+  const bankRoll = sum
 
 
   // handling this locally becauase it does not need to be saved yet.
   const handleOnOff = (e) => {
-    let newRows = localBotData.map(row => {
-      if (e.target.name == row.id) {
-        row.is_enabled = !row.is_enabled
-      }
-      return row
-    })
+
     updateLocalBotData(prevState => {
-      return addMetrics(newRows)
+      const newRows = prevState.map(row => {
+        if (e.target.name == row.id) {
+          row.is_enabled = !row.is_enabled
+        }
+        return row
+      })
+      return calc_dropMetrics(bankRoll, newRows)
     })
+
   }
 
   const handleDeleteRow = (e) => {
-    console.log(e.id)
-    let newRows = localBotData.filter(row => {
-      if (e.id !== row.id) {
-        return row
-      }
-    })
-
-  }
-
-  const addMetrics = (botData) => {
-      const enabledBots = botData.filter(bot => bot.is_enabled)
-      const fundsAvailable = 15000 / enabledBots.length
-      return botData.map(bot => {
-        const dropMetrics = calc_dropCoverage(fundsAvailable, bot)
-        return {
-          ...bot,
-          ...dropMetrics
+    updateLocalBotData(prevState => {
+      const newRows = prevState.filter(row => {
+        if (e.id !== row.id) {
+          return row
         }
       })
+      return calc_dropMetrics(bankRoll, newRows)
+    })
+
   }
 
   const handleEditCellChangeCommitted = (e) => {
-    let newRows = localBotData.map(row => {
-      if (e.id == row.id) {
-        row[e.field] = e.props.value
-        console.log(`changed ${e.field} to ${e.props.value}`)
-      }
-      return row
+
+    /**
+     * 1. Identify the row that was updated (e) and the value, then update it.
+     * 2. calculate the new metrics for the row.
+     * 3. calculate the drop coverage for the entire thing.
+     */
+
+    updateLocalBotData(prevState => {
+      const newRows = prevState.map(row => {
+        if (e.id == row.id) {
+          row[e.field] = e.props.value
+          console.log(`changed ${e.field} to ${e.props.value}`)
+
+          /**
+           * TODO
+           * - If it's worth it, find out what row was updated and then calculate the below metrics. There may be a few rows that we don't have to recalc metrics for.
+           */
+
+          const { max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient, martingale_step_coefficient, max_active_deals, active_deals_count, safety_order_step_percentage } = row
+          let maxDealFunds = calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
+          let max_inactive_funds = calc_maxInactiveFunds(+maxDealFunds, +max_active_deals, +active_deals_count)
+          row.max_funds = calc_maxBotFunds(+maxDealFunds, +max_active_deals)
+          row.max_funds_per_deal = maxDealFunds;
+          row.max_inactive_funds = max_inactive_funds;
+          row.price_deviation = calc_deviation(+max_safety_orders, +safety_order_step_percentage, +martingale_step_coefficient)
+
+        }
+        return row
+      })
+
+      return calc_dropMetrics(bankRoll, newRows)
+
+
     })
-
-    
-
-    let calculatedrows = newRows.map(row => {
-      if (e.id === row.id) {
-        const { max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient, martingale_step_coefficient, max_active_deals, active_deals_count, safety_order_step_percentage } = row
-        let maxDealFunds = calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
-        let max_inactive_funds = calc_maxInactiveFunds(+maxDealFunds, +max_active_deals, +active_deals_count)
-
-        row.max_funds = calc_maxBotFunds(+maxDealFunds, +max_active_deals)
-        row.max_funds_per_deal = maxDealFunds;
-        row.max_inactive_funds = max_inactive_funds;
-        row.price_deviation = calc_deviation(+max_safety_orders, +safety_order_step_percentage, +martingale_step_coefficient)
-      }
-
-      return row
-    })
-
-    const newMetrics = addMetrics(calculatedrows)
-
-
-    updateLocalBotData(newMetrics)
   }
 
 
@@ -112,9 +113,9 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }) => {
     { field: 'martingale_volume_coefficient', headerName: 'OS', editable: true, description: "Safety order volume scale", flex: .75, headerAlign: 'center', align: 'center' },
     { field: 'martingale_step_coefficient', headerName: 'SS', editable: true, description: "Safety order step scale", flex: .75, headerAlign: 'center', align: 'center' },
     { field: 'max_active_deals', headerName: 'Max active deals', editable: true, description: "Max amount of deals the bot can open at a time.", flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'price_deviation', headerName: 'Deviation', editable: false, description: "Drawdown %", flex: .75, headerAlign: 'center', align: 'center', valueFormatter: (params) => { return `${params.value} %` } },
-    { field: 'maxCoveragePercent', headerName: 'Coverage %', editable: false, description: "Coverage %", flex: .75, headerAlign: 'center', align: 'center', valueFormatter: (params) => { return `${params.value} %` } },
-    { field: 'maxSoReached', headerName: 'SO Reached', editable: false, description: "Max SO Reached", flex: .75, headerAlign: 'center', align: 'center'},
+    { field: 'price_deviation', headerName: 'Deviation', editable: false, description: "This is calculated the same as 3Commas. It's the max amount of drop in the market your bot can take before it's out of SOs.", flex: .75, headerAlign: 'center', align: 'center', valueFormatter: (params) => { return `${params.value} %` } },
+    { field: 'maxCoveragePercent', headerName: 'Coverage %', editable: false, description: "Coverage % tells you how much you can cover with a drop. This is calculated by dividing the amount of bank roll by bots and allocating an even amount for each bot.", flex: .75, headerAlign: 'center', align: 'center', valueFormatter: (params) => { return `${params.value} %` } },
+    { field: 'maxSoReached', headerName: 'Max SO Covered', editable: false, description: "This is another way of seeing your coverage %. It's the max SO that you'll reach if you hit the max covered % listed.", flex: .75, headerAlign: 'center', align: 'center' },
     { field: 'max_funds_per_deal', headerName: 'Max funds per deal', editable: false, description: "Max funds that each deal can take.", flex: 1, headerAlign: 'center', align: 'center', valueFormatter: (params) => { return parseNumber(params.value) } },
     { field: 'max_funds', headerName: 'Max funds', editable: false, description: "Total Max funds that the bot can take.", flex: 1, headerAlign: 'center', align: 'center', valueFormatter: (params) => { return parseNumber(params.value) } },
     {

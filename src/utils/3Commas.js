@@ -187,7 +187,7 @@ const getAccountDataFunction = async (defaultCurrency) => {
             balance: {
                 on_orders: balanceData.on_orders,
                 position: balanceData.position,
-                sum: ((balanceData.on_orders + balanceData.position))
+                sum: ((balanceData.on_orders + balanceData.position + balanceData.on_orders))
             }
         }
     }

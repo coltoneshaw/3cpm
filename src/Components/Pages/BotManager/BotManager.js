@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
 import DataTable from './DataTable';
 import './BotManager.scss';
@@ -11,39 +11,27 @@ import SaveIcon from '@material-ui/icons/Save';
 import AddIcon from '@material-ui/icons/Add';
 import { useGlobalData } from '../../../Context/DataContext';
 
-import { calc_dropCoverage } from '../../../utils/formulas'
+import { calc_dropMetrics } from '../../../utils/formulas'
 
 
 const BotManagerPage = (props) => {
 
     const state = useGlobalData();
-    const { actions: { fetchBotData }, data: { botData }  } = state;
-  
-    const [ localBotData, updateLocalBotData ] = useState([{test:'test', id:'1'}])
+    const { actions: { fetchBotData }, data: { botData, metricsData: { sum } } } = state;
 
-    const addMetrics = () => {
-        updateLocalBotData(prevBotData => {
-            const enabledBots = prevBotData.filter(bot => bot.is_enabled)
-            const fundsAvailable = 15000 / enabledBots.length
-            return prevBotData.map(bot => {
-                const dropMetrics = calc_dropCoverage(fundsAvailable, bot)
-                return {
-                    ...bot,
-                    ...dropMetrics
-                }
-            })
-        })
-    }
-  
+    const bankRoll = sum;
+
+    const [localBotData, updateLocalBotData] = useState([{ test: 'test', id: '1' }])
+
+
     useEffect(() => {
 
         /**
          * Calculate the money available per bot - bankroll / enabledBots
          */
 
+         updateLocalBotData(calc_dropMetrics(bankRoll, botData))
 
-      updateLocalBotData(botData)
-      if(localBotData.length > 0) addMetrics()
     }, [botData])
 
     const blankObject = {
@@ -62,9 +50,11 @@ const BotManagerPage = (props) => {
         martingale_step_coefficient: 1.0,
         max_active_deals: 1,
         max_inactive_funds: 0,
-        price_deviation: 60,
-        max_funds_per_deal: 1339,
-        max_funds: 1339,
+        price_deviation: 0,
+        max_funds_per_deal: 0,
+        max_funds: 0,
+        maxCoveragePercent: 0,
+        maxSoReached: 0
     }
 
     const addToTable = () => {
@@ -85,11 +75,11 @@ const BotManagerPage = (props) => {
         electron.database.query("select * from bots where origin = 'custom'; ")
             .then(table => {
                 const customBotIds = customBots.map(bot => bot.id);
-                if(customBotIds.length === 0){
+                if (customBotIds.length === 0) {
                     electron.database.run(`DELETE from bots where origin = 'custom'`)
                 } else {
-                    for(const row of table){
-                        if( !customBotIds.includes(row.id) ){
+                    for (const row of table) {
+                        if (!customBotIds.includes(row.id)) {
                             electron.database.run(`DELETE from bots where id = '${row.id}'`)
                         }
                     }
@@ -97,7 +87,7 @@ const BotManagerPage = (props) => {
 
             })
     }
-  
+
     /**
      * TODO
      * - make this function store in the database and read from the database.
@@ -120,7 +110,7 @@ const BotManagerPage = (props) => {
                     endIcon={<SaveIcon />}
                     onClick={() => { saveCustomDeals() }}
                 >
-                   Save Data
+                    Save Data
                 </Button>
 
 
@@ -128,25 +118,25 @@ const BotManagerPage = (props) => {
 
             <Risk localBotData={localBotData} />
             <Button
-                    variant="contained"
-                    color="primary"
-                    endIcon={<AddIcon />}
-                    onClick={() => { addToTable() }}
-                    style={{
-                        width: '150px',
-                        margin: '5px 5px 10px 5px',
-                        alignSelf: 'flex-end'
+                variant="contained"
+                color="primary"
+                endIcon={<AddIcon />}
+                onClick={() => { addToTable() }}
+                style={{
+                    width: '150px',
+                    margin: '5px 5px 10px 5px',
+                    alignSelf: 'flex-end'
 
-                    }}
-                    disableElevation
-                >
-                   add row
-                </Button>
+                }}
+                disableElevation
+            >
+                add row
+            </Button>
             <DataTable
                 classes={props.classes}
                 localBotData={localBotData}
                 updateLocalBotData={updateLocalBotData}
-                />
+            />
         </>
     )
 }

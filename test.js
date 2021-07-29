@@ -45,6 +45,7 @@ const calc_dropCoverage = ( totalFundsAvailable, safety_order_step_percentage, m
 
     const deviation = calc_deviation(maxSoReached, safety_order_step_percentage, martingale_step_coefficient)
     console.log({deviation, maxSoReached})
+    return 
 }
 
 calc_dropCoverage( 899.79, 2, 1.0, 30, 10, 20, 1.05 )
