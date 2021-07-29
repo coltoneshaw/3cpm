@@ -25,7 +25,6 @@ const ApiSettings = () => {
      },[config]);
 
     const handleKeyChange = (e) => {
-        console.log(e.target.value)
         updateApiData(prevState => {
             return {
                 ...prevState,
@@ -35,7 +34,6 @@ const ApiSettings = () => {
     }
 
     const handleSecretChange = (e) => {
-        console.log(e.target.value)
         updateApiData(prevState => {
             return {
                 ...prevState,

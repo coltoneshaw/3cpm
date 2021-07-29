@@ -19,14 +19,20 @@ const currencyArray = [
         key: 1
     },
     {
-        name: "BTC",
-        value: "BTC",
+        name: "USDT",
+        value: "USDT",
         key: 2
     },
     {
-        name: "ETH",
-        value: "ETH",
+        name: "BUSD",
+        value: "BUSD",
         key: 3
+
+    },
+    {
+        name: "USDC",
+        value: "USDC",
+        key: 4
 
     }
 ]

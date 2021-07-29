@@ -1,9 +1,9 @@
 
 const { app } = require("electron");
-const appDataPath = app.getPath('appData');
+const appDataPath = app.getPath('userData');
 const path = require("path");
 const Database = require('better-sqlite3');
-const db = new Database(path.join(appDataPath, 'bot-manager', 'db.sqlite3'));
+const db = new Database(path.join(appDataPath, 'db.sqlite3'));
 
 
 function testTable() {
@@ -65,7 +65,10 @@ function initializeBotsTable() {
             take_profit_type TEXT,
             trailing_deviation NUMBER,
             type TEXT,
-            price_deviation NUMBER
+            price_deviation NUMBER,
+            drawdown NUMBER,
+            maxCoveragePercent NUMBER,
+            maxSoReached NUMBER
             )`);
 
     const info = stmt.run();

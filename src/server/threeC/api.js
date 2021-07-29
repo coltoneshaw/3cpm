@@ -214,14 +214,14 @@ async function getDealsUpdate(limit) {
 
 
   // converting the incoming dateUTC to the right format in case it's not done properly.
-  // let lastSyncTime = await config.get('syncStatus.deals.lastSyncTime');
+  let lastSyncTime = await config.get('syncStatus.deals.lastSyncTime');
 
   /**
    * FIX THIS BEFORE RELEASING. THIS IS HARD CODING THE DATE
    */
-  let lastSyncTime = 1617249600000;
+  // let lastSyncTime = 1617249600000;
 
-  console.error('the date has been hard coded. Fix this before releasing. Additionally, change the limit back to 500')
+  // console.error('the date has been hard coded. Fix this before releasing. Additionally, change the limit back to 500')
 
   for (offset = 0; offset < offsetMax; offset += 1000) {
 

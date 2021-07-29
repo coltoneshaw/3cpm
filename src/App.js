@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 
-import './App.scss';
+import './App.global.css';
 import Sidebar from './Components/Sidebar/Sidebar';
 
 import { HashRouter } from 'react-router-dom'
@@ -38,7 +38,7 @@ const useStyles = makeStyles(
       },
       '& .MuiDataGrid-columnHeaderTitle': {
         fontWeight: 700,
-        
+
         overflow: "visible",
         textOverflow: "initial",
         whiteSpace: "pre-wrap",
@@ -51,45 +51,30 @@ const useStyles = makeStyles(
       },
       '& .MuiDataGrid-columnHeader': {
         padding: 0
-      }, 
+      },
       '& .MuiDataGrid-iconButtonContainer': {
         display: "none"
-      }, 
+      },
       '& .MuiDataGrid-columnHeaderWrapper': {
         overflow: "visible"
-      }, 
+      },
     },
   }),
 );
 
-
-class App extends PureComponent {
-
-  render() {
-
-    return (
-      <HashRouter>
-        <ThemeProvider theme={theme}>
-        {/* Need to update this to properly pass down the config from the app to the components.*/}
-
-            <Sidebar />
-            <MainWindow classes={this.props.classes}/>
-            
-        </ThemeProvider>
-      </HashRouter>
-
-    );
-  }
-
-
-}
-
-const AppClass = () => {
+const App = () => {
   const classes = useStyles();
-  console.log(classes)
   return (
-      <App classes={classes} />
+    <HashRouter>
+    <ThemeProvider theme={theme}>
+    {/* Need to update this to properly pass down the config from the app to the components.*/}
+
+        <Sidebar />
+        <MainWindow classes={classes}/>
+
+    </ThemeProvider>
+  </HashRouter>
   )
 }
 
-export default AppClass;
+export default App;

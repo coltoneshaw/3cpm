@@ -1,5 +1,5 @@
 import { getTime } from 'date-fns'
-import React, { useContext, useState, useEffect, forwardRef }from 'react';
+import React, { useContext, useState, useEffect, forwardRef } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 
 import dotProp from 'dot-prop';
@@ -22,35 +22,35 @@ const findData = (config, path) => {
 
 export default function StartDatePicker(props) {
   const state = useGlobalState()
-    const {  state: {date, updateDate} } = state
+  const { state: { date, updateDate }, config } = state
 
   // const [selectedDate, setSelectedDate] = useState(() => new Date());
 
-//   useEffect(() =>{
-//     setSelectedDate( findData(config, startDatePath));
-// }, [config])
+  useEffect(() => {
+    updateDate(findData(config, startDatePath));
+  }, [config])
 
   const handleDateChange = (date) => {
     updateDate(getTime(date));
-    
+
     console.log('changing the date')
   };
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils} >
-        <KeyboardDatePicker
-          disableToolbar
-          variant="inline"
-          format="MM/dd/yyyy"
-          margin="normal"
-          id="date-picker-inline"
-          label="Stats Start Date"
-          value={date}
-          onChange={handleDateChange}
-          KeyboardButtonProps={{
-            'aria-label': 'change date',
-          }}
-        />
+      <KeyboardDatePicker
+        disableToolbar
+        variant="inline"
+        format="MM/dd/yyyy"
+        margin="normal"
+        id="date-picker-inline"
+        label="Stats Start Date"
+        value={date}
+        onChange={handleDateChange}
+        KeyboardButtonProps={{
+          'aria-label': 'change date',
+        }}
+      />
     </MuiPickersUtilsProvider>
   );
 }

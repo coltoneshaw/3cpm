@@ -106,29 +106,29 @@ const ConfigProvider = ({ children }) => {
         getConfig()
     }, [])
 
-    // useEffect(() => {
-    //     // console.log({config}, 'yolo')
-    //     // console.log()
-    //     if(config && dotProp.has(config,'general.defaultCurrency')) {
-    //         console.log('ran this')
-    //         updateCurrency(dotProp.get(config,'general.defaultCurrency'))
-    //     }
+    useEffect(() => {
+        // console.log({config}, 'yolo')
+        // console.log()
+        if(config && dotProp.has(config,'general.defaultCurrency')) {
+            console.log('ran this')
+            updateCurrency(dotProp.get(config,'general.defaultCurrency'))
+        }
 
-    //     if(config && dotProp.has(config,'apis.threeC')) {
-    //         console.log('Updated threeC')
-    //         updateApiData(dotProp.get(config,'apis.threeC'))
-    //     }
+        if(config && dotProp.has(config,'apis.threeC')) {
+            console.log('Updated threeC')
+            updateApiData(dotProp.get(config,'apis.threeC'))
+        }
 
-    //     if(config && dotProp.has(config,'statSettings.account_id')) {
-    //         console.log('Updated threeC')
-    //         updateAccountID(dotProp.get(config,'statSettings.account_id'))
-    //     }
+        if(config && dotProp.has(config,'statSettings.account_id')) {
+            console.log('Updated threeC')
+            updateAccountID(dotProp.get(config,'statSettings.account_id'))
+        }
 
-    //     if(config && dotProp.has(config,'statSettings.startDate')) {
-    //         console.log('Updated start Date')
-    //         updateAccountID(config.statSettings.startDate)
-    //     }
-    // }, [config])
+        if(config && dotProp.has(config,'statSettings.startDate')) {
+            console.log('Updated start Date')
+            updateAccountID(config.statSettings.startDate)
+        }
+    }, [config])
 
 
     return (
