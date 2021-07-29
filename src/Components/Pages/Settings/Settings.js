@@ -21,7 +21,7 @@ const SettingsPage = () => {
     return (
         <>
             <h1>Settings</h1>
-            <div className="settings-div boxData flex-column">
+            <div className="settings-div boxData flex-column" style={{overflow: "visible"}}>
                 <ApiSettings />
 
 

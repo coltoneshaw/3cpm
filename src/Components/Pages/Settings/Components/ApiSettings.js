@@ -46,6 +46,7 @@ const ApiSettings = () => {
     return (
         <div className=" flex-column">
             <h2>API Settings</h2>
+            <p className="subText">This app requires "Bots read", "Smart trades read", and "Accounts read" within 3commas.</p>
             <TextField
                 id="key"
                 label="Key"

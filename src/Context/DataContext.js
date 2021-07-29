@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, createRef } from 'react';
 import dotProp from 'dot-prop';
 
 // Contect Providers
@@ -34,6 +34,9 @@ const defaultMetrics = {
  * This needs to be nested under the config context as it'll use that!
  */
 const DataProvider = ({ children }) => {
+    
+    const botSyncIcon = createRef()
+    const statsSyncIcon = createRef()
 
     const configState = useGlobalState()
     const { config } = configState
@@ -46,6 +49,7 @@ const DataProvider = ({ children }) => {
     const [accountData, setAccountData] = useState([])
     const [metricsData, updateMetricsData] = useState(() => defaultMetrics)
     const [additionalData, setAdditionalData] = useState([])
+    const [isSyncing, updateIsSyncing ] = useState(false)
 
 
 
@@ -60,11 +64,14 @@ const DataProvider = ({ children }) => {
 
     }, [config])
 
-    useEffect(() => {
-        fetchBotData()
-        fetchProfitMetrics()
-        fetchPerformanceData()
-        getActiveDeals()
+    useEffect(async () => {
+        updateIsSyncing(true)
+        await fetchBotData()
+        await fetchProfitMetrics()
+        await fetchPerformanceData()
+        await getActiveDeals()
+        updateIsSyncing(false)
+
     }, [config])
 
     /**
@@ -219,13 +226,15 @@ const DataProvider = ({ children }) => {
         console.log({ metricsData })
     }
 
-    const updateAllData = () => {
-        updateThreeCData()
-            .then(() => {
-                fetchBotData()
-                fetchProfitMetrics()
-                fetchPerformanceData()
-                getActiveDeals()
+    const updateAllData = async () => {
+        updateIsSyncing(true)
+
+       await  updateThreeCData()
+            .then(async () => {
+                await fetchBotData()
+                await fetchProfitMetrics()
+                await fetchPerformanceData()
+                await getActiveDeals()
 
                 if (config && dotProp.has(config, 'general.defaultCurrency')) {
                     console.log('ran this')
@@ -233,6 +242,8 @@ const DataProvider = ({ children }) => {
                 }
 
             })
+            updateIsSyncing(false)
+
     }
 
     const refreshData = () => {
@@ -269,7 +280,8 @@ const DataProvider = ({ children }) => {
             balanceData,
             metricsData,
             additionalData,
-            accountData
+            accountData,
+            isSyncing
         }
     }
 

@@ -49,7 +49,7 @@ const StatsPage = () => {
     const configState = useGlobalState()
     const { config } = configState
     const state = useGlobalData()
-    const { data :{metricsData, accountData }, actions: {updateAllData, refreshData} } = state
+    const { data :{metricsData, accountData, isSyncing }, actions: {updateAllData, refreshData} } = state
 
     const { activeDealCount, activeSum, maxRisk, position, on_orders, totalProfit  } = metricsData
 
@@ -98,7 +98,7 @@ const StatsPage = () => {
                     variant="outlined"
                     color="primary"
                     onClick={() => updateAllData()}
-                    endIcon={<SyncIcon />}
+                    endIcon={<SyncIcon className={ isSyncing ? "iconSpinning" : ""}/>}
                 >
                     Update Data
                 </Button>

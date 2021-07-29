@@ -16,15 +16,13 @@
    margin: 0;
    /* // overscroll-behavior: none; */
    min-height: 100vh;
-   min-height: 1000px;
+   /* min-height: 1000px; */
    min-width: 1200px;
    width: 100vw;
  }
 
 
  #root {
-   height: 100%;
-
    display: flex;  /* enables flex content for its children */
    box-sizing: border-box;
  }
@@ -88,3 +86,19 @@
      overflow: hidden;
  }
 
+
+ .iconSpinning {
+  animation: spin-animation 1s infinite;
+  animation-timing-function: linear;
+  display: inline-block;
+}
+
+@keyframes spin-animation {
+  0% {
+      transform: rotate(0deg);
+  }
+
+  100% {
+      transform: rotate(360deg);
+  }
+}

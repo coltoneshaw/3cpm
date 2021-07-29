@@ -7,7 +7,7 @@ const SaveSubmitButtons = () => {
     const { reset, setConfigBulk } = useContext(ConfigContext)
 
     return (
-        <div className="flex-row padding">
+        <div className="flex-row padding settingsButtonDiv" >
             <Button
                 variant="contained"
                 onClick={() => reset()}

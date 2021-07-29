@@ -9,10 +9,21 @@
     justify-content: space-between;
     text-align: left;
 
-    min-height: 400px;
-
 }
 
 .settings-div div {
     margin: 10px 0 10px 0;
+}
+
+.subText{
+    font-weight: 300;
+    font-size: .8em;
+}
+
+.settingsButtonDiv{
+    justify-content: center;
+}
+
+.settingsButtonDiv button{
+    width: 150px;
 }

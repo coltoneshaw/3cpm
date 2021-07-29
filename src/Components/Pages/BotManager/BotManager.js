@@ -17,11 +17,12 @@ import { calc_dropMetrics } from '../../../utils/formulas'
 const BotManagerPage = (props) => {
 
     const state = useGlobalData();
-    const { actions: { fetchBotData }, data: { botData, metricsData: { sum } } } = state;
+    const { actions: { fetchBotData, updateAllData }, data: { botData, isSyncing, metricsData: { sum } } } = state;
 
     const bankRoll = sum;
 
     const [localBotData, updateLocalBotData] = useState([{ test: 'test', id: '1' }])
+
 
 
     useEffect(() => {
@@ -33,6 +34,7 @@ const BotManagerPage = (props) => {
          updateLocalBotData(calc_dropMetrics(bankRoll, botData))
 
     }, [botData])
+
 
     const blankObject = {
         id: Math.random().toString(16).slice(2),
@@ -99,10 +101,10 @@ const BotManagerPage = (props) => {
             <div className="flex-row padding">
                 <Button
                     variant="outlined"
-                    endIcon={<SyncIcon />}
-                    onClick={fetchBotData}
+                    endIcon={<SyncIcon className={ isSyncing ? "iconSpinning" : ""}/>}
+                    onClick={updateAllData}
                 >
-                    Fetch new data
+                    Update data
                 </Button>
                 <Button
                     variant="outlined"
@@ -110,7 +112,7 @@ const BotManagerPage = (props) => {
                     endIcon={<SaveIcon />}
                     onClick={() => { saveCustomDeals() }}
                 >
-                    Save Data
+                    Save table data
                 </Button>
 
 

@@ -52,7 +52,7 @@ const ConfigProvider = ({ children }) => {
     const setConfigBulk = async () => {
         console.log('Setting the config')
 
-        updateConfig((prevConfig) => {
+        await updateConfig((prevConfig) => {
 
             const keys = {
                 key: apiData.key,
@@ -76,6 +76,8 @@ const ConfigProvider = ({ children }) => {
             return prevConfig
 
         })
+
+        alert('Config has been updated! If you adjusted filers make sure to reload the data and click "refresh chart data".')
     }
 
     // reset button is confirmed working at the moment.

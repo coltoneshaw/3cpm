@@ -2,6 +2,8 @@
 import React, { PureComponent } from 'React';
 import { PieChart, Pie, Legend, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
+import { parseNumber } from '../../../utils/number_formatting';
+
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
@@ -14,15 +16,18 @@ class BalancePie extends PureComponent {
         console.log(metrics)
         const chartData = [{
             name: 'Available',
-            metric: parseInt(balance.position - balance.on_orders)
+            metric: parseInt(balance.position - balance.on_orders),
+            key: 1
         },
         {
             name: 'On Orders',
-            metric: parseInt(balance.on_orders)
+            metric: parseInt(balance.on_orders),
+            key: 2
         },
         {
             name: "In Deals",
-            metric: parseInt(metrics.activeSum)
+            metric: parseInt(metrics.activeSum),
+            key: 3
         }
 
         ]
@@ -36,9 +41,9 @@ class BalancePie extends PureComponent {
             }}>
                 <div style={{
                     width: '300px',
-                    height: '200px'
+                    height: '250px'
                 }}>
-                    <h3 className="chartTitle" style={{ 'paddingBottom': '25px' }}>{title}</h3>
+                    <h3 className="chartTitle" >{title}</h3>
 
 
                     <ResponsiveContainer width="100%" height="100%">
@@ -50,7 +55,7 @@ class BalancePie extends PureComponent {
                                 ))}
                             </Pie>
                             <Legend verticalAlign="bottom" height={36}/>
-                            <Tooltip />
+                            <Tooltip content={<CustomTooltip />} />
                         </PieChart>
                     </ResponsiveContainer>
 
@@ -64,6 +69,21 @@ class BalancePie extends PureComponent {
     }
 
 
+}
+
+function CustomTooltip({ active, payload }) {
+    if (active) {
+        const { name, value } = payload[0]
+        console.log({name, value})
+        return (
+            <div className="tooltop">
+                <h4>{name}</h4>
+                <p>${parseNumber( value ) }</p>
+            </div>
+        )
+    } else {
+        return null
+    }
 }
 
 export default BalancePie;
