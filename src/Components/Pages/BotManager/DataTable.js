@@ -138,7 +138,7 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }) => {
 
   return (
 
-    <div style={{ display: 'flex' }} className="boxData">
+    <div style={{ display: 'flex', overflow: "visible" }} className="boxData">
       <div className="dataTable"  >
         <DataGrid
           className={classes.root}
