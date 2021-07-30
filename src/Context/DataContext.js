@@ -210,6 +210,8 @@ const DataProvider = ({ children }) => {
     }
 
 
+
+
     /**
      * maxRisk - Active deals max risk total. This comes from the deals endpoint. 3Commas.js / getActiveDealsFunction()
      * sum - ((balanceData.on_orders + balanceData.position + balanceData.on_orders)) - this comes from the accounts endpoint.
@@ -302,7 +304,7 @@ const DataProvider = ({ children }) => {
             calculateMetrics,
             updateAllData,
             refreshData
-        },
+                },
         data: {
             botData,
             profitData,

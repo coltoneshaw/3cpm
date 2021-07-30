@@ -1,4 +1,4 @@
-import React, {  useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGlobalData } from '../../../Context/DataContext';
 import { format } from 'date-fns';
 
@@ -49,21 +49,22 @@ const StatsPage = () => {
     const configState = useGlobalState()
     const { config } = configState
     const state = useGlobalData()
-    const { data :{metricsData, accountData, isSyncing }, actions: {updateAllData, refreshData} } = state
+    const { data: { metricsData, accountData, isSyncing }, actions: { updateAllData, refreshData } } = state
 
-    const { activeDealCount, totalInDeals, maxRisk,totalBankroll,  position, on_orders, totalProfit, sum  } = metricsData
+    const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, sum } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')
     const date = dotProp.get(config, 'statSettings.startDate')
     const account_id = dotProp.get(config, 'statSettings.account_id')
 
 
-//         updatePage = async () => {
-//                 await updateThreeCData()
-//         await this.queryAndUpdate()
-// //     }
-
-
+    const returnAccountNames = () => {
+       if(accountData.length > 0 && account_id.length > 0){
+           return Array.from( new Set(accountData.filter(e => account_id.includes(e.account_id)).map(e => e.account_name))).join(', ')
+       } else {
+           return "n/a"
+       }
+    }
 
     // this needs to stay on this page
     const viewChanger = (newView) => {
@@ -98,7 +99,7 @@ const StatsPage = () => {
                     variant="outlined"
                     color="primary"
                     onClick={() => updateAllData()}
-                    endIcon={<SyncIcon className={ isSyncing ? "iconSpinning" : ""}/>}
+                    endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
                 >
                     Update Data
                 </Button>
@@ -128,16 +129,16 @@ const StatsPage = () => {
                 </div>
 
                 <div className="flex-row filters">
-                    <p><strong>Account: </strong>{ (account_id && accountData.length > 0) ? accountData.find(a => a.account_id === account_id).account_name : "All" }</p>
-                    <p><strong>Start Date: </strong>{ (date) ? format(date , "MM/dd/yyyy")  : date } </p>
-                    <p><strong>Default Currency: </strong>{dotProp.get(config, 'general.defaultCurrency' )}</p>
+                    <p><strong>Account: </strong>{ returnAccountNames() }</p>
+                    <p><strong>Start Date: </strong>{(date) ? format(date, "MM/dd/yyyy") : date} </p>
+                    <p><strong>Default Currency: </strong>{dotProp.get(config, 'general.defaultCurrency')}</p>
                 </div>
 
                 <div className="riskDiv">
                     <Card title="Active Deals" metric={activeDealCount} />
                     <Card title="Total in Deals" metric={"$" + parseNumber(totalInDeals)} />
                     <Card title="DCA Max" metric={"$" + parseNumber(maxRisk)} />
-                    <Card title="Total Bankroll" metric={"$" + parseNumber( totalBankroll ) } />
+                    <Card title="Total Bankroll" metric={"$" + parseNumber(totalBankroll)} />
                     <Card title="Total Profit" metric={"$" + parseNumber(totalProfit)} />
                 </div>
 

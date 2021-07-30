@@ -7,7 +7,7 @@ const getFiltersQueryString = async () => {
     const startString = `closed_at_iso_string > ${startDate}`
 
     // may not always have an account_id if it's not been configured, this needs to detect null or not.
-    const accountIdString = (account_id) ? `and account_id = ${account_id}` : ""
+    const accountIdString = (account_id) ? `and account_id in ( ${account_id} )` : ""
 
     // should never have a time where there is not a currency.
     const currencyString = `and currency = '${defaultCurrency}'`

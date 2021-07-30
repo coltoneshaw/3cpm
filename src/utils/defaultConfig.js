@@ -54,7 +54,7 @@ const configSchema = {
                 default: "",
             },
             account_id: {
-                type: ["number","null"],
+                type: ["array"],
 
             }
         }
@@ -80,9 +80,18 @@ const defaultConfig = {
     },
     "statSettings": {
         "startDate": getTime(sub(new Date(), { days: 90 })),
-        "account_id": null,
+        "account_id": [],
+    }
+}
+
+// version is the existing version of the application.
+const migrations = {
+    '0.0.3': store =>{
+        console.info('migrating the config store to 0.0.2-RC1')
+        store.set('statSettings.account_id', []);
     }
 }
 
 exports.defaultConfig = defaultConfig;
 exports.configSchema = configSchema;
+exports.migrations = migrations

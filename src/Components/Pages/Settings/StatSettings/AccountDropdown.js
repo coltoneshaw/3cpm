@@ -64,10 +64,13 @@ const AccountDropdown = () => {
     }, [])
 
     useEffect(() => {
-
-        selectElement([findData(config, accountIdPath)])
+        selectElement(findData(config, accountIdPath))
 
     }, [config])
+
+    const returnAccountNames = (accountData, accountIdArray) => {
+        return accountData.filter(e => accountIdArray.includes(e.account_id)).map(e => e.account_name).join(', ')
+    }
 
     // const [select, selectElement] = useState(() => accountID)
     const [select, selectElement] = useState([])
@@ -77,7 +80,7 @@ const AccountDropdown = () => {
     const handleChange = (event) => {
         updateAccountID(event.target.value)
         selectElement(event.target.value)
-        console.log('changing the default account ID')
+        console.log(event.target.value)
     };
 
 
@@ -91,7 +94,7 @@ const AccountDropdown = () => {
                 value={select}
                 onChange={handleChange}
                 input={<Input />}
-                renderValue={() => (accountData.length > 0) ? accountData.filter(e => select.includes(e.account_id)).map(e => e.account_name).join(', ') : ""}
+                renderValue={() => (accountData.length > 0) ? returnAccountNames(accountData, select) : ""}
                 MenuProps={MenuProps}
             >
             {/* Need to think through All because it's now a selector. */}
