@@ -153,7 +153,7 @@ const getActiveDealsFunction = async () => {
         return {
             activeDeals,
             metrics: {
-                activeSum: activeDeals.map(deal => deal.bought_volume).reduce((sum, item) => sum + item),
+                totalBoughtVolume: activeDeals.map(deal => deal.bought_volume).reduce((sum, item) => sum + item),
                 maxRisk: activeDeals.map(deal => deal.max_deal_funds).reduce((sum, item) => sum + item)
             }
 
@@ -163,7 +163,7 @@ const getActiveDealsFunction = async () => {
         return {
             activeDeals: [],
             metrics: {
-                activeSum: 0,
+                totalBoughtVolume: 0,
                 maxRisk: 0
             }
 
@@ -187,7 +187,7 @@ const getAccountDataFunction = async (defaultCurrency) => {
             balance: {
                 on_orders: balanceData.on_orders,
                 position: balanceData.position,
-                sum: ((balanceData.on_orders + balanceData.position + balanceData.on_orders))
+                sum: ((balanceData.on_orders + balanceData.position))
             }
         }
     }

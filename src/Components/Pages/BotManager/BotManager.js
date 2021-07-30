@@ -98,7 +98,7 @@ const BotManagerPage = (props) => {
 
     return (
         <>
-            <h1>Bot Manager</h1>
+            <h1>Bot Planner</h1>
             <div className="flex-row padding">
                 <Button
                     variant="outlined"

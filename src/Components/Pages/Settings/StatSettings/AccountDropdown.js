@@ -8,6 +8,10 @@ import {
     Select
 } from '@material-ui/core';
 
+import Checkbox from '@material-ui/core/Checkbox';
+import ListItemText from '@material-ui/core/ListItemText';
+import Input from '@material-ui/core/Input';
+
 import { accountDataAll } from '../../../../utils/3Commas';
 import { useGlobalState } from '../../../../Context/Config';
 import { defaultConfig } from '../../../../utils/defaultConfig';
@@ -22,13 +26,22 @@ const findData = (config, path) => {
 }
 
 // initializing a state for each of the two props that we are using.
-
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
 
 
 
 const AccountDropdown = () => {
     const state = useGlobalState()
-    const { config, state: { accountID, updateAccountID }} = state;
+    const { config, state: { accountID, updateAccountID } } = state;
 
 
     /**
@@ -51,17 +64,13 @@ const AccountDropdown = () => {
     }, [])
 
     useEffect(() => {
-        // let defaultAccountID = findData(config, accountIdPath)
 
-        // if(defaultAccountID == "" && accountData.length > 0){
-        //     selectElement( accountData[0].account_id )
-        // } else {
-            selectElement(findData(config, accountIdPath))
-        // 
-        
+        selectElement([findData(config, accountIdPath)])
+
     }, [config])
 
-    const [select, selectElement ] = useState(() => accountID)
+    // const [select, selectElement] = useState(() => accountID)
+    const [select, selectElement] = useState([])
 
 
     // changing the select value
@@ -71,19 +80,28 @@ const AccountDropdown = () => {
         console.log('changing the default account ID')
     };
 
+
     return (
         <FormControl >
             <InputLabel>Account Filter</InputLabel>
+
+
             <Select
+                multiple
                 value={select}
                 onChange={handleChange}
-                // inputRef={accountIDPicker}
+                input={<Input />}
+                renderValue={() => (accountData.length > 0) ? accountData.filter(e => select.includes(e.account_id)).map(e => e.account_name).join(', ') : ""}
+                MenuProps={MenuProps}
             >
-             <MenuItem value=""></MenuItem>
-
-                {/* Add filter here that if it's an array of 1 or the value is not defined in the config then we just pick accounts[0] */}
-                {accountData.map(a => <MenuItem value={a.account_id} key={a.account_id}>{a.account_name}</MenuItem>)}
-
+            {/* Need to think through All because it's now a selector. */}
+            {/* <MenuItem value=""></MenuItem> */}
+                {accountData.map((account) => (
+                    <MenuItem key={account.account_id} value={account.account_id}>
+                        <Checkbox checked={select.indexOf(account.account_id) > -1} />
+                        <ListItemText primary={account.account_name} />
+                    </MenuItem>
+                ))}
             </Select>
         </FormControl>
     )

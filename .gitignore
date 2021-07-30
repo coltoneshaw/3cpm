@@ -3,3 +3,4 @@ node/
 /node_modules
 src/main-app.js
 dist/*
+/src/main-app.js

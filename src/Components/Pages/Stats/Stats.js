@@ -51,7 +51,7 @@ const StatsPage = () => {
     const state = useGlobalData()
     const { data :{metricsData, accountData, isSyncing }, actions: {updateAllData, refreshData} } = state
 
-    const { activeDealCount, activeSum, maxRisk, position, on_orders, totalProfit  } = metricsData
+    const { activeDealCount, totalInDeals, maxRisk,totalBankroll,  position, on_orders, totalProfit, sum  } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')
     const date = dotProp.get(config, 'statSettings.startDate')
@@ -120,7 +120,7 @@ const StatsPage = () => {
                         {
                             buttonElements.map(button => {
                                 if (button.id === currentView) return <Button onClick={() => viewChanger(button.id)} color="primary" >{button.name}</Button>
-                                return <Button onClick={() => viewChanger(button.id)} >{button.name}</Button>
+                                return <Button key={button.id} onClick={() => viewChanger(button.id)} >{button.name}</Button>
 
                             })
                         }
@@ -135,9 +135,9 @@ const StatsPage = () => {
 
                 <div className="riskDiv">
                     <Card title="Active Deals" metric={activeDealCount} />
-                    <Card title="$ In Deals" metric={"$" + parseNumber(activeSum)} />
+                    <Card title="Total in Deals" metric={"$" + parseNumber(totalInDeals)} />
                     <Card title="DCA Max" metric={"$" + parseNumber(maxRisk)} />
-                    <Card title="Remaining Bankroll" metric={"$" + parseNumber((position - on_orders))} />
+                    <Card title="Total Bankroll" metric={"$" + parseNumber( totalBankroll ) } />
                     <Card title="Total Profit" metric={"$" + parseNumber(totalProfit)} />
                 </div>
 

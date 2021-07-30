@@ -22,11 +22,12 @@ const defaultBalance = {
 }
 
 const defaultMetrics = {
-    activeSum: 0,
+    totalBoughtVolume: 0,
     maxRisk: 0,
     totalProfit: 0,
     maxRiskPercent: 0,
-    bankrollAvailable: 0
+    bankrollAvailable: 0,
+    totalBankroll: 0
 }
 
 /**
@@ -84,7 +85,7 @@ const DataProvider = ({ children }) => {
      */
     useEffect(() => {
         calculateMetrics()
-    }, [metricsData.sum, metricsData.activeSum, metricsData.maxRisk])
+    }, [metricsData.sum, metricsData.totalBoughtVolume, metricsData.maxRisk])
 
 
     const fetchBotData = async () => {
@@ -146,7 +147,7 @@ const DataProvider = ({ children }) => {
     }
 
     /**
-     * @metrics - activeSum, maxRisk, activeDealCount
+     * @metrics - totalBoughtVolume, maxRisk, activeDealCount
      * @data - active deals, entire array returned by 3C
      * Confirmed working
      */
@@ -209,20 +210,41 @@ const DataProvider = ({ children }) => {
     }
 
 
+    /**
+     * maxRisk - Active deals max risk total. This comes from the deals endpoint. 3Commas.js / getActiveDealsFunction()
+     * sum - ((balanceData.on_orders + balanceData.position + balanceData.on_orders)) - this comes from the accounts endpoint.
+     * totalBoughtVolume - Active Deals bot volume total.
+     * 
+     * postition - this includes what's on orders!!!!!
+     */
     const calculateMetrics = () => {
         updateMetricsData(prevState => {
-            const { maxRisk, sum, activeSum } = prevState
-            console.log(prevState)
+            const { maxRisk, sum, totalBoughtVolume, position, on_orders } = prevState
+
+            // Position = available + on orders.
+            const totalBankroll = parseInt( position + totalBoughtVolume )
+            const availableBankroll = parseInt( position - on_orders)
+            const totalInDeals = on_orders + totalBoughtVolume
+
             console.log({
-                maxRiskPercent: ((parseInt(maxRisk) / (parseInt(sum) + parseInt(activeSum))) * 100).toFixed(0),
-                bankrollAvailable: ((parseInt(sum) / (parseInt(sum) + parseInt(activeSum))) * 100).toFixed(0)
+                maxRiskPercent: parseInt((( maxRisk / totalBankroll ) * 100).toFixed(0)),
+                bankrollAvailable: parseInt(  (( 1 - (( totalInDeals ) / totalBankroll ) ) * 100 ).toFixed(0) ),
+                totalBankroll,
+                availableBankroll,
+                prevState,
+                totalInDeals
             })
+
+            // active sum already includes on_orders.
 
 
             return {
                 ...prevState,
-                maxRiskPercent: parseInt(((parseInt(maxRisk) / (parseInt(sum) + parseInt(activeSum))) * 100).toFixed(0)),
-                bankrollAvailable: parseInt(((parseInt(sum) / (parseInt(sum) + parseInt(activeSum))) * 100).toFixed(0))
+                maxRiskPercent: parseInt(((maxRisk / totalBankroll ) * 100).toFixed(0)),
+                bankrollAvailable: parseInt(  (( 1 - (( totalInDeals ) / totalBankroll ) ) * 100 ).toFixed(0) ),
+                totalBankroll,
+                availableBankroll,
+                totalInDeals
             }
         })
     }

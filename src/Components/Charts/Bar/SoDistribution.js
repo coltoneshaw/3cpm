@@ -37,7 +37,7 @@ export default class SoDistribution extends PureComponent {
             const MaxSO = Math.max( ...data.map( deal => deal.completed_safety_orders_count ))
             const soNumbers = Array.from(Array(MaxSO + 1).keys())
             const totalDeals = data.length
-            const totalDealFunds = metrics.activeSum
+            const totalDealFunds = metrics.totalBoughtVolume
                 
             dataArray = soNumbers.map(SO => {
                 let matchingDeals = data.filter( deal => deal.completed_safety_orders_count === SO)

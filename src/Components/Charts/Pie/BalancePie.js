@@ -13,20 +13,21 @@ class BalancePie extends PureComponent {
 
     render() {
         const { title, balance, metrics } = this.props
-        console.log(metrics)
+
+        const { availableBankroll, position, totalBoughtVolume, on_orders } = metrics
         const chartData = [{
             name: 'Available',
-            metric: parseInt(balance.position - balance.on_orders),
+            metric: parseInt( availableBankroll ),
             key: 1
         },
         {
-            name: 'On Orders',
-            metric: parseInt(balance.on_orders),
+            name: 'Limit Orders',
+            metric: parseInt( on_orders ),
             key: 2
         },
         {
-            name: "In Deals",
-            metric: parseInt(metrics.activeSum),
+            name: "Purchased",
+            metric: parseInt(totalBoughtVolume),
             key: 3
         }
 

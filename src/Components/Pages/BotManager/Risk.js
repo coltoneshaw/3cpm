@@ -12,7 +12,7 @@ import { useGlobalData } from '../../../Context/DataContext';
 const Risk = ({ localBotData }) => {
 
     const state = useGlobalData();
-    const { data: { metricsData: { sum } } } = state;
+    const { data: { metricsData: { totalBankroll } } } = state;
 
     /**
      * Bankroll - sum, on_orders, position all added together. Needs to come from global state most likely.
@@ -27,7 +27,7 @@ const Risk = ({ localBotData }) => {
     let maxDCA = (enabledDeals.length > 0) ? enabledDeals.map(deal => deal.max_funds).reduce((sum, max) => sum + max) : 0;
 
 
-    let bankroll = sum
+    let bankroll = totalBankroll
     let risk = (maxDCA / bankroll) * 100
     let botCount = localBotData.filter(deal => deal.is_enabled).length
 
@@ -36,8 +36,8 @@ const Risk = ({ localBotData }) => {
 
     const metricData = [
         {
-            title: "Bank Roll",
-            metric: "$" + parseNumber(bankroll),
+            title: "Total Bank Roll",
+            metric: "$" + parseNumber(totalBankroll),
             key: 1
         },
         {

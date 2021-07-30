@@ -17,12 +17,8 @@ const RiskMonitor = () => {
     return (
         <>
         <SpeedometerDiv
-                    metrics={{
-                        maxRiskPercent: metricsData.maxRiskPercent,
-                        bankrollAvailable:  metricsData.bankrollAvailable,
-                        activeSum: metricsData.activeSum
-                    }}
-                        balance={balanceData}
+                    metrics={metricsData}
+                    balance={balanceData}
                     />
         <Grid item xs={12}>
             <DealSoUtalizationBar data={activeDeals} title="Current Deal SO Utalization" />
