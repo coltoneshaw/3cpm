@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import DataTable from './DataTable';
-import './BotManager.scss';
+import './BotPlanner.scss';
 
 import Risk from "./Risk";
 
@@ -14,7 +14,7 @@ import { useGlobalData } from '../../../Context/DataContext';
 import { calc_dropMetrics } from '../../../utils/formulas'
 
 
-const BotManagerPage = (props) => {
+const BotPlannerPage = (props) => {
 
     const state = useGlobalData();
     const { actions: { fetchBotData, updateAllData }, data: { botData, isSyncing, metricsData: { sum } } } = state;
@@ -146,4 +146,4 @@ const BotManagerPage = (props) => {
 
 
 
-export default BotManagerPage;
+export default BotPlannerPage;

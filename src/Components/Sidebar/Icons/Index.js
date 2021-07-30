@@ -1,4 +1,4 @@
-import BotManagerIcon from "./BotManager";
+import BotPlannerIcon from "./BotPlanner";
 import Coffee from "./Coffee";
 import Cog from "./Cog";
 import Moon from "./Moon";
@@ -7,7 +7,7 @@ import PieChart from "./PieChart";
 import BackwardClock from './BackwardClock'
 
 export {
-    BotManagerIcon,
+    BotPlannerIcon,
     Coffee,
     Cog,
     Moon,

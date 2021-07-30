@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import { Route, Redirect } from 'react-router-dom'
-import { DonatePage, BotManagerPage, TradingViewPage, SettingsPage, StatsPage } from './Pages/Index'
+import { DonatePage, BotPlannerPage, TradingViewPage, SettingsPage, StatsPage } from './Pages/Index'
 import { ConfigProvider, useGlobalState } from '../Context/Config';
 import { DataProvider } from '../Context/DataContext';
 
@@ -16,7 +16,7 @@ const MainWindow = (props) => {
 
     useEffect(() => {
         if( apiData.key.length > 0 ||  apiData.secret.length > 0){
-            updateHomePage(<Redirect to="/botmanager" />)
+            updateHomePage(<Redirect to="/botplanner" />)
         } else {
             updateHomePage(<Redirect to="/settings" />)
         }
@@ -31,7 +31,7 @@ const MainWindow = (props) => {
                 </Route>
 
                 <DataProvider>
-                    <Route exact path="/botmanager" render={() => <BotManagerPage classes={props.classes} />} />
+                    <Route exact path="/botplanner" render={() => <BotPlannerPage classes={props.classes} />} />
                     <Route exact path="/stats" render={() => <StatsPage  />} />
                 </DataProvider>
                 

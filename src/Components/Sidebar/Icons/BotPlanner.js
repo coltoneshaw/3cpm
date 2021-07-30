@@ -1,6 +1,6 @@
 import React from "react";
 
-const BotManagerIcon = props => {
+const BotPlannerIcon = props => {
     return (
         <svg  version="1.1"  x="0px" y="0px" viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg">
             <g>
@@ -42,4 +42,5 @@ const BotManagerIcon = props => {
     )
 }
 
-export default BotManagerIcon;
+
+export default BotPlannerIcon;

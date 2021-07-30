@@ -2,7 +2,7 @@ import React, { Component, ReactComponent } from 'react';
 import './Sidebar.scss';
 
 
-import { BackwardClock, BotManagerIcon, Coffee, Cog, PieChart } from './Icons'
+import { BackwardClock, BotPlannerIcon, Coffee, Cog, PieChart } from './Icons'
 
 import SidebarOption from './SidebarOption';
 import DisplaySwitcher from './DisplaySwitcher';
@@ -19,7 +19,7 @@ class Sidebar extends Component {
         return (
             <div id="sidebar">
                 <div className="flex-column sidebar-column">
-                    <SidebarOption Icon={BotManagerIcon} name="Bot Planner" link="/botmanager" />
+                    <SidebarOption Icon={BotPlannerIcon} name="Bot Planner" link="/botplanner" />
                     <SidebarOption Icon={PieChart} name="Stats" link="/stats" />
                     <SidebarOption Icon={BackwardClock} name="Trading View" link="/backtesting" />
                 </div>
