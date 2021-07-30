@@ -34,7 +34,7 @@ const defaultMetrics = {
  * This needs to be nested under the config context as it'll use that!
  */
 const DataProvider = ({ children }) => {
-    
+
     const botSyncIcon = createRef()
     const statsSyncIcon = createRef()
 
@@ -49,7 +49,7 @@ const DataProvider = ({ children }) => {
     const [accountData, setAccountData] = useState([])
     const [metricsData, updateMetricsData] = useState(() => defaultMetrics)
     const [additionalData, setAdditionalData] = useState([])
-    const [isSyncing, updateIsSyncing ] = useState(false)
+    const [isSyncing, updateIsSyncing] = useState(false)
 
 
 
@@ -66,11 +66,16 @@ const DataProvider = ({ children }) => {
 
     useEffect(async () => {
         updateIsSyncing(true)
-        await fetchBotData()
-        await fetchProfitMetrics()
-        await fetchPerformanceData()
-        await getActiveDeals()
+        try{
+            await fetchBotData()
+            await fetchProfitMetrics()
+            await fetchPerformanceData()
+            await getActiveDeals()
+        } catch(error){
+            console.error(error)
+        }
         updateIsSyncing(false)
+
 
     }, [config])
 
@@ -88,12 +93,12 @@ const DataProvider = ({ children }) => {
             .then(
                 (result) => {
                     // alert('Bot data is updated')
-                    if(result.length > 0) {
+                    if (result.length > 0) {
                         updateBotData(result)
                     } else {
                         updateBotData([])
                     }
-                    
+
                 })
 
     }
@@ -134,7 +139,7 @@ const DataProvider = ({ children }) => {
                         ...prevData,
                         boughtVolume: (data.length > 0) ? data.map(deal => deal.bought_volume).reduce((sum, item) => sum + item) : 0,
                         totalProfit_perf: (data.length > 0) ? data.map(deal => deal.total_profit).reduce((sum, item) => sum + item) : 0,
-                        totalDeals : (data.length > 0) ? data.map(deal => deal.number_of_deals).reduce((sum, item) => sum + item) : 0
+                        totalDeals: (data.length > 0) ? data.map(deal => deal.number_of_deals).reduce((sum, item) => sum + item) : 0
                     }
                 })
             })
@@ -228,21 +233,25 @@ const DataProvider = ({ children }) => {
 
     const updateAllData = async () => {
         updateIsSyncing(true)
+        try {
+            await updateThreeCData()
+                .then(async () => {
+                    await fetchBotData()
+                    await fetchProfitMetrics()
+                    await fetchPerformanceData()
+                    await getActiveDeals()
 
-       await  updateThreeCData()
-            .then(async () => {
-                await fetchBotData()
-                await fetchProfitMetrics()
-                await fetchPerformanceData()
-                await getActiveDeals()
+                    if (config && dotProp.has(config, 'general.defaultCurrency')) {
+                        console.log('ran this')
+                        getAccountData(config)
+                    }
 
-                if (config && dotProp.has(config, 'general.defaultCurrency')) {
-                    console.log('ran this')
-                    getAccountData(config)
-                }
+                })
+        } catch (error) {
+            console.error(error)
+        }
 
-            })
-            updateIsSyncing(false)
+        updateIsSyncing(false)
 
     }
 
