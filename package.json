@@ -1,7 +1,7 @@
 {
   "name": "3c-portfolio-manager",
   "productName": "3C Portfolio Manager",
-  "version": "0.0.1",
+  "version": "0.0.1-RC1",
   "description": "An application to manage your 3Commas portfolio.",
   "private": true,
   "main": "src/main.js",
@@ -11,7 +11,8 @@
     "start": "electron .",
     "rebuild": "./node_modules/.bin/electron-rebuild -f -w better-sqlite3",
     "pack": " electron-builder --dir ",
-    "dist": " electron-builder --mac"
+    "dist": " electron-builder --mac --win --linux",
+    "build-prod": "npm run build && npm run pack && npm run dist"
   },
   "author": "Colton",
   "license": "ISC",

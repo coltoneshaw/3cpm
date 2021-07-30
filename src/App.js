@@ -9,6 +9,8 @@ import { createTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles
 
 import MainWindow from "./Components/MainWindow"
 
+import { ConfigProvider } from './Context/Config';
+
 // import Settings from './Components/Settings/Settings';
 // import Backtesting from './Components/Pages/TradingView/TradingView';
 
@@ -66,14 +68,17 @@ const App = () => {
   const classes = useStyles();
   return (
     <HashRouter>
-    <ThemeProvider theme={theme}>
-    {/* Need to update this to properly pass down the config from the app to the components.*/}
+      <ThemeProvider theme={theme}>
+        <ConfigProvider>
 
-        <Sidebar />
-        <MainWindow classes={classes}/>
+          {/* Need to update this to properly pass down the config from the app to the components.*/}
 
-    </ThemeProvider>
-  </HashRouter>
+          <Sidebar />
+          <MainWindow classes={classes} />
+        </ConfigProvider>
+
+      </ThemeProvider>
+    </HashRouter>
   )
 }
 
