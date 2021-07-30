@@ -60,6 +60,9 @@ const useStyles = makeStyles(
       '& .MuiDataGrid-columnHeaderWrapper': {
         overflow: "visible"
       },
+      '& .MuiDataGrid-row.Mui-even': {
+        backgroundColor: '#DEE3EC'
+      }
     },
   }),
 );

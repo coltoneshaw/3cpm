@@ -70,11 +70,11 @@ const BotManagerPage = (props) => {
         })
     }
 
-    const saveCustomDeals = () => {
+    const saveCustomDeals = async () => {
         const customBots = localBotData.filter(bot => bot.origin === 'custom')
-        electron.database.update('bots', customBots)
+        await electron.database.update('bots', customBots)
 
-        electron.database.query("select * from bots where origin = 'custom'; ")
+        await electron.database.query("select * from bots where origin = 'custom'; ")
             .then(table => {
                 const customBotIds = customBots.map(bot => bot.id);
                 if (customBotIds.length === 0) {
@@ -88,6 +88,7 @@ const BotManagerPage = (props) => {
                 }
 
             })
+        alert('Saved to the bots table!')
     }
 
     /**
