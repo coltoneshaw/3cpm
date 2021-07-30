@@ -98,7 +98,7 @@ const StatsPage = () => {
                 <Button
                     variant="outlined"
                     color="primary"
-                    onClick={() => updateAllData()}
+                    onClick={() => updateAllData().then(refreshData())}
                     endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
                 >
                     Update Data

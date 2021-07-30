@@ -7,7 +7,7 @@ const getFiltersQueryString = async () => {
     const startString = `closed_at_iso_string > ${startDate}`
 
     // may not always have an account_id if it's not been configured, this needs to detect null or not.
-    const accountIdString = (account_id) ? `and account_id in ( ${account_id} )` : ""
+    const accountIdString = (account_id.length > 0) ? `and account_id in ( ${account_id} )` : ""
 
     // should never have a time where there is not a currency.
     const currencyString = `and currency = '${defaultCurrency}'`
@@ -41,7 +41,7 @@ const fetchDealDataFunction = async () => {
     let dataArray = await electron.database.query(`select final_profit, closed_at, id, deal_hours from deals where closed_at != null or finished = 1 and ${filtersQueryString.fullQueryString} order by closed_at asc;`)
     let dates = Array.from(new Set(dataArray.map(row => { if (row.closed_at) { return row.closed_at.split('T')[0] } })))
 
-    let totalDealHours = dataArray.map( deal => deal.deal_hours).reduce((sum, hours) => sum + hours)
+    let totalDealHours = dataArray.map(deal => deal.deal_hours).reduce((sum, hours) => sum + hours)
 
     console.log({ dates })
 
@@ -65,8 +65,8 @@ const fetchDealDataFunction = async () => {
     })
 
     const totalProfit = (profitArray.length > 0) ? parseInt(profitArray[profitArray.length - 1].runningSum) : 0
-    const averageDailyProfit = (profitArray.length > 0) ? totalProfit / ( profitArray.length + 1) : 0;
-    const averageDealHours = (profitArray.length > 0 ) ? totalDealHours / ( dataArray.length + 1 ) : 0;
+    const averageDailyProfit = (profitArray.length > 0) ? totalProfit / (profitArray.length + 1) : 0;
+    const averageDealHours = (profitArray.length > 0) ? totalDealHours / (dataArray.length + 1) : 0;
 
     return {
         profitData: profitArray,
@@ -108,8 +108,8 @@ const fetchPerformanceDataFunction = async () => {
                     and ${filtersQueryString.fullQueryString}
                 GROUP BY 
                     performance_id;`
-    
-                    console.log(queryString)
+
+    console.log(queryString)
     let databaseQuery = await electron.database.query(queryString);
 
     if (databaseQuery.length > 0) {
@@ -176,18 +176,29 @@ const getActiveDealsFunction = async () => {
  * @param {string} defaultCurrency This is the default currency configured in settings and used as a filter
  * @returns 
  */
-const getAccountDataFunction = async (defaultCurrency) => {
+let getAccountDataFunction = async (defaultCurrency) => {
     let accountData = await accountDataAll()
+        .then(data => data.filter(row => row.currency_code === defaultCurrency) )
 
-    let balanceData = accountData.filter(row => row.currency_code === defaultCurrency)[0]
+    console.log(accountData)
 
-    if(accountData.length > 0) {
+    if (accountData.length > 0) {
+        let on_ordersTotal = 0;
+        let positionTotal = 0;
+
+        for (const account of accountData) {
+            const { on_orders, position } = account
+            on_ordersTotal += on_orders;
+            positionTotal += position;
+
+        }
+
+        console.log({on_ordersTotal, positionTotal})
         return {
             accountData,
             balance: {
-                on_orders: balanceData.on_orders,
-                position: balanceData.position,
-                sum: ((balanceData.on_orders + balanceData.position))
+                on_orders: on_ordersTotal,
+                position: positionTotal,
             }
         }
     }
@@ -201,7 +212,7 @@ const getAccountDataFunction = async (defaultCurrency) => {
         }
     }
 
-    
+
 }
 
 const accountDataAll = async () => {
