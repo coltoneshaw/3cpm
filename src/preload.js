@@ -3,7 +3,7 @@ const { contextBridge, ipcRenderer } = require('electron')
 
 async function setupContextBridge() {
 
-  contextBridge.exposeInMainWorld('electron', {
+  contextBridge.exposeInMainWorld('test', {
     api: {
       async update(limit) {
         console.log('Updating 3Commas data.')
