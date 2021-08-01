@@ -4,8 +4,8 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 
 // custom charts
-import { ProfitByDay, SummaryProfitByDay } from '../../../Charts/Area'
-import { useGlobalData } from '../../../../Context/DataContext';
+import { ProfitByDay, SummaryProfitByDay } from '@/app/Components/Charts/Area'
+import { useGlobalData } from '@/app/Context/DataContext';
 
 
 

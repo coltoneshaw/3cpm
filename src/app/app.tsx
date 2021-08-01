@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './App.global.css';
+import './App.global.scss';
 import Sidebar from './Components/Sidebar/Sidebar';
 
 import { HashRouter } from 'react-router-dom'

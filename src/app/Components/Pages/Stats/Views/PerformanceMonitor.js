@@ -4,12 +4,12 @@ import React, { useEffect } from 'react';
 import { Grid } from '@material-ui/core';
 
 // custom charts
-import { DealPerformanceBubble } from '../../../Charts/Scatter';
-import { DealAllocationBar } from '../../../Charts/Bar';
-import Card from '../../../Charts/DataCards/Card';
+import { DealPerformanceBubble } from '@/app/Components/Charts/Scatter';
+import { DealAllocationBar } from '@/app/Components/Charts/Bar';
+import Card from '@/app/Components/Charts/DataCards/Card';
 
-import { parseNumber } from '../../../../utils/number_formatting';
-import { useGlobalData } from '../../../../Context/DataContext';
+import { parseNumber } from '@/utils/number_formatting';
+import { useGlobalData } from '@/app/Context/DataContext';
 
 const PerformanceMonitor = () => {
 

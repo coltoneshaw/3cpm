@@ -4,9 +4,9 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 
 // custom charts
-import { DealSoUtalizationBar, SoDistribution } from '../../../Charts/Bar'
+import { DealSoUtalizationBar, SoDistribution } from '@/app/Components/Charts/Bar/index'
 import SpeedometerDiv from '../Components/SpeedometerDiv';
-import { useGlobalData } from '../../../../Context/DataContext';
+import { useGlobalData } from '@/app/Context/DataContext';
 
 
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Sidebar.scss';
+// import './Sidebar.scss';
 
 
 import { BackwardClock, BotPlannerIcon, Coffee, Cog, PieChart } from './Icons/Index'

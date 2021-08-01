@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'React';
 import { PieChart, Pie, Legend, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
-import { parseNumber } from '../../../utils/number_formatting';
+import { parseNumber } from '@/utils/number_formatting';
 
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];

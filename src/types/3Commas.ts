@@ -191,6 +191,7 @@ export interface Type_MetricData {
     totalBankroll: number
     position: number
     on_orders: number
+    totalInDeals: number
 }
 
 export interface Type_MarketOrders {

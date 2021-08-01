@@ -96,6 +96,19 @@ const findConfigData = ( config:object , path:string ) => {
     return ""
 }
 
+export const findAccounts = ( config:object , path:string ) => {
+    console.log({ config, path })
+    if (dotProp.has(config, path)){
+        const definedAccounts: [] | undefined = dotProp.get(config, path)
+        if(definedAccounts == null || definedAccounts.length == 0 ){
+            return []
+        } else {
+            return definedAccounts
+        }
+    } 
+    return ""
+}
+
 
 export {
     defaultConfig,

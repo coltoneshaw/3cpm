@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useGlobalData } from '../../../Context/DataContext';
 import { format } from 'date-fns';
 
 import { Button, ButtonGroup } from '@material-ui/core';
 import SyncIcon from '@material-ui/icons/Sync';
 
+// @ts-ignore
 import { RiskMonitor, SummaryStatistics, PerformanceMonitor, ActiveDeals } from './Views/Index';
-import { parseNumber } from '../../../utils/number_formatting'
+import { parseNumber } from '@/utils/number_formatting'
 
-import Card from '../../Charts/DataCards/Card';
+import Card from '@/app/Components/Charts/DataCards/Card';
 
+import { findAccounts } from '@/utils/defaultConfig'
 
-import './Stats.scss'
-import { useGlobalState } from '../../../Context/Config';
+// import './Stats.scss'
+import { useGlobalState } from '@/app/Context/Config';
+import { useGlobalData } from '@/app/Context/DataContext';
+
 import dotProp from 'dot-prop';
 
 /**
@@ -51,15 +54,18 @@ const StatsPage = () => {
     const state = useGlobalData()
     const { data: { metricsData, accountData, isSyncing }, actions: { updateAllData, refreshData } } = state
 
-    const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, sum } = metricsData
+    const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')
-    const date = dotProp.get(config, 'statSettings.startDate')
-    const account_id = dotProp.get(config, 'statSettings.account_id')
+    const date: undefined | number = dotProp.get(config, 'statSettings.startDate')
+
+    const account_id = findAccounts(config, 'statSettings.account_id')
 
 
     const returnAccountNames = () => {
        if(accountData.length > 0 && account_id.length > 0){
+
+        // @ts-ignore
            return Array.from( new Set(accountData.filter(e => account_id.includes(e.account_id)).map(e => e.account_name))).join(', ')
        } else {
            return "n/a"
@@ -67,7 +73,7 @@ const StatsPage = () => {
     }
 
     // this needs to stay on this page
-    const viewChanger = (newView) => {
+    const viewChanger = ( newView:string ) => {
         changeView(newView)
     }
     // this needs to stay on this page
@@ -89,6 +95,11 @@ const StatsPage = () => {
         //dealData={this.state.dealData} 
 
         />
+    }
+
+    const dateString = ( date:undefined| number  ) => {
+
+       return (date) ? format(date, "MM/dd/yyyy") : ""
     }
 
     return (
@@ -130,7 +141,8 @@ const StatsPage = () => {
 
                 <div className="flex-row filters">
                     <p><strong>Account: </strong>{ returnAccountNames() }</p>
-                    <p><strong>Start Date: </strong>{(date) ? format(date, "MM/dd/yyyy") : date} </p>
+
+                    <p><strong>Start Date: </strong>{ dateString(date) } </p>
                     <p><strong>Default Currency: </strong>{dotProp.get(config, 'general.defaultCurrency')}</p>
                 </div>
 

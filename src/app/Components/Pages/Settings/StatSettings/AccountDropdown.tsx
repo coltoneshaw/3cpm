@@ -32,6 +32,20 @@ const MenuProps = {
     },
 };
 
+const noAccount = [{
+    currency_code: "USD",
+    id: 0,
+    account_id: 0,
+    account_name: "no account",
+    exchange_name: "blank",
+    percentage: 0,
+    position: 0,
+    on_orders: 0,
+    btc_value: 0,
+    usd_value: 0,
+    market_code: 0
+}]
+
 
 
 const AccountDropdown = () => {
@@ -43,8 +57,8 @@ const AccountDropdown = () => {
      * TODO 
      * - Move this into the config element and pass it down, or pull from the data element.
      */
-    const [accountData, changeAccountData] = useState<Type_Query_Accounts[] | undefined>()
-    const [select, selectElement] = useState<number[]>([])
+    const [accountData, changeAccountData] = useState<Type_Query_Accounts[]>( () => noAccount )
+    const [select, selectElement] = useState<any[] | undefined>([])
 
     // @ts-ignore
     useEffect(() => {
@@ -64,15 +78,17 @@ const AccountDropdown = () => {
     }, [])
 
     useEffect(() => {
-        const findAccounts = findConfigData(config, accountIdPath);
-        if(findAccounts !== ""){
-            selectElement(findAccounts)
-        }
+
+        // @ts-ignore
+        let findAccounts: array[] = findConfigData(config, accountIdPath);
+        findAccounts = (findAccounts) ? findAccounts : []
+        selectElement(findAccounts)
+        
         
 
     }, [config])
 
-    const returnAccountNames = (accountData, accountIdArray) => {
+    const returnAccountNames = (accountData: Type_Query_Accounts[], accountIdArray: number[]) => {
         return accountData.filter(e => accountIdArray.includes(e.account_id)).map(e => e.account_name).join(', ')
     }
 
@@ -80,7 +96,7 @@ const AccountDropdown = () => {
 
 
     // changing the select value
-    const handleChange = (event) => {
+    const handleChange = (event:any ) => {
         updateAccountID(event.target.value)
         selectElement(event.target.value)
         console.log(event.target.value)
@@ -97,13 +113,19 @@ const AccountDropdown = () => {
                 value={select}
                 onChange={handleChange}
                 input={<Input />}
+                 // @ts-ignore
                 renderValue={() => (accountData.length > 0) ? returnAccountNames(accountData, select) : ""}
                 MenuProps={MenuProps}
             >
                 {/* Need to think through All because it's now a selector. */}
                 {/* <MenuItem value=""></MenuItem> */}
+
+                {/*  @ts-ignore */}
                 {accountData.map((account) => (
                     <MenuItem key={account.account_id} value={account.account_id}>
+
+                        {/*  @ts-ignore */}
+
                         <Checkbox checked={select.indexOf(account.account_id) > -1} />
                         <ListItemText primary={account.account_name} />
                     </MenuItem>

@@ -3,7 +3,7 @@ const { contextBridge, ipcRenderer } = require('electron')
 
 async function setupContextBridge() {
 
-  contextBridge.exposeInMainWorld('test', {
+  contextBridge.exposeInMainWorld('electron', {
     api: {
       async update(limit) {
         console.log('Updating 3Commas data.')
@@ -58,7 +58,7 @@ async function setupContextBridge() {
         return await ipcRenderer.invoke('update-database', table, updateData);
       },
       async run(query) {
-        console.log('running query')
+        console.log('running query' + query)
         return await ipcRenderer.invoke('run-database', query);
       }
     },

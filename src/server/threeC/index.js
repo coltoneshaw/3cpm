@@ -29,9 +29,12 @@ async function getAndStoreBotData(){
     })
 }
 
-module.exports = {
+export {
   bots,
   getAndStoreBotData,
   updateAPI,
-  getAccountDetail, deals, getDealsBulk, getDealsUpdate
+  getAccountDetail, 
+  deals, 
+  getDealsBulk, 
+  getDealsUpdate
 }

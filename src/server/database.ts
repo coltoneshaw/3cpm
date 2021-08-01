@@ -1,29 +1,12 @@
 
 import { app } from "electron";
 const appDataPath = app.getPath('userData');
+console.log(appDataPath)
 import path from "path";
 import Database from 'better-sqlite3';
 const db = new Database(path.join(appDataPath, 'db.sqlite3'));
 
-
-function testTable() {
-    const stmt = db.prepare(`
-        CREATE TABLE TEST (
-            id TEXT PRIMARY KEY UNIQUE,
-            account_id NUMBER,
-            account_name TEXT,
-            exchange_name TEXT,
-            currency_code TEXT,
-            percentage NUMBER,
-            position NUMBER,
-            on_orders NUMBER,
-            btc_value NUMBER,
-            usd_value NUMBER,
-            market_code TEXT
-            )`);
-
-    const info = stmt.run();
-}
+console.log(db)
 
 function initializeBotsTable() {
     const stmt = db.prepare(`
@@ -183,7 +166,7 @@ function initializeAccountTable() {
             market_code TEXT
             )`);
 
-    const info = stmt.run();
+    stmt.run();
 
 }
 
@@ -191,7 +174,6 @@ function initialDatabaseSetup(){
     initializeDealTable();
     initializeAccountTable();
     initializeBotsTable();
-    testTable();
 }
 
 
@@ -206,7 +188,6 @@ async function checkOrMakeTables(){
         if(!tableNames.includes('accountData')) initializeAccountTable()
         if(!tableNames.includes('bots')) initializeBotsTable()
 
-        if(!tableNames.includes('TEST')) testTable()
     } else {
         initialDatabaseSetup()
     }
@@ -242,6 +223,8 @@ function normalizeData( data:any ) {
  * @description Inserting data into a table. Data coming in needs to be an array of objects.
  */
 async function update(table:string, data:[] ) {
+
+    console.log(data)
     let normalizedData = data.map(row => {
         let newRow:any = {};
         Object.keys(row).forEach(item => {
@@ -275,7 +258,7 @@ async function update(table:string, data:[] ) {
  * ### TODO 
  * - Can add the ability to set custom filters to be returned. Not sure the exact benefit of this but it's possible.
  */
-async function  query(query:string) {
+async function query( query:string ) {
     const row = await db.prepare(query)
     return await row.all()
 }

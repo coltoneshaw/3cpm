@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './Card.scss';
+// import './Card.scss';
 
 const Card = ({title, metric}: {title: string, metric: number | string}) => {
 

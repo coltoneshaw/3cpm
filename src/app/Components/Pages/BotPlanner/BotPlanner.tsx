@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import DataTable from './DataTable';
-import './BotPlanner.scss';
+// import './BotPlanner.scss';
 
 import Risk from "./Risk";
 

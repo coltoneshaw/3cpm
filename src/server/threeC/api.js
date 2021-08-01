@@ -1,12 +1,9 @@
-// const { app } = require("electron");
-const threeCommasAPI = require('3commas-api-node')
-// const path = require("path");
-// const appDataPath = app.getPath('appData');
+const threeCommasAPI = require( '3commas-api-node' );
 
 
-const { config } = require('../../utils/config')
+import { config } from '@/utils/config';
 
-const { 
+import {
   calc_deviation, 
   calc_DealMaxFunds_bot, 
   calc_maxInactiveFunds, 
@@ -14,7 +11,7 @@ const {
   calc_dealHours, 
   getBotName,
   calc_maxBotFunds
-} = require('../../utils/formulas')
+} from '@/utils/formulas';
 
 /**
  * 
@@ -56,7 +53,7 @@ async function bots() {
 
   const dataArray = []
 
-  for (bot of data) {
+  for (let bot of data) {
 
     let {
       id, account_id, account_name, is_enabled,
@@ -143,7 +140,7 @@ async function getMarketOrders(deal_id) {
 
   let dataArray = []
 
-  for (order of apiCall) {
+  for (let order of apiCall) {
     let { deal_order_type, status_string, quantity, quantity_remaining, total, rate, average_price } = order
 
     if (deal_order_type === "Manual Safety") {
@@ -168,7 +165,7 @@ async function getDealsBulk(limit) {
   let response;
   let offsetMax = (!limit) ? 250000 : limit;
 
-  for (offset = 0; offset < offsetMax; offset += 1000) {
+  for (let offset = 0; offset < offsetMax; offset += 1000) {
 
     response = await api.getDeals({ scope: 'completed', limit: 1000, offset })
 
@@ -223,7 +220,7 @@ async function getDealsUpdate(limit) {
 
   // console.error('the date has been hard coded. Fix this before releasing. Additionally, change the limit back to 500')
 
-  for (offset = 0; offset < offsetMax; offset += 1000) {
+  for (let offset = 0; offset < offsetMax; offset += 1000) {
 
     // can look into using the from tag to filter on the last created deal.
     response = await api.getDeals({ limit: 1000, order: 'updated_at', order_direction: 'desc', offset })
@@ -278,7 +275,7 @@ async function deals(limit) {
 
   let dealArray = [];
 
-  for (deal of deals) {
+  for (let deal of deals) {
     const {
       created_at, closed_at, bought_volume,
       base_order_volume, safety_order_volume, max_safety_orders,
@@ -327,12 +324,12 @@ async function getAccountDetail() {
   let accountData = await api.accounts()
   let array = [];
 
-  for (account of accountData) {
+  for (let account of accountData) {
     let data = await api.accountTableData(account.id)
 
     const { name: account_name, exchange_name, market_code } = account
     // Load data into new array with only the columns we want and format them
-    for (row of data) {
+    for (let row of data) {
 
       const { account_id, currency_code, percentage, position, btc_value, usd_value, on_orders, currency_slug, equity } = row
       let tempObject = {
@@ -357,7 +354,7 @@ async function getAccountDetail() {
 
 
 
-module.exports = {
+export {
   getDealsBulk,
   getDealsUpdate,
   getAccountDetail,

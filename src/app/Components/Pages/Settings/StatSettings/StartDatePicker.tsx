@@ -9,28 +9,26 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-import { useGlobalState } from '../../../../Context/Config';
+import { useGlobalState } from '@/app/Context/Config';
+
+import { findConfigData } from '@/utils/defaultConfig';
 const startDatePath = 'statSettings.startDate'
-// finding the data that exists based on the dotprop.
-const findData = (config, path) => {
-  console.log('running find data')
-  console.log({ config, path })
-  if (dotProp.has(config, path)) return dotProp.get(config, path)
-  return ""
-}
 
 
-export default function StartDatePicker(props) {
+
+
+export default function StartDatePicker() {
   const state = useGlobalState()
   const { state: { date, updateDate }, config } = state
 
   // const [selectedDate, setSelectedDate] = useState(() => new Date());
 
   useEffect(() => {
-    updateDate(findData(config, startDatePath));
+    updateDate(findConfigData(config, startDatePath));
   }, [config])
 
-  const handleDateChange = (date) => {
+  const handleDateChange = ( date:any) => {
+
     updateDate(getTime(date));
 
     console.log('changing the date')

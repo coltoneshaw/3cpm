@@ -34,7 +34,8 @@ const defaultMetrics = {
     bankrollAvailable: 0,
     totalBankroll: 0,
     position: 0,
-    on_orders: 0
+    on_orders: 0,
+    totalInDeals: 0
  }
 
 interface Type_Data_Context {

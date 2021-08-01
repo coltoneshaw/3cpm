@@ -23,8 +23,6 @@ const SettingsPage = () => {
             <h1>Settings</h1>
             <div className="settings-div boxData flex-column" style={{overflow: "visible"}}>
                 <ApiSettings />
-
-
                 <div className="flex-column">
                     <h2>General Settings:</h2>
                     <CurrencySelector />
