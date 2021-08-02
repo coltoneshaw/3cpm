@@ -1,4 +1,4 @@
-interface Type_Query_PerfArray {
+export interface Type_Query_PerfArray {
     performance_id: string
     bot_name: string
     pair: string[]
@@ -11,7 +11,7 @@ interface Type_Query_PerfArray {
     percentTotalProfit: number
 }
 
-interface Type_Query_DealData {
+export interface Type_Query_DealData {
     final_profit: number,
     closed_at: string
     id: number
@@ -26,7 +26,7 @@ export type Type_Profit = {
 
 
 
-interface Type_Deals {
+export interface Type_Deals {
     id: number
     type: string
     bot_id: number
@@ -108,13 +108,13 @@ interface Type_Deals {
     impactFactor: number
 }
 
-interface Type_ActiveDeals extends Type_Deals {
+export interface Type_ActiveDeals extends Type_Deals {
     max_deal_funds: number
     bought_volume: number
     so_volume_remaining: number
 }
 
-interface Type_Query_Accounts {
+export interface Type_Query_Accounts {
     currency_code: string
     id: number
     account_id: number
@@ -128,13 +128,12 @@ interface Type_Query_Accounts {
     market_code: number
 }
 
-interface Type_bots {
+export interface Type_bots {
     id: number
     origin: string
     account_id: number
     account_name?: string
     name: string
-    pairs: string | string[]
     active_deals_count: number
     active_deals_usd_profit?: number
     active_safety_orders_count?: number
@@ -171,9 +170,18 @@ interface Type_bots {
     price_deviation: number
 
     // TODO - this is blank in the database
-    drawdown: number
-    maxCoveragePercent: number
-    maxSoReached: number
+    // TODO - Need to break this into another type that extends bots since the data coming in does not have this.
+    drawdown?: number
+    maxCoveragePercent: number | null
+    maxSoReached?: number
+}
+
+export interface Type_Query_bots extends Type_bots {
+    pairs: string
+}
+
+export interface Type_API_bots extends Type_bots {
+    pairs: string[]
 }
 
 export interface Type_MetricData {
@@ -192,6 +200,7 @@ export interface Type_MetricData {
     position: number
     on_orders: number
     totalInDeals: number
+    availableBankroll: number
 }
 
 export interface Type_MarketOrders {
@@ -204,11 +213,7 @@ export interface Type_MarketOrders {
     average_price: number;
 }
 
-export {
-    Type_Query_PerfArray,
-    Type_Query_DealData,
-    Type_ActiveDeals,
-    Type_Query_Accounts,
-    Type_bots,
-    Type_Deals
+export interface Type_BalanceData {
+    on_orders: number
+    position: number
 }

@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 // import isDev from 'electron-is-dev'; // New Import
 
-import path from "path";
+const path = require("path");
 const isDev = !app.isPackaged;
 
 
@@ -14,7 +14,7 @@ const createWindow = (): void => {
     width: 1500,
     height: 1000,
     title: "Bot Portfolio Manager",
-    icon: path.join(__dirname, '../assets/icons/icon.png'),
+    // icon: path.join(__dirname, '../assets/icons/icon.png'),
     webPreferences: {
       nodeIntegration: false, // is default value after Electron v5
       contextIsolation: true, // protect against prototype pollution
@@ -30,16 +30,34 @@ const createWindow = (): void => {
 
   if (isDev) {
 		win.webContents.openDevTools();
-	}
+    win.loadURL('http://localhost:9000');
 
-  win.loadURL(
-    isDev
-      ? 'http://localhost:9000'
-      : `file://${app.getAppPath()}/index.html`,
-  );
+	} else {
+    win.loadURL(`file://${__dirname}/index.html`);
+
+  }
+
+
 }
 
 app.on('ready', createWindow);
+// Quit when all windows are closed, except on macOS. There, it's common
+// for applications and their menu bar to stay active until the user quits
+// explicitly with Cmd + Q.
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
+
+app.on('activate', () => {
+  // On macOS it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow()
+  }
+})
 
 import { config } from './utils/config';
 
@@ -98,7 +116,6 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
  * 
  */
 
-// @ts-ignore
  const { updateAPI, bots, getDealsBulk, getDealsUpdate, getAndStoreBotData } = require('./server/threeC/index');
 
 

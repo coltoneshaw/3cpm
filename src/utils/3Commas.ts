@@ -181,7 +181,7 @@ const getActiveDealsFunction = async () => {
                 so_volume_remaining
             }
         })
-        console.log(activeDeals)
+
         return {
             activeDeals,
             metrics: {

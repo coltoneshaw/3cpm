@@ -1,7 +1,9 @@
-const threeCommasAPI = require( '3commas-api-node' );
-
+const threeCommasAPI = require('3commas-api-node')
+import {  Type_Deals, Type_Query_Accounts, Type_API_bots } from '@/types/3Commas'
+import {  TconfigValues } from '@/types/config'
 
 import { config } from '@/utils/config';
+
 
 import {
   calc_deviation, 
@@ -20,7 +22,7 @@ import {
  * 
  * @description - required at the moment so when you make a config change on the frontend you're not using old data.
  */
-function threeCapi(config) {
+const threeCapi = ( config:any ) => {
   const api = new threeCommasAPI({
     apiKey: config.get('apis.threeC.key'),
     apiSecret: config.get('apis.threeC.secret')
@@ -35,7 +37,11 @@ function threeCapi(config) {
  * 
  */
 
- const max_deal_funds = async (id, bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, active_manual_safety_orders) => {
+ const max_deal_funds = async(
+      id:number , bought_volume:number , base_order_volume:number , safety_order_volume:number , 
+      max_safety_orders:number , completed_safety_orders_count:number , martingale_volume_coefficient:number , 
+      active_manual_safety_orders:number
+    ) => {
   let market_order_data;
 
   // fetching market order information for any deals that are not closed.
@@ -49,7 +55,7 @@ function threeCapi(config) {
 
 async function bots() {
   const api = threeCapi(config)
-  let data = await api.getBots();
+  let data:Type_API_bots[] = await api.getBots();
 
   const dataArray = []
 
@@ -68,16 +74,14 @@ async function bots() {
       finished_deals_count, pairs, trailing_deviation,
       active_deals_usd_profit, stop_loss_percentage,
       enabled_active_funds, from_currency,
-      enabled_inactive_funds, strategy
+      enabled_inactive_funds, strategy, 
     } = bot
 
     let maxDealFunds = calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
     let max_inactive_funds = calc_maxInactiveFunds( maxDealFunds, max_active_deals, active_deals_count )
 
 
-    
-
-
+  
     const tempObject = {
       id,
       origin: 'sync',
@@ -117,7 +121,8 @@ async function bots() {
       trailing_deviation,
       type,
       drawdown: 0,
-      price_deviation: calc_deviation( +max_safety_orders, +safety_order_step_percentage, +martingale_step_coefficient)
+      price_deviation: calc_deviation( +max_safety_orders, +safety_order_step_percentage, +martingale_step_coefficient),
+      maxCoveragePercent: null
     }
 
     dataArray.push(tempObject)
@@ -132,7 +137,7 @@ async function bots() {
    * @description Fetching market orders for bots that are active and have active market orders
    * @api_docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/deals_api.md#deal-safety-orders-permission-bots_read-security-signed
    */
-async function getMarketOrders(deal_id) {
+async function getMarketOrders( deal_id:number ) {
   const api = threeCapi(config)
 
   // this is the /market_orders endpoint.
@@ -152,78 +157,71 @@ async function getMarketOrders(deal_id) {
   return dataArray
 }
 
-/**
- * 
- * @param {*} api 
- * @param {*} limit 
- * @returns 
- * @description - DO NOT USE THIS FUNCTION AT THE MOMENT
- */
-async function getDealsBulk(limit) {
+// /**
+//  * 
+//  * @param {*} api 
+//  * @param {*} limit 
+//  * @returns 
+//  * @description - DO NOT USE THIS FUNCTION AT THE MOMENT
+//  */
+// async function getDealsBulk( limit:number ) {
 
-  let responseArray = [];
-  let response;
-  let offsetMax = (!limit) ? 250000 : limit;
+//   let responseArray = [];
+//   let response;
+//   let offsetMax = (!limit) ? 250000 : limit;
+//   const api = threeCapi(config) 
 
-  for (let offset = 0; offset < offsetMax; offset += 1000) {
+//   for (let offset = 0; offset < offsetMax; offset += 1000) {
 
-    response = await api.getDeals({ scope: 'completed', limit: 1000, offset })
+//     response = await api.getDeals({ scope: 'completed', limit: 1000, offset })
 
-    // limiting the offset to just 5000 here. This can be adjusted but made for some issues with writing to Sheets.
-    if (response.length > 0) {
-      responseArray.push(...response)
-    }
+//     // limiting the offset to just 5000 here. This can be adjusted but made for some issues with writing to Sheets.
+//     if (response.length > 0) {
+//       responseArray.push(...response)
+//     }
 
-    console.info({
-      'responseArrayLength': responseArray.length,
-      'currentResponse': response.length,
-      offset,
-      id: response[0].id
-    })
+//     console.info({
+//       'responseArrayLength': responseArray.length,
+//       'currentResponse': response.length,
+//       offset,
+//       id: response[0].id
+//     })
 
-    if (response.length != 1000) {
-      break;
-    }
+//     if (response.length != 1000) {
+//       break;
+//     }
 
-    // if(offset == offsetMax){ break; }
+//     // if(offset == offsetMax){ break; }
 
 
-  }
+//   }
 
-  console.log('Response data Length: ' + responseArray.length)
-  return responseArray
+//   console.log('Response data Length: ' + responseArray.length)
+//   return responseArray
 
-}
+// }
 
 /**
  * 
  * @param {number} limit - This sets the max amount of deals to sync. Default is at 250k as a global param
  * @returns object array of deals.
  */
-async function getDealsUpdate(limit) {
+async function getDealsUpdate( limit: number) {
   const api = threeCapi(config)
 
   let responseArray = [];
-  let response;
+  let response:Type_Deals[] ;
   let offsetMax = (!limit) ? config.get('general.globalLimit') : limit;
   let oldestDate, newLastSyncTime;
-
 
 
   // converting the incoming dateUTC to the right format in case it's not done properly.
   let lastSyncTime = await config.get('syncStatus.deals.lastSyncTime');
 
-  /**
-   * FIX THIS BEFORE RELEASING. THIS IS HARD CODING THE DATE
-   */
-  // let lastSyncTime = 1617249600000;
-
-  // console.error('the date has been hard coded. Fix this before releasing. Additionally, change the limit back to 500')
-
   for (let offset = 0; offset < offsetMax; offset += 1000) {
 
     // can look into using the from tag to filter on the last created deal.
-    response = await api.getDeals({ limit: 1000, order: 'updated_at', order_direction: 'desc', offset })
+    response= await api.getDeals({ limit: 1000, order: 'updated_at', order_direction: 'desc', offset })
 
     // limiting the offset to just 5000 here. This can be adjusted but made for some issues with writing to Sheets.
     if (response.length > 0) { responseArray.push(...response) }
@@ -269,7 +267,7 @@ async function getDealsUpdate(limit) {
 }
 
 
-async function deals(limit) {
+async function deals( limit:number ) {
   let deals = await getDealsUpdate(limit);
   let botData = await bots();
 
@@ -355,7 +353,6 @@ async function getAccountDetail() {
 
 
 export {
-  getDealsBulk,
   getDealsUpdate,
   getAccountDetail,
   deals,

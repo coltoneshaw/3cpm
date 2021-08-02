@@ -8,30 +8,36 @@ import { useGlobalData } from '@/app/Context/DataContext';
 import { parseNumber } from '@/utils/number_formatting';
 import { calc_deviation, calc_DealMaxFunds_bot, calc_maxInactiveFunds, calc_maxBotFunds, calc_dropCoverage, calc_dropMetrics } from '@/utils/formulas';
 
-import { Type_bots } from '@/types/3Commas'
+import { Type_Query_bots } from '@/types/3Commas'
 
 
 /**
  * TODO
  * - Wire up bot save. This will need to detect the differences between the states and submit that as an API call.
  */
-const DataTable = ({ classes, localBotData, updateLocalBotData }: any) => {
+
+interface Type_DataTable {
+  localBotData: Type_Query_bots[]
+  classes: any
+  updateLocalBotData: any
+}
+const DataTable = ({ classes, localBotData, updateLocalBotData }:Type_DataTable) => {
 
   const state = useGlobalData()
 
-  // @ts-ignore
+
   // TODO - This needs to be fixed when the other data from this is fixed.
-  const { data: { metricsData: { sum } } } = state;
+  const { data: { metricsData: { totalBankroll } } } = state;
 
   // sum combines position + on_orders + available.
-  const bankRoll = sum
+  const bankRoll = totalBankroll
 
 
   // handling this locally becauase it does not need to be saved yet.
   const handleOnOff = (e: any) => {
 
-    updateLocalBotData((prevState: Type_bots[]) => {
-      const newRows = prevState.map((row: Type_bots) => {
+    updateLocalBotData((prevState: Type_Query_bots[]) => {
+      const newRows = prevState.map((row: Type_Query_bots) => {
         if (e !== undefined && e.target !== null) {
           if (e.target.name == row.id) {
             row.is_enabled = !row.is_enabled
@@ -46,7 +52,7 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }: any) => {
   }
 
   const handleDeleteRow = (e: any) => {
-    updateLocalBotData((prevState: Type_bots[]) => {
+    updateLocalBotData((prevState: Type_Query_bots[]) => {
       const newRows = prevState.filter(row => {
         if (e.id !== row.id) {
           return row
@@ -65,11 +71,11 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }: any) => {
      * 3. calculate the drop coverage for the entire thing.
      */
 
-    updateLocalBotData((prevState: Type_bots[]) => {
+    updateLocalBotData((prevState: Type_Query_bots[]) => {
       const newRows = prevState.map(row => {
         if (e.id == row.id) {
 
-          // @ts-ignore
+          // @ts-ignore - validate props
           row[e.field] = e.props.value
           console.log(`changed ${e.field} to ${e.props.value}`)
 
@@ -78,7 +84,10 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }: any) => {
            * - If it's worth it, find out what row was updated and then calculate the below metrics. There may be a few rows that we don't have to recalc metrics for.
            */
 
-          const { max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient, martingale_step_coefficient, max_active_deals, active_deals_count, safety_order_step_percentage } = row
+          const { max_safety_orders, base_order_volume, safety_order_volume, 
+            martingale_volume_coefficient, martingale_step_coefficient, max_active_deals, 
+            active_deals_count, safety_order_step_percentage } = row
+
           let maxDealFunds = calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
           let max_inactive_funds = calc_maxInactiveFunds(+maxDealFunds, +max_active_deals, +active_deals_count)
           row.max_funds = calc_maxBotFunds(+maxDealFunds, +max_active_deals)

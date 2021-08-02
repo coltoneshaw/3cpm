@@ -1,10 +1,14 @@
-import { MaxRiskSpeedometer } from '../../../Charts/Speedometer'
-import { BalancePie } from '../../../Charts/Pie';
 import React from 'react';
+import { MaxRiskSpeedometer } from '@/app/Components/Charts/Speedometer'
+import { BalancePie } from '@/app/Components/Charts/Pie';
+import {Type_MetricData } from '@/types/3Commas'
 
-const SpeedometerDiv = (props) => {
+interface Speedometer_Type {
+    metrics: Type_MetricData
+}
+const SpeedometerDiv = ({metrics}: Speedometer_Type ) => {
 
-    const { maxRiskPercent, bankrollAvailable } = props.metrics
+    const { maxRiskPercent, bankrollAvailable } = metrics
 
     return (
         <div style={{display: 'flex', justifyContent: 'space-around'}}>
@@ -47,7 +51,6 @@ const SpeedometerDiv = (props) => {
                 max={100}
                 title="Bankroll Available"
                 metric={bankrollAvailable}
-                segments={6}
                 labelArray={[
                     {
                         text: '20%',
@@ -77,8 +80,7 @@ const SpeedometerDiv = (props) => {
             />
 
             <BalancePie 
-                metrics={ props.metrics }
-                balance={ props.balance }
+                metrics={ metrics }
                 title="Balances Available"
             />
 

@@ -4,7 +4,6 @@ import { format } from 'date-fns';
 import { Button, ButtonGroup } from '@material-ui/core';
 import SyncIcon from '@material-ui/icons/Sync';
 
-// @ts-ignore
 import { RiskMonitor, SummaryStatistics, PerformanceMonitor, ActiveDeals } from './Views/Index';
 import { parseNumber } from '@/utils/number_formatting'
 
@@ -18,10 +17,7 @@ import { useGlobalData } from '@/app/Context/DataContext';
 
 import dotProp from 'dot-prop';
 
-/**
- * TODO 
- * - Need to add a date filter that can filter the Risk / Performance dashboards.
- */
+
 
 const buttonElements = [
     {
@@ -41,12 +37,6 @@ const buttonElements = [
         id: 'active-deals'
     }
 ]
-
-/**
- * TODO 
- * - Need to add a date filter that can filter the Risk / Performance dashboards.
- * 
- */
 
 const StatsPage = () => {
     const configState = useGlobalState()

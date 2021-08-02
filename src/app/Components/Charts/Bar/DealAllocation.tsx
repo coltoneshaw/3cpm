@@ -1,39 +1,24 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { parseNumber, formatPercent } from '@/utils/number_formatting';
+import { Type_Tooltip, Type_DealPerformanceCharts } from '@/types/Charts'
 
-import NoData from '../../Pages/Stats/Components/NoData';
+import NoData from '@/app/Components/Pages/Stats/Components/NoData';
 
-const legendFind = (value) => {
+const legendFind = ( value:string ) => {
     if (value == "bought_volume") return "Bought Volume"
     return "SO Volume Remaining"
 }
 
-const parseNumber = (number) => {
-    if (number) {
-        return number.toLocaleString(undefined, { 'minimumFractionDigits': 0, 'maximumFractionDigits': 0 })
-    }
-    return number
-}
-
-
-const renderCustomizedLabel = (props) => {
-    const { content, ...rest } = props;
-
-    return <Label {...rest} fontSize="12" fill="#FFFFFF" fontWeight="Bold" />;
-};
-export default class DealAllocationBar extends PureComponent {
-
-
-    render() {
-        let { title, data } = this.props
+const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
 
         const renderChart = () => {
 
             if (data.length === 0) {
                 return (<NoData />)
             } else {
-                data = data.filter(row => row.percentTotalVolume > .15)
+                data = data.filter( row => row.percentTotalVolume > .15)
                     .sort((a, b) => a.percentTotalProfit < b.percentTotalProfit ? -1 : (a.percentTotalProfit > b.percentTotalProfit ? 1 : 0))
                 return (
                     <ResponsiveContainer width="100%" aspect={3}>
@@ -54,6 +39,8 @@ export default class DealAllocationBar extends PureComponent {
                             />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip
+                                // @ts-ignore - handle props
+                                // TODO - typescript - properly handle the props being passed
                                 content={<CustomTooltip />}
                             />
                             <XAxis dataKey="pair"
@@ -86,16 +73,9 @@ export default class DealAllocationBar extends PureComponent {
 
             </div>
         )
-    }
-
-
 }
 
-const formatPercent = (num1, num2) => {
-    return ((num1 / num2) * 100).toFixed(0) + "%"
-}
-
-function CustomTooltip({ active, payload, label }) {
+function CustomTooltip({ active, payload, label }:Type_Tooltip) {
     if (active) {
 
         const { total_profit, bot_name, pair, percentTotalVolume, percentTotalProfit, bought_volume } = payload[0].payload
@@ -114,3 +94,5 @@ function CustomTooltip({ active, payload, label }) {
         return null
     }
 }
+
+export default DealAllocationBar;
