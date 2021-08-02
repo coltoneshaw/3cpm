@@ -1,0 +1,111 @@
+/*
+ * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ *        See https://github.com/webpack-contrib/sass-loader#imports
+ */
+ @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap');
+
+ body {
+   font-family: 'Open Sans', sans-serif;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+ }
+
+ html, body, #root {
+   height: 100%;
+   /* // overflow: hidden; */
+   margin: 0;
+   /* // overscroll-behavior: none; */
+   min-height: 100vh;
+   /* min-height: 1000px; */
+   min-width: 1200px;
+   width: 100vw;
+ }
+
+
+ #root {
+   display: flex;  /* enables flex content for its children */
+   box-sizing: border-box;
+ }
+
+
+ code {
+   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+     monospace;
+ }
+
+ h1 {
+   font-size: 2em;
+   letter-spacing: 1px;
+   font-weight: 600;
+ }
+
+ #sidebar {
+     flex-basis: 5%;
+     background-color: #8BBABC;
+     min-width: 50px;
+     max-width: 75px;
+     height: 100%;
+     min-height: 100vh;
+     flex-shrink: 0;
+     box-sizing: border-box;
+
+ }
+
+
+ .mainWindow{
+     flex-grow: 1;
+     background-color: #E7EAEE;
+     padding: 3%;
+     overflow: scroll;
+
+     display: flex;
+     flex-direction: column;
+ }
+
+ .flex-row{
+     display: flex;
+     flex-direction: row;
+ }
+
+ .flex-column{
+     display: flex;
+     flex-direction: column;
+ }
+
+ .padding button {
+     margin: 10px
+ }
+
+ .boxData {
+     border-radius: 15px;
+     background-color: #F3F5F7;
+     text-align: center;
+     color: #212B3B;
+     box-shadow: 0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);
+     padding: 2%;
+     overflow: hidden;
+ }
+
+
+ .iconSpinning {
+  animation: spin-animation 1s infinite;
+  animation-timing-function: linear;
+  display: inline-block;
+}
+
+@keyframes spin-animation {
+  0% {
+      transform: rotate(0deg);
+  }
+
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+
+@import url('./Components/Pages/BotPlanner/BotPlanner.scss');
+@import url('./Components/Pages/Settings/Settings.scss');
+@import url('./Components/Pages/Stats/Stats.scss');
+@import url('./Components/Charts/DataCards/Card.scss');
+@import url('./Components/Sidebar/Sidebar.scss');
