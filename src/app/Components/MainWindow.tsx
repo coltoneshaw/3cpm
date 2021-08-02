@@ -5,17 +5,18 @@ import { DonatePage, BotPlannerPage, TradingViewPage, SettingsPage, StatsPage } 
 import { ConfigProvider, useGlobalState } from '../Context/Config';
 import { DataProvider } from '../Context/DataContext';
 
+import ToastNotifcation from '@/app/Components/ToastNotification'
 
 
-const MainWindow = (props: {classes: object}) => {
+const MainWindow = (props: { classes: object }) => {
 
     const configState = useGlobalState()
     const { state: { apiData }, config } = configState;
 
-    const [ homePage, updateHomePage ] = useState<ReactElement>()
+    const [homePage, updateHomePage] = useState<ReactElement>()
 
     useEffect(() => {
-        if( apiData.key.length > 0 ||  apiData.secret.length > 0){
+        if (apiData.key.length > 0 || apiData.secret.length > 0) {
             updateHomePage(<Redirect to="/botplanner" />)
         } else {
             updateHomePage(<Redirect to="/settings" />)
@@ -23,22 +24,26 @@ const MainWindow = (props: {classes: object}) => {
     }, [apiData])
 
 
+
     return (
         <ConfigProvider>
             <div className="mainWindow" >
                 <Route path='/'>
-                    { homePage }
+                    {homePage}
                 </Route>
 
                 <DataProvider>
                     <Route exact path="/botplanner" render={() => <BotPlannerPage classes={props.classes} />} />
-                    <Route exact path="/stats" render={() => <StatsPage  />} />
+                    <Route exact path="/stats" render={() => <StatsPage />} />
                 </DataProvider>
-                
+
                 <Route exact path="/settings" render={() => <SettingsPage />} />
                 <Route exact path="/donate" render={() => <DonatePage />} />
                 <Route exact path="/backtesting" render={() => <TradingViewPage />} />
+
             </div>
+
+
         </ConfigProvider>
 
     )

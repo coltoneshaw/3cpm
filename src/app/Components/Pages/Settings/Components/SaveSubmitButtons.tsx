@@ -1,16 +1,23 @@
-import React, { useContext } from 'react';
+import React, { SetStateAction, useContext } from 'react';
 
 import { Button } from '@material-ui/core';
 
 import { ConfigContext } from '@/app/Context/Config';
-const SaveSubmitButtons = () => {
+
+interface SubmitButtons {
+    setOpen: any
+}
+const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
     const { reset, setConfigBulk } = useContext(ConfigContext)
 
     return (
         <div className="flex-row padding settingsButtonDiv" >
             <Button
                 variant="contained"
-                onClick={() => reset()}
+                onClick={() => {
+                    reset()
+                    setOpen(true)
+                }}
                 disableElevation
             >
                 Reset
@@ -18,7 +25,10 @@ const SaveSubmitButtons = () => {
             <Button
                 variant="contained"
                 color="primary"
-                onClick={ () => setConfigBulk() }
+                onClick={ () => {
+                    setConfigBulk() 
+                    setOpen(true)
+                }}
                 disableElevation
             >
                 Save

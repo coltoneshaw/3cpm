@@ -1,12 +1,9 @@
 
 import { app } from "electron";
 const appDataPath = app.getPath('userData');
-console.log(appDataPath)
 import path from "path";
 import Database from 'better-sqlite3';
 const db = new Database(path.join(appDataPath, 'db.sqlite3'));
-
-console.log(db)
 
 function initializeBotsTable() {
     const stmt = db.prepare(`
@@ -223,8 +220,6 @@ function normalizeData( data:any ) {
  * @description Inserting data into a table. Data coming in needs to be an array of objects.
  */
 async function update(table:string, data:any[] ) {
-
-    console.log(data)
     let normalizedData = data.map(row => {
         let newRow:any = {};
         Object.keys(row).forEach(item => {

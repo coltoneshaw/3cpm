@@ -215,8 +215,6 @@ const getAccountDataFunction = async (defaultCurrency: string[]) => {
     let accountData: Array<Type_Query_Accounts> = await accountDataAll()
         .then(data => data.filter((row: Type_Query_Accounts) => defaultCurrency.includes(row.currency_code)))
 
-    console.log(accountData)
-
     if (accountData.length > 0) {
         let on_ordersTotal = 0;
         let positionTotal = 0;

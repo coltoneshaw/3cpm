@@ -117,7 +117,7 @@ const ConfigProvider = ({ children }: any) => {
 
         })
 
-        alert('Config has been updated! If you adjusted filers make sure to reload the data and click "refresh chart data".')
+        // alert('Config has been updated! If you adjusted filers make sure to reload the data and click "refresh chart data".')
     }
 
     // reset button is confirmed working at the moment.

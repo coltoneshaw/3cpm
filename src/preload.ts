@@ -8,7 +8,6 @@ async function setupContextBridge() {
       async update( limit:number ) {
         console.log('Updating 3Commas data.')
         await ipcRenderer.invoke('api-updateData', limit);
-        alert(`Updated Data`)
       },
       async updateBots() {
         console.log('Fetching Bot Data')
@@ -36,7 +35,6 @@ async function setupContextBridge() {
          */
         console.log('attempting to reset the config to default values.')
         await ipcRenderer.invoke('config-clear')
-        alert(`Config has been reset`)
       },
       async set(key:string, value:any) {
         console.log('writing Config')

@@ -1,3 +1,14 @@
+v0.0.3
+
+- Multi-Currency selector
+- Feedback / bug report links in the settings
+- Chart refresh is now included in the refresh data button
+- Project has been migrated fully to TypeScript
+- Fixed issues in the bankroll miscalculating
+- Renamed the bot manager to Bot Planner
+- Added a multi-Account selector
+- Cleaned up the functions to into utility files.
+
 v0.0.2-RC1
 
 - Fixed issue where the data table hid the overflow and prevented scrolling. Will need further improvements for responsiveness.

@@ -16,6 +16,7 @@ import { useGlobalState } from '@/app/Context/Config';
 import { useGlobalData } from '@/app/Context/DataContext';
 
 import dotProp from 'dot-prop';
+import ToastNotifcation from '@/app/Components/ToastNotification'
 
 
 
@@ -42,8 +43,7 @@ const StatsPage = () => {
     const configState = useGlobalState()
     const { config } = configState
     const state = useGlobalData()
-    const { data: { metricsData, accountData, isSyncing }, actions: { updateAllData, refreshData } } = state
-
+    const { data: { metricsData, accountData, isSyncing }, actions: { updateAllData } } = state
     const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')
@@ -102,6 +102,20 @@ const StatsPage = () => {
        return (date) ? format(date, "MM/dd/yyyy") : ""
     }
 
+    const [open, setOpen] = React.useState(false);
+
+    const handleClick = () => {
+        setOpen(true);
+    };
+
+    const handleClose = ( event:any , reason:string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
+
     return (
         <>
             <h1>Stats</h1>
@@ -109,7 +123,10 @@ const StatsPage = () => {
                 <Button
                     variant="outlined"
                     color="primary"
-                    onClick={() => updateAllData().then(refreshData())}
+                    onClick={async () => {
+                        await updateAllData()
+                        handleClick() 
+                    }}
                     endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
                 >
                     Update Data
@@ -151,6 +168,8 @@ const StatsPage = () => {
 
             {/* // Returning the current view rendered in the function above. */}
             {currentViewRender()}
+            <ToastNotifcation open={open} handleClose={handleClose} message="Sync finished." />
+
         </>
 
     )

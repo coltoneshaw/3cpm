@@ -14,30 +14,46 @@ import SaveSubmitButtons from './Components/SaveSubmitButtons';
 import ApiSettings from './Components/ApiSettings';
 import StatSettingElements from './StatSettings'
 
+import ToastNotifcation from '@/app/Components/ToastNotification'
+
 
 
 const SettingsPage = () => {
 
+    const [open, setOpen] = React.useState(false);
+
+    const handleClick = () => {
+        setOpen(true);
+    };
+
+    const handleClose = ( event:any , reason:string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
+
     return (
         <>
             <h1>Settings</h1>
-            <div className="settings-div boxData flex-column" style={{overflow: "visible"}}>
+            <div className="settings-div boxData flex-column" style={{ overflow: "visible" }}>
                 <ApiSettings />
                 <div className="flex-column">
                     <h2>General Settings:</h2>
                     <CurrencySelector />
                 </div>
-                <StatSettingElements/>
+                <StatSettingElements />
 
-                <SaveSubmitButtons />
+                <SaveSubmitButtons setOpen={setOpen} />
 
                 {/* These buttons still need to be wired up, but for now they are displayed. */}
                 <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ margin: 'auto' }}>
-                    <Button onClick={() => window.open('https://forms.gle/2ihxsQtvG1yexPxW6')}  style={{ margin: '25px', borderRight: 'none' }} >Leave Feedback</Button>
+                    <Button onClick={() => window.open('https://forms.gle/2ihxsQtvG1yexPxW6')} style={{ margin: '25px', borderRight: 'none' }} >Leave Feedback</Button>
                     <Button onClick={() => window.open('https://forms.gle/CfzMy8E6zUe8UuzBA')} style={{ margin: '25px' }}>Report a Bug</Button>
                 </ButtonGroup>
             </div>
-
+            <ToastNotifcation open={open} handleClose={handleClose} message="Config has been saved" />
         </>
     )
 }

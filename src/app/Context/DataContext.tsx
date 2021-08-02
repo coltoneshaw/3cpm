@@ -48,7 +48,6 @@ interface Type_Data_Context {
             fetchBotData: any
             calculateMetrics: any
             updateAllData: any
-            refreshData: any
         },
         data: {
             botData: Type_Query_bots[]
@@ -316,17 +315,17 @@ const DataProvider = ( { children }:any ) => {
 
     }
 
-    const refreshData = () => {
-        fetchBotData()
-        fetchProfitMetrics()
-        fetchPerformanceData()
-        getActiveDeals()
+    // const refreshData = () => {
+    //     fetchBotData()
+    //     fetchProfitMetrics()
+    //     fetchPerformanceData()
+    //     getActiveDeals()
 
-        if (config && dotProp.has(config, 'general.defaultCurrency')) {
-            console.log('ran this')
-            getAccountData(config)
-        }
-    }
+    //     if (config && dotProp.has(config, 'general.defaultCurrency')) {
+    //         console.log('ran this')
+    //         getAccountData(config)
+    //     }
+    // }
 
 
 
@@ -340,9 +339,8 @@ const DataProvider = ( { children }:any ) => {
             getAccountData,
             fetchBotData,
             calculateMetrics,
-            updateAllData,
-            refreshData
-        },
+            updateAllData
+                },
         data: {
             // @ts-ignore
             botData,

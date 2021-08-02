@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 import DataTable from './DataTable';
+
+import ToastNotifcation from '@/app/Components/ToastNotification'
+
+
 // import './BotPlanner.scss';
 
 import Risk from "./Risk";
@@ -35,7 +39,7 @@ const BotPlannerPage = ({ classes }: { classes: object }) => {
 
 
     const blankObject = {
-        id: parseInt( Math.random().toString(16).slice(2)) ,
+        id: parseInt(Math.random().toString(16).slice(2)),
         origin: 'custom',
         name: 'edit me',
         is_enabled: false,
@@ -88,7 +92,7 @@ const BotPlannerPage = ({ classes }: { classes: object }) => {
 
         // @ts-ignore - electron
         await electron.database.query("select * from bots where origin = 'custom'; ")
-            .then( (table: Type_Query_bots[]) => {
+            .then((table: Type_Query_bots[]) => {
                 const customBotIds = customBots.map(bot => bot.id);
                 if (customBotIds.length === 0) {
 
@@ -105,13 +109,23 @@ const BotPlannerPage = ({ classes }: { classes: object }) => {
                 }
 
             })
-        alert('Saved to the bots table!')
+        // alert('Saved to the bots table!')
     }
+    const [open, setOpen] = useState(false);
 
-    /**
-     * TODO
-     * - make this function store in the database and read from the database.
-     */
+    // const handleClick = () => {
+    //     setOpen(true);
+    // };
+
+    const handleClose = ( event:any , reason:string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
+
+
 
     return (
         <>
@@ -120,7 +134,10 @@ const BotPlannerPage = ({ classes }: { classes: object }) => {
                 <Button
                     variant="outlined"
                     endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
-                    onClick={updateAllData}
+                    onClick={async () => {
+                        await updateAllData()
+                        setOpen(true)
+                    }}
                 >
                     Update data
                 </Button>
@@ -157,6 +174,10 @@ const BotPlannerPage = ({ classes }: { classes: object }) => {
                 localBotData={localBotData}
                 updateLocalBotData={updateLocalBotData}
             />
+
+            <ToastNotifcation open={open} handleClose={handleClose} message="Sync finished." />
+
+
         </>
     )
 }
