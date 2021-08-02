@@ -6,7 +6,10 @@ import { sub, getTime } from 'date-fns'
 // @ts-ignore
 const ConfigContext = createContext<Type_ConfigContext>();
 
-
+interface Type_currency {
+    name: string
+    value: string
+}
 
 
 // pulling in the default config from the config store for use once it's been reset.
@@ -24,7 +27,7 @@ interface Type_ConfigContext {
         updateAccountID: any
         date: number
         updateDate: any
-        currency: string
+        currency: string[]
         updateCurrency: any
         updateApiData: any
         apiData: {key: string, secret: string}
@@ -39,13 +42,13 @@ const ConfigProvider = ({ children }: any) => {
     // setting the default state to be 90 days in the past.
     const [date, updateDate] = useState(() => getTime(sub(new Date(), { days: 90 })))
     const [apiData, updateApiData] = useState({ key: '', secret: '' })
-    const [currency, updateCurrency] = useState("USD")
+    const [currency, updateCurrency] = useState<string[]>(["USD"])
     const [accountID, updateAccountID] = useState<number[]>([]);
 
     const setNewCurrency = (config: TconfigValues) => {
         updateCurrency(() => {
-            const newCurrency: string | undefined = dotProp.get(config, 'general.defaultCurrency')
-            return (newCurrency) ? newCurrency : "USD"
+            const newCurrency: string[] | undefined = dotProp.get(config, 'general.defaultCurrency')
+            return (newCurrency) ? newCurrency : ["USD"]
         })
     }
 

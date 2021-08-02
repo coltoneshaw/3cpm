@@ -6,7 +6,7 @@ export interface TconfigValues {
         }
     },
     "general": {
-        defaultCurrency: string,
+        defaultCurrency: string[],
         globalLimit: number
     },
     "syncStatus": {

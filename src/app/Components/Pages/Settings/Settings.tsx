@@ -33,8 +33,8 @@ const SettingsPage = () => {
 
                 {/* These buttons still need to be wired up, but for now they are displayed. */}
                 <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ margin: 'auto' }}>
-                    <Button style={{ margin: '25px', borderRight: 'none' }}>Leave Feedback</Button>
-                    <Button style={{ margin: '25px' }}>Report a Bug</Button>
+                    <Button onClick={() => window.open('https://forms.gle/2ihxsQtvG1yexPxW6')}  style={{ margin: '25px', borderRight: 'none' }} >Leave Feedback</Button>
+                    <Button onClick={() => window.open('https://forms.gle/CfzMy8E6zUe8UuzBA')} style={{ margin: '25px' }}>Report a Bug</Button>
                 </ButtonGroup>
             </div>
 

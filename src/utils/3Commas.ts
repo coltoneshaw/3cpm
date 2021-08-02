@@ -22,7 +22,10 @@ const getFiltersQueryString = async () => {
     const accountIdString = (account_id.length > 0) ? `and account_id in ( ${account_id} )` : ""
 
     // should never have a time where there is not a currency.
-    const currencyString = `and currency = '${defaultCurrency}'`
+    // const currencyString = `and currency = '${defaultCurrency}'`
+    console.log({defaultCurrency})
+
+    const currencyString = (defaultCurrency.length > 0) ? `and currency in ( ${defaultCurrency.map( (b:string) => "'" + b + "'")} )` : ""
 
     // combining the above filters
     // no OR starting the string.
@@ -208,9 +211,9 @@ const getActiveDealsFunction = async () => {
  * @param {string} defaultCurrency This is the default currency configured in settings and used as a filter
  * @returns 
  */
-const getAccountDataFunction = async (defaultCurrency: string) => {
+const getAccountDataFunction = async (defaultCurrency: string[]) => {
     let accountData: Array<Type_Query_Accounts> = await accountDataAll()
-        .then(data => data.filter((row: Type_Query_Accounts) => row.currency_code === defaultCurrency))
+        .then(data => data.filter((row: Type_Query_Accounts) => defaultCurrency.includes(row.currency_code)))
 
     console.log(accountData)
 

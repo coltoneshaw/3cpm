@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import dotProp from 'dot-prop';
 
 import {
     FormControl,
@@ -78,14 +77,10 @@ const AccountDropdown = () => {
     }, [])
 
     useEffect(() => {
-
         // @ts-ignore
         let findAccounts: array[] = findConfigData(config, accountIdPath);
         findAccounts = (findAccounts) ? findAccounts : []
         selectElement(findAccounts)
-        
-        
-
     }, [config])
 
     const returnAccountNames = (accountData: Type_Query_Accounts[], accountIdArray: number[]) => {

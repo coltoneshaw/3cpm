@@ -62,6 +62,16 @@ const StatsPage = () => {
        }
     }
 
+    const returnCurrencyValues = () => {
+       const currencyValues: string[] | undefined = dotProp.get(config, 'general.defaultCurrency')
+        if( currencyValues != undefined && currencyValues.length > 0){
+         // @ts-ignore
+            return currencyValues.join(', ')
+        } else {
+            return "n/a"
+        }
+     }
+
     // this needs to stay on this page
     const viewChanger = ( newView:string ) => {
         changeView(newView)
@@ -104,14 +114,6 @@ const StatsPage = () => {
                 >
                     Update Data
                 </Button>
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => refreshData()}
-                    endIcon={<SyncIcon />}
-                >
-                    Refresh Chart Data
-                </Button>
             </div>
 
             <div className="flex-column" style={{ alignItems: 'center' }}>
@@ -133,7 +135,7 @@ const StatsPage = () => {
                     <p><strong>Account: </strong>{ returnAccountNames() }</p>
 
                     <p><strong>Start Date: </strong>{ dateString(date) } </p>
-                    <p><strong>Default Currency: </strong>{dotProp.get(config, 'general.defaultCurrency')}</p>
+                    <p><strong>Default Currency: </strong>{ returnCurrencyValues() }</p>
                 </div>
 
                 <div className="riskDiv">

@@ -26,8 +26,8 @@ const configSchema = {
         type: "object",
         properties: {
             defaultCurrency: {
-                type: "string",
-                default: "USD"
+                type: "array",
+                default: ["USD"]
             },
             globalLimit: {
                 type: "number",
@@ -74,7 +74,7 @@ const defaultConfig:TconfigValues = {
         }
     },
     "general": {
-        "defaultCurrency": "USD",
+        "defaultCurrency": ["USD"],
         "globalLimit": 250000
     },
     "syncStatus": {
