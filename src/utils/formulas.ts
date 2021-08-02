@@ -1,4 +1,4 @@
-import { Type_Deals, Type_bots, Type_MarketOrders } from '@/types/3Commas'
+import { Type_Deals, Type_Query_bots, Type_API_bots, Type_MarketOrders } from '@/types/3Commas'
 
 
 /**
@@ -60,7 +60,7 @@ function calc_maxSOReached(moneyAvailable:number, max_safety_orders:number, base
 }
 
 
-const calc_dropCoverage = (totalFundsAvailable:number, bot:Type_bots ) => {
+const calc_dropCoverage = (totalFundsAvailable:number, bot:Type_Query_bots ) => {
     /*
     take the total bankroll / total enabled bots = money available for this bot
 
@@ -119,7 +119,7 @@ function calc_maxInactiveFunds(maxDealFunds:number , max_active_deals:number , a
  * @param {object} market_order_data object that contains each market order ( manual safety trade / add funds )
  * @returns maxTotal - this is the total amount of funds that a single deal can consume.
  */
-function calc_maxDealFunds_Deals(bought_volume:number , base_order_volume:number , safety_order_volume:number , max_safety_orders:number , completed_safety_orders:number , martingale_volume_coefficient:number , market_order_data:Type_MarketOrders[] ) {
+function calc_maxDealFunds_Deals(bought_volume:number , base_order_volume:number , safety_order_volume:number , max_safety_orders:number , completed_safety_orders:number , martingale_volume_coefficient:number , market_order_data:Type_MarketOrders[] | undefined ) {
     let maxTotal;
     if (+bought_volume > 0)
         maxTotal = +bought_volume;
@@ -175,7 +175,7 @@ const calc_dealHours = (created_at:any, closed_at:string ) => {
  * @param {string} bot_name name of the bot.
  * @returns the bot name based on single / multi bot.
  */
-const getBotName = (botData:Type_bots[], pair:string , bot_id:number , bot_name:string) => {
+const getBotName = (botData:Type_Query_bots[], pair:string , bot_id:number , bot_name:string) => {
 
     let botFilter = botData.find(bot => bot.id === bot_id)
     let bot_type;
@@ -187,7 +187,7 @@ const getBotName = (botData:Type_bots[], pair:string , bot_id:number , bot_name:
     return (bot_type === 'SingleBot') ? bot_name : `${bot_name} - ${pair}`
 }
 
-const calc_dropMetrics = (bankRoll:number, botData:Type_bots[]) => {
+const calc_dropMetrics = (bankRoll:number, botData:Type_Query_bots[]) => {
     /**
      * This function is responsible for taking the bot data, bankroll and outputting the new bot array with the metrics added.
      */

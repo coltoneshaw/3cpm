@@ -1,32 +1,19 @@
 import React, { PureComponent } from 'react';
 
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { parseNumber, formatPercent } from '@/utils/number_formatting';
+import { Type_Tooltip, Type_ActiveDealCharts } from '@/types/Charts';
 
-import NoData from '../../Pages/Stats/Components/NoData';
+import NoData from '@/app/Components/Pages/Stats/Components/NoData';
 
-const legendFind = (value) => {
+const legendFind = ( value:string ) => {
     if (value == "bought_volume") return "Bought Volume"
     return "SO Volume Remaining"
 }
 
-const parseNumber = (number) => {
-    if (number) {
-        return number.toLocaleString(undefined, { 'minimumFractionDigits': 0, 'maximumFractionDigits': 0 })
-    }
-    return number
-}
 
+const DealSoUtalizationBar = ({title, data }: Type_ActiveDealCharts) => {
 
-const renderCustomizedLabel = (props) => {
-    const { content, ...rest } = props;
-
-    return <Label {...rest} fontSize="12" fill="#FFFFFF" fontWeight="Bold" />;
-};
-export default class DealSoUtalizationBar extends PureComponent {
-
-
-    render() {
-        const { title, data } = this.props
 
         const renderChart = () => {
             if (data.length === 0) {
@@ -50,6 +37,7 @@ export default class DealSoUtalizationBar extends PureComponent {
                     />
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip
+                        // @ts-ignore - Pass tooltip props down properly.
                         content={<CustomTooltip />}
                     />
                     <XAxis dataKey="pair"
@@ -82,13 +70,8 @@ export default class DealSoUtalizationBar extends PureComponent {
     }
 
 
-}
 
-const formatPercent = (num1, num2) => {
-    return ((num1 / num2) * 100).toFixed(0) + "%"
-}
-
-function CustomTooltip({ active, payload, label }) {
+function CustomTooltip({ active, payload, label }: Type_Tooltip) {
     if (active) {
 
         const { bought_volume, so_volume_remaining, max_deal_funds, bot_name } = payload[0].payload
@@ -104,3 +87,5 @@ function CustomTooltip({ active, payload, label }) {
         return null
     }
 }
+
+export default DealSoUtalizationBar;

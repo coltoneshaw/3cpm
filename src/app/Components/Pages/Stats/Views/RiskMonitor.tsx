@@ -5,7 +5,7 @@ import { Grid } from '@material-ui/core';
 
 // custom charts
 import { DealSoUtalizationBar, SoDistribution } from '@/app/Components/Charts/Bar/index'
-import SpeedometerDiv from '../Components/SpeedometerDiv';
+import SpeedometerDiv from '@/app/Components/Pages/Stats/Components/SpeedometerDiv';
 import { useGlobalData } from '@/app/Context/DataContext';
 
 
@@ -18,7 +18,6 @@ const RiskMonitor = () => {
         <>
         <SpeedometerDiv
                     metrics={metricsData}
-                    balance={balanceData}
                     />
         <Grid item xs={12}>
             <DealSoUtalizationBar data={activeDeals} title="Current Deal SO Utalization" />

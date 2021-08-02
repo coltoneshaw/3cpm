@@ -12,14 +12,14 @@ import AddIcon from '@material-ui/icons/Add';
 import { useGlobalData } from '@/app/Context/DataContext';
 import { calc_dropMetrics } from '@/utils/formulas'
 
-import { Type_bots } from '@/types/3Commas';
+import { Type_Query_bots } from '@/types/3Commas';
 
 const BotPlannerPage = ({ classes }: { classes: object }) => {
 
     const state = useGlobalData();
     const { actions: { fetchBotData, updateAllData }, data: { botData, isSyncing, metricsData: { totalBankroll } } } = state;
 
-    const [localBotData, updateLocalBotData] = useState<Type_bots[]>([])
+    const [localBotData, updateLocalBotData] = useState<Type_Query_bots[]>([])
 
 
 
@@ -69,7 +69,7 @@ const BotPlannerPage = ({ classes }: { classes: object }) => {
     }
 
     const addToTable = () => {
-        updateLocalBotData((prevState: Type_bots[]) => {
+        updateLocalBotData((prevState: Type_Query_bots[]) => {
             console.log('adding blank object')
             console.log(prevState)
             return [
@@ -79,25 +79,26 @@ const BotPlannerPage = ({ classes }: { classes: object }) => {
         })
     }
 
+    // TODO - come back and refactor this function.
     const saveCustomDeals = async () => {
         const customBots = localBotData.filter(bot => bot.origin === 'custom')
 
-        // @ts-ignore
+        // @ts-ignore - electron
         await electron.database.update('bots', customBots)
 
-        // @ts-ignore
+        // @ts-ignore - electron
         await electron.database.query("select * from bots where origin = 'custom'; ")
-            .then( (table: Type_bots[]) => {
+            .then( (table: Type_Query_bots[]) => {
                 const customBotIds = customBots.map(bot => bot.id);
                 if (customBotIds.length === 0) {
 
-                    // @ts-ignore
+                    // @ts-ignore - electron
                     electron.database.run(`DELETE from bots where origin = 'custom'`)
                 } else {
                     for (let row of table) {
                         if (!customBotIds.includes(row.id)) {
 
-                            // @ts-ignore
+                            // @ts-ignore - electron
                             electron.database.run(`DELETE from bots where id = '${row.id}'`)
                         }
                     }

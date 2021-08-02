@@ -4,7 +4,7 @@ import dotProp from 'dot-prop';
 // Contect Providers
 import { useGlobalState } from './Config';
 
-import { Type_Query_PerfArray, Type_bots, Type_ActiveDeals, Type_Query_Accounts, Type_MetricData} from '@/types/3Commas'
+import { Type_Query_PerfArray, Type_Query_bots, Type_ActiveDeals, Type_Query_Accounts, Type_MetricData, Type_Profit} from '@/types/3Commas'
 import { TconfigValues } from '@/types/config'
 
 // TODO - see about setting this to something other than null for the default Value
@@ -51,8 +51,8 @@ interface Type_Data_Context {
             refreshData: any
         },
         data: {
-            botData: Type_bots[]
-            profitData: any
+            botData: Type_Query_bots[]
+            profitData: Type_Profit[]
             activeDeals: Type_ActiveDeals[]
             performanceData: Type_Query_PerfArray[]
             balanceData: { on_orders: number, position: number}
@@ -75,14 +75,14 @@ const DataProvider = ( { children }:any ) => {
     const configState = useGlobalState()
     const { config } = configState
 
-    const [botData, updateBotData] = useState<Type_bots[]>([])
-    const [profitData, updateProfitData] = useState<object[]>([])
-    const [activeDeals, updateActiveDeals] = useState<object[]>([])
-    const [performanceData, updatePerformanceData] = useState<object[]>([])
+    const [botData, updateBotData] = useState<Type_Query_bots[]>([])
+    const [profitData, updateProfitData] = useState<Type_Profit[]>([])
+    const [activeDeals, updateActiveDeals] = useState<Type_ActiveDeals[]>([])
+    const [performanceData, updatePerformanceData] = useState<Type_Query_PerfArray[]>([])
     const [balanceData, setBalanceData] = useState(() => defaultBalance)
-    const [accountData, setAccountData] = useState<object[]>([])
+    const [accountData, setAccountData] = useState<Type_Query_Accounts[]>([])
     const [metricsData, updateMetricsData] = useState(() => defaultMetrics)
-    const [additionalData, setAdditionalData] = useState([])
+    const [additionalData, setAdditionalData] = useState<{accountName: string[] }[]>([])
     const [isSyncing, updateIsSyncing] = useState(false)
 
 
@@ -128,7 +128,7 @@ const DataProvider = ( { children }:any ) => {
 
         // @ts-ignore
         await electron.database.query('select * from bots;')
-            .then( (result: Type_bots[])  => {
+            .then( (result: Type_Query_bots[])  => {
                     // alert('Bot data is updated')
                     if (result.length > 0) {
                         updateBotData(result)
