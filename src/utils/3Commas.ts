@@ -16,23 +16,29 @@ const getFiltersQueryString = async () => {
     const { statSettings: { startDate, account_id }, general: { defaultCurrency } } = config
 
     // always will have a start date of 90 days out. There should not be a time that this is null
-    const startString = `closed_at_iso_string > ${startDate}`
+    // const startString = `closed_at_iso_string > ${startDate}`
 
     // may not always have an account_id if it's not been configured, this needs to detect null or not.
-    const accountIdString = (account_id.length > 0) ? `and account_id in ( ${account_id} )` : ""
+    // const accountIdString = (account_id.length > 0) ? `and account_id in ( ${account_id} )` : ""
 
     // should never have a time where there is not a currency.
     // const currencyString = `and currency = '${defaultCurrency}'`
-    console.log({defaultCurrency})
+    // console.log({defaultCurrency})
 
-    const currencyString = (defaultCurrency.length > 0) ? `and currency in ( ${defaultCurrency.map( (b:string) => "'" + b + "'")} )` : ""
+
+    // const currencyString = (defaultCurrency.length > 0) ? `and currency in ( ${defaultCurrency.map( (b:string) => "'" + b + "'")} )` : ""
 
     // combining the above filters
     // no OR starting the string.
-    const fullQueryString = `${startString} ${accountIdString} ${currencyString}`
+    // const fullQueryString = `${startString} ${accountIdString} ${currencyString}`
+
+    const currencyString = defaultCurrency.map( (b:string) => "'" + b + "'")
+    const startString = startDate
+    const accountIdString = account_id
+
 
     return {
-        fullQueryString,
+        // fullQueryString,
         currencyString,
         accountIdString,
         startString
@@ -55,7 +61,21 @@ const updateThreeCData = async () => {
 // This can most likely be moved to the performance dashboard or upwards to the app header.
 const fetchDealDataFunction = async () => {
     const filtersQueryString = await getFiltersQueryString()
-    const query = `select final_profit, closed_at, id, deal_hours from deals where closed_at != null or finished = 1 and ${filtersQueryString.fullQueryString} order by closed_at asc;`
+    const { currencyString, accountIdString, startString } = filtersQueryString;
+    const query = `
+                SELECT 
+                    final_profit, closed_at, id, 
+                    deal_hours
+                FROM 
+                    deals 
+                WHERE
+                    closed_at != null 
+                    or finished = 1 
+                    and account_id in (${accountIdString}) 
+                    And currency in (${currencyString}) 
+                    and closed_at_iso_string > ${startString} 
+                ORDER BY
+                    closed_at asc;`
 
     // @ts-ignore
     let dataArray = await electron.database.query(query)
@@ -111,6 +131,7 @@ const fetchDealDataFunction = async () => {
      */
 const fetchPerformanceDataFunction = async () => {
     const filtersQueryString = await getFiltersQueryString()
+    const { currencyString, accountIdString, startString } = filtersQueryString;
 
 
     // Filtering by only closed.
@@ -130,7 +151,9 @@ const fetchPerformanceDataFunction = async () => {
                     deals 
                 WHERE
                     profitPercent is not null
-                    and ${filtersQueryString.fullQueryString}
+                    and account_id in (${accountIdString} )
+                    and currency in (${currencyString} )
+                    and closed_at_iso_string > ${startString} 
                 GROUP BY 
                     performance_id;`
 
@@ -169,11 +192,19 @@ const getActiveDealsFunction = async () => {
     const filtersQueryString = await getFiltersQueryString()
 
     const { currencyString, accountIdString } = filtersQueryString
-    console.log(`select * from deals where finished = 0 ${currencyString} ${accountIdString} `)
-
-
+    const query = `
+                SELECT
+                    * 
+                FROM
+                    deals 
+                WHERE
+                    finished = 0 
+                    and account_id in (${accountIdString} )
+                    and currency in (${currencyString} )
+                    `
+    console.log(query)
     // @ts-ignore
-    let activeDeals: Array<Type_ActiveDeals> = await electron.database.query(`select * from deals where finished = 0 ${currencyString} ${accountIdString} `)
+    let activeDeals: Array<Type_ActiveDeals> = await electron.database.query(query)
 
 
     if (activeDeals.length > 0) {
@@ -212,8 +243,25 @@ const getActiveDealsFunction = async () => {
  * @returns 
  */
 const getAccountDataFunction = async (defaultCurrency: string[]) => {
-    let accountData: Array<Type_Query_Accounts> = await accountDataAll()
-        .then(data => data.filter((row: Type_Query_Accounts) => defaultCurrency.includes(row.currency_code)))
+    // console.log({accountData:  await accountDataAll()})
+
+    const filtersQueryString = await getFiltersQueryString()
+    const { currencyString, accountIdString } = filtersQueryString
+
+    const query = `
+                SELECT
+                    *
+                FROM
+                    accountData
+                WHERE
+                    account_id IN ( ${accountIdString} )
+                    and currency_code IN ( ${currencyString} );
+    `
+
+
+    // @ts-ignore
+    let accountData: Array<Type_Query_Accounts> = await electron.database.query(query)
+        .then((data: Type_Query_Accounts[]) => data.filter( row => defaultCurrency.includes(row.currency_code)))
 
     if (accountData.length > 0) {
         let on_ordersTotal = 0;
@@ -263,3 +311,5 @@ export {
     getAccountDataFunction,
     accountDataAll
 }
+
+

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 // import isDev from 'electron-is-dev'; // New Import
 
 const path = require("path");
@@ -8,6 +8,20 @@ const isDev = !app.isPackaged;
 const { update, query, checkOrMakeTables, run } = require( './server/database');
 
 let win;
+
+const installExtensions = async () => {
+  const installer = require('electron-devtools-installer')
+  const forceDownload = !!process.env.UPGRADE_EXTENSIONS
+  const extensions = [
+    'REACT_DEVELOPER_TOOLS',
+    'REDUX_DEVTOOLS',
+    'DEVTRON'
+  ]
+
+  return Promise
+    .all(extensions.map(name => installer.default(installer[name], forceDownload)))
+    .catch(console.log)
+}
 
 const createWindow = (): void => {
   win = new BrowserWindow({
@@ -30,6 +44,7 @@ const createWindow = (): void => {
 
   if (isDev) {
 		win.webContents.openDevTools();
+    installExtensions()
     win.loadURL('http://localhost:9000');
 
 	} else {
@@ -58,6 +73,10 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+ipcMain.handle('open-external-link', (event, link) => {
+  shell.openExternal(link)
+});
 
 import { config } from './utils/config';
 

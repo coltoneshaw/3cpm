@@ -38,3 +38,46 @@ You can see right away that this repo is under my real name with my real company
 2. What would they gain from my data?
 3. Just search for anything that's `https` or looks like an IP address.
 4. It's open source, so you can review the code and even compile it youself!
+
+
+
+# Test Functions
+
+## Get bankroll test
+
+```javascript
+// code to find bankroll
+let testAccountData = async (accountId, currencyCode) => {
+    const accountData = await electron.database.query(`select * from accountData where account_id IN (${accountId}) and currency_code IN ('${currencyCode}') `);
+
+
+    let on_orders;
+    let position;
+
+
+    if (accountData.length > 0) {
+        let on_ordersTotal = 0;
+        let positionTotal = 0;
+
+        for (const account of accountData) {
+            const { on_orders, position } = account
+            on_ordersTotal += on_orders;
+            positionTotal += position;
+
+        }
+
+        console.log({ on_ordersTotal, positionTotal })
+        position =  positionTotal
+        on_orders = on_ordersTotal
+        }
+    
+
+    let activeDeals = await electron.database.query(`select * from deals where finished = 0 and currency IN ('${currencyCode}')  and account_id IN (${accountId}) `)
+    const boughtVolume = activeDeals.map((deal) => deal.bought_volume).reduce((sum, item) => sum + item)
+
+    console.log('Bankroll is: ' + ( position + boughtVolume ))
+    console.log({position, on_orders, boughtVolume})
+}
+```
+
+You can run this function with `testAccountData(30368609, 'BUSD')`

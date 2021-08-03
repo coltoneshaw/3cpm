@@ -19,10 +19,9 @@ const DealSoUtalizationBar = ({title, data }: Type_ActiveDealCharts) => {
             if (data.length === 0) {
                 return (<NoData />)
             } else {
-                return (<ResponsiveContainer width="100%" aspect={5}>
+                return (<ResponsiveContainer width="100%" height="90%" minHeight="400px">
                 <BarChart
-                    width={500}
-                    height={200}
+                    // width={500}
                     data={data}
                     margin={{
                         top: 20,
@@ -62,7 +61,7 @@ const DealSoUtalizationBar = ({title, data }: Type_ActiveDealCharts) => {
         }
 
         return (
-            <div className="boxData" style={{ 'margin': '25px' }}>
+            <div className="boxData" style={{ 'margin': '25px', minHeight:"400px" }}>
                 <h3 className="chartTitle">{title}</h3>
                 {renderChart()}
             </div>

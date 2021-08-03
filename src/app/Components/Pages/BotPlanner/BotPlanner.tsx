@@ -112,10 +112,12 @@ const BotPlannerPage = ({ classes }: { classes: object }) => {
         // alert('Saved to the bots table!')
     }
     const [open, setOpen] = useState(false);
+    const [toastMessage, changeToastMessage] = useState("");
 
-    // const handleClick = () => {
-    //     setOpen(true);
-    // };
+    const handleToast = ( message:string ) => {
+        changeToastMessage(message)
+        setOpen(true);
+    };
 
     const handleClose = ( event:any , reason:string) => {
         if (reason === 'clickaway') {
@@ -123,6 +125,7 @@ const BotPlannerPage = ({ classes }: { classes: object }) => {
         }
 
         setOpen(false);
+        changeToastMessage("")
     };
 
 
@@ -136,6 +139,7 @@ const BotPlannerPage = ({ classes }: { classes: object }) => {
                     endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
                     onClick={async () => {
                         await updateAllData()
+                        handleToast("Sync Completed.")
                         setOpen(true)
                     }}
                 >
@@ -145,7 +149,12 @@ const BotPlannerPage = ({ classes }: { classes: object }) => {
                     variant="outlined"
                     color="primary"
                     endIcon={<SaveIcon />}
-                    onClick={() => { saveCustomDeals() }}
+                    onClick={() => { 
+                        
+                        saveCustomDeals()
+                        handleToast("Saved table data.")
+                        setOpen(true)
+                     }}
                 >
                     Save table data
                 </Button>
@@ -175,7 +184,7 @@ const BotPlannerPage = ({ classes }: { classes: object }) => {
                 updateLocalBotData={updateLocalBotData}
             />
 
-            <ToastNotifcation open={open} handleClose={handleClose} message="Sync finished." />
+            <ToastNotifcation open={open} handleClose={handleClose} message={toastMessage} />
 
 
         </>

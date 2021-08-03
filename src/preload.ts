@@ -60,6 +60,11 @@ async function setupContextBridge() {
         return await ipcRenderer.invoke('run-database', query);
       }
     },
+    general: {
+      openLink(link: string){
+        ipcRenderer.invoke('open-external-link', link);
+      }
+    }
   })
 }
 

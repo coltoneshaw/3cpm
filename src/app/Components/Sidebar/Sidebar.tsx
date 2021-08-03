@@ -4,7 +4,8 @@ import React, { Component } from 'react';
 
 import { BackwardClock, BotPlannerIcon, Coffee, Cog, PieChart } from './Icons/Index'
 
-import SidebarOption from './SidebarOption';
+import { SidebarNav, SidebarLink } from './Components';
+
 import DisplaySwitcher from './DisplaySwitcher';
 
 
@@ -19,13 +20,14 @@ class Sidebar extends Component {
         return (
             <div id="sidebar">
                 <div className="flex-column sidebar-column">
-                    <SidebarOption Icon={BotPlannerIcon} name="Bot Planner" link="/botplanner" />
-                    <SidebarOption Icon={PieChart} name="Stats" link="/stats" />
-                    <SidebarOption Icon={BackwardClock} name="Trading View" link="/backtesting" />
+                    <SidebarNav Icon={BotPlannerIcon} name="Bot Planner" link="/botplanner" />
+                    <SidebarNav Icon={PieChart} name="Stats" link="/stats" />
+                    <SidebarNav Icon={BackwardClock} name="Trading View" link="/backtesting" />
                 </div>
                 <div className="flex-column sidebar-column" style={{justifyContent: 'flex-end'}}>
-                    <SidebarOption Icon={Coffee} name="Donate" link="/donate" />
-                    <SidebarOption Icon={Cog} name="Settings" link="/settings" />
+                    {/*  @ts-ignore */}
+                    <SidebarLink Icon={Coffee} name="Donate" link="" onClick={() => electron.general.openLink('https://www.buymeacoffee.com/ColtonS')} />
+                    <SidebarNav Icon={Cog} name="Settings" link="/settings" />
                     <DisplaySwitcher />
                 </div>
 

@@ -6,12 +6,11 @@ interface Props {
     // In your case
     Icon: React.ComponentType,
     name: string, 
-    link: string
+    link: string,
   }
 
-const SidebarOption= ({ Icon, name, link }: Props) => {
+const SidebarNav= ({ Icon, name, link }: Props) => {
 
-    // let { Icon, name, link } = props
 
     return (
         <div className="sidebarOption">
@@ -27,4 +26,4 @@ const SidebarOption= ({ Icon, name, link }: Props) => {
 
 }
 
-export default SidebarOption;
+export default SidebarNav;

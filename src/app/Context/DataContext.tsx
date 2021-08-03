@@ -260,9 +260,10 @@ const DataProvider = ( { children }:any ) => {
             const { maxRisk, totalBoughtVolume, position, on_orders } = prevState
 
             // Position = available + on orders.
-            const totalBankroll =  position + totalBoughtVolume
             const availableBankroll = position - on_orders
             const totalInDeals = on_orders + totalBoughtVolume
+            const totalBankroll =  position + totalBoughtVolume
+
 
             console.log({
                 maxRiskPercent: parseInt((( maxRisk / totalBankroll ) * 100).toFixed(0)),
@@ -287,10 +288,6 @@ const DataProvider = ( { children }:any ) => {
         })
     }
 
-    const runTestData = () => {
-        console.log({ metricsData })
-    }
-
     const updateAllData = async () => {
         updateIsSyncing(true)
         try {
@@ -309,6 +306,7 @@ const DataProvider = ( { children }:any ) => {
                 })
         } catch (error) {
             console.error(error)
+            alert('Error updating your data. Check the console for more information.')
         }
 
         updateIsSyncing(false)
@@ -332,7 +330,6 @@ const DataProvider = ( { children }:any ) => {
     // TODO - Come back to this
     const values = {
         actions: {
-            runTestData,
             fetchProfitMetrics,
             fetchPerformanceData,
             getActiveDeals,

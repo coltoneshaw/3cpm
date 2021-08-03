@@ -16,15 +16,19 @@ const RiskMonitor = () => {
     const { data: { activeDeals, metricsData, balanceData } } = state;
     return (
         <>
-        <SpeedometerDiv
-                    metrics={metricsData}
-                    />
-        <Grid item xs={12}>
-            <DealSoUtalizationBar data={activeDeals} title="Current Deal SO Utalization" />
-            <SoDistribution  data={activeDeals} title="Current Deal SO Distribution" metrics={metricsData}/>
-        </Grid>
+            <SpeedometerDiv
+                metrics={metricsData}
+            />
+            <Grid container >
+                <Grid item xl={6} md={12} lg={6}>
+                    <DealSoUtalizationBar data={activeDeals} title="Deal Max Utalization" />
+                </Grid>
+                <Grid item xl={6} md={12} lg={6}>
+                    <SoDistribution data={activeDeals} title="Active Deals SO Distribution" metrics={metricsData} />
+                </Grid>
+            </Grid>
         </>
-        
+
     )
 }
 
