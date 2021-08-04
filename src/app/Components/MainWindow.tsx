@@ -16,7 +16,7 @@ const MainWindow = () => {
     const [homePage, updateHomePage] = useState<ReactElement>()
 
     useEffect(() => {
-        if (apiData.key.length > 0 || apiData.secret.length > 0) {
+        if (apiData.key !== "" || apiData.secret !== "") {
             updateHomePage(<Redirect to="/botplanner" />)
         } else {
             updateHomePage(<Redirect to="/settings" />)

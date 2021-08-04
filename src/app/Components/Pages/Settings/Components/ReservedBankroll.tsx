@@ -36,53 +36,55 @@ export default function ReservedBankroll() {
     const dataState = useGlobalData()
     const { data: { accountData } } = dataState
 
-    // useEffect(() => {
-    //     updateReservedFunds(( prevState: Type_ReservedFunds[] ) => {
-    //         if (accountData.length > 0) {
-    //             const filteredAccountData = removeDuplicatesInArray(accountData, 'account_id')
-    //             console.log({filteredAccountData})
+    useEffect(() => {
+        updateReservedFunds(( prevState: Type_ReservedFunds[] ) => {
 
-    //             // checking to see if any reserved funds exist
-    //             if (reservedFunds.length === 0 || reservedFunds === []) {
-    //                 console.log('setitng since there are no account IDs!')
-    //                 return filteredAccountData.map(account => {
-    //                     const { account_id, account_name } = account
-    //                     return {
-    //                         id : account_id,
-    //                         account_name,
-    //                         reserved_funds: 0,
-    //                         is_enabled: false
-    //                     }
-    //                 })
-    //             }
+            // @ts-ignore
+            if (accountData !== undefined || accountData.length > 0) {
+                const filteredAccountData = removeDuplicatesInArray(accountData, 'account_id')
+                console.log({filteredAccountData})
 
-    //             const configuredAccountIds = reservedFunds.map(account => account.id)
+                // checking to see if any reserved funds exist
+                if (reservedFunds.length === 0 || reservedFunds === []) {
+                    console.log('setting since there are no account IDs!')
+                    return filteredAccountData.map(account => {
+                        const { account_id, account_name } = account
+                        return {
+                            id : account_id,
+                            account_name,
+                            reserved_funds: 0,
+                            is_enabled: false
+                        }
+                    })
+                }
 
-    //             // finding any accounts that did not exist since the last sync.
-    //             const newAcounts = filteredAccountData
-    //                 .filter( account => !configuredAccountIds.includes(account.account_id) )
-    //                 .map( account => {
-    //                     const { account_id, account_name } = account
-    //                     return {
-    //                         id: account_id,
-    //                         account_name,
-    //                         reserved_funds: 0,
-    //                         is_enabled: false
-    //                     }
-    //                 })
-    //             console.log({ newAcounts, configuredAccountIds })
+                const configuredAccountIds = reservedFunds.map(account => account.id)
 
-    //             return [
-    //                 ...prevState,
-    //                 ...newAcounts
-    //             ]
-    //         }
-    //     })
-    // }, [config, accountData])
+                // finding any accounts that did not exist since the last sync.
+                const newAcounts = filteredAccountData
+                    .filter( account => !configuredAccountIds.includes(account.account_id) )
+                    .map( account => {
+                        const { account_id, account_name } = account
+                        return {
+                            id: account_id,
+                            account_name,
+                            reserved_funds: 0,
+                            is_enabled: false
+                        }
+                    })
+                console.log({ newAcounts, configuredAccountIds })
 
-    // /**
-    //  * Detect account data, merge accoutn data with the config data.
-    //  */
+                return [
+                    ...prevState,
+                    ...newAcounts
+                ]
+            }
+        })
+    }, [config, accountData])
+
+    /**
+     * Detect account data, merge accoutn data with the config data.
+     */
 
 
     const columns = [
@@ -134,24 +136,22 @@ export default function ReservedBankroll() {
     }
 
     const handleEditCellChangeCommitted = (e: any) => {
-        console.log('editing a page')
 
         updateReservedFunds((prevState: Type_ReservedFunds[]) => {
             return prevState.map(row => {
-                console.log('row')
 
-                console.log({row})
+                console.log({row, e})
                 if (e.id == row.id) {
+
                     // @ts-ignore - validate props
-                    row[e.field] = e.props.value
-                    console.log(`changed ${e.field} to ${e.props.value}`)
+                    row[e.field] = e.value
+                    console.log(`changed ${e.field} to ${e.value}`)
 
                 }
                 return row
             })
         })
     }
-
 
     return (
         <div style={{ display: 'flex', overflow: "visible", width: "100%", alignSelf: "center" }}>
@@ -160,13 +160,14 @@ export default function ReservedBankroll() {
                     autoHeight
                     className={classes.root}
                     hideFooter={true}
-                    rows={rows}
+                    rows={reservedFunds}
                     // @ts-ignore
                     columns={columns}
                     disableColumnFilter
                     disableColumnSelector
                     disableColumnMenu
-                    onEditCellChangeCommitted={handleEditCellChangeCommitted}
+                    onCellEditCommit={handleEditCellChangeCommitted}
+                    onError={(error) => console.log(error + 'error')}
 
                 />
             </div>

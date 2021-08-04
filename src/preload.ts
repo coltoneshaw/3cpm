@@ -58,6 +58,10 @@ async function setupContextBridge() {
       async run(query:string) {
         console.log('running query' + query)
         return await ipcRenderer.invoke('run-database', query);
+      },
+      async deleteAllData() {
+        console.log('deleting all data!')
+        return await ipcRenderer.invoke('database-deleteAll');
       }
     },
     general: {

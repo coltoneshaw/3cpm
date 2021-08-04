@@ -263,10 +263,20 @@ async function run(query:string) {
     await stmt.run()
 }
 
+async function deleteAllData () {
+        console.info('deleting all database info.')
+       await run('drop table bots')
+       await run('drop table accountData')
+       await run('drop table deals')
+       initialDatabaseSetup()
+
+}
+
 
 export {
     update,
     query,
     run,
-    checkOrMakeTables
+    checkOrMakeTables,
+    deleteAllData
 }

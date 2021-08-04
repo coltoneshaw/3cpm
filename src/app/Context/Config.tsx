@@ -36,6 +36,8 @@ interface Type_ConfigContext {
     }
 }
 
+const defaultReserved = [{ id: 0, account_name: '', reserved_funds: 0, is_enabled: false }]
+
 
 const ConfigProvider = ({ children }: any) => {
     const [config, updateConfig] = useState<TconfigValues>(() => defaultConfig)
@@ -82,7 +84,7 @@ const ConfigProvider = ({ children }: any) => {
     const setNewStatDate = (config: TconfigValues) => {
         updateDate(() => {
             const startDate: number | undefined = dotProp.get(config, 'statSettings.account_id')
-            return (startDate) ? startDate : 0;
+            return (startDate) ? startDate : getTime(sub(new Date(), { days: 90 })) ;
         })
     }
 

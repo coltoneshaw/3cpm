@@ -37,7 +37,6 @@ const DataTable = ({  localBotData, updateLocalBotData }:Type_DataTable) => {
 
   // handling this locally becauase it does not need to be saved yet.
   const handleOnOff = (e: any) => {
-
     updateLocalBotData((prevState: Type_Query_bots[]) => {
       const newRows = prevState.map((row: Type_Query_bots) => {
         if (e !== undefined && e.target !== null) {
@@ -45,7 +44,6 @@ const DataTable = ({  localBotData, updateLocalBotData }:Type_DataTable) => {
             row.is_enabled = !row.is_enabled
           }
         }
-
         return row
       })
       return calc_dropMetrics(bankRoll, newRows)
@@ -65,6 +63,7 @@ const DataTable = ({  localBotData, updateLocalBotData }:Type_DataTable) => {
 
   }
 
+
   const handleEditCellChangeCommitted = (e: any) => {
     console.log(e)
 
@@ -75,13 +74,12 @@ const DataTable = ({  localBotData, updateLocalBotData }:Type_DataTable) => {
      */
 
     updateLocalBotData((prevState: Type_Query_bots[]) => {
-      
       const newRows = prevState.map(row => {
         if (e.id == row.id) {
 
           // @ts-ignore - validate props
-          row[e.field] = e.props.value
-          console.log(`changed ${e.field} to ${e.props.value}`)
+          row[e.field] = e.value
+          console.log(`changed ${e.field} to ${e.value}`)
 
           /**
            * TODO
@@ -92,7 +90,7 @@ const DataTable = ({  localBotData, updateLocalBotData }:Type_DataTable) => {
             martingale_volume_coefficient, martingale_step_coefficient, max_active_deals, 
             active_deals_count, safety_order_step_percentage } = row
 
-          let maxDealFunds = calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
+          let maxDealFunds = calc_DealMaxFunds_bot(+max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
           let max_inactive_funds = calc_maxInactiveFunds(+maxDealFunds, +max_active_deals, +active_deals_count)
           row.max_funds = calc_maxBotFunds(+maxDealFunds, +max_active_deals)
           row.max_funds_per_deal = maxDealFunds;
@@ -164,18 +162,18 @@ const DataTable = ({  localBotData, updateLocalBotData }:Type_DataTable) => {
     <div style={{ display: 'flex', overflow: "visible" }} className="boxData">
       <div className="dataTable"  >
         <DataGrid
-          onEditCellChangeCommitted={handleEditCellChangeCommitted}
           className={classes.root}
           hideFooter={true}
           rows={localBotData}
-          style={{minWidth: "1500px"}}
+          // style={{minWidth: "1500px"}}
+
           // @ts-ignore
           columns={columns}
           disableColumnFilter
           disableColumnSelector
           disableColumnMenu
-          // onCellEditCommit={handleEditCellChangeCommitted}
-          
+          onCellEditCommit={handleEditCellChangeCommitted}
+          onError={(error) => console.log(error + 'error')}
         />
       </div>
     </div>
