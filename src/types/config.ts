@@ -16,8 +16,16 @@ export interface TconfigValues {
     },
     statSettings: {
         startDate: number
-        account_id: number[]
+        account_id: number[],
+        reservedFunds: Type_ReservedFunds[]
     }
+}
+
+export interface Type_ReservedFunds {
+    id: number
+    account_name: string
+    reserved_funds: number
+    is_enabled: boolean
 }
 
 export interface Type_ApiKeys {

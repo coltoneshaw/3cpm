@@ -32,7 +32,7 @@ const getFiltersQueryString = async () => {
     // no OR starting the string.
     // const fullQueryString = `${startString} ${accountIdString} ${currencyString}`
 
-    const currencyString = defaultCurrency.map( (b:string) => "'" + b + "'")
+    const currencyString = (defaultCurrency) ? defaultCurrency.map( (b:string) => "'" + b + "'") : ""
     const startString = startDate
     const accountIdString = account_id
 
@@ -79,6 +79,18 @@ const fetchDealDataFunction = async () => {
 
     // @ts-ignore
     let dataArray = await electron.database.query(query)
+
+    if(dataArray == null || dataArray.length === 0){
+        console.log('no data')
+        return {
+            profitData: [],
+            metrics: {
+                totalProfit: 0,
+                averageDailyProfit: 0,
+                averageDealHours: 0
+            }
+        }
+    }
     
     let dates = Array.from(new Set(dataArray.map((row: Type_Query_DealData) => { if (row.closed_at) { return row.closed_at.split('T')[0] } })))
     let totalDealHours = dataArray.map((deal: Type_Query_DealData) => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours)
@@ -162,7 +174,7 @@ const fetchPerformanceDataFunction = async () => {
     // @ts-ignore
     let databaseQuery = await electron.database.query(queryString);
 
-    if (databaseQuery.length > 0) {
+    if (databaseQuery == null || databaseQuery.length > 0) {
         const totalProfitSummary = databaseQuery
             .map((deal: Type_Query_PerfArray) => deal.total_profit)
             .reduce((sum: number, item: number) => sum + item)
@@ -207,7 +219,7 @@ const getActiveDealsFunction = async () => {
     let activeDeals: Array<Type_ActiveDeals> = await electron.database.query(query)
 
 
-    if (activeDeals.length > 0) {
+    if (activeDeals == null || activeDeals.length > 0) {
         activeDeals = activeDeals.map((row: Type_ActiveDeals) => {
             const so_volume_remaining = row.max_deal_funds - row.bought_volume
             return {
@@ -257,13 +269,13 @@ const getAccountDataFunction = async (defaultCurrency: string[]) => {
                     account_id IN ( ${accountIdString} )
                     and currency_code IN ( ${currencyString} );
     `
-
+    console.log(query)
 
     // @ts-ignore
     let accountData: Array<Type_Query_Accounts> = await electron.database.query(query)
         .then((data: Type_Query_Accounts[]) => data.filter( row => defaultCurrency.includes(row.currency_code)))
 
-    if (accountData.length > 0) {
+    if (accountData == null || accountData.length > 0) {
         let on_ordersTotal = 0;
         let positionTotal = 0;
 

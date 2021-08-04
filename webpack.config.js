@@ -1,11 +1,10 @@
-const { mainConfig,
-  preloadconfig 
-} = require('./webpack.electron.js');
+const electronConfigs = require('./webpack.electron.js');
+const preloadConfig = require('./webpack.preload.js');
 
 const reactConfigs = require('./webpack.react.js');
 
 module.exports = [
-  mainConfig,
-  preloadconfig,
+  electronConfigs,
+  preloadConfig,
   reactConfigs
 ];

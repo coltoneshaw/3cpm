@@ -4,7 +4,7 @@ import dotProp from 'dot-prop';
 // Contect Providers
 import { useGlobalState } from './Config';
 
-import { Type_Query_PerfArray, Type_Query_bots, Type_ActiveDeals, Type_Query_Accounts, Type_MetricData, Type_Profit} from '@/types/3Commas'
+import { Type_Query_PerfArray, Type_Query_bots, Type_ActiveDeals, Type_Query_Accounts, Type_MetricData, Type_Profit } from '@/types/3Commas'
 import { TconfigValues } from '@/types/config'
 
 // TODO - see about setting this to something other than null for the default Value
@@ -23,7 +23,7 @@ import {
 
 const defaultBalance = {
     on_orders: 0,
-    position: 0
+    position: 0,
 }
 
 const defaultMetrics = {
@@ -35,44 +35,42 @@ const defaultMetrics = {
     totalBankroll: 0,
     position: 0,
     on_orders: 0,
-    totalInDeals: 0
- }
+    totalInDeals: 0,
+    reservedFundsTotal: 0
+}
 
 interface Type_Data_Context {
-        actions: {
-            runTestData: any
-            fetchProfitMetrics: any
-            fetchPerformanceData: any
-            getActiveDeals: any
-            getAccountData: any
-            fetchBotData: any
-            calculateMetrics: any
-            updateAllData: any
-        },
-        data: {
-            botData: Type_Query_bots[]
-            profitData: Type_Profit[]
-            activeDeals: Type_ActiveDeals[]
-            performanceData: Type_Query_PerfArray[]
-            balanceData: { on_orders: number, position: number}
-            metricsData: Type_MetricData
-            additionalData: {accountName: string[] }[]
-            accountData: Type_Query_Accounts[]
-            isSyncing: boolean
-        }
+    actions: {
+        runTestData: any
+        fetchProfitMetrics: any
+        fetchPerformanceData: any
+        getActiveDeals: any
+        getAccountData: any
+        fetchBotData: any
+        calculateMetrics: any
+        updateAllData: any
+    },
+    data: {
+        botData: Type_Query_bots[]
+        profitData: Type_Profit[]
+        activeDeals: Type_ActiveDeals[]
+        performanceData: Type_Query_PerfArray[]
+        balanceData: { on_orders: number, position: number }
+        metricsData: Type_MetricData
+        additionalData: { accountName: string[] }[]
+        accountData: Type_Query_Accounts[]
+        isSyncing: boolean
+    }
 }
 
 /**
  * 
  * This needs to be nested under the config context as it'll use that!
  */
-const DataProvider = ( { children }:any ) => {
-
-    const botSyncIcon = createRef()
-    const statsSyncIcon = createRef()
+const DataProvider = ({ children }: any) => {
 
     const configState = useGlobalState()
-    const { config } = configState
+    const { config, state: { reservedFunds } } = configState
 
     const [botData, updateBotData] = useState<Type_Query_bots[]>([])
     const [profitData, updateProfitData] = useState<Type_Profit[]>([])
@@ -81,8 +79,10 @@ const DataProvider = ( { children }:any ) => {
     const [balanceData, setBalanceData] = useState(() => defaultBalance)
     const [accountData, setAccountData] = useState<Type_Query_Accounts[]>([])
     const [metricsData, updateMetricsData] = useState(() => defaultMetrics)
-    const [additionalData, setAdditionalData] = useState<{accountName: string[] }[]>([])
+    const [additionalData, setAdditionalData] = useState<{ accountName: string[] }[]>([])
     const [isSyncing, updateIsSyncing] = useState(false)
+
+
 
 
 
@@ -91,7 +91,11 @@ const DataProvider = ( { children }:any ) => {
         // console.log()
         if (config && dotProp.has(config, 'general.defaultCurrency')) {
             console.log('ran this')
-            getAccountData(config)
+            try{
+                getAccountData(config)
+            } catch(error) {
+                console.error(error)
+            }
         }
 
 
@@ -100,12 +104,12 @@ const DataProvider = ( { children }:any ) => {
     // @ts-ignore
     useEffect(async () => {
         updateIsSyncing(true)
-        try{
+        try {
             await fetchBotData()
             await fetchProfitMetrics()
             await fetchPerformanceData()
             await getActiveDeals()
-        } catch(error){
+        } catch (error) {
             console.error(error)
         }
         updateIsSyncing(false)
@@ -122,19 +126,25 @@ const DataProvider = ( { children }:any ) => {
 
 
     const fetchBotData = async () => {
-        // @ts-ignore
-        await electron.api.updateBots()
 
-        // @ts-ignore
-        await electron.database.query('select * from bots;')
-            .then( (result: Type_Query_bots[])  => {
+        try {
+            // @ts-ignore
+            await electron.api.updateBots()
+
+            // @ts-ignore
+            await electron.database.query('select * from bots;')
+                .then((result: Type_Query_bots[]) => {
                     // alert('Bot data is updated')
-                    if (result.length > 0) {
+                    if (result != null && result.length > 0) {
                         updateBotData(result)
                     } else {
                         updateBotData([])
                     }
                 })
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 
 
@@ -167,15 +177,15 @@ const DataProvider = ( { children }:any ) => {
      */
     const fetchPerformanceData = () => {
         fetchPerformanceDataFunction()
-            .then( ( (data: Type_Query_PerfArray[] ) => {
+            .then(((data: Type_Query_PerfArray[]) => {
                 console.log('updated Performance Data!')
                 updatePerformanceData(data)
                 updateMetricsData(prevData => {
                     return {
                         ...prevData,
-                        boughtVolume: (data.length > 0) ? data.map( deal => deal.bought_volume).reduce((sum:number , item:number ) => sum + item) : 0,
-                        totalProfit_perf: (data.length > 0) ? data.map( deal => deal.total_profit).reduce((sum:number , item:number ) => sum + item) : 0,
-                        totalDeals: (data.length > 0) ? data.map( deal  => deal.number_of_deals).reduce((sum:number , item:number ) => sum + item) : 0
+                        boughtVolume: (data.length > 0) ? data.map(deal => deal.bought_volume).reduce((sum: number, item: number) => sum + item) : 0,
+                        totalProfit_perf: (data.length > 0) ? data.map(deal => deal.total_profit).reduce((sum: number, item: number) => sum + item) : 0,
+                        totalDeals: (data.length > 0) ? data.map(deal => deal.number_of_deals).reduce((sum: number, item: number) => sum + item) : 0
                     }
                 })
             }))
@@ -217,8 +227,12 @@ const DataProvider = ( { children }:any ) => {
             .then(data => {
                 const { accountData, balance } = data
 
+                if(accountData == undefined || accountData.length === 0) {
+                    return
+                }
+
                 // filtering the accounts based on what is included in the config settings.
-                const filteredAccount = accountData.filter(account => config.statSettings.account_id.includes( account.account_id ) )
+                const filteredAccount = accountData.filter(account => config.statSettings.account_id.includes(account.account_id))
 
                 /** TODO
                  * - Add error handling here to properly know what to return if there is no matching accounts
@@ -260,18 +274,20 @@ const DataProvider = ( { children }:any ) => {
             const { maxRisk, totalBoughtVolume, position, on_orders } = prevState
 
             // Position = available + on orders.
-            const availableBankroll = position - on_orders
+            const reservedFundsTotal = (reservedFunds.length) ? reservedFunds.filter(account => account.is_enabled).map(account => account.reserved_funds).reduce((sum: number, item: number) => sum + item) : 0
+            const availableBankroll = position - on_orders - reservedFundsTotal
             const totalInDeals = on_orders + totalBoughtVolume
-            const totalBankroll =  position + totalBoughtVolume
+            const totalBankroll = position + totalBoughtVolume - reservedFundsTotal
 
 
             console.log({
-                maxRiskPercent: parseInt((( maxRisk / totalBankroll ) * 100).toFixed(0)),
-                bankrollAvailable: parseInt(  (( 1 - (( totalInDeals ) / totalBankroll ) ) * 100 ).toFixed(0) ),
+                maxRiskPercent: parseInt(((maxRisk / totalBankroll) * 100).toFixed(0)),
+                bankrollAvailable: parseInt(((1 - ((totalInDeals) / totalBankroll)) * 100).toFixed(0)),
                 totalBankroll,
                 availableBankroll,
                 prevState,
-                totalInDeals
+                totalInDeals,
+                reservedFunds
             })
 
             // active sum already includes on_orders.
@@ -279,11 +295,12 @@ const DataProvider = ( { children }:any ) => {
 
             return {
                 ...prevState,
-                maxRiskPercent: parseInt(((maxRisk / totalBankroll ) * 100).toFixed(0)),
-                bankrollAvailable: parseInt(  (( 1 - (( totalInDeals ) / totalBankroll ) ) * 100 ).toFixed(0) ),
+                maxRiskPercent: parseInt(((maxRisk / totalBankroll) * 100).toFixed(0)),
+                bankrollAvailable: parseInt(((1 - ((totalInDeals) / totalBankroll)) * 100).toFixed(0)),
                 totalBankroll,
                 availableBankroll,
-                totalInDeals
+                totalInDeals,
+                reservedFundsTotal
             }
         })
     }
@@ -337,7 +354,7 @@ const DataProvider = ( { children }:any ) => {
             fetchBotData,
             calculateMetrics,
             updateAllData
-                },
+        },
         data: {
             // @ts-ignore
             botData,
@@ -359,7 +376,7 @@ const DataProvider = ( { children }:any ) => {
     return (
         <DataContext.Provider
             // @ts-ignore
-            value={values }>
+            value={values}>
             {children}
         </DataContext.Provider>
     )

@@ -10,6 +10,8 @@ import { calc_deviation, calc_DealMaxFunds_bot, calc_maxInactiveFunds, calc_maxB
 
 import { Type_Query_bots } from '@/types/3Commas'
 
+import { MuiClassObject } from '@/app/Context/MuiClassObject'
+
 
 /**
  * TODO
@@ -18,12 +20,12 @@ import { Type_Query_bots } from '@/types/3Commas'
 
 interface Type_DataTable {
   localBotData: Type_Query_bots[]
-  classes: any
   updateLocalBotData: any
 }
-const DataTable = ({ classes, localBotData, updateLocalBotData }:Type_DataTable) => {
+const DataTable = ({  localBotData, updateLocalBotData }:Type_DataTable) => {
 
   const state = useGlobalData()
+  const classes = MuiClassObject()
 
 
   // TODO - This needs to be fixed when the other data from this is fixed.
@@ -35,7 +37,6 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }:Type_DataTable)
 
   // handling this locally becauase it does not need to be saved yet.
   const handleOnOff = (e: any) => {
-
     updateLocalBotData((prevState: Type_Query_bots[]) => {
       const newRows = prevState.map((row: Type_Query_bots) => {
         if (e !== undefined && e.target !== null) {
@@ -43,7 +44,6 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }:Type_DataTable)
             row.is_enabled = !row.is_enabled
           }
         }
-
         return row
       })
       return calc_dropMetrics(bankRoll, newRows)
@@ -63,7 +63,9 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }:Type_DataTable)
 
   }
 
+
   const handleEditCellChangeCommitted = (e: any) => {
+    console.log(e)
 
     /**
      * 1. Identify the row that was updated (e) and the value, then update it.
@@ -76,8 +78,8 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }:Type_DataTable)
         if (e.id == row.id) {
 
           // @ts-ignore - validate props
-          row[e.field] = e.props.value
-          console.log(`changed ${e.field} to ${e.props.value}`)
+          row[e.field] = e.value
+          console.log(`changed ${e.field} to ${e.value}`)
 
           /**
            * TODO
@@ -88,7 +90,7 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }:Type_DataTable)
             martingale_volume_coefficient, martingale_step_coefficient, max_active_deals, 
             active_deals_count, safety_order_step_percentage } = row
 
-          let maxDealFunds = calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
+          let maxDealFunds = calc_DealMaxFunds_bot(+max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
           let max_inactive_funds = calc_maxInactiveFunds(+maxDealFunds, +max_active_deals, +active_deals_count)
           row.max_funds = calc_maxBotFunds(+maxDealFunds, +max_active_deals)
           row.max_funds_per_deal = maxDealFunds;
@@ -163,13 +165,15 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }:Type_DataTable)
           className={classes.root}
           hideFooter={true}
           rows={localBotData}
+          // style={{minWidth: "1500px"}}
 
           // @ts-ignore
           columns={columns}
           disableColumnFilter
           disableColumnSelector
           disableColumnMenu
-          onEditCellChangeCommitted={handleEditCellChangeCommitted}
+          onCellEditCommit={handleEditCellChangeCommitted}
+          onError={(error) => console.log(error + 'error')}
         />
       </div>
     </div>

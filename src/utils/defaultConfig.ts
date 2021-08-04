@@ -85,6 +85,7 @@ const defaultConfig:TconfigValues = {
     "statSettings": {
         "startDate": getTime(sub(new Date(), { days: 90 })),
         "account_id": [],
+        "reservedFunds": []
     }
 }
 

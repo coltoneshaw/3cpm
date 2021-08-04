@@ -8,7 +8,7 @@ import { DataProvider } from '../Context/DataContext';
 import ToastNotifcation from '@/app/Components/ToastNotification'
 
 
-const MainWindow = (props: { classes: object }) => {
+const MainWindow = () => {
 
     const configState = useGlobalState()
     const { state: { apiData }, config } = configState;
@@ -16,7 +16,7 @@ const MainWindow = (props: { classes: object }) => {
     const [homePage, updateHomePage] = useState<ReactElement>()
 
     useEffect(() => {
-        if (apiData.key.length > 0 || apiData.secret.length > 0) {
+        if (apiData.key !== "" || apiData.secret !== "") {
             updateHomePage(<Redirect to="/botplanner" />)
         } else {
             updateHomePage(<Redirect to="/settings" />)
@@ -33,11 +33,12 @@ const MainWindow = (props: { classes: object }) => {
                 </Route>
 
                 <DataProvider>
-                    <Route exact path="/botplanner" render={() => <BotPlannerPage classes={props.classes} />} />
+                    <Route exact path="/botplanner" render={() => <BotPlannerPage />} />
                     <Route exact path="/stats" render={() => <StatsPage />} />
+                    <Route exact path="/settings" render={() => <SettingsPage />} />
+
                 </DataProvider>
 
-                <Route exact path="/settings" render={() => <SettingsPage />} />
                 <Route exact path="/donate" render={() => <DonatePage />} />
                 <Route exact path="/backtesting" render={() => <TradingViewPage />} />
 

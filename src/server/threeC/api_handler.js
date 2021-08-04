@@ -225,6 +225,10 @@ class threeCommasAPI {
     return await this.makeRequest('POST', `/public/api/ver1/accounts/${params.account_id}/rename?`, params)
   }
 
+  async balanceHistoryData (params) {
+    return await this.makeRequest('GET', `/public/api/ver1/accounts/${params.account_id}/balance_chart_data?`, params)
+  }
+
   async accountPieChartData (account_id) {
     return await this.makeRequest('POST', `/public/api/ver1/accounts/${account_id}/pie_chart_data?`, { account_id })
   }

@@ -11,4 +11,11 @@ function tryParseJSON_( jsonString:string , options:object ) {
     return false;
 };
 
-exports.tryParseJSON_ = tryParseJSON_
+const removeDuplicatesInArray = (data: any[], idAttribute:any) => {
+  return Array.from(new Set( data.map(a => a[idAttribute] ))).map(id => data.find(a => a[idAttribute] === id))
+}
+
+export {
+  removeDuplicatesInArray,
+  tryParseJSON_
+}

@@ -1,8 +1,7 @@
-import { getTime } from 'date-fns'
+import { getTime, sub } from 'date-fns'
 import React, { useContext, useState, useEffect, forwardRef } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 
-import dotProp from 'dot-prop';
 
 import {
   MuiPickersUtilsProvider,
@@ -34,8 +33,10 @@ export default function StartDatePicker() {
     console.log('changing the date')
   };
 
+  console.log({date})
+
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils} >
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDatePicker
         disableToolbar
         variant="inline"
@@ -47,6 +48,9 @@ export default function StartDatePicker() {
         onChange={handleDateChange}
         KeyboardButtonProps={{
           'aria-label': 'change date',
+        }}
+        style={{
+          width: "100%"
         }}
       />
     </MuiPickersUtilsProvider>

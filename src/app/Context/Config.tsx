@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, SetStateAction } from 'react';
 import dotProp from 'dot-prop';
 import { sub, getTime } from 'date-fns'
 
@@ -14,7 +14,7 @@ interface Type_currency {
 
 // pulling in the default config from the config store for use once it's been reset.
 import { defaultConfig } from '@/utils/defaultConfig'
-import { TconfigValues } from '@/types/config'
+import { TconfigValues, Type_ReservedFunds } from '@/types/config'
 
 
 interface Type_ConfigContext {
@@ -31,9 +31,12 @@ interface Type_ConfigContext {
         updateCurrency: any
         updateApiData: any
         apiData: {key: string, secret: string}
+        reservedFunds: Type_ReservedFunds[],
+        updateReservedFunds: any
     }
 }
 
+const defaultReserved = [{ id: 0, account_name: '', reserved_funds: 0, is_enabled: false }]
 
 
 const ConfigProvider = ({ children }: any) => {
@@ -44,11 +47,19 @@ const ConfigProvider = ({ children }: any) => {
     const [apiData, updateApiData] = useState({ key: '', secret: '' })
     const [currency, updateCurrency] = useState<string[]>(["USD"])
     const [accountID, updateAccountID] = useState<number[]>([]);
+    const [reservedFunds, updateReservedFunds] = useState<Type_ReservedFunds[]>([])
 
     const setNewCurrency = (config: TconfigValues) => {
         updateCurrency(() => {
             const newCurrency: string[] | undefined = dotProp.get(config, 'general.defaultCurrency')
             return (newCurrency) ? newCurrency : ["USD"]
+        })
+    }
+
+    const setNewReservedFunds = (config: TconfigValues) => {
+        updateReservedFunds( () => {
+            const reservedFundsArray: Type_ReservedFunds[] | undefined = dotProp.get(config, 'statSettings.reservedFunds')
+            return (reservedFundsArray) ? reservedFundsArray : [];
         })
     }
 
@@ -73,7 +84,7 @@ const ConfigProvider = ({ children }: any) => {
     const setNewStatDate = (config: TconfigValues) => {
         updateDate(() => {
             const startDate: number | undefined = dotProp.get(config, 'statSettings.account_id')
-            return (startDate) ? startDate : 0;
+            return (startDate) ? startDate : getTime(sub(new Date(), { days: 90 })) ;
         })
     }
 
@@ -89,6 +100,7 @@ const ConfigProvider = ({ children }: any) => {
                 setNewApiKeys(config)
                 setNewAccountIdArray(config)
                 setNewStatDate(config)
+                setNewReservedFunds(config)
 
 
             })
@@ -104,6 +116,7 @@ const ConfigProvider = ({ children }: any) => {
 
             prevConfig.statSettings.account_id = (accountID) ? accountID : [];
             prevConfig.statSettings.startDate = (date) ? date : 0;
+            prevConfig.statSettings.reservedFunds = (reservedFunds) ? reservedFunds : [];
 
             prevConfig.apis.threeC = {
                 key: apiData.key,
@@ -133,6 +146,7 @@ const ConfigProvider = ({ children }: any) => {
             setNewCurrency(newConfig)
             setNewApiKeys(newConfig)
             setNewAccountIdArray(newConfig)
+            setNewReservedFunds(newConfig)
 
             return newConfig
         })
@@ -165,6 +179,11 @@ const ConfigProvider = ({ children }: any) => {
             console.log('Updated start Date')
             setNewStatDate(config)
         }
+
+        if (config && dotProp.has(config, 'statSettings.reservedFunds')) {
+            console.log('Updated reserved funds.')
+            setNewReservedFunds(config)
+        }
     }, [config])
 
 
@@ -186,7 +205,9 @@ const ConfigProvider = ({ children }: any) => {
                     currency,
                     updateCurrency,
                     updateApiData,
-                    apiData
+                    apiData,
+                    reservedFunds,
+                    updateReservedFunds
                 }
             }}>
             {children}

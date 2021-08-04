@@ -8,6 +8,7 @@ const migrateCurrencyToArray = (store:any ) => {
     (currentCurrency.length > 0) ? store.set('general.defaultCurrency', [currentCurrency] ) : store.set('general.defaultCurrency', ["usd"] )
 }
 
+
 // establishing a config store.
 const config = new Store({
     migrations: {
@@ -16,6 +17,13 @@ const config = new Store({
             store.set('statSettings.account_id', []);
 
             migrateCurrencyToArray(store)
+            
+        },
+        '0.0.4': ( store: any )=>{
+            console.info('migrating the config store to 0.0.4')
+            console.log('adding a reserved funds array.')
+            store.set('statSettings.reservedFunds', []);
+            
             
         }
     },

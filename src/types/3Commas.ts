@@ -200,7 +200,8 @@ export interface Type_MetricData {
     position: number
     on_orders: number
     totalInDeals: number
-    availableBankroll: number
+    availableBankroll: number,
+    reservedFundsTotal: number
 }
 
 export interface Type_MarketOrders {

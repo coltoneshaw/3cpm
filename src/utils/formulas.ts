@@ -191,7 +191,7 @@ const calc_dropMetrics = (bankRoll:number, botData:Type_Query_bots[]) => {
     /**
      * This function is responsible for taking the bot data, bankroll and outputting the new bot array with the metrics added.
      */
-    if(botData.length === 0) return [];
+    if(botData == undefined || botData.length === 0) return [];
 
      const enabledBots = botData.filter(bot => bot.is_enabled)
      const fundsAvailable = bankRoll / enabledBots.length

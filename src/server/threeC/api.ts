@@ -23,9 +23,18 @@ import {
  * @description - required at the moment so when you make a config change on the frontend you're not using old data.
  */
 const threeCapi = ( config:any ) => {
+
+  const key = config.get('apis.threeC.key')
+  const secret = config.get('apis.threeC.secret')
+
+  if(key == null || secret == null){
+    console.error('missing API keys')
+    return false
+  }
+
   const api = new threeCommasAPI({
-    apiKey: config.get('apis.threeC.key'),
-    apiSecret: config.get('apis.threeC.secret')
+    apiKey: key,
+    apiSecret: secret
   })
 
   return api
@@ -55,6 +64,8 @@ const threeCapi = ( config:any ) => {
 
 async function bots() {
   const api = threeCapi(config)
+  if(!api) return []
+
   let data:Type_API_bots[] = await api.getBots();
 
   const dataArray = []
@@ -139,6 +150,7 @@ async function bots() {
    */
 async function getMarketOrders( deal_id:number ) {
   const api = threeCapi(config)
+  if(!api) return []
 
   // this is the /market_orders endpoint.
   let apiCall = await api.getDealSafetyOrders(deal_id)
@@ -208,6 +220,7 @@ async function getMarketOrders( deal_id:number ) {
  */
 async function getDealsUpdate( limit: number) {
   const api = threeCapi(config)
+  if(!api) return []
 
   let responseArray = [];
   let response:Type_Deals[] ;
@@ -318,6 +331,7 @@ async function deals( limit:number ) {
  */
 async function getAccountDetail() {
   const api = threeCapi(config)
+  if(!api) return false
 
   let accountData = await api.accounts()
   let array = [];
