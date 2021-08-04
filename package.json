@@ -11,6 +11,7 @@
     "build": "webpack && electron-builder --dir && electron-builder --mac --win --linux",
     "react:dev": "webpack serve --mode=development",
     "electron:dev": "nodemon",
+    "webpack" : "webpack",
     "dev": "concurrently --kill-others \"npm run react:dev\" \"npm run electron:dev\"",
     "start": "npm run build && electron dist/main.js",
     "rebuild": "./node_modules/.bin/electron-rebuild -f -w better-sqlite3"

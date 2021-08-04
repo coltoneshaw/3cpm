@@ -4,15 +4,15 @@
 
     width: 75%;
     min-width: 200px;
-    max-width: 400px;
+
     padding: 5%;
     justify-content: space-between;
     text-align: left;
 
 }
 
-.settings-div div {
-    margin: 10px 0 10px 0;
+.settings-child {
+    margin: 0 0 40px 0;
 }
 
 .subText{
@@ -26,4 +26,29 @@
 
 .settingsButtonDiv button{
     width: 150px;
+}
+
+.settings-right {
+    margin-left: 15px;
+    flex-basis: 50%;
+}
+
+.settings-left {
+    margin-right: 15px;
+    flex-basis: 50%;
+}
+
+#date-picker-inline {
+    margin: 10px
+}
+
+.settings-dataGrid {
+    flex-grow: 1;
+    text-align: center;
+    border: none;
+    width: 50%;
+    overflow: scroll;
+    overflow-x: scroll;
+    align-self: center;
+    width: 60%
 }

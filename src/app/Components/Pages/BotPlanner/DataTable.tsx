@@ -10,6 +10,8 @@ import { calc_deviation, calc_DealMaxFunds_bot, calc_maxInactiveFunds, calc_maxB
 
 import { Type_Query_bots } from '@/types/3Commas'
 
+import { MuiClassObject } from '@/app/Context/MuiClassObject'
+
 
 /**
  * TODO
@@ -18,12 +20,12 @@ import { Type_Query_bots } from '@/types/3Commas'
 
 interface Type_DataTable {
   localBotData: Type_Query_bots[]
-  classes: any
   updateLocalBotData: any
 }
-const DataTable = ({ classes, localBotData, updateLocalBotData }:Type_DataTable) => {
+const DataTable = ({  localBotData, updateLocalBotData }:Type_DataTable) => {
 
   const state = useGlobalData()
+  const classes = MuiClassObject()
 
 
   // TODO - This needs to be fixed when the other data from this is fixed.
@@ -64,6 +66,7 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }:Type_DataTable)
   }
 
   const handleEditCellChangeCommitted = (e: any) => {
+    console.log(e)
 
     /**
      * 1. Identify the row that was updated (e) and the value, then update it.
@@ -72,6 +75,7 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }:Type_DataTable)
      */
 
     updateLocalBotData((prevState: Type_Query_bots[]) => {
+      
       const newRows = prevState.map(row => {
         if (e.id == row.id) {
 
@@ -160,16 +164,18 @@ const DataTable = ({ classes, localBotData, updateLocalBotData }:Type_DataTable)
     <div style={{ display: 'flex', overflow: "visible" }} className="boxData">
       <div className="dataTable"  >
         <DataGrid
+          onEditCellChangeCommitted={handleEditCellChangeCommitted}
           className={classes.root}
           hideFooter={true}
           rows={localBotData}
-
+          style={{minWidth: "1500px"}}
           // @ts-ignore
           columns={columns}
           disableColumnFilter
           disableColumnSelector
           disableColumnMenu
-          onEditCellChangeCommitted={handleEditCellChangeCommitted}
+          // onCellEditCommit={handleEditCellChangeCommitted}
+          
         />
       </div>
     </div>

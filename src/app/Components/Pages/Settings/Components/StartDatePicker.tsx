@@ -35,7 +35,7 @@ export default function StartDatePicker() {
   };
 
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils} >
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDatePicker
         disableToolbar
         variant="inline"
@@ -47,6 +47,9 @@ export default function StartDatePicker() {
         onChange={handleDateChange}
         KeyboardButtonProps={{
           'aria-label': 'change date',
+        }}
+        style={{
+          width: "100%"
         }}
       />
     </MuiPickersUtilsProvider>

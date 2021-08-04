@@ -12,11 +12,10 @@ import './Settings.scss';
 import CurrencySelector from './Components/CurrencySelector';
 import SaveSubmitButtons from './Components/SaveSubmitButtons';
 import ApiSettings from './Components/ApiSettings';
-import StatSettingElements from './StatSettings'
 
 import ToastNotifcation from '@/app/Components/ToastNotification'
-
-
+import ReservedBankroll from './Components/ReservedBankroll';
+import StartDatePicker from './Components/StartDatePicker';
 
 const SettingsPage = () => {
 
@@ -26,7 +25,7 @@ const SettingsPage = () => {
         setOpen(true);
     };
 
-    const handleClose = ( event:any , reason:string) => {
+    const handleClose = (event: any, reason: string) => {
         if (reason === 'clickaway') {
             return;
         }
@@ -36,14 +35,33 @@ const SettingsPage = () => {
 
     return (
         <>
-            <h1>Settings</h1>
-            <div className="settings-div boxData flex-column" style={{ overflow: "visible" }}>
+            {/* <h1>Settings</h1> */}
+            <div className="settings-div boxData flex-column" style={{ overflow: "visible", margin: "auto" }}>
                 <ApiSettings />
-                <div className="flex-column">
+                <div className="flex-column settings-child">
                     <h2>General Settings:</h2>
-                    <CurrencySelector />
+                    <div className="flex-row">
+                        <div style={{
+                            marginRight: "15px",
+                            flexBasis: "50%"
+                        }}>
+                            <CurrencySelector />
+                            <StartDatePicker />
+                        </div>
+                        <div style={{
+                            marginLeft: "15px",
+                            flexBasis: "50%"
+                        }}>
+                            
+
+                            <p className="subText">Set your account filters and reserved funds below. Double click in the reserved fund box to update the value.</p>
+                            <ReservedBankroll />
+
+                        </div>
+
+                    </div>
+
                 </div>
-                <StatSettingElements />
 
                 <SaveSubmitButtons setOpen={setOpen} />
 

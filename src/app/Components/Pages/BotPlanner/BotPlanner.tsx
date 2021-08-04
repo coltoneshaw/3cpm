@@ -18,7 +18,7 @@ import { calc_dropMetrics } from '@/utils/formulas'
 
 import { Type_Query_bots } from '@/types/3Commas';
 
-const BotPlannerPage = ({ classes }: { classes: object }) => {
+const BotPlannerPage = () => {
 
     const state = useGlobalData();
     const { actions: { fetchBotData, updateAllData }, data: { botData, isSyncing, metricsData: { totalBankroll } } } = state;
@@ -179,7 +179,6 @@ const BotPlannerPage = ({ classes }: { classes: object }) => {
                 add row
             </Button>
             <DataTable
-                classes={classes}
                 localBotData={localBotData}
                 updateLocalBotData={updateLocalBotData}
             />

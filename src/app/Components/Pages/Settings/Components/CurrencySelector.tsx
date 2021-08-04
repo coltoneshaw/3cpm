@@ -66,7 +66,7 @@ const CurrencySelector = () => {
 
     return (
 
-        <FormControl >
+        <FormControl style={{width: "100%"}}>
             <InputLabel>Currency</InputLabel>
 
 
@@ -75,9 +75,11 @@ const CurrencySelector = () => {
                 value={currency}
                 onChange={onChange}
                 input={<Input />}
+                // style={{width: "100%"}}
                 // @ts-ignore
                 renderValue={() => (currency.length > 0) ? returnCurrencyValues(currencyArray, currency) : ""}
                 MenuProps={MenuProps}
+                style={{padding: "10px 0 10px 0", marginLeft: "10px"}}
             >
                 {/* Need to think through All because it's now a selector. */}
                 {/* <MenuItem value=""></MenuItem> */}
