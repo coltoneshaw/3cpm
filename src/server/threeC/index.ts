@@ -1,5 +1,5 @@
 import { update } from '@/server/database';
-const { bots, getAccountDetail, deals, getDealsBulk, getDealsUpdate } = require('./api');
+const { bots, getAccountDetail, deals, getDealsBulk, getDealsUpdate, getAccountSummary } = require('./api');
 
 import { Type_Deals, Type_Query_Accounts, Type_API_bots } from '@/types/3Commas'
 
@@ -17,6 +17,10 @@ async function updateAPI(limit: number) {
       update('deals', data)
     })
 
+  await getAccountData()
+}
+
+async function getAccountData(){
   await getAccountDetail()
     .then((data: Type_Query_Accounts[]) => {
       update('accountData', data)
@@ -47,5 +51,7 @@ export {
   getAccountDetail,
   deals,
   getDealsBulk,
-  getDealsUpdate
+  getDealsUpdate,
+  getAccountData,
+  getAccountSummary
 }

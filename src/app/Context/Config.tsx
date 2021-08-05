@@ -1,6 +1,8 @@
 import React, { createContext, useState, useEffect, SetStateAction } from 'react';
 import dotProp from 'dot-prop';
 import { sub, getTime } from 'date-fns'
+import { removeDuplicatesInArray } from '@/utils/helperFunctions';
+
 
 // TODO - see about setting this to something other than null for the default Value
 // @ts-ignore
@@ -33,6 +35,9 @@ interface Type_ConfigContext {
         apiData: {key: string, secret: string}
         reservedFunds: Type_ReservedFunds[],
         updateReservedFunds: any
+    },
+    actions: {
+        fetchAccountsForRequiredFunds: any
     }
 }
 
@@ -45,7 +50,7 @@ const ConfigProvider = ({ children }: any) => {
     // setting the default state to be 90 days in the past.
     const [date, updateDate] = useState(() => getTime(sub(new Date(), { days: 90 })))
     const [apiData, updateApiData] = useState({ key: '', secret: '' })
-    const [currency, updateCurrency] = useState<string[]>(["USD"])
+    const [currency, updateCurrency] = useState<string[]>([])
     const [accountID, updateAccountID] = useState<number[]>([]);
     const [reservedFunds, updateReservedFunds] = useState<Type_ReservedFunds[]>([])
 
@@ -118,6 +123,18 @@ const ConfigProvider = ({ children }: any) => {
             prevConfig.statSettings.startDate = (date) ? date : 0;
             prevConfig.statSettings.reservedFunds = (reservedFunds) ? reservedFunds : [];
 
+            // console.log(reservedFunds.filter(account => account.is_enabled).map(account => account.id))
+
+            updateAccountID(() => {
+                const accountIDs = reservedFunds.filter(account => account.is_enabled).map(account => account.id)
+                if(accountIDs.length > 0){
+
+                    return accountIDs
+                } else {
+                    return []
+                }
+            })
+
             prevConfig.apis.threeC = {
                 key: apiData.key,
                 secret: apiData.secret,
@@ -150,6 +167,58 @@ const ConfigProvider = ({ children }: any) => {
 
             return newConfig
         })
+    }
+
+    const fetchAccountsForRequiredFunds = async () => {
+        // @ts-ignore
+        const accountSummary = await electron.api.getAccountData()
+        console.log({accountSummary})
+
+        if (accountSummary !== undefined || accountSummary.length > 0) {
+            updateReservedFunds( prevState => {
+
+                // @ts-ignore
+                    const filteredAccountData = removeDuplicatesInArray(accountSummary, 'id')
+                    console.log({filteredAccountData})
+    
+                    // checking to see if any reserved funds exist
+                    if (prevState.length === 0 || prevState === []) {
+                        console.log('setting since there are no account IDs!')
+                        return filteredAccountData.map(account => {
+                            const { id, name } = account
+                            return {
+                                id,
+                                account_name: name,
+                                reserved_funds: 0,
+                                is_enabled: false
+                            }
+                        })
+                    }
+    
+                    const configuredAccountIds = removeDuplicatesInArray(reservedFunds.map(account => account.id), 'id') 
+    
+                    // finding any accounts that did not exist since the last sync.
+                    const newAcounts = filteredAccountData
+                        .filter( account => !configuredAccountIds.includes(account.id) )
+                        .map( account => {
+                            const { id, name } = account
+                            return {
+                                id,
+                                account_name : name,
+                                reserved_funds: 0,
+                                is_enabled: false
+                            }
+                        })
+                    console.log({ newAcounts, configuredAccountIds })
+    
+                    return [
+                        ...prevState,
+                        ...newAcounts
+                    ]
+                
+            })
+        }
+        
     }
 
 
@@ -208,6 +277,9 @@ const ConfigProvider = ({ children }: any) => {
                     apiData,
                     reservedFunds,
                     updateReservedFunds
+                },
+                actions: {
+                    fetchAccountsForRequiredFunds
                 }
             }}>
             {children}

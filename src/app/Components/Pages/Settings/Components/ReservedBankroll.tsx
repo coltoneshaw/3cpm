@@ -25,62 +25,12 @@ const rows = [
  * TODO
  * - Need to see about finding all the existing accounts and merging that array with the config.
  */
-export default function ReservedBankroll() {
+const ReservedBankroll = () => {
     const classes = MuiClassObject()
 
     // config state
     const configState = useGlobalState()
     const { config, state: { reservedFunds, updateReservedFunds } } = configState
-
-    // global api / database state
-    const dataState = useGlobalData()
-    const { data: { accountData } } = dataState
-
-    useEffect(() => {
-        updateReservedFunds(( prevState: Type_ReservedFunds[] ) => {
-
-            // @ts-ignore
-            if (accountData !== undefined || accountData.length > 0) {
-                const filteredAccountData = removeDuplicatesInArray(accountData, 'account_id')
-                console.log({filteredAccountData})
-
-                // checking to see if any reserved funds exist
-                if (reservedFunds.length === 0 || reservedFunds === []) {
-                    console.log('setting since there are no account IDs!')
-                    return filteredAccountData.map(account => {
-                        const { account_id, account_name } = account
-                        return {
-                            id : account_id,
-                            account_name,
-                            reserved_funds: 0,
-                            is_enabled: false
-                        }
-                    })
-                }
-
-                const configuredAccountIds = reservedFunds.map(account => account.id)
-
-                // finding any accounts that did not exist since the last sync.
-                const newAcounts = filteredAccountData
-                    .filter( account => !configuredAccountIds.includes(account.account_id) )
-                    .map( account => {
-                        const { account_id, account_name } = account
-                        return {
-                            id: account_id,
-                            account_name,
-                            reserved_funds: 0,
-                            is_enabled: false
-                        }
-                    })
-                console.log({ newAcounts, configuredAccountIds })
-
-                return [
-                    ...prevState,
-                    ...newAcounts
-                ]
-            }
-        })
-    }, [config, accountData])
 
     /**
      * Detect account data, merge accoutn data with the config data.
@@ -128,6 +78,7 @@ export default function ReservedBankroll() {
                 if (e !== undefined && e.target !== null) {
                     if (e.target.name == row.id) {
                         row.is_enabled = !row.is_enabled
+                        console.log(row.is_enabled)
                     }
                 }
                 return row
@@ -174,3 +125,5 @@ export default function ReservedBankroll() {
         </div>
     );
 }
+
+export default ReservedBankroll;

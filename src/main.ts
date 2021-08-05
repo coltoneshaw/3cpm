@@ -139,7 +139,7 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
  * 
  */
 
- const { updateAPI, bots, getDealsBulk, getDealsUpdate, getAndStoreBotData } = require('./server/threeC/index');
+ const { updateAPI, bots, getDealsBulk, getDealsUpdate, getAndStoreBotData, getAccountSummary } = require('./server/threeC/index');
 
 
  ipcMain.handle('api-getDealsBulk', (event, limit) => {
@@ -153,6 +153,10 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
  ipcMain.handle('api-updateData', async (event, limit) => {
    await updateAPI(limit)
  });
+
+ ipcMain.handle('api-getAccountData', async (event) => {
+  return await getAccountSummary()
+});
  
  ipcMain.handle('api-getBots', async (event) => {
    await getAndStoreBotData()

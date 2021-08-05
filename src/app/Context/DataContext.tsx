@@ -240,6 +240,7 @@ const DataProvider = ({ children }: any) => {
                 const defaultData = {
                     accountName: (filteredAccount.length > 0) ? filteredAccount.map(account => account.account_name) : "No matching accounts"
                 }
+
                 setAccountData(accountData)
                 setBalanceData(balance)
                 updateMetricsData(prevState => {
@@ -259,6 +260,7 @@ const DataProvider = ({ children }: any) => {
             })
     }
 
+    
 
 
 

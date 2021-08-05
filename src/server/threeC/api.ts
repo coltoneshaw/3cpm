@@ -231,10 +231,10 @@ async function getDealsUpdate( limit: number) {
   // converting the incoming dateUTC to the right format in case it's not done properly.
   let lastSyncTime = await config.get('syncStatus.deals.lastSyncTime');
 
-  for (let offset = 0; offset < offsetMax; offset += 1000) {
+  for (let offset = 0; offset < offsetMax; offset += 500) {
 
     // can look into using the from tag to filter on the last created deal.
-    response= await api.getDeals({ limit: 1000, order: 'updated_at', order_direction: 'desc', offset })
+    response= await api.getDeals({ limit: 500, order: 'updated_at', order_direction: 'desc', offset })
 
     // limiting the offset to just 5000 here. This can be adjusted but made for some issues with writing to Sheets.
     if (response.length > 0) { responseArray.push(...response) }
@@ -267,7 +267,7 @@ async function getDealsUpdate( limit: number) {
 
     // breaking out of the loop if it's not a full payload OR the oldest deal is oldest deal comes before the last sync time.
     // This is not needed if 3C gives us the ability to sync based on an updatedAt date.
-    if (response.length != 1000 || oldestDate <= lastSyncTime) { break; }
+    if (response.length != 500 || oldestDate <= lastSyncTime) { break; }
 
   }
 
@@ -364,11 +364,27 @@ async function getAccountDetail() {
   return array
 }
 
+async function getAccountSummary() {
+  const api = threeCapi(config)
+  if(!api) return false
+  let accountData = await api.accounts()
+
+  let array = []
+
+  for(let account of accountData){
+    const { id, name } = account
+    array.push({id, name})
+  }
+
+  return array;
+}
+
 
 
 export {
   getDealsUpdate,
   getAccountDetail,
   deals,
-  bots
+  bots,
+  getAccountSummary
 }

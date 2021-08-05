@@ -26,8 +26,7 @@ const configSchema = {
         type: "object",
         properties: {
             defaultCurrency: {
-                type: "array",
-                default: ["USD"]
+                type: "array"
             },
             globalLimit: {
                 type: "number",

@@ -41,7 +41,7 @@ const buttonElements = [
 
 const StatsPage = () => {
     const configState = useGlobalState()
-    const { config } = configState
+    const { config, state: {reservedFunds}} = configState
     const state = useGlobalData()
     const { data: { metricsData, accountData, isSyncing }, actions: { updateAllData } } = state
     const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal } = metricsData
@@ -53,10 +53,9 @@ const StatsPage = () => {
 
 
     const returnAccountNames = () => {
-       if(accountData.length > 0 && account_id.length > 0){
-
+       if(reservedFunds.length > 0){
         // @ts-ignore
-           return Array.from( new Set(accountData.filter(e => account_id.includes(e.account_id)).map(e => e.account_name))).join(', ')
+           return reservedFunds.filter( account => account.is_enabled ).map( account => account.account_name ).join(', ')
        } else {
            return "n/a"
        }

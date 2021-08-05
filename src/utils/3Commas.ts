@@ -6,6 +6,9 @@ import {
     Type_Query_Accounts
 } from '@/types/3Commas'
 
+import { Type_ReservedFunds } from '@/types/config'
+
+
 interface Type_ProfitArray extends Array<Type_Profit>{}
 
 const getFiltersQueryString = async () => {
@@ -13,7 +16,7 @@ const getFiltersQueryString = async () => {
     // @ts-ignore
     const config = await electron.config.get()
 
-    const { statSettings: { startDate, account_id }, general: { defaultCurrency } } = config
+    const { statSettings: { startDate, reservedFunds }, general: { defaultCurrency } } = config
 
     // always will have a start date of 90 days out. There should not be a time that this is null
     // const startString = `closed_at_iso_string > ${startDate}`
@@ -34,7 +37,7 @@ const getFiltersQueryString = async () => {
 
     const currencyString = (defaultCurrency) ? defaultCurrency.map( (b:string) => "'" + b + "'") : ""
     const startString = startDate
-    const accountIdString = account_id
+    const accountIdString = reservedFunds.filter(( account:Type_ReservedFunds ) => account.is_enabled ).map( ( account:Type_ReservedFunds ) => account.id )
 
 
     return {
