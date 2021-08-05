@@ -32,47 +32,43 @@ const buttonElements = [
     {
         name: 'Performance Monitor',
         id: 'performance-monitor'
-    },
-    {
-        name: 'Active Deals',
-        id: 'active-deals'
     }
 ]
 
 const StatsPage = () => {
     const configState = useGlobalState()
-    const { config, state: {reservedFunds}} = configState
+    const { config, state: { reservedFunds } } = configState
     const state = useGlobalData()
-    const { data: { metricsData, accountData, isSyncing }, actions: { updateAllData } } = state
+    const { data: { metricsData, isSyncing }, actions: { updateAllData } } = state
     const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')
     const date: undefined | number = dotProp.get(config, 'statSettings.startDate')
 
-    const account_id = findAccounts(config, 'statSettings.account_id')
+    // const account_id = findAccounts(config, 'statSettings.account_id')
 
 
     const returnAccountNames = () => {
-       if(reservedFunds.length > 0){
-        // @ts-ignore
-           return reservedFunds.filter( account => account.is_enabled ).map( account => account.account_name ).join(', ')
-       } else {
-           return "n/a"
-       }
+        if (reservedFunds.length > 0) {
+            // @ts-ignore
+            return reservedFunds.filter(account => account.is_enabled).map(account => account.account_name).join(', ')
+        } else {
+            return "n/a"
+        }
     }
 
     const returnCurrencyValues = () => {
-       const currencyValues: string[] | undefined = dotProp.get(config, 'general.defaultCurrency')
-        if( currencyValues != undefined && currencyValues.length > 0){
-         // @ts-ignore
+        const currencyValues: string[] | undefined = dotProp.get(config, 'general.defaultCurrency')
+        if (currencyValues != undefined && currencyValues.length > 0) {
+            // @ts-ignore
             return currencyValues.join(', ')
         } else {
             return "n/a"
         }
-     }
+    }
 
     // this needs to stay on this page
-    const viewChanger = ( newView:string ) => {
+    const viewChanger = (newView: string) => {
         changeView(newView)
     }
     // this needs to stay on this page
@@ -96,8 +92,8 @@ const StatsPage = () => {
         />
     }
 
-    const dateString = ( date:undefined| number  ) => {
-       return (date) ? format(date, "MM/dd/yyyy") : ""
+    const dateString = (date: undefined | number) => {
+        return (date) ? format(date, "MM/dd/yyyy") : ""
     }
 
     const [open, setOpen] = React.useState(false);
@@ -106,7 +102,7 @@ const StatsPage = () => {
         setOpen(true);
     };
 
-    const handleClose = ( event:any , reason:string) => {
+    const handleClose = (event: any, reason: string) => {
         if (reason === 'clickaway') {
             return;
         }
@@ -117,48 +113,54 @@ const StatsPage = () => {
 
     return (
         <>
-            <h1>Stats</h1>
-            <div className="flex-row padding">
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={async () => {
-                        await updateAllData()
-                        handleClick() 
-                    }}
-                    endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
-                >
-                    Update Data
-                </Button>
+            <div className="flex-row">
+                <div className="flex-column" style={{flexBasis: "50%"}} >
+                    <div className="flex-row" >
+                        <h1 style={{ textAlign: "center", margin: "auto" }}>Stats</h1>
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            onClick={async () => {
+                                await updateAllData()
+                                handleClick()
+                            }}
+                            endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
+                            style={{margin: "auto", height: "36px"}}
+                        >
+                            Update Data
+                        </Button>
+                    </div>
+                    <div className="flex-row filters" style={{alignItems: "center", margin: "auto"}}>
+                        <p><strong>Account: </strong>{returnAccountNames()}</p>
+
+                        <p><strong>Start Date: </strong>{dateString(date)} </p>
+                        <p><strong>Default Currency: </strong>{returnCurrencyValues()}</p>
+                    </div>
+                </div>
+                <div className="flex-column" style={{ margin: "auto", alignItems: "center", flexBasis: "50%" }}>
+                    {/* This needs to be it's own div to prevent the buttons from taking on the flex properties. */}
+                    <div>
+                        <ButtonGroup aria-label="outlined primary button group" disableElevation disableRipple>
+                            {
+                                buttonElements.map(button => {
+                                    if (button.id === currentView) return <Button onClick={() => viewChanger(button.id)} color="primary" >{button.name}</Button>
+                                    return <Button key={button.id} onClick={() => viewChanger(button.id)} >{button.name}</Button>
+
+                                })
+                            }
+                        </ButtonGroup>
+                    </div>
+                </div>
             </div>
+
 
             <div className="flex-column" style={{ alignItems: 'center' }}>
 
-                {/* This needs to be it's own div to prevent the buttons from taking on the flex properties. */}
-                <div>
-                    <ButtonGroup aria-label="outlined primary button group" disableElevation disableRipple>
-                        {
-                            buttonElements.map(button => {
-                                if (button.id === currentView) return <Button onClick={() => viewChanger(button.id)} color="primary" >{button.name}</Button>
-                                return <Button key={button.id} onClick={() => viewChanger(button.id)} >{button.name}</Button>
-
-                            })
-                        }
-                    </ButtonGroup>
-                </div>
-
-                <div className="flex-row filters">
-                    <p><strong>Account: </strong>{ returnAccountNames() }</p>
-
-                    <p><strong>Start Date: </strong>{ dateString(date) } </p>
-                    <p><strong>Default Currency: </strong>{ returnCurrencyValues() }</p>
-                </div>
-
                 <div className="riskDiv">
                     <Card_ActiveDeals metric={activeDealCount} />
-                    <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume}} />
+                    <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
                     <Card_MaxDca metric={maxRisk} />
-                    <Card_TotalBankRoll metric={totalBankroll} additionalData={{position, totalBoughtVolume, reservedFundsTotal}} />
+                    <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
                     <Card_TotalProfit metric={totalProfit} />
                 </div>
 

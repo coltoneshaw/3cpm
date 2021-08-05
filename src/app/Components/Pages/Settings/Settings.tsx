@@ -39,7 +39,7 @@ const SettingsPage = () => {
             <div className="settings-div boxData flex-column" style={{ overflow: "visible", margin: "auto" }}>
                 <ApiSettings />
                 <div className="flex-column settings-child">
-                    <h2>General Settings:</h2>
+                    <h2 className="text-center ">General Settings:</h2>
                     <div className="flex-row">
                         <div style={{
                             marginRight: "15px",

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Button } from '@material-ui/core';
 
 import { useGlobalState } from '@/app/Context/Config';
 import { useGlobalData } from '@/app/Context/DataContext';
+import LoaderIcon from '@/app/Components/icons/Loading'
 
 interface SubmitButtons {
     setOpen: any
@@ -14,7 +15,7 @@ const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
 
     const dataState = useGlobalData()
     const {actions: {updateAllData}} = dataState
-
+    const [ loader, setLoaderIcon ] = useState(false)
 
 
     return (
@@ -29,7 +30,6 @@ const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
                     reset()
                     setOpen(true)
                     }
-
                 }}
                 disableElevation
             >
@@ -39,13 +39,22 @@ const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
                 variant="contained"
                 color="primary"
                 onClick={ async () => {
-                    await setConfigBulk() 
-                    await updateAllData()
+                    setLoaderIcon(true)
+                    try{
+                        await setConfigBulk() 
+                        await updateAllData()
+                    } catch (error) {
+                        console.log(error)
+                    }
+                    setLoaderIcon(false)
                     setOpen(true)
+
+                    
+
                 }}
                 disableElevation
             >
-                Save
+                {( loader) ? <LoaderIcon /> : "Save"}
             </Button>
         </div>
     )

@@ -32,7 +32,7 @@ const BotPlannerPage = () => {
         /**
          * Calculate the money available per bot - bankroll / enabledBots
          */
-        if(botData != undefined && botData.length > 0){
+        if (botData != undefined && botData.length > 0) {
             updateLocalBotData(calc_dropMetrics(totalBankroll, botData))
         } else {
             updateLocalBotData([])
@@ -117,12 +117,12 @@ const BotPlannerPage = () => {
     const [open, setOpen] = useState(false);
     const [toastMessage, changeToastMessage] = useState("");
 
-    const handleToast = ( message:string ) => {
+    const handleToast = (message: string) => {
         changeToastMessage(message)
         setOpen(true);
     };
 
-    const handleClose = ( event:any , reason:string) => {
+    const handleClose = (event: any, reason: string) => {
         if (reason === 'clickaway') {
             return;
         }
@@ -135,8 +135,11 @@ const BotPlannerPage = () => {
 
     return (
         <>
-            <h1>Bot Planner</h1>
-            <div className="flex-row padding">
+            <h1 style={{margin: "auto"}}>Bot Planner</h1>
+    
+
+            <Risk localBotData={localBotData} />
+            <div className="flex-row" style={{justifyContent: "flex-end"}}>
                 <Button
                     variant="outlined"
                     endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
@@ -145,6 +148,13 @@ const BotPlannerPage = () => {
                         handleToast("Sync Completed.")
                         setOpen(true)
                     }}
+
+                    style={{
+                        width: '200px',
+                        margin: '5px 5px 10px 5px',
+                        alignSelf: 'flex-end'
+
+                    }}
                 >
                     Update data
                 </Button>
@@ -152,35 +162,40 @@ const BotPlannerPage = () => {
                     variant="outlined"
                     color="primary"
                     endIcon={<SaveIcon />}
-                    onClick={() => { 
-                        
+                    onClick={() => {
+
                         saveCustomDeals()
                         handleToast("Saved table data.")
                         setOpen(true)
-                     }}
+                    }}
+
+                    style={{
+                        width: '200px',
+                        margin: '5px 5px 10px 5px',
+                        alignSelf: 'flex-end'
+
+                    }}
                 >
                     Save table data
                 </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    endIcon={<AddIcon />}
+                    onClick={() => { addToTable() }}
+                    style={{
+                        width: '200px',
+                        margin: '5px 5px 10px 5px',
+                        alignSelf: 'flex-end'
 
+                    }}
+                    disableElevation
+                >
+                    add row
+                </Button>
 
             </div>
 
-            <Risk localBotData={localBotData} />
-            <Button
-                variant="contained"
-                color="primary"
-                endIcon={<AddIcon />}
-                onClick={() => { addToTable() }}
-                style={{
-                    width: '150px',
-                    margin: '5px 5px 10px 5px',
-                    alignSelf: 'flex-end'
-
-                }}
-                disableElevation
-            >
-                add row
-            </Button>
             <DataTable
                 localBotData={localBotData}
                 updateLocalBotData={updateLocalBotData}

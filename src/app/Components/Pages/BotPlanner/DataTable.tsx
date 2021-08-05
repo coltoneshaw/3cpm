@@ -165,7 +165,7 @@ const DataTable = ({  localBotData, updateLocalBotData }:Type_DataTable) => {
           className={classes.root}
           hideFooter={true}
           rows={localBotData}
-          // style={{minWidth: "1500px"}}
+          style={{minWidth: "1500px"}}
 
           // @ts-ignore
           columns={columns}
@@ -173,7 +173,6 @@ const DataTable = ({  localBotData, updateLocalBotData }:Type_DataTable) => {
           disableColumnSelector
           disableColumnMenu
           onCellEditCommit={handleEditCellChangeCommitted}
-          onError={(error) => console.log(error + 'error')}
         />
       </div>
     </div>

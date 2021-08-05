@@ -45,6 +45,10 @@ const currencyArray: Type_currency[] = [
     {
         name: "USDC",
         value: "USDC",
+    },
+    {
+        name: "GBP",
+        value: "GBP"
     }
 ]
 

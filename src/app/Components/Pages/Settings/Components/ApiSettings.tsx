@@ -52,7 +52,7 @@ const ApiSettings = () => {
 
     return (
         <div className=" flex-column settings-child">
-            <h2>API Settings</h2>
+            <h2 className="text-center ">API Settings</h2>
             <p className="subText">This app requires "Bots read", "Smart trades read", and "Accounts read" within 3commas.</p>
             <div className=" flex-row" style={{paddingBottom: "25px"}} >
                 <TextField
