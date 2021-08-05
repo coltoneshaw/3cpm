@@ -5,7 +5,7 @@ Endpoint - `GET /public/api/ver1/accounts/{account_id}/balance_chart_data`
 Notes:
 
 Response:
-```json
+```javascript
 [
   {
     date: 1619308800, // Epoch date in seconds
@@ -26,10 +26,16 @@ Response:
 ```
 
 
+## Load Balances
+Endpoint - `POST /ver1/accounts/{account_id}/load_balances`
+Notes: This endpoint updates the data from your Exchange to 3Commas and returns an array of the account data.
+
+Endpoint - `GET /ver1/accounts/{account_id}`
+Notes: A response of the single account. Account ID is required.
 
 Response:
 
-```json
+```javascript
 [
   {
     id: 30035777,
@@ -60,8 +66,8 @@ Response:
     nomics_id: 'binance_us',
     market_icon: 'https://3commas.io/img/exchanges/binance.png',
     supported_market_types: [ 'spot' ],
-    api_key: 'OVnLHUyXmMiiXT2fQXDkWyYqlOnkC3er3rd3xAC7AKLCWP5Fnom0kYG9ewtNCCoO',
-    name: 'Binance US',
+    api_key: '',
+    name: 'Binance US', // name that has been configured within 3C
     auto_balance_method: 'time',
     auto_balance_error: null,
     lock_reason: null,
@@ -83,3 +89,4 @@ Response:
   }
 ]
 ```
+

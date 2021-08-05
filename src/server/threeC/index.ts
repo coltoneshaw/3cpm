@@ -1,4 +1,4 @@
-import { update } from '@/server/database';
+import { update, run } from '@/server/database';
 const { bots, getAccountDetail, deals, getDealsBulk, getDealsUpdate, getAccountSummary } = require('./api');
 
 import { Type_Deals, Type_Query_Accounts, Type_API_bots } from '@/types/3Commas'
@@ -10,7 +10,7 @@ import { Type_Deals, Type_Query_Accounts, Type_API_bots } from '@/types/3Commas'
  * the code for threeC
  */
 async function updateAPI(limit: number) {
-  
+
   await deals(limit)
     .then((data: Type_Deals[]) => {
       console.log('made it back here')
@@ -20,11 +20,18 @@ async function updateAPI(limit: number) {
   await getAccountData()
 }
 
-async function getAccountData(){
+async function getAccountData() {
+
+  // 1. Fetch data from the API
   await getAccountDetail()
-    .then((data: Type_Query_Accounts[]) => {
-      update('accountData', data)
+    .then(async (data: Type_Query_Accounts[]) => {
+      // 2. Delete all the data in the database that exist in the API response
+      const accountIds = data.map(account => account.account_id);
+      await run(`DELETE FROM accountData WHERE account_id in ( ${accountIds.join()});`)
+      return data
     })
+    //3. Post the API response to the database.
+    .then((data: Type_Query_Accounts[]) => update('accountData', data))
 }
 
 async function getAndStoreBotData() {

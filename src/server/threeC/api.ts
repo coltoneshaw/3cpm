@@ -334,9 +334,12 @@ async function getAccountDetail() {
   if(!api) return false
 
   let accountData = await api.accounts()
+  
   let array = [];
 
   for (let account of accountData) {
+    const accountBalances = await api.accountLoadBalances(account.id)
+    console.log({accountBalances})
     let data = await api.accountTableData(account.id)
 
     const { name: account_name, exchange_name, market_code } = account
