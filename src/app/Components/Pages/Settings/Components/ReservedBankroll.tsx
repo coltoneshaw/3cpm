@@ -90,8 +90,6 @@ const ReservedBankroll = () => {
 
         updateReservedFunds((prevState: Type_ReservedFunds[]) => {
             return prevState.map(row => {
-
-                console.log({row, e})
                 if (e.id == row.id) {
 
                     // @ts-ignore - validate props

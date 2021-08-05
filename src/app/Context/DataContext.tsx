@@ -122,7 +122,7 @@ const DataProvider = ({ children }: any) => {
      */
     useEffect(() => {
         calculateMetrics()
-    }, [metricsData.position, metricsData.totalBoughtVolume, metricsData.maxRisk])
+    }, [metricsData.position, metricsData.totalBoughtVolume, metricsData.maxRisk, config])
 
 
     const fetchBotData = async () => {
@@ -319,8 +319,10 @@ const DataProvider = ({ children }: any) => {
 
                     if (config && dotProp.has(config, 'general.defaultCurrency')) {
                         console.log('ran this')
-                        getAccountData(config)
+                        await getAccountData(config)
                     }
+
+                    calculateMetrics()
 
                 })
         } catch (error) {

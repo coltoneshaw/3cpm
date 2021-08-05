@@ -35,7 +35,7 @@ const BotPlannerPage = () => {
         if(botData != undefined && botData.length > 0){
             updateLocalBotData(calc_dropMetrics(totalBankroll, botData))
         } else {
-            updateLocalBotData([blankObject])
+            updateLocalBotData([])
         }
 
     }, [botData])
