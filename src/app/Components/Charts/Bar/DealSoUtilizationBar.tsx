@@ -12,7 +12,7 @@ const legendFind = ( value:string ) => {
 }
 
 
-const DealSoUtalizationBar = ({title, data }: Type_ActiveDealCharts) => {
+const DealSoUtilizationBar = ({title, data }: Type_ActiveDealCharts) => {
 
 
         const renderChart = () => {
@@ -87,4 +87,4 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
     }
 }
 
-export default DealSoUtalizationBar;
+export default DealSoUtilizationBar;

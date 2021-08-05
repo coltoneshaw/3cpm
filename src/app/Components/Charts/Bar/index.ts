@@ -1,10 +1,10 @@
-import DealSoUtalizationBar from './DealSoUtalizationBar';
+import DealSoUtilizationBar from './DealSoUtilizationBar';
 import SoDistribution from './SoDistribution'
 import DealAllocationBar from './DealAllocation';
 
 
 export {
-    DealSoUtalizationBar,
+    DealSoUtilizationBar,
     SoDistribution,
     DealAllocationBar
 }

@@ -108,7 +108,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
             <div className="tooltop">
                 <h4>SO # {label}</h4>
                 <p><strong>Bought Volume:</strong> ${parseNumber(volume)} ( {(percentOfVolume * 100).toFixed(2)} %)</p>
-                <p><strong>Deal Count:</strong> {numberOfDeals} ( {(percentOfDeals * 100).toFixed(2)} $)</p>
+                <p><strong>Deal Count:</strong> {numberOfDeals} ( {(percentOfDeals * 100).toFixed(2)} %)</p>
             </div>
         )
     } else {
