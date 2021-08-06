@@ -11,6 +11,33 @@ export interface Type_Query_PerfArray {
     percentTotalProfit: number
 }
 
+export interface Type_Pair_Performance_Metrics {
+    pair:string
+    avg_completed_so: number
+    total_profit: number
+    number_of_deals: number
+    avg_profit: number
+    bought_volume: number
+    avg_deal_hours: number
+}
+
+export interface Type_Performance_Metrics {
+    pair_bot?: Type_Query_PerfArray[]
+    bot?: Type_Bot_Performance_Metrics[]
+    pair?: Type_Pair_Performance_Metrics[]
+}
+
+export interface Type_Bot_Performance_Metrics {
+    bot_name: string
+    bot_id: number
+    avg_completed_so: number
+    total_profit: number
+    number_of_deals: number
+    avg_profit: number
+    bought_volume: number
+    avg_deal_hours: number
+}
+
 export interface Type_Query_DealData {
     final_profit: number,
     closed_at: string
@@ -27,49 +54,49 @@ export type Type_Profit = {
 
 
 export interface Type_Deals {
-    id: number
-    type: string
-    bot_id: number
-    max_safety_orders: number
-    deal_has_error: boolean
-    from_currency_id: number
-    to_currency_id: number
-    account_id: number
-    active_safety_orders_count: number
-    created_at: string
-    updated_at: string
-    closed_at: string
-    closed_at_iso_string: number
-    finished: boolean
-    current_active_safety_orders_count: boolean
-    current_active_safety_orders: number
-    completed_safety_orders_count: number
-    completed_manual_safety_orders_count: number
+    id: number // in use
+    type: string // in use
+    bot_id: number // in use
+    max_safety_orders: number // in use
+    deal_has_error: boolean 
+    from_currency_id: number // in use
+    to_currency_id: number // in use
+    account_id: number // in use
+    active_safety_orders_count: number // in use
+    created_at: string // in use
+    updated_at: string // in use
+    closed_at: string // in use
+    closed_at_iso_string: number // in use
+    finished: boolean // in use
+    current_active_safety_orders_count: boolean // in use
+    current_active_safety_orders: number // in use
+    completed_safety_orders_count: number // in use
+    completed_manual_safety_orders_count: number // in use
     cancellable: boolean
     panic_sellable: boolean
     trailing_enabled: boolean
     tsl_enabled: boolean
     stop_loss_timeout_enabled: boolean
     stop_loss_timeout_in_seconds: number
-    active_manual_safety_orders: number
-    pair: string
-    status: string
+    active_manual_safety_orders: number // in use
+    pair: string // in use
+    status: string  // in use
     localized_status: string
-    take_profit: number
-    base_order_volume: number
-    safety_order_volume: number
-    safety_order_step_percentage: number
+    take_profit: number // in use
+    base_order_volume: number // in use
+    safety_order_volume: number // in use
+    safety_order_step_percentage: number // in use
     leverage_type: string
     leverage_custom_value: number
-    bought_amount: number
-    bought_volume: number
-    bought_average_price: number
+    bought_amount: number // in use
+    bought_volume: number // in use
+    bought_average_price: number 
     base_order_average_price: number
     sold_amount: number
     sold_volume: number
     sold_average_price: number
     take_profit_type: string
-    final_profit: number
+    final_profit: number // in use
     martingale_coefficient: number
     martingale_volume_coefficient: number
     martingale_step_coefficient: number

@@ -1,4 +1,4 @@
-import { Type_Profit, Type_Query_PerfArray, Type_ActiveDeals, Type_MetricData } from '@/types/3Commas';
+import { Type_Profit, Type_Query_PerfArray, Type_ActiveDeals, Type_MetricData, Type_Bot_Performance_Metrics, Type_Pair_Performance_Metrics } from '@/types/3Commas';
 
 export interface Type_SoDistribution {
     title: string
@@ -12,6 +12,11 @@ export interface Type_ProfitChart {
     X: string
 }
 
+export interface Type_Pair_Performance {
+    title: string
+    data: Type_Pair_Performance_Metrics[] | undefined | []
+}
+
 
 export interface Type_Tooltip  {
     active: boolean
@@ -21,7 +26,12 @@ export interface Type_Tooltip  {
 
 export interface Type_DealPerformanceCharts{
     title: string
-    data: Type_Query_PerfArray[]
+    data: Type_Query_PerfArray[] | undefined | []
+}
+
+export interface Type_BotPerformanceCharts{
+    title: string
+    data: Type_Bot_Performance_Metrics[] | undefined | []
 }
 
 export interface Type_ActiveDealCharts{

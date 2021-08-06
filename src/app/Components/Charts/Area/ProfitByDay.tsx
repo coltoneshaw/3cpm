@@ -30,7 +30,7 @@ const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
         if (data.length === 0) {
             return (<NoData />)
         } else {
-            return (<ResponsiveContainer width="100%" aspect={2} >
+            return (<ResponsiveContainer width="100%"  height="100%" minHeight="300px">
                 <AreaChart
                     width={500}
                     height={300}
@@ -79,7 +79,7 @@ const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
         }
     }
     return (
-        <div className="boxData" style={{ 'margin': '25px' }}>
+        <div className="boxData stat-chart" >
             <h3 className="chartTitle">Profit by day </h3>
             {renderChart()}
 

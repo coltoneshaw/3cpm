@@ -19,7 +19,7 @@ const RiskMonitor = () => {
             <SpeedometerDiv
                 metrics={metricsData}
             />
-            <Grid container >
+            <Grid container spacing={8}>
                 <Grid item xl={6} md={12} lg={6}>
                     <DealSoUtilizationBar data={activeDeals} title="Deal Max Utalization" />
                 </Grid>

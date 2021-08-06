@@ -75,11 +75,9 @@ const StatsPage = () => {
     const currentViewRender = () => {
         if (currentView === 'risk-monitor') {
             return <RiskMonitor
-            // activeDeals={this.state.activeDeals} metrics={this.state.metrics} balance={this.state.balance} 
             />
         } else if (currentView === 'performance-monitor') {
             return <PerformanceMonitor
-            // performanceData={this.state.performanceData} 
 
             />
         } else if (currentView === 'active-deals') {
@@ -87,7 +85,6 @@ const StatsPage = () => {
         }
 
         return <SummaryStatistics
-        //dealData={this.state.dealData} 
 
         />
     }

@@ -61,7 +61,7 @@ const DealSoUtilizationBar = ({title, data }: Type_ActiveDealCharts) => {
         }
 
         return (
-            <div className="boxData" style={{ 'margin': '25px', minHeight:"400px" }}>
+            <div className="boxData stat-chart bubble-chart" >
                 <h3 className="chartTitle">{title}</h3>
                 {renderChart()}
             </div>

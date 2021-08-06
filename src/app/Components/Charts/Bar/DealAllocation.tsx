@@ -15,13 +15,13 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
 
         const renderChart = () => {
 
-            if (data.length === 0) {
+            if (data == undefined || data.length === 0) {
                 return (<NoData />)
             } else {
                 data = data.filter( row => row.percentTotalVolume > .15)
                     .sort((a, b) => a.percentTotalProfit < b.percentTotalProfit ? -1 : (a.percentTotalProfit > b.percentTotalProfit ? 1 : 0))
                 return (
-                    <ResponsiveContainer width="100%" aspect={3}>
+                    <ResponsiveContainer width="100%" minHeight="400px">
                         <BarChart
                             width={500}
                             height={200}
@@ -44,9 +44,8 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
                                 content={<CustomTooltip />}
                             />
                             <XAxis dataKey="pair"
-                                angle={45}
-                                dx={15}
-                                dy={20}
+                                angle={90}
+                                textAnchor="start"
                                 minTickGap={-200}
                                 axisLine={false}
                                 height={75}
@@ -67,7 +66,7 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
 
 
         return (
-            <div className="boxData" style={{ 'margin': '25px' }}>
+            <div className="boxData stat-chart bubble-chart">
                 <h3 className="chartTitle">{title}</h3>
                 {renderChart()}
 
