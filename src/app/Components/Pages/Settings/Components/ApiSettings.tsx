@@ -14,17 +14,14 @@ import { useGlobalData } from '@/app/Context/DataContext';
 
 const ApiSettings = () => {
     const state = useGlobalState();
-    const { state: { updateApiData, apiData }, config, actions: {fetchAccountsForRequiredFunds} } = state
+    const { state: { updateApiData, apiData }, config, actions: { fetchAccountsForRequiredFunds } } = state
 
-    // const dataState = useGlobalData()
-    // const { actions: { getAccountData} } = dataState;
 
     const updateKeys = (config: TconfigValues) => {
         if (dotProp.has(config, 'apis.threeC')) return config.apis.threeC
         return { key: '', secret: '' }
     }
 
-    // const [ apiKeyState, updateKey ] = useState(updateKeys(config))
 
 
     useEffect(() => {
@@ -86,8 +83,10 @@ const ApiSettings = () => {
                     async () => {
                         // @ts-ignore
                         // await electron.api.getAccountData()
+                        let key = apiData.key
+                        let secret = apiData.secret
                         try {
-                            await fetchAccountsForRequiredFunds()
+                            await fetchAccountsForRequiredFunds(key, secret)
                         } catch (error) {
                             alert('there was an error testing the API keys. Check the console for more information.')
                         }

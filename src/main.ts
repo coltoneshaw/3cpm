@@ -154,8 +154,8 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
    await updateAPI(limit)
  });
 
- ipcMain.handle('api-getAccountData', async (event) => {
-  return await getAccountSummary()
+ ipcMain.handle('api-getAccountData', async (event, key?:string, secret?:string) => {
+  return await getAccountSummary(key, secret)
 });
  
  ipcMain.handle('api-getBots', async (event) => {

@@ -88,7 +88,7 @@ const ConfigProvider = ({ children }: any) => {
 
     const setNewStatDate = (config: TconfigValues) => {
         updateDate(() => {
-            const startDate: number | undefined = dotProp.get(config, 'statSettings.account_id')
+            const startDate: number | undefined = dotProp.get(config, 'statSettings.startDate')
             return (startDate) ? startDate : getTime(sub(new Date(), { days: 90 })) ;
         })
     }
@@ -106,8 +106,6 @@ const ConfigProvider = ({ children }: any) => {
                 setNewAccountIdArray(config)
                 setNewStatDate(config)
                 setNewReservedFunds(config)
-
-
             })
     }
 
@@ -169,9 +167,9 @@ const ConfigProvider = ({ children }: any) => {
         })
     }
 
-    const fetchAccountsForRequiredFunds = async () => {
+    const fetchAccountsForRequiredFunds = async (key:string, secret:string) => {
         // @ts-ignore
-        const accountSummary = await electron.api.getAccountData()
+        const accountSummary = await electron.api.getAccountData(key, secret)
         console.log({accountSummary})
 
         if (accountSummary !== undefined || accountSummary.length > 0) {

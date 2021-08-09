@@ -20,20 +20,11 @@ export default function StartDatePicker() {
   const state = useGlobalState()
   const { state: { date, updateDate }, config } = state
 
-  // const [selectedDate, setSelectedDate] = useState(() => new Date());
-
-  useEffect(() => {
-    updateDate(findConfigData(config, startDatePath));
-  }, [config])
-
   const handleDateChange = ( date:any) => {
-
     updateDate(getTime(date));
 
     console.log('changing the date')
   };
-
-  console.log({date})
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>

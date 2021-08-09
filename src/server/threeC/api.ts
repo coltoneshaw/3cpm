@@ -22,10 +22,10 @@ import {
  * 
  * @description - required at the moment so when you make a config change on the frontend you're not using old data.
  */
-const threeCapi = ( config:any ) => {
+const threeCapi = ( config:any, key?:string, secret?:string ) => {
 
-  const key = config.get('apis.threeC.key')
-  const secret = config.get('apis.threeC.secret')
+  key = (key) ? key : config.get('apis.threeC.key')
+  secret = (secret) ? secret : config.get('apis.threeC.secret')
 
   if(key == null || secret == null){
     console.error('missing API keys')
@@ -367,8 +367,14 @@ async function getAccountDetail() {
   return array
 }
 
-async function getAccountSummary() {
-  const api = threeCapi(config)
+async function getAccountSummary(key:string , secret:string) {
+  let api;
+  if(key && secret) {
+    api = threeCapi(config, key, secret)
+
+  } else {
+    api = threeCapi(config)
+  }
   if(!api) return false
   let accountData = await api.accounts()
 
