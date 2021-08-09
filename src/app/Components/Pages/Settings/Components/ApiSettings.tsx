@@ -55,7 +55,7 @@ const ApiSettings = () => {
                 <TextField
                     id="key"
                     label="Key"
-                    defaultValue={apiData.key}
+                    value={apiData.key}
                     onChange={handleKeyChange}
                     className="settings-left"
                     style={{
@@ -66,7 +66,7 @@ const ApiSettings = () => {
                 <TextField
                     id="secret"
                     label="Secret"
-                    defaultValue={apiData.secret}
+                    value={apiData.secret}
                     onChange={handleSecretChange}
                     style={{
                         marginLeft: "15px",

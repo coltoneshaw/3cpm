@@ -57,6 +57,7 @@ const ConfigProvider = ({ children }: any) => {
     const setNewCurrency = (config: TconfigValues) => {
         updateCurrency(() => {
             const newCurrency: string[] | undefined = dotProp.get(config, 'general.defaultCurrency')
+            console.log({newCurrency})
             return (newCurrency) ? newCurrency : ["USD"]
         })
     }
