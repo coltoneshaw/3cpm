@@ -110,8 +110,8 @@ const StatsPage = () => {
 
     return (
         <>
-            <div className="flex-row">
-            <div className="flex-column" style={{ margin: "auto", flexBasis: "50%", paddingBottom: "15px" }}>
+            <div className="flex-row statHeaderRow">
+                <div className="flex-row menuButtons">
                     {/* This needs to be it's own div to prevent the buttons from taking on the flex properties. */}
                     <div>
                         <ButtonGroup aria-label="outlined primary button group" disableElevation disableRipple>
@@ -139,13 +139,10 @@ const StatsPage = () => {
                     </div>
                 </div>
 
-                <div className="flex-column" style={{ flexBasis: "50%" }} >
-                    <div className="flex-row filters" style={{ alignItems: "center", marginLeft: "auto" }}>
-                        <p><strong>Account: </strong>{returnAccountNames()}</p>
-
-                        <p><strong>Start Date: </strong>{dateString(date)} </p>
-                        <p><strong>Default Currency: </strong>{returnCurrencyValues()}</p>
-                    </div>
+                <div className="flex-row filters" >
+                    <p><strong>Account: </strong>{returnAccountNames()}</p>
+                    <p><strong>Start Date: </strong>{dateString(date)} </p>
+                    <p><strong>Default Currency: </strong>{returnCurrencyValues()}</p>
                 </div>
 
             </div>
@@ -153,7 +150,7 @@ const StatsPage = () => {
 
 
 
-            <div className="flex-column" style={{ alignItems: 'center'}}>
+            <div className="flex-column" style={{ alignItems: 'center' }}>
 
                 <div className="riskDiv">
                     <Card_ActiveDeals metric={activeDealCount} />
