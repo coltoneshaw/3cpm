@@ -11,7 +11,6 @@ import { dynamicSort } from '@/utils/helperFunctions';
 const colors = ["#cfe1f2", "#b5d4e9", "#93c3df", "#6daed5", "#4b97c9", "#2f7ebc", "#1864aa", "#0a4a90", "#08306b"]
 
 
-
 /**
  * TODO
  * - Look at combining this chart by "pair-BO" to minimize bubbles on the chart.
@@ -23,7 +22,7 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
         setSort(event.target.value);
     };
 
-    const getPosition = (data:Type_Query_PerfArray[] , metric:string) => {
+    const getPosition = (data: Type_Query_PerfArray[], metric: string) => {
         data = data.sort(dynamicSort(metric))
 
         const length = data.length
@@ -32,12 +31,8 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
 
             // @ts-ignore
 
-            return <Cell key={entry.performance_id} fill={colors[  Math.round( (index / length) * ( colors.length - 1)  ) ]} />
+            return <Cell key={entry.performance_id} fill={colors[Math.round((index / length) * (colors.length - 1))]} />
         })
-
-    }
-
-    const returnCells = () => {
 
     }
 
@@ -47,7 +42,7 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
             return (<NoData />)
         } else {
             const newData = data
-                .filter(row => row.percentTotalVolume > .9)
+                .filter(row => row.percentTotalVolume > 1.5)
             // 
 
             console.log(newData)
@@ -80,21 +75,12 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
                     }}
                 >
                     <CartesianGrid />
-
-                    {/* 
-                        X - Average Deal Hours
-                        Y - Average Hourly Profit
-                        Z - Number of deals completed
-                        Cell Color - Base Order Start
-                    
-                     */}
                     <XAxis
                         type="number"
                         dataKey="averageDealHours"
                         height={50}
                         name="Avg. Deal Hours"
-                        tickCount={9}
-                        domain={[0, (dataMax: number) => Math.round(dataMax / 10) * 10]}
+                        tickCount={10}
 
                         allowDataOverflow={true}
                     >
@@ -107,8 +93,6 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
                         // width={100}
                         name="Avg. Hourly Profit %"
                         allowDataOverflow={true}
-
-
                     >
                         <Label value="Avg. Hourly Profit %" angle={-90}
                             dy={0}
@@ -117,12 +101,20 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
 
                     </YAxis>
                     {/* Range is lowest number and highest number. */}
-                    <ZAxis type="number" dataKey="number_of_deals" range={[0, Math.max(...newData.map(deal => deal.number_of_deals))]} name="# of Deals Completed" />
+                    <ZAxis 
+                        type="number" 
+                        dataKey="total_profit" 
+                        range={[
+                            Math.min(...newData.map(deal => deal.total_profit)), 
+                            Math.max(...newData.map(deal => deal.total_profit))
+                        ]} 
+                        name="Bought Volume" />
 
 
                     <Tooltip
                         cursor={{ strokeDasharray: '3 3' }}
                         // @ts-ignore
+                         
                         // TODOD - pass props properly to the custom tool tip
                         content={<CustomTooltip />}
                     />
@@ -172,7 +164,7 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
 function CustomTooltip({ active, payload, label }: Type_Tooltip) {
     if (active) {
 
-        const { total_profit, bot_name, pair, averageHourlyProfitPercent, averageDealHours, number_of_deals } = payload[0].payload
+        const { total_profit, bot_name, pair, averageHourlyProfitPercent, averageDealHours, number_of_deals, bought_volume } = payload[0].payload
         return (
             <div className="tooltop">
                 <h4>{pair}</h4>
@@ -181,6 +173,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
                 <p><strong>Average Deal Hours:</strong> {averageDealHours.toFixed(2)}</p>
                 <p><strong>Average Hourly Profit Percent:</strong> {averageHourlyProfitPercent.toFixed(8)}%</p>
                 <p><strong># of Deals:</strong>{number_of_deals}</p>
+                <p><strong>Bought Volume:</strong>{parseNumber(bought_volume)}</p>
 
             </div>
         )

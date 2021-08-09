@@ -3,70 +3,77 @@ import React, { PureComponent } from 'react';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { parseNumber, formatPercent } from '@/utils/number_formatting';
 import { Type_Tooltip, Type_ActiveDealCharts } from '@/types/Charts';
+import { dynamicSort } from '@/utils/helperFunctions';
 
 import NoData from '@/app/Components/Pages/Stats/Components/NoData';
 
-const legendFind = ( value:string ) => {
+const legendFind = (value: string) => {
     if (value == "bought_volume") return "Bought Volume"
     return "SO Volume Remaining"
 }
 
 
-const DealSoUtilizationBar = ({title, data }: Type_ActiveDealCharts) => {
+const DealSoUtilizationBar = ({ title, data }: Type_ActiveDealCharts) => {
 
 
-        const renderChart = () => {
-            if (data.length === 0) {
-                return (<NoData />)
-            } else {
-                return (<ResponsiveContainer width="100%" height="90%" minHeight="400px">
-                <BarChart
-                    // width={500}
-                    data={data}
-                    margin={{
-                        top: 20,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                    }}
-                    stackOffset="expand"
-                >
-                <Legend
-                        formatter={value => legendFind(value)}
-                    />
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <Tooltip
-                        // @ts-ignore - Pass tooltip props down properly.
-                        content={<CustomTooltip />}
-                    />
-                    <XAxis dataKey="pair"
-                        angle={45}
-                        dx={15}
-                        dy={20}
-                        minTickGap={-200}
-                        axisLine={false}
-                        height={75}
-                    />
-                    <YAxis
-                        tickFormatter={tick => tick * 100 + "%"}
+    const renderChart = () => {
+        if (data.length === 0) {
+            return (<NoData />)
+        } else {
+            data = data.sort(dynamicSort("bought_volume"))
+            return (
+                <ResponsiveContainer width="100%" height="90%" minHeight="300px">
+                    <BarChart
+                        // width={500}
+                        data={data}
+                        margin={{
+                            top: 20,
+                            right: 30,
+                            left: 20,
+                            bottom: 5,
+                        }}
+                        stackOffset="expand"
+                    >
+                        <Legend
+                            formatter={value => legendFind(value)}
+                        />
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <Tooltip
+                            // @ts-ignore - Pass tooltip props down properly.
+                            content={<CustomTooltip />}
+                        />
+                        <XAxis
+                            dataKey="pair"
+                            angle={45}
+                            dx={10}
+                            // dx={15}
+                            dy={10}
+                            fontSize=".75em"
+                            minTickGap={-200}
+                            axisLine={false}
+                            height={75}
 
-                    />
-                    
-                    
-                    <Bar dataKey="bought_volume" stackId="a" fill="#8884d8" />
-                    <Bar dataKey="so_volume_remaining" stackId="a" fill="#82ca9d" />
-                </BarChart>
-            </ResponsiveContainer>)
-            }
+                        />
+                        <YAxis
+                            tickFormatter={tick => tick * 100 + "%"}
+
+                        />
+
+
+                        <Bar dataKey="bought_volume" stackId="a" fill="#8884d8" />
+                        <Bar dataKey="so_volume_remaining" stackId="a" fill="#82ca9d" />
+                    </BarChart>
+                </ResponsiveContainer>)
         }
-
-        return (
-            <div className="boxData stat-chart bubble-chart" >
-                <h3 className="chartTitle">{title}</h3>
-                {renderChart()}
-            </div>
-        )
     }
+
+    return (
+        <div className="boxData stat-chart bubble-chart" >
+            <h3 className="chartTitle">{title}</h3>
+            {renderChart()}
+        </div>
+    )
+}
 
 
 

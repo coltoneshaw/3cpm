@@ -3,6 +3,7 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { parseNumber, formatPercent } from '@/utils/number_formatting';
 import { Type_Tooltip, Type_DealPerformanceCharts } from '@/types/Charts'
+import { dynamicSort } from '@/utils/helperFunctions';
 
 import NoData from '@/app/Components/Pages/Stats/Components/NoData';
 
@@ -18,8 +19,10 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
             if (data == undefined || data.length === 0) {
                 return (<NoData />)
             } else {
+
+                // removing everything over a specific percent of total volume.
                 data = data.filter( row => row.percentTotalVolume > .15)
-                    .sort((a, b) => a.percentTotalProfit < b.percentTotalProfit ? -1 : (a.percentTotalProfit > b.percentTotalProfit ? 1 : 0))
+                    .sort(dynamicSort("percentTotalProfit"))
                 return (
                     <ResponsiveContainer width="100%" minHeight="400px">
                         <BarChart

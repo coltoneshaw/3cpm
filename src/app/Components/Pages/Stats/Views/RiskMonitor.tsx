@@ -20,10 +20,10 @@ const RiskMonitor = () => {
                 metrics={metricsData}
             />
             <Grid container spacing={8}>
-                <Grid item xl={6} md={12} lg={6}>
+                <Grid item lg={12} xl={6}>
                     <DealSoUtilizationBar data={activeDeals} title="Deal Max Utalization" />
                 </Grid>
-                <Grid item xl={6} md={12} lg={6}>
+                <Grid item lg={12} xl={6}>
                     <SoDistribution data={activeDeals} title="Active Deals SO Distribution" metrics={metricsData} />
                 </Grid>
             </Grid>

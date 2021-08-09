@@ -35,7 +35,7 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
             return (<NoData />)
         } else {
             data = data.sort(dynamicSort(sort))
-            return (<ResponsiveContainer width="100%" height="90%" minHeight="400px">
+            return (<ResponsiveContainer width="100%" height="90%" minHeight="300px">
                 <ComposedChart
 
                     data={data}
@@ -57,9 +57,7 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
                     <XAxis 
                         dataKey="bot_name"
                         type="category"
-                        angle={90}
-  
-                        minTickGap={-200}
+                        angle={45}
                         axisLine={false}
                         height={125}
                         textLength={15}
@@ -68,7 +66,11 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
                         tickFormatter={(str) => {
                             return (str.length > 12 ) ? str.slice(0, 9) + "..." : str
                         }}
-                        
+                        dx={0}
+                        // dx={15}
+                        dy={5}
+                        fontSize=".75em"
+                        minTickGap={-200}
 
                     />
                     <YAxis yAxisId="total_profit" orientation='right' hide={hide("total_profit")} domain={[0, 'auto']} allowDataOverflow={true} offset={20}/>

@@ -35,7 +35,7 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
             return (<NoData />)
         } else {
             data = data.sort(dynamicSort(sort))
-            return (<ResponsiveContainer width="100%" height="90%" minHeight="400px">
+            return (<ResponsiveContainer width="100%" height="90%" minHeight="300px">
                 <ComposedChart
 
                     data={data}
@@ -56,8 +56,10 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
                     />
                     <XAxis dataKey="pair"
                         angle={45}
-                        dx={15}
-                        dy={20}
+                        dx={10}
+                        // dx={15}
+                        dy={10}
+                        fontSize=".75em"
                         minTickGap={-200}
                         axisLine={false}
                         height={75}
