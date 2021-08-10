@@ -99,7 +99,7 @@ const BotPerformanceBubble = ({ title, data }: Type_BotPerformanceCharts) => {
     }
 
     return (
-        <div className="boxData" style={{ 'margin': '25px' }}>
+        <div className="boxData" >
             <h3 className="chartTitle">{title}</h3>
             {renderChart()}
         </div>

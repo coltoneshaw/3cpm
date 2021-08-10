@@ -46,12 +46,15 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
                                 // TODO - typescript - properly handle the props being passed
                                 content={<CustomTooltip />}
                             />
-                            <XAxis dataKey="pair"
-                                angle={90}
-                                textAnchor="start"
-                                minTickGap={-200}
+                            <XAxis 
+                                dataKey="pair"
+                                angle={45}
                                 axisLine={false}
                                 height={75}
+                                textAnchor="start"
+                                fontSize=".75em"
+                                minTickGap={-200}
+
                             />
                             <YAxis
                                 tickFormatter={tick => tick + "%"}

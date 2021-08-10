@@ -47,11 +47,11 @@ const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
                         tickLine={false}
                         axisLine={false}
                         tickFormatter={tick => parseNumber(tick)}
-                        tickCount={10}
+                        tickCount={9}
                         // TODO - Need to look at passing in a tick array that contains the values rounded to 100s.
                         type="number" 
                         allowDecimals={false}
-                        domain={[(dataMin: number) => Math.floor(dataMin / 10 ) * 10, (dataMax: number) =>  Math.round(dataMax / 10 ) * 10]}
+                        domain={[(dataMin: number) => Math.floor(dataMin / 100 ) * 100, (dataMax: number) =>  Math.round(dataMax / 100 ) * 100]}
                     />
 
                     <Tooltip 

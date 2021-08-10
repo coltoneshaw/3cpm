@@ -131,7 +131,7 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
     }
 
     return (
-        <div className="boxData stat-chart">
+        <div className="boxData">
             <div style={{ position: "relative" }}>
                 <h3 className="chartTitle">{title}</h3>
                 <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>

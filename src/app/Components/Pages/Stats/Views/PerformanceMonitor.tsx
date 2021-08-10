@@ -31,9 +31,8 @@ const PerformanceMonitor = () => {
             </div>
 
             <Grid container spacing={8}>
-                <Grid item xs={12} lg={6}>
+                <Grid item xs={12}>
                     <DealAllocationBar title="Deal Allocation" data={performanceData.pair_bot} />
-
                 </Grid>
                 <Grid item xs={12} lg={6}>
                     <DealPerformanceBubble title="Deal Performance Scatter" data={performanceData.pair_bot} />
