@@ -135,7 +135,7 @@ const BotPlannerPage = () => {
 
     return (
         <>
-            <h1 style={{margin: "auto"}}>Bot Planner</h1>
+            {/* <h1 style={{margin: "auto"}}>Bot Planner</h1> */}
     
 
             <Risk localBotData={localBotData} />
