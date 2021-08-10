@@ -141,26 +141,19 @@ const BotPlannerPage = () => {
             <Risk localBotData={localBotData} />
             <div className="flex-row" style={{justifyContent: "flex-end"}}>
                 <Button
-                    variant="outlined"
+                    // variant="outlined"
                     endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
                     onClick={async () => {
                         await updateAllData()
                         handleToast("Sync Completed.")
                         setOpen(true)
                     }}
-
-                    style={{
-                        width: '200px',
-                        margin: '5px 5px 10px 5px',
-                        alignSelf: 'flex-end'
-
-                    }}
+                    className="button-botPlanner secondaryButton-outline"
                 >
                     Update data
                 </Button>
+
                 <Button
-                    variant="outlined"
-                    color="primary"
                     endIcon={<SaveIcon />}
                     onClick={() => {
 
@@ -169,26 +162,15 @@ const BotPlannerPage = () => {
                         setOpen(true)
                     }}
 
-                    style={{
-                        width: '200px',
-                        margin: '5px 5px 10px 5px',
-                        alignSelf: 'flex-end'
+                    className="button-botPlanner secondaryButton-outline"
 
-                    }}
                 >
                     Save table data
                 </Button>
                 <Button
-                    variant="contained"
-                    color="primary"
                     endIcon={<AddIcon />}
                     onClick={() => { addToTable() }}
-                    style={{
-                        width: '200px',
-                        margin: '5px 5px 10px 5px',
-                        alignSelf: 'flex-end'
-
-                    }}
+                    className="button-botPlanner CtaButton"
                     disableElevation
                 >
                     add row

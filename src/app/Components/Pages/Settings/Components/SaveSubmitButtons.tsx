@@ -36,8 +36,9 @@ const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
                 Reset
             </Button>
             <Button
-                variant="contained"
-                color="primary"
+                // variant="contained"
+                // color="primary"
+                className="CtaButton"
                 onClick={ async () => {
                     setLoaderIcon(true)
                     try{

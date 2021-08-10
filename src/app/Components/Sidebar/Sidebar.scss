@@ -1,7 +1,7 @@
 .sidebarOption svg, 
 #displaySwitcher svg,
 .icon {
-    fill: #7990B4;
+    fill: var(--color-secondary-light50);
     max-height: 25px;
     max-width: 25px;
 }
@@ -17,7 +17,7 @@
 
 .sidebarOption .active svg,
 .sidebarOption:hover svg {
-    fill: #212B3B;
+    fill: var(--color-secondary);
   }
 
 

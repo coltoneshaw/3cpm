@@ -4,6 +4,44 @@
  */
  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap');
 
+ :root{
+  --color-primary: #8BBABC;
+  --color-primary-dark25: #59999B;
+  --color-secondary-light87: #DEE3EC;
+  --color-secondary-light50: #7990B4;
+  --color-secondary-light25: #475C7E;
+  --color-secondary: #212B3B;
+  --color-secondary-dark25: #19202C;
+  --color-CTA: #FFC20A;
+  --color-CTA-light25: #FFD147;
+  --color-CTA-dark25: #C79500;
+  --color-background: #E7EAEE;
+  --color-light: #FFFFFF;
+
+  --color-dark-text: black;
+ }
+
+// :root{
+//   --color-primary: #1C6E8C;
+//   --color-primary-dark25: #155369;
+//   --color-secondary-light87: #F8FAFF;
+//   --color-secondary-light50: #E3ECFF;
+//   --color-secondary-light25: #D5E2FF;
+//   --color-secondary: #C6D8FF;
+//   --color-secondary-dark25: #558BFF;
+//   --color-CTA: #E6AF2E;
+//   --color-CTA-light25: #EDC362;
+//   --color-CTA-dark25: #B98816;
+//   --color-background: #C6D8FF;
+//   --color-light: #FFFFFF;
+
+//   --color-dark-text: #100B00;
+// }
+
+ @function color($color-name) {
+  @return var(--color-#{$color-name});
+}
+
  body {
    font-family: 'Open Sans', sans-serif;
    -webkit-font-smoothing: antialiased;
@@ -41,7 +79,7 @@
 
  #sidebar {
      flex-basis: 5%;
-     background-color: #8BBABC;
+     background-color: color(primary);
      min-width: 50px;
      max-width: 75px;
      height: 100%;
@@ -58,7 +96,7 @@
 
  .mainWindow{
      flex-grow: 1;
-     background-color: #E7EAEE;
+     background-color: color(background);
      padding: 3%;
      overflow: scroll;
 
@@ -112,3 +150,52 @@
 @import url('./Components/Pages/Stats/Stats.scss');
 @import url('./Components/Charts/DataCards/Card.scss');
 @import url('./Components/Sidebar/Sidebar.scss');
+
+
+.secondaryButton-outline {
+  background-color: none !important;
+  color: var(--color-secondary-light25) !important;
+  border: 1px solid var(--color-secondary-light50) !important;
+}
+
+.secondaryButton-outline:hover {
+  background-color: none !important;
+  color: var(--color-secondary-light25) !important;
+  border: 1px solid var(--color-secondary-light50) !important;
+}
+
+.primaryButton-outline {
+  background-color: none !important;
+  color: var(--color-primary-dark25) !important;
+  border: 1px solid var(--color-primary-dark25) !important;
+}
+
+.primaryButton-outline:hover {
+  background-color: none !important;
+  color: var(--color-primary-dark25) !important;
+  border: 1px solid var(--color-primary-dark25) !important;
+}
+
+.CtaButton {
+  background-color: var(--color-CTA) !important;
+  color: var(--color-dark-text) !important;
+  border: 1px solid var(--color-CTA) !important;
+}
+
+.CtaButton:hover {
+  background-color: var(--color-CTA-light25) !important;
+  color: var(--color-dark-text) !important;
+  border: 1px solid var(--color-CTA-light25) !important;
+}
+
+.MuiSwitch-colorPrimary.Mui-checked + .MutiSwitch-track {
+  background-color: var(--color-secondary-light25) !important;
+}
+
+.MuiSwitch-thumb {
+  background-color: var(--color-secondary) !important;
+}
+
+.MuiCheckbox-colorSecondary.Mui-checked {
+  color: var(--color-secondary) !important;
+}

@@ -117,22 +117,23 @@ const StatsPage = () => {
                         <ButtonGroup aria-label="outlined primary button group" disableElevation disableRipple>
                             {
                                 buttonElements.map(button => {
-                                    if (button.id === currentView) return <Button onClick={() => viewChanger(button.id)} color="primary" >{button.name}</Button>
-                                    return <Button key={button.id} onClick={() => viewChanger(button.id)} >{button.name}</Button>
+                                    if (button.id === currentView) return <Button onClick={() => viewChanger(button.id)} className="primaryButton-outline">{button.name}</Button>
+                                    return <Button className="secondaryButton-outline" key={button.id} onClick={() => viewChanger(button.id)} >{button.name}</Button>
 
                                 })
                             }
                         </ButtonGroup>
                         <Button
-                            variant="contained"
-                            color="primary"
+                            // variant="contained"
+                            // color="primary"
+                            className="CtaButton"
                             onClick={async () => {
                                 await updateAllData()
                                 handleClick()
                             }}
                             disableElevation
                             endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
-                            style={{ margin: "auto", height: "36px", marginLeft: "15px" }}
+                            style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }}
                         >
                             Update Data
                         </Button>

@@ -33,7 +33,7 @@ const MuiClassObject = makeStyles(
           overflow: "visible"
         },
         '& .MuiDataGrid-row.Mui-even': {
-          backgroundColor: '#DEE3EC'
+          backgroundColor: 'var(--color-secondary-light87)'
         }
       },
     }),
