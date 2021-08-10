@@ -1,3 +1,23 @@
+# v0.0.5
+
+## New Features:
+- Pair and bot performance chart to see volume, profit, and deal length
+- Added chart filters and additional bubble charts
+
+## Bug Fixes:
+- Incorrect date on the settings page, this was pulling account ID into the date.
+- Issue where outdated currency data was being shown. Fixed this by adding a delete to remove the account table on each sync.
+- Default currency was getting duplicated due to the default config.
+
+## Enhancements:
+- Better styling of the deal allocation chart
+- Added UI alert if no currency or account is enabled
+- Improved the initial first user onboarding flow
+- Redesigned the headers on each page to work better and utilize the screen better
+- Fixed various typos across the app
+- Added a `POST` to the account update to pull updated account information on each sync
+
+
 # v0.0.4
 - a TON of settings and user flow updates
     - New structure to the settings page to utalize more of the screen
