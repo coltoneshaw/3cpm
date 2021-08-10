@@ -24,7 +24,7 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
                 data = data.filter( row => row.percentTotalVolume > .15)
                     .sort(dynamicSort("percentTotalProfit"))
                 return (
-                    <ResponsiveContainer width="100%" minHeight="400px">
+                    <ResponsiveContainer width="100%" minHeight="300px">
                         <BarChart
                             width={500}
                             height={200}
