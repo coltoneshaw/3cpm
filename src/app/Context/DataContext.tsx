@@ -4,7 +4,18 @@ import dotProp from 'dot-prop';
 // Contect Providers
 import { useGlobalState } from './Config';
 
-import { Type_Query_PerfArray, Type_Query_bots, Type_ActiveDeals, Type_Query_Accounts, Type_MetricData, Type_Profit } from '@/types/3Commas'
+import {
+    Type_Query_PerfArray,
+    Type_Query_bots,
+    Type_ActiveDeals,
+    Type_Query_Accounts,
+    Type_MetricData,
+    Type_Profit,
+    Type_Bot_Performance_Metrics,
+    Type_Performance_Metrics,
+    Type_Pair_Performance_Metrics
+
+} from '@/types/3Commas'
 import { TconfigValues } from '@/types/config'
 
 // TODO - see about setting this to something other than null for the default Value
@@ -17,7 +28,9 @@ import {
     fetchPerformanceDataFunction,
     getActiveDealsFunction,
     updateThreeCData,
-    getAccountDataFunction
+    getAccountDataFunction,
+    fetchBotPerformanceMetrics,
+    fetchPairPerformanceMetrics
 } from '@/utils/3Commas';
 
 
@@ -39,6 +52,7 @@ const defaultMetrics = {
     reservedFundsTotal: 0
 }
 
+
 interface Type_Data_Context {
     actions: {
         runTestData: any
@@ -54,7 +68,7 @@ interface Type_Data_Context {
         botData: Type_Query_bots[]
         profitData: Type_Profit[]
         activeDeals: Type_ActiveDeals[]
-        performanceData: Type_Query_PerfArray[]
+        performanceData: Type_Performance_Metrics
         balanceData: { on_orders: number, position: number }
         metricsData: Type_MetricData
         additionalData: { accountName: string[] }[]
@@ -75,7 +89,7 @@ const DataProvider = ({ children }: any) => {
     const [botData, updateBotData] = useState<Type_Query_bots[]>([])
     const [profitData, updateProfitData] = useState<Type_Profit[]>([])
     const [activeDeals, updateActiveDeals] = useState<Type_ActiveDeals[]>([])
-    const [performanceData, updatePerformanceData] = useState<Type_Query_PerfArray[]>([])
+    const [performanceData, updatePerformanceData] = useState<Type_Performance_Metrics>({ pair_bot: [], bot: [] })
     const [balanceData, setBalanceData] = useState(() => defaultBalance)
     const [accountData, setAccountData] = useState<Type_Query_Accounts[]>([])
     const [metricsData, updateMetricsData] = useState(() => defaultMetrics)
@@ -91,9 +105,9 @@ const DataProvider = ({ children }: any) => {
         // console.log()
         if (config && dotProp.has(config, 'general.defaultCurrency')) {
             console.log('ran this')
-            try{
+            try {
                 getAccountData(config)
-            } catch(error) {
+            } catch (error) {
                 console.error(error)
             }
         }
@@ -179,7 +193,12 @@ const DataProvider = ({ children }: any) => {
         fetchPerformanceDataFunction()
             .then(((data: Type_Query_PerfArray[]) => {
                 console.log('updated Performance Data!')
-                updatePerformanceData(data)
+
+                updatePerformanceData((prevState) => {
+                    return { ...prevState, pair_bot: data }
+                })
+
+
                 updateMetricsData(prevData => {
                     return {
                         ...prevData,
@@ -189,6 +208,24 @@ const DataProvider = ({ children }: any) => {
                     }
                 })
             }))
+
+        fetchBotPerformanceMetrics()
+            .then((data: Type_Bot_Performance_Metrics[]) => {
+                console.log('getting bot performance metrics')
+                updatePerformanceData((prevState) => {
+                    return { ...prevState, bot: data }
+                })
+
+            })
+
+        fetchPairPerformanceMetrics()
+            .then((data: Type_Pair_Performance_Metrics[]) => {
+                console.log('getting pair performance metrics')
+                updatePerformanceData((prevState) => {
+                    return { ...prevState, pair: data }
+                })
+
+            })
     }
 
     /**
@@ -227,7 +264,7 @@ const DataProvider = ({ children }: any) => {
             .then(data => {
                 const { accountData, balance } = data
 
-                if(accountData == undefined || accountData.length === 0) {
+                if (accountData == undefined || accountData.length === 0) {
                     return
                 }
 
@@ -260,7 +297,7 @@ const DataProvider = ({ children }: any) => {
             })
     }
 
-    
+
 
 
 

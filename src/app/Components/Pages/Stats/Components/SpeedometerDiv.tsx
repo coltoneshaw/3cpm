@@ -20,27 +20,27 @@ const SpeedometerDiv = ({metrics}: Speedometer_Type ) => {
                 colorArray={["rgb(96, 213, 46)", "rgb(150, 222, 42)", "rgb(212, 231, 37)", "rgb(239, 197, 33)", "rgb(247, 138, 29)", "rgb(255, 71, 26)"]}
                 labelArray={[
                     {
-                        text: '100%',
+                        text: '50%',
                         position: "OUTSIDE",
                         color: "#555",
                     },
                     {
-                        text: "200%",
+                        text: "150%",
                         position: "OUTSIDE",
                         color: "#555",
                     },
                     {
-                        text: "300%",
+                        text: "250%",
                         position: "OUTSIDE",
                         color: "#555",
                     },
                     {
-                        text: "400%",
+                        text: "350%",
                         position: "OUTSIDE",
                         color: "#555",
                     },
                     {
-                        text: "500%",
+                        text: "450%",
                         position: "OUTSIDE",
                         color: "#555",
                     }]}

@@ -9,7 +9,7 @@ import {
 import { Type_ReservedFunds } from '@/types/config'
 
 
-interface Type_ProfitArray extends Array<Type_Profit>{}
+interface Type_ProfitArray extends Array<Type_Profit> { }
 
 const getFiltersQueryString = async () => {
 
@@ -35,9 +35,9 @@ const getFiltersQueryString = async () => {
     // no OR starting the string.
     // const fullQueryString = `${startString} ${accountIdString} ${currencyString}`
 
-    const currencyString = (defaultCurrency) ? defaultCurrency.map( (b:string) => "'" + b + "'") : ""
+    const currencyString = (defaultCurrency) ? defaultCurrency.map((b: string) => "'" + b + "'") : ""
     const startString = startDate
-    const accountIdString = reservedFunds.filter(( account:Type_ReservedFunds ) => account.is_enabled ).map( ( account:Type_ReservedFunds ) => account.id )
+    const accountIdString = reservedFunds.filter((account: Type_ReservedFunds) => account.is_enabled).map((account: Type_ReservedFunds) => account.id)
 
 
     return {
@@ -75,7 +75,7 @@ const fetchDealDataFunction = async () => {
                     closed_at != null 
                     or finished = 1 
                     and account_id in (${accountIdString}) 
-                    And currency in (${currencyString}) 
+                    and currency in (${currencyString}) 
                     and closed_at_iso_string > ${startString} 
                 ORDER BY
                     closed_at asc;`
@@ -83,7 +83,7 @@ const fetchDealDataFunction = async () => {
     // @ts-ignore
     let dataArray = await electron.database.query(query)
 
-    if(dataArray == null || dataArray.length === 0){
+    if (dataArray == null || dataArray.length === 0) {
         console.log('no data')
         return {
             profitData: [],
@@ -94,7 +94,7 @@ const fetchDealDataFunction = async () => {
             }
         }
     }
-    
+
     let dates = Array.from(new Set(dataArray.map((row: Type_Query_DealData) => { if (row.closed_at) { return row.closed_at.split('T')[0] } })))
     let totalDealHours = dataArray.map((deal: Type_Query_DealData) => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours)
 
@@ -186,7 +186,7 @@ const fetchPerformanceDataFunction = async () => {
             .map((deal: Type_Query_PerfArray) => deal.bought_volume)
             .reduce((sum: number, item: number) => sum + item)
 
-        const performanceData  = databaseQuery.map((perfData: Type_Query_PerfArray ) => {
+        const performanceData = databaseQuery.map((perfData: Type_Query_PerfArray) => {
             const { bought_volume, total_profit } = perfData
             return {
                 ...perfData,
@@ -202,6 +202,93 @@ const fetchPerformanceDataFunction = async () => {
 
 
 }
+
+
+/**
+ * 
+ * @returns An array containing the data for specific bot metrics.
+ */
+const fetchBotPerformanceMetrics = async () => {
+    const filtersQueryString = await getFiltersQueryString()
+    const { currencyString, accountIdString, startString } = filtersQueryString;
+
+
+    const queryString = `
+                SELECT 
+                    bot_id, 
+                    bot_name, 
+                    sum(final_profit) as total_profit, 
+                    avg(final_profit) as avg_profit,
+                    count(*) as number_of_deals,
+                    sum(bought_volume) as bought_volume,
+                    avg(deal_hours) as avg_deal_hours,
+                    avg(completed_safety_orders_count + completed_manual_safety_orders_count) as avg_completed_so
+                FROM 
+                    deals 
+                WHERE
+                    closed_at is not null
+                    and account_id in (${accountIdString}) 
+                    and currency in (${currencyString}) 
+                    and closed_at_iso_string > ${startString} 
+                GROUP BY 
+                    bot_id;`
+
+    console.log(queryString)
+
+    // @ts-ignore
+    let databaseQuery = await electron.database.query(queryString);
+
+    if (databaseQuery == null || databaseQuery.length > 0) {
+        return databaseQuery
+    } else {
+        return []
+    }
+
+
+}
+
+/**
+ * 
+ * @returns An array containing the data for specific bot metrics.
+ */
+ const fetchPairPerformanceMetrics = async () => {
+    const filtersQueryString = await getFiltersQueryString()
+    const { currencyString, accountIdString, startString } = filtersQueryString;
+
+
+    const queryString = `
+                SELECT 
+                    pair, 
+                    sum(final_profit) as total_profit, 
+                    avg(final_profit) as avg_profit,
+                    count(*) as number_of_deals,
+                    sum(bought_volume) as bought_volume,
+                    avg(deal_hours) as avg_deal_hours,
+                    avg(completed_safety_orders_count + completed_manual_safety_orders_count) as avg_completed_so
+                FROM 
+                    deals 
+                WHERE
+                    closed_at is not null
+                    and account_id in (${accountIdString}) 
+                    and currency in (${currencyString}) 
+                    and closed_at_iso_string > ${startString} 
+                GROUP BY 
+                    pair;`
+
+    console.log(queryString)
+
+    // @ts-ignore
+    let databaseQuery = await electron.database.query(queryString);
+
+    if (databaseQuery == null || databaseQuery.length > 0) {
+        return databaseQuery
+    } else {
+        return []
+    }
+
+
+}
+
 
 const getActiveDealsFunction = async () => {
     const filtersQueryString = await getFiltersQueryString()
@@ -276,7 +363,7 @@ const getAccountDataFunction = async (defaultCurrency: string[]) => {
 
     // @ts-ignore
     let accountData: Array<Type_Query_Accounts> = await electron.database.query(query)
-        .then((data: Type_Query_Accounts[]) => data.filter( row => defaultCurrency.includes(row.currency_code)))
+        .then((data: Type_Query_Accounts[]) => data.filter(row => defaultCurrency.includes(row.currency_code)))
 
     if (accountData == null || accountData.length > 0) {
         let on_ordersTotal = 0;
@@ -324,7 +411,9 @@ export {
     getActiveDealsFunction,
     updateThreeCData,
     getAccountDataFunction,
-    accountDataAll
+    accountDataAll,
+    fetchBotPerformanceMetrics,
+    fetchPairPerformanceMetrics
 }
 
 

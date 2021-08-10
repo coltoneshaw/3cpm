@@ -17,7 +17,7 @@ const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
         if (data.length === 0) {
             return (<NoData />)
         } else {
-            return (<ResponsiveContainer width="100%" aspect={2} >
+            return (<ResponsiveContainer width="100%" height="100%" minHeight="300px" >
                 <AreaChart
                     width={500}
                     height={300}
@@ -30,7 +30,7 @@ const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
                     }}
 
                 >
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <CartesianGrid opacity={.3} vertical={false} />
                     <XAxis
                         dataKey="utc_date"
                         axisLine={false}
@@ -47,13 +47,18 @@ const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
                         tickLine={false}
                         axisLine={false}
                         tickFormatter={tick => parseNumber(tick)}
-                        tickCount={8}
+                        tickCount={9}
                         // TODO - Need to look at passing in a tick array that contains the values rounded to 100s.
-                        type="number" domain={[(dataMin: number) => (0 - Math.abs(dataMin)).toFixed(0), (dataMax: number) => dataMax.toFixed(0)]}
+                        type="number" 
+                        allowDecimals={false}
+                        domain={[(dataMin: number) => Math.floor(dataMin / 100 ) * 100, (dataMax: number) =>  Math.round(dataMax / 100 ) * 100]}
                     />
 
-                    {/* @ts-ignore */}
-                    <Tooltip content={<CustomTooltip />} />
+                    <Tooltip 
+                        cursor={{ strokeDasharray: '3 3' }}
+                        // @ts-ignore
+                        content={<CustomTooltip />} 
+                    />
                     <defs>
                         <linearGradient id="gradiant" x1="0" y1="0" x2="0" y2="1">
                             <stop offset={20} stopColor="#DEE3EC" stopOpacity={1} />
@@ -69,7 +74,7 @@ const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
 
 
     return (
-        <div className="boxData" style={{ 'margin': '25px' }}>
+        <div className="boxData stat-chart">
             <h3 className="chartTitle">Cumulative profit by day </h3>
             {renderChart()}
 

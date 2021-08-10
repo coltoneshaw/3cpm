@@ -73,7 +73,7 @@ const defaultConfig:TconfigValues = {
         }
     },
     "general": {
-        "defaultCurrency": ["USD"],
+        "defaultCurrency": [],
         "globalLimit": 250000
     },
     "syncStatus": {

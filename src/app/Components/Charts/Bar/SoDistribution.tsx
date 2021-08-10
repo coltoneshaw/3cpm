@@ -49,7 +49,8 @@ const SoDistribution = ({ title, data, metrics }: Type_SoDistribution) => {
         if (data.length === 0) {
             return (<NoData />)
         } else {
-            return (<ResponsiveContainer width="100%"  height="90%" minHeight="400px">
+            return (
+            <ResponsiveContainer width="100%"  height="90%" minHeight="300px" >
                 <BarChart
                     width={500}
                     height={200}
@@ -71,14 +72,17 @@ const SoDistribution = ({ title, data, metrics }: Type_SoDistribution) => {
                         // todo - improve how tooltops can pass the values.
                         content={<CustomTooltip />}
                     />
-                    <XAxis dataKey="SO"
+                    <XAxis 
+                        dataKey="SO"
                         angle={45}
-                        dx={15}
+                        dx={0}
+                        textAnchor="start"
                         dy={20}
                         minTickGap={-200}
                         axisLine={false}
                         height={75}
                     />
+
                     <YAxis
                         tickFormatter={tick => tick * 100 + "%"}
                     />
@@ -86,13 +90,14 @@ const SoDistribution = ({ title, data, metrics }: Type_SoDistribution) => {
 
                     <Bar dataKey="percentOfDeals" fill="#8884d8" />
                     <Bar dataKey="percentOfVolume" fill="#82ca9d" />
+
                 </BarChart>
             </ResponsiveContainer>)
         }
     }
 
     return (
-        <div className="boxData" style={{ 'margin': '25px', minHeight:"400px"  }}>
+        <div className="boxData stat-chart bubble-chart" >
             <h3 className="chartTitle">{title}</h3>
             {renderChart()}
         </div>
@@ -108,7 +113,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
             <div className="tooltop">
                 <h4>SO # {label}</h4>
                 <p><strong>Bought Volume:</strong> ${parseNumber(volume)} ( {(percentOfVolume * 100).toFixed(2)} %)</p>
-                <p><strong>Deal Count:</strong> {numberOfDeals} ( {(percentOfDeals * 100).toFixed(2)} $)</p>
+                <p><strong>Deal Count:</strong> {numberOfDeals} ( {(percentOfDeals * 100).toFixed(2)} %)</p>
             </div>
         )
     } else {

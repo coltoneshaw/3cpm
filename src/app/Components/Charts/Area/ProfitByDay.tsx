@@ -30,7 +30,8 @@ const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
         if (data.length === 0) {
             return (<NoData />)
         } else {
-            return (<ResponsiveContainer width="100%" aspect={2} >
+            return (
+            <ResponsiveContainer width="100%"  height="100%" minHeight="300px">
                 <AreaChart
                     width={500}
                     height={300}
@@ -61,11 +62,12 @@ const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
                         tickLine={false}
                         axisLine={false}
                         tickCount={6}
+                        type="number"
                     />
 
                      {/* TODO - pass the custom props down properly here.  */}
                     {/* @ts-ignore */}
-                    <Tooltip content={ <CustomTooltip />}/>
+                    <Tooltip content={ <CustomTooltip />} cursor={{ strokeDasharray: '3 3' }}/>
                     <defs>
                         <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
                             <stop offset={off} stopColor="#DEE3EC" stopOpacity={1} />
@@ -79,7 +81,7 @@ const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
         }
     }
     return (
-        <div className="boxData" style={{ 'margin': '25px' }}>
+        <div className="boxData stat-chart" >
             <h3 className="chartTitle">Profit by day </h3>
             {renderChart()}
 

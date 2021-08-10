@@ -57,6 +57,7 @@ const ConfigProvider = ({ children }: any) => {
     const setNewCurrency = (config: TconfigValues) => {
         updateCurrency(() => {
             const newCurrency: string[] | undefined = dotProp.get(config, 'general.defaultCurrency')
+            console.log({newCurrency})
             return (newCurrency) ? newCurrency : ["USD"]
         })
     }
@@ -88,7 +89,7 @@ const ConfigProvider = ({ children }: any) => {
 
     const setNewStatDate = (config: TconfigValues) => {
         updateDate(() => {
-            const startDate: number | undefined = dotProp.get(config, 'statSettings.account_id')
+            const startDate: number | undefined = dotProp.get(config, 'statSettings.startDate')
             return (startDate) ? startDate : getTime(sub(new Date(), { days: 90 })) ;
         })
     }
@@ -106,48 +107,56 @@ const ConfigProvider = ({ children }: any) => {
                 setNewAccountIdArray(config)
                 setNewStatDate(config)
                 setNewReservedFunds(config)
-
-
             })
     }
 
     const setConfigBulk = async () => {
         console.log('Setting the config')
 
-        await updateConfig((prevConfig: TconfigValues) => {
+        const accountIDs = reservedFunds.filter(account => account.is_enabled).map(account => account.id)
+
+        if(accountIDs.length === 0 || currency.length == 0){
+            alert("Please make sure you have an account and a currency enabled")
+            return false
+        }
+
+        try {
+            await updateConfig((prevConfig: TconfigValues) => {
 
 
-            prevConfig.general.defaultCurrency = currency;
-
-            prevConfig.statSettings.account_id = (accountID) ? accountID : [];
-            prevConfig.statSettings.startDate = (date) ? date : 0;
-            prevConfig.statSettings.reservedFunds = (reservedFunds) ? reservedFunds : [];
-
-            // console.log(reservedFunds.filter(account => account.is_enabled).map(account => account.id))
-
-            updateAccountID(() => {
-                const accountIDs = reservedFunds.filter(account => account.is_enabled).map(account => account.id)
-                if(accountIDs.length > 0){
-
-                    return accountIDs
-                } else {
-                    return []
+                prevConfig.general.defaultCurrency = currency;
+                prevConfig.statSettings.account_id = (accountID) ? accountID : [];
+                prevConfig.statSettings.startDate = (date) ? date : 0;
+                prevConfig.statSettings.reservedFunds = (reservedFunds) ? reservedFunds : [];
+    
+                // console.log(reservedFunds.filter(account => account.is_enabled).map(account => account.id))
+    
+                updateAccountID(() => {
+                    // const accountIDs = reservedFunds.filter(account => account.is_enabled).map(account => account.id)
+                    if(accountIDs.length > 0){
+    
+                        return accountIDs
+                    } else {
+                        return []
+                    }
+                })
+    
+                prevConfig.apis.threeC = {
+                    key: apiData.key,
+                    secret: apiData.secret,
                 }
+    
+                // @ts-ignore
+                // sending the config over to Electron and returning the response
+                electron.config.bulk(prevConfig)
+                return prevConfig
+    
             })
-
-            prevConfig.apis.threeC = {
-                key: apiData.key,
-                secret: apiData.secret,
-            }
-
-            // @ts-ignore
-            // sending the config over to Electron and returning the response
-            electron.config.bulk(prevConfig)
-            return prevConfig
-
-        })
-
-        // alert('Config has been updated! If you adjusted filers make sure to reload the data and click "refresh chart data".')
+            return true
+        } catch (error) {
+            console.error(error)
+            return false
+        }
     }
 
     // reset button is confirmed working at the moment.
@@ -169,9 +178,9 @@ const ConfigProvider = ({ children }: any) => {
         })
     }
 
-    const fetchAccountsForRequiredFunds = async () => {
+    const fetchAccountsForRequiredFunds = async (key:string, secret:string) => {
         // @ts-ignore
-        const accountSummary = await electron.api.getAccountData()
+        const accountSummary = await electron.api.getAccountData(key, secret)
         console.log({accountSummary})
 
         if (accountSummary !== undefined || accountSummary.length > 0) {

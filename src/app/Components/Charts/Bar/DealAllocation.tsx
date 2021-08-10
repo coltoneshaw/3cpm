@@ -3,6 +3,7 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { parseNumber, formatPercent } from '@/utils/number_formatting';
 import { Type_Tooltip, Type_DealPerformanceCharts } from '@/types/Charts'
+import { dynamicSort } from '@/utils/helperFunctions';
 
 import NoData from '@/app/Components/Pages/Stats/Components/NoData';
 
@@ -15,13 +16,15 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
 
         const renderChart = () => {
 
-            if (data.length === 0) {
+            if (data == undefined || data.length === 0) {
                 return (<NoData />)
             } else {
+
+                // removing everything over a specific percent of total volume.
                 data = data.filter( row => row.percentTotalVolume > .15)
-                    .sort((a, b) => a.percentTotalProfit < b.percentTotalProfit ? -1 : (a.percentTotalProfit > b.percentTotalProfit ? 1 : 0))
+                    .sort(dynamicSort("percentTotalProfit"))
                 return (
-                    <ResponsiveContainer width="100%" aspect={3}>
+                    <ResponsiveContainer width="100%" minHeight="400px">
                         <BarChart
                             width={500}
                             height={200}
@@ -43,13 +46,15 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
                                 // TODO - typescript - properly handle the props being passed
                                 content={<CustomTooltip />}
                             />
-                            <XAxis dataKey="pair"
+                            <XAxis 
+                                dataKey="pair"
                                 angle={45}
-                                dx={15}
-                                dy={20}
-                                minTickGap={-200}
                                 axisLine={false}
                                 height={75}
+                                textAnchor="start"
+                                fontSize=".75em"
+                                minTickGap={-200}
+
                             />
                             <YAxis
                                 tickFormatter={tick => tick + "%"}
@@ -67,7 +72,7 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
 
 
         return (
-            <div className="boxData" style={{ 'margin': '25px' }}>
+            <div className="boxData stat-chart bubble-chart">
                 <h3 className="chartTitle">{title}</h3>
                 {renderChart()}
 

@@ -41,20 +41,19 @@ const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
                 onClick={ async () => {
                     setLoaderIcon(true)
                     try{
-                        await setConfigBulk() 
-                        await updateAllData()
+                        const config = await setConfigBulk() 
+                        if(config){
+                            setOpen(true)
+                            await updateAllData()
+                        }
                     } catch (error) {
                         console.log(error)
                     }
                     setLoaderIcon(false)
-                    setOpen(true)
-
-                    
-
                 }}
                 disableElevation
             >
-                {( loader) ? <LoaderIcon /> : "Save"}
+                {( loader) ? <> Syncing... <LoaderIcon /> </> : "Save"}
             </Button>
         </div>
     )

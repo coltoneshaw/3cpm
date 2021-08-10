@@ -35,11 +35,50 @@
     color: orange;
 }
 
+.statHeaderRow{
+    padding-bottom: 15px;
+}
+
 .filters {
     font-weight: 300;
     font-size: .9em;
+    flex-basis: 50%;
+    align-items: center;
+    justify-content: flex-end;
+ 
 }
 
+.menuButtons{
+    margin: auto;
+    flex-basis: 50%;
+    min-width: 730px;
+}
+
+
+@media only screen and (max-width: 1500px)  {
+
+    .statHeaderRow{
+        flex-wrap: wrap;
+    }
+    .filters{
+        flex-basis: 100%;
+        justify-content: center;
+    }
+
+    .menuButtons{
+        flex-basis: 100%;
+        justify-content: center;
+        align-self: center;
+    }
+    
+}
 .filters p { 
     padding: 0px 10px 0px 10px
+}
+
+.stat-chart {
+    margin: 0;
+}
+
+.bubble-chart {
 }

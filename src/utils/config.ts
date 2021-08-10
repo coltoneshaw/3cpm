@@ -5,7 +5,7 @@ import { defaultConfig, configSchema } from '@/utils/defaultConfig';
 
 const migrateCurrencyToArray = (store:any ) => {
     const currentCurrency = store.get('general.defaultCurrency');
-    (currentCurrency.length > 0) ? store.set('general.defaultCurrency', [currentCurrency] ) : store.set('general.defaultCurrency', ["usd"] )
+    (currentCurrency.length > 0) ? store.set('general.defaultCurrency', [currentCurrency] ) : store.set('general.defaultCurrency', [] )
 }
 
 
@@ -23,8 +23,6 @@ const config = new Store({
             console.info('migrating the config store to 0.0.4')
             console.log('adding a reserved funds array.')
             store.set('statSettings.reservedFunds', []);
-            
-            
         }
     },
     defaults: defaultConfig

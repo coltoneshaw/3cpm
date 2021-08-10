@@ -4,8 +4,8 @@
 .riskDiv{
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
-    padding: 2% 0 2% 0;
+    justify-content: space-between;
+    padding: 0% 0 2% 0;
     flex-wrap: wrap;
     width: 100%;
 }
@@ -22,6 +22,5 @@
     border: none;
     width: 100%;
     overflow: scroll;
-    overflow-x: scroll;
-    height: 55vh
+    height: 65vh
 }

@@ -7,8 +7,6 @@ const MuiClassObject = makeStyles(
         border: 0,
         padding: 0,
         fontFamily: 'Open Sans',
-        overflowX: "auto",
-        overflowY: "scroll",
         '& .MuiDataGrid-iconSeparator': {
           display: 'none',
         },

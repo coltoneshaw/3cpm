@@ -1,10 +1,14 @@
-import DealSoUtalizationBar from './DealSoUtalizationBar';
+import DealSoUtilizationBar from './DealSoUtilizationBar';
 import SoDistribution from './SoDistribution'
 import DealAllocationBar from './DealAllocation';
+import PairPerformanceBar from './PairPerformanceBar';
+import BotPerformanceBar from './BotPerformanceBar';
 
 
 export {
-    DealSoUtalizationBar,
+    DealSoUtilizationBar,
     SoDistribution,
-    DealAllocationBar
+    DealAllocationBar,
+    PairPerformanceBar,
+    BotPerformanceBar
 }
