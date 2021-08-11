@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { parseISO, format } from 'date-fns'
 
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import NoData from '@/app/Components/Pages/Stats/Components/NoData';
 
 import { Type_ProfitChart } from '@/types/Charts';
@@ -32,7 +32,7 @@ const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
         } else {
             return (
             <ResponsiveContainer width="100%"  height="100%" minHeight="300px">
-                <AreaChart
+                <BarChart
                     width={500}
                     height={300}
                     data={data}
@@ -68,14 +68,14 @@ const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
                      {/* TODO - pass the custom props down properly here.  */}
                     {/* @ts-ignore */}
                     <Tooltip content={ <CustomTooltip />} cursor={{ strokeDasharray: '3 3' }}/>
-                    <defs>
+                    {/* <defs>
                         <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
                             <stop offset={off} stopColor="#DEE3EC" stopOpacity={1} />
                             <stop offset={off} stopColor="#9BABC7" stopOpacity={1} />
                         </linearGradient>
-                    </defs>
-                    <Area type="monotone" dataKey={X} stroke="#212B3B" strokeWidth={1.75} fill="url(#splitColor)" />
-                </AreaChart>
+                    </defs> */}
+                    <Bar type="monotone" dataKey={X} fill="var(--color-primary)" />
+                </BarChart>
 
             </ResponsiveContainer>)
         }
