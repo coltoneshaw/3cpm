@@ -140,7 +140,7 @@
   }
 
   100% {
-      transform: rotate(360deg);
+      transform: rotate(-360deg);
   }
 }
 
@@ -150,7 +150,7 @@
 @import url('./Components/Pages/Stats/Stats.scss');
 @import url('./Components/Charts/DataCards/Card.scss');
 @import url('./Components/Sidebar/Sidebar.scss');
-
+@import url('./Components/Pages/ActiveDeals/ActiveDeals.scss');
 
 .secondaryButton-outline {
   background-color: none !important;
