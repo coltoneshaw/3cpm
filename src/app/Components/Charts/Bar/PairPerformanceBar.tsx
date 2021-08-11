@@ -21,7 +21,7 @@ const legendFind = (value: string) => {
 
 const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
 
-    const [sort, setSort] = React.useState('total_profit');
+    const [sort, setSort] = React.useState('-total_profit');
 
     const handleChange = (event:any) => {
         setSort(event.target.value);
@@ -92,9 +92,9 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
                         onChange={handleChange}
                         style={{width: "150px"}}
                     >
-                        <MenuItem value="total_profit">Profit</MenuItem>
-                        <MenuItem value="bought_volume">Bought Volume</MenuItem>
-                        <MenuItem value="avg_deal_hours">Avg. Deal Hours</MenuItem>
+                        <MenuItem value="-total_profit">Profit</MenuItem>
+                        <MenuItem value="-bought_volume">Bought Volume</MenuItem>
+                        <MenuItem value="-avg_deal_hours">Avg. Deal Hours</MenuItem>
                     </Select>
                 </FormControl>
                 </div>

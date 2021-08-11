@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Line, Area } from 'recharts';
+import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Line, Area, Scatter } from 'recharts';
 
 
 import {InputLabel, MenuItem, FormControl, Select, FormHelperText} from '@material-ui/core';
@@ -21,7 +21,7 @@ const legendFind = (value: string) => {
 
 const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
 
-    const [sort, setSort] = React.useState('total_profit');
+    const [sort, setSort] = React.useState('-total_profit');
 
     const handleChange = (event:any) => {
         setSort(event.target.value);
@@ -78,8 +78,10 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
                     <YAxis yAxisId="bought_volume" orientation='right' hide={hide("bought_volume") } domain={[0, 'auto']} allowDataOverflow={true} offset={20} />
 
                     <Bar  name="Bought Volume" yAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.8} fill="#8BBABC" />
-                    <Line name="Total Profit" type="monotone" yAxisId="total_profit" dataKey="total_profit" stroke="#E8AE00" dot={false} strokeWidth={1.75} />
-                    <Line name="Avg. Deal Hours" type="monotone" yAxisId="avg_deal_hours" dataKey="avg_deal_hours" dot={false} strokeWidth={1.75} />
+                    <Bar name="Total Profit" dataKey="total_profit" fill="#E8AE00"  yAxisId="total_profit" />
+                    <Bar name="Avg. Deal Hours" dataKey="avg_deal_hours"  yAxisId="avg_deal_hours"/>
+                    {/* <Line name="Total Profit" type="monotone" yAxisId="total_profit" dataKey="total_profit" stroke="#E8AE00" dot={false} strokeWidth={1.75} /> */}
+                    {/* <Line name="Avg. Deal Hours" type="monotone" yAxisId="avg_deal_hours" dataKey="avg_deal_hours" dot={false} strokeWidth={1.75} /> */}
 
                 </ComposedChart>
             </ResponsiveContainer>)
@@ -100,9 +102,9 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
                         onChange={handleChange}
                         style={{width: "150px"}}
                     >
-                        <MenuItem value="total_profit">Profit</MenuItem>
-                        <MenuItem value="bought_volume">Bought Volume</MenuItem>
-                        <MenuItem value="avg_deal_hours">Avg. Deal Hours</MenuItem>
+                        <MenuItem value="-total_profit">Profit</MenuItem>
+                        <MenuItem value="-bought_volume">Bought Volume</MenuItem>
+                        <MenuItem value="-avg_deal_hours">Avg. Deal Hours</MenuItem>
                     </Select>
                 </FormControl>
                 </div>
