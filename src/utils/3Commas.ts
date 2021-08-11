@@ -67,8 +67,7 @@ const fetchDealDataFunction = async () => {
     const { currencyString, accountIdString, startString } = filtersQueryString;
     const query = `
                 SELECT 
-                    final_profit, closed_at, id, 
-                    deal_hours
+                    final_profit, closed_at, id, deal_hours
                 FROM 
                     deals 
                 WHERE

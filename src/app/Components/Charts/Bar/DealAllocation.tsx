@@ -7,10 +7,10 @@ import { dynamicSort } from '@/utils/helperFunctions';
 
 import NoData from '@/app/Components/Pages/Stats/Components/NoData';
 
-const legendFind = ( value:string ) => {
-    if (value == "bought_volume") return "Bought Volume"
-    return "SO Volume Remaining"
-}
+// const legendFind = ( value:string ) => {
+//     if (value == "bought_volume") return "Bought Volume"
+//     return "SO Volume Remaining"
+// }
 
 const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
 
@@ -37,9 +37,7 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
                             }}
                             stackOffset="expand"
                         >
-                            <Legend
-                                formatter={value => legendFind(value)}
-                            />
+                            <Legend />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip
                                 // @ts-ignore - handle props
@@ -61,8 +59,8 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
                             />
     
     
-                            <Bar dataKey="percentTotalVolume" fill="#8884d8" />
-                            <Bar dataKey="percentTotalProfit" fill="#82ca9d" />
+                            <Bar dataKey="percentTotalVolume" fill="#8884d8" name="% Total Volume" />
+                            <Bar dataKey="percentTotalProfit" fill="#82ca9d" name="% Total Profit" />
                         </BarChart>
                     </ResponsiveContainer>)
             }

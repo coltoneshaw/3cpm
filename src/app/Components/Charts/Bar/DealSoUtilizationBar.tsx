@@ -7,10 +7,10 @@ import { dynamicSort } from '@/utils/helperFunctions';
 
 import NoData from '@/app/Components/Pages/Stats/Components/NoData';
 
-const legendFind = (value: string) => {
-    if (value == "bought_volume") return "Bought Volume"
-    return "SO Volume Remaining"
-}
+// const legendFind = (value: string) => {
+//     if (value == "bought_volume") return "Bought Volume"
+//     return "SO Volume Remaining"
+// }
 
 
 const DealSoUtilizationBar = ({ title, data }: Type_ActiveDealCharts) => {
@@ -35,7 +35,7 @@ const DealSoUtilizationBar = ({ title, data }: Type_ActiveDealCharts) => {
                         stackOffset="expand"
                     >
                         <Legend
-                            formatter={value => legendFind(value)}
+                            
                         />
                         <CartesianGrid strokeDasharray="3 3" />
                         <Tooltip
@@ -60,8 +60,8 @@ const DealSoUtilizationBar = ({ title, data }: Type_ActiveDealCharts) => {
                         />
 
 
-                        <Bar dataKey="bought_volume" stackId="a" fill="#8884d8" />
-                        <Bar dataKey="so_volume_remaining" stackId="a" fill="#82ca9d" />
+                        <Bar dataKey="bought_volume" stackId="a" fill="#8884d8" name="% Bought Volume" />
+                        <Bar dataKey="so_volume_remaining" stackId="a" fill="#82ca9d" name="% Deal Count"  />
                     </BarChart>
                 </ResponsiveContainer>)
         }
