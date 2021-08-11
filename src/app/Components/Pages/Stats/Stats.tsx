@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { format } from 'date-fns';
 
 import { Button, ButtonGroup } from '@material-ui/core';
-import SyncIcon from '@material-ui/icons/Sync';
 
 import { RiskMonitor, SummaryStatistics, PerformanceMonitor, ActiveDeals } from './Views/Index';
-
-import { findAccounts } from '@/utils/defaultConfig'
+import { UpdateDataButton } from '@/app/Components/Buttons/Index'
 
 // import './Stats.scss'
 import { useGlobalState } from '@/app/Context/Config';
 import { useGlobalData } from '@/app/Context/DataContext';
 
 import dotProp from 'dot-prop';
-import ToastNotifcation from '@/app/Components/ToastNotification'
 
 
 import { Card_ActiveDeals, Card_totalInDeals, Card_MaxDca, Card_TotalBankRoll, Card_TotalProfit } from '@/app/Components/Charts/DataCards';
@@ -93,20 +90,6 @@ const StatsPage = () => {
         return (date) ? format(date, "MM/dd/yyyy") : ""
     }
 
-    const [open, setOpen] = React.useState(false);
-
-    const handleClick = () => {
-        setOpen(true);
-    };
-
-    const handleClose = (event: any, reason: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setOpen(false);
-    };
-
 
     return (
         <>
@@ -123,20 +106,8 @@ const StatsPage = () => {
                                 })
                             }
                         </ButtonGroup>
-                        <Button
-                            // variant="contained"
-                            // color="primary"
-                            className="CtaButton"
-                            onClick={async () => {
-                                await updateAllData()
-                                handleClick()
-                            }}
-                            disableElevation
-                            endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
-                            style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }}
-                        >
-                            Update Data
-                        </Button>
+                        <UpdateDataButton className="CtaButton" style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }} />
+                        
                     </div>
                 </div>
 
@@ -166,7 +137,7 @@ const StatsPage = () => {
 
             {/* // Returning the current view rendered in the function above. */}
             {currentViewRender()}
-            <ToastNotifcation open={open} handleClose={handleClose} message="Sync finished." />
+            
 
         </>
 
