@@ -53,10 +53,10 @@ const getFiltersQueryString = async () => {
 /**
  * @description This kicks off the update process that updates all 3Commas data within the database.
  */
-const updateThreeCData = async () => {
+const updateThreeCData = async ( offset:number ) => {
 
     // @ts-ignore
-    await electron.api.update();
+    await electron.api.update(offset);
 }
 
 

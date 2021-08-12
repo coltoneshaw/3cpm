@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, createRef } from 'react';
+import React, { createContext, useState, useEffect, createRef, SetStateAction } from 'react';
 import dotProp from 'dot-prop';
 
 // Contect Providers
@@ -74,6 +74,10 @@ interface Type_Data_Context {
         additionalData: { accountName: string[] }[]
         accountData: Type_Query_Accounts[]
         isSyncing: boolean
+    },
+    autoSync: {
+        buttonEnabled: boolean
+        setButtonEnabled: any // needs to be adjusted
     }
 }
 
@@ -95,9 +99,6 @@ const DataProvider = ({ children }: any) => {
     const [metricsData, updateMetricsData] = useState(() => defaultMetrics)
     const [additionalData, setAdditionalData] = useState<{ accountName: string[] }[]>([])
     const [isSyncing, updateIsSyncing] = useState(false)
-
-
-
 
 
     useEffect(() => {
@@ -344,10 +345,10 @@ const DataProvider = ({ children }: any) => {
         })
     }
 
-    const updateAllData = async () => {
+    const updateAllData = async (offset: number) => {
         updateIsSyncing(true)
         try {
-            await updateThreeCData()
+            await updateThreeCData(offset)
                 .then(async () => {
                     await fetchBotData()
                     await fetchProfitMetrics()
@@ -371,17 +372,35 @@ const DataProvider = ({ children }: any) => {
 
     }
 
-    // const refreshData = () => {
-    //     fetchBotData()
-    //     fetchProfitMetrics()
-    //     fetchPerformanceData()
-    //     getActiveDeals()
+    /**
+     * Data Syncing state
+     */
 
-    //     if (config && dotProp.has(config, 'general.defaultCurrency')) {
-    //         console.log('ran this')
-    //         getAccountData(config)
-    //     }
-    // }
+    const [buttonEnabled, setButtonEnabled] = useState<boolean>(false)
+    const [interval, setIntervalState] = useState<NodeJS.Timeout | null | number>()
+
+    const timer = () => setIntervalState(setInterval(() => {
+        updateAllData(25)
+        console.log('updating data from the button')
+    }, 10000))
+    const stopAutoSync = () => {
+
+        //@ts-ignore
+        clearInterval(interval); // Not working
+        setIntervalState(null)
+    }
+    useEffect(() => {
+
+        if (buttonEnabled) {
+            console.log('enabling a timer')
+            timer();
+
+        } else {
+            console.log('disabling a timer')
+            stopAutoSync()
+        }
+
+    }, [buttonEnabled]);
 
 
 
@@ -411,6 +430,9 @@ const DataProvider = ({ children }: any) => {
             // @ts-ignore
             accountData,
             isSyncing
+        },
+        autoSync: {
+            buttonEnabled, setButtonEnabled
         }
     }
 

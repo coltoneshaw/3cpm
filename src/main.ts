@@ -150,8 +150,8 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
    return getDealsUpdate(limit)
  });
  
- ipcMain.handle('api-updateData', async (event, limit) => {
-   await updateAPI(limit)
+ ipcMain.handle('api-updateData', async (event, offset) => {
+   await updateAPI(offset)
  });
 
  ipcMain.handle('api-getAccountData', async (event, key?:string, secret?:string) => {

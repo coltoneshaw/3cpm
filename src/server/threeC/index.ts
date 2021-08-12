@@ -9,9 +9,9 @@ import { Type_Deals, Type_Query_Accounts, Type_API_bots } from '@/types/3Commas'
  * - Inspect if the lastSyncTime is set. If it is, then need to run bulk. If it's not, need to run update. This might need to go into
  * the code for threeC
  */
-async function updateAPI(limit: number) {
+async function updateAPI(offset: number) {
 
-  await deals(limit)
+  await deals(offset)
     .then((data: Type_Deals[]) => {
       console.log('made it back here')
       update('deals', data)

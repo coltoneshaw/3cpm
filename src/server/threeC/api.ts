@@ -215,26 +215,29 @@ async function getMarketOrders( deal_id:number ) {
 
 /**
  * 
- * @param {number} limit - This sets the max amount of deals to sync. Default is at 250k as a global param
+ * @param {number} offset - Total to sync per update
  * @returns object array of deals.
  */
-async function getDealsUpdate( limit: number) {
+async function getDealsUpdate( perSyncOffset: number) {
   const api = threeCapi(config)
   if(!api) return []
 
   let responseArray = [];
   let response:Type_Deals[] ;
-  let offsetMax = (!limit) ? config.get('general.globalLimit') : limit;
+  let offsetMax = 250000;
+  let perOffset = (perSyncOffset) ? perSyncOffset : 500;
   let oldestDate, newLastSyncTime;
+
+  console.log({perOffset})
 
 
   // converting the incoming dateUTC to the right format in case it's not done properly.
   let lastSyncTime = await config.get('syncStatus.deals.lastSyncTime');
 
-  for (let offset = 0; offset < offsetMax; offset += 500) {
+  for (let offset = 0; offset < offsetMax; offset += perOffset) {
 
     // can look into using the from tag to filter on the last created deal.
-    response= await api.getDeals({ limit: 500, order: 'updated_at', order_direction: 'desc', offset })
+    response= await api.getDeals({ limit: perOffset, order: 'updated_at', order_direction: 'desc', offset })
 
     // limiting the offset to just 5000 here. This can be adjusted but made for some issues with writing to Sheets.
     if (response.length > 0) { responseArray.push(...response) }
@@ -267,7 +270,7 @@ async function getDealsUpdate( limit: number) {
 
     // breaking out of the loop if it's not a full payload OR the oldest deal is oldest deal comes before the last sync time.
     // This is not needed if 3C gives us the ability to sync based on an updatedAt date.
-    if (response.length != 500 || oldestDate <= lastSyncTime) { break; }
+    if (response.length != perOffset || oldestDate <= lastSyncTime) { break; }
 
   }
 
@@ -280,8 +283,8 @@ async function getDealsUpdate( limit: number) {
 }
 
 
-async function deals( limit:number ) {
-  let deals = await getDealsUpdate(limit);
+async function deals( offset:number ) {
+  let deals = await getDealsUpdate(offset);
   let botData = await bots();
 
   let dealArray = [];

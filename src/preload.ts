@@ -5,9 +5,9 @@ async function setupContextBridge() {
 
   contextBridge.exposeInMainWorld('electron', {
     api: {
-      async update( limit:number ) {
+      async update( offset:number ) {
         console.log('Updating 3Commas data.')
-        await ipcRenderer.invoke('api-updateData', limit);
+        await ipcRenderer.invoke('api-updateData', offset);
       },
       async updateBots() {
         console.log('Fetching Bot Data')
