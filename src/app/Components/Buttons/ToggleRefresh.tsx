@@ -35,7 +35,7 @@ const ToggleRefreshButton = ({ style, className }: Type_ButtonProps) => {
             endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
             style={{
                 ...style, 
-                backgroundColor: (buttonEnabled)? 'red': 'green' 
+                backgroundColor: (buttonEnabled)? 'var(--color-red)': 'var(--color-green)' 
             }}
         >
             {// check the state here and show based on if the interval timer is activated or not.

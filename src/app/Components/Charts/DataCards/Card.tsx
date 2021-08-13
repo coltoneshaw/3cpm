@@ -9,8 +9,8 @@ const Card = ({ title, metric, message }: { title: string, metric: number | stri
 
     const content = () => (
         <div className="dataCard boxData">
-            <h2>{metric}</h2>
             <h4>{title}</h4>
+            <h2>{metric}</h2>
         </div>
     )
 

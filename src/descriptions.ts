@@ -17,7 +17,9 @@ const descriptions = {
         totalBoughtVolume: ` is the total that your bots have put into a deal.`,
         totalDeals: ` is the total amount of deals closed during the filtered period.`,
         averageDailyProfit: ` is the amount of total profit you've made divided by the total number of days included in your filter.`,
-        averageDealHours: ` is the total average amount of time it takes for your deals to close.`
+        averageDealHours: ` is the total average amount of time it takes for your deals to close.`,
+        todaysProfit: ` is the sum of the profit you've made in UTC today. Note this does not always reset at midnight, depending on your timezone`,
+        activeDealReserves: ` is the sum of all your deals current profit. This number can be postive / negative based on where all your deals are currently.`
     }
 }
 

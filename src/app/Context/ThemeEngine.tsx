@@ -49,7 +49,9 @@ const lightMode = {
     '--color-text-darkbackground': 'white',
     '--color-text-lightbackground': 'black',
     '--color-boxshadow-1' : 'rgba(154,160,185,.05)',
-    '--color-boxshadow-2' : 'rgba(166,173,201,.2)'
+    '--color-boxshadow-2' : 'rgba(166,173,201,.2)',
+    '--color-red' : '#CC0000',
+    '--color-green' : '#03C03C'
 }
 
 const darkMode = {
@@ -71,7 +73,9 @@ const darkMode = {
     '--color-text-darkbackground': 'black',
     '--color-text-lightbackground': 'lightgrey',
     '--color-boxshadow-1' : 'rgba(154,160,185,.00)',
-    '--color-boxshadow-2' : 'rgba(166,173,201,.0)'
+    '--color-boxshadow-2' : 'rgba(166,173,201,.0)',
+    '--color-red' : '#E23D28',
+    '--color-green' : '#50C878'
 }
 
 const ThemeEngine = ({ children }: any) => {

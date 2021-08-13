@@ -7,14 +7,18 @@ import { UpdateDataButton, ToggleRefreshButton } from '@/app/Components/Buttons/
 
 import formatDeals from './Components/FormatDeals';
 import { useGlobalData } from '@/app/Context/DataContext';
-import { Type_ActiveDeals } from '@/types/3Commas';
-import { dynamicSort, getDateString } from '@/utils/helperFunctions';
+import { Card_ActiveDeals, Card_totalInDeals, Card_ActiveDealReserve, Card_TotalDayProfit } from '@/app/Components/Charts/DataCards';
 
 
 const ActiveDealsPage = () => {
 
     const dataState = useGlobalData()
-    let { data: { activeDeals } } = dataState
+    let { data: { activeDeals, metricsData, profitData } } = dataState
+
+    const todaysProfit = (profitData.length > 0) ? profitData[profitData.length - 1].profit : 0 
+    const activeDealReserve = (activeDeals.length > 0) ? activeDeals.map( deal => deal.actual_usd_profit ).reduce( (sum, profit) => sum  + profit ) : 0;
+    
+    const { activeDealCount, totalInDeals,  on_orders, totalBoughtVolume } = metricsData
 
     const [localData, updateLocalData] = useState<object[]>([])
 
@@ -24,14 +28,20 @@ const ActiveDealsPage = () => {
 
     return (
         <>
-            <div className="flex-row">
-                <div className="flex-row" style={{flexBasis: '50%'}}>
-                    <h1>Active Deals</h1>
+            <div className="flex-row activeDealsStats">
+                <div className="flex-row" style={{ flex: 1 }}>
+                    <div className="riskDiv activeDealCards" style={{padding: 0}}>
+                        <Card_ActiveDeals metric={activeDealCount} />
+                        <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
+                        <Card_TotalDayProfit metric={todaysProfit} />
+                        <Card_ActiveDealReserve metric={activeDealReserve} />
+                    </div>
+
                 </div>
 
-                <div className="flex-row filters" >
-                    <UpdateDataButton className="CtaButton" style={{ width: '250px', margin: '10px' }} />
-                    <ToggleRefreshButton style={{ width: '250px', margin: '10px' }} />
+                <div className="filters activeDealButtons" >
+                    <UpdateDataButton className="CtaButton" style={{ width: '250px', margin: '5px' }} />
+                    <ToggleRefreshButton style={{ width: '250px', margin: '5px' }} />
                 </div>
 
             </div>

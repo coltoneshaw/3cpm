@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Table from './Components/Table';
 // import formatDeals from './Components/FormatDeals';
 import { getDateString } from '@/utils/helperFunctions';
+import { parseNumber } from '@/utils/number_formatting';
 
 
 
@@ -94,7 +95,7 @@ function DealsTable({ data }: { data: object[] }) {
                         accessor: 'current_price',
                         className: 'text-center',
                         Cell: ({ cell }: any) => {
-                            return <>$ {+cell.value.toFixed(4)}</>
+                            return <>$ {parseNumber( cell.value, 4) }</>
                         }
                     },
                     {
@@ -102,7 +103,7 @@ function DealsTable({ data }: { data: object[] }) {
                         accessor: 'take_profit_price',
                         className: 'text-center',
                         Cell: ({ cell }: any) => {
-                            return <>$ {+cell.value.toFixed(4)}</>
+                            return <>$ {parseNumber( cell.value, 4) }</>
                         }
                     },
                 ]
@@ -152,7 +153,7 @@ function DealsTable({ data }: { data: object[] }) {
                         className: 'text-center',
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
-                            return <span >${cell.value.toFixed(2)}</span>
+                            return <span >$ {parseNumber( cell.value, 2) }</span>
                         }
                     },
                     {
@@ -164,6 +165,15 @@ function DealsTable({ data }: { data: object[] }) {
                             return <span >{+cell.value} %</span>
                         }
                     },
+                    {
+                        Header: 'UR',
+                        accessor: 'unrealized_profit',
+                        className: 'text-center',
+                        sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
+                        Cell: ({ cell }: any) => {
+                            return <span >$ {parseNumber( cell.value, 3) }</span>
+                        }
+                    }
                 ]
             },
             {
@@ -224,7 +234,8 @@ function DealsTable({ data }: { data: object[] }) {
                 getCellProps={cellInfo => ({
 
                     style: {
-                        color: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? (cellInfo.row.original.in_profit) ? '#0ba92c' : '#d41d1a' : null
+                        color: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? (cellInfo.row.original.in_profit) ? 'var(--color-green)' : 'var(--color-red)': null,
+                        fontWeight: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? '600' : null
                     }
 
                 })}

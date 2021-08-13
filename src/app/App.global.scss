@@ -129,6 +129,15 @@
   }
 }
 
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+
 
 @import url('./Components/Pages/BotPlanner/BotPlanner.scss');
 @import url('./Components/Pages/Settings/Settings.scss');

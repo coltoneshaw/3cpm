@@ -97,7 +97,7 @@ const fetchDealDataFunction = async () => {
     let dates = Array.from(new Set(dataArray.map((row: Type_Query_DealData) => { if (row.closed_at) { return row.closed_at.split('T')[0] } })))
     let totalDealHours = dataArray.map((deal: Type_Query_DealData) => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours)
 
-    console.log({ dates })
+    // console.log({ dates })
 
     let profitArray: Type_ProfitArray = []
 
@@ -375,7 +375,7 @@ const getAccountDataFunction = async (defaultCurrency: string[]) => {
 
         }
 
-        console.log({ on_ordersTotal, positionTotal })
+        // console.log({ on_ordersTotal, positionTotal })
         return {
             accountData,
             balance: {

@@ -1,12 +1,33 @@
-
-.text-center {
-    text-align: center;
+.activeDealsStats {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-bottom: 1em;
+    align-items: center;
 }
 
-.text-right {
-    text-align: right;
+
+.activeDealCards {
+    flex-wrap: nowrap;
+    justify-content: flex-start; 
 }
 
+.activeDealButtons{
+    flex-basis: 20%;
+    align-items: flex-end;
+    display: flex;
+    flex-direction: column;
+}
+
+@media only screen and (max-width: 1550px)  {
+    .activeDealCards {
+        justify-content: center; 
+    }
+    .activeDealButtons{
+        align-items: center;
+        flex-direction: row;
+        padding-top: 1em;
+    }
+}
 .dealsTable{
     width: 100%
 }
