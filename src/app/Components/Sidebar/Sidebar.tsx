@@ -21,8 +21,8 @@ class Sidebar extends Component {
             <div id="sidebar">
                 <div className="flex-column sidebar-column">
                     <SidebarNav Icon={ActiveDealsIcon} name="Active Deals" link="/activeDeals" />
-                    <SidebarNav Icon={BotPlannerIcon} name="Bot Planner" link="/botplanner" />
                     <SidebarNav Icon={PieChart} name="Stats" link="/stats" />
+                    <SidebarNav Icon={BotPlannerIcon} name="Bot Planner" link="/botplanner" />
                     <SidebarNav Icon={BackwardClock} name="Trading View" link="/backtesting" />
                 </div>
                 <div className="flex-column sidebar-column" style={{justifyContent: 'flex-end'}}>

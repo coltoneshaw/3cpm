@@ -10,17 +10,18 @@ const Styles = styled.div`
 
   table {
     border-spacing: 0;
-    background-color: var(--color-background-light)
-    color: var(--color-text-lightbackground)
+    background-color: var(--color-background-light);
+    color: var(--color-text-lightbackground);
 
     th,
     td {
       margin: 0;
-      padding: 0.2rem .2rem .2rem .5rem;
+      padding: 0.2rem .2rem .5rem .5rem;
     }
 
     
     tbody{
+
         tr {
             :nth-child(2n+2) {
                 background-color: var(--color-secondary-light87);
@@ -60,7 +61,16 @@ function DealsTable({ data }: { data: object[] }) {
                 columns: [
                     {
                         Header: 'Bot Name',
-                        accessor: 'bot_name', // accessor is the "key" in the data     
+                        accessor: 'bot_name', // accessor is the "key" in the data,
+                        Cell: ({ cell }: any) => {
+                            return (
+                                <span
+                                    data-text={cell.row.original.bot_settings}
+                                    className="tooltip">
+                                    {cell.value}
+                                </span>
+                            )
+                        }
                     },
                     {
                         Header: 'Pair',
@@ -73,13 +83,7 @@ function DealsTable({ data }: { data: object[] }) {
                         Cell: ({ cell }: any) => {
                             return <>{getDateString(cell.value)}</>
                         }
-                    },
-                    {
-                        Header: 'Bot Settings',
-                        accessor: 'bot_settings',
-                        className: 'text-center',
-                        disableSortBy: true
-                    },
+                    }
                 ]
             },
             {

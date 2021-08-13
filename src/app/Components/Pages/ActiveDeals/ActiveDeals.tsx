@@ -30,8 +30,8 @@ const ActiveDealsPage = () => {
                 </div>
 
                 <div className="flex-row filters" >
-                <UpdateDataButton className="CtaButton" style={{ width: '250px', margin: '10px' }} />
-                <ToggleRefreshButton style={{ width: '250px', margin: '10px' }} />
+                    <UpdateDataButton className="CtaButton" style={{ width: '250px', margin: '10px' }} />
+                    <ToggleRefreshButton style={{ width: '250px', margin: '10px' }} />
                 </div>
 
             </div>

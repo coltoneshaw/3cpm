@@ -9,7 +9,7 @@ import { Type_Deals, Type_Query_Accounts, Type_API_bots } from '@/types/3Commas'
  * - Inspect if the lastSyncTime is set. If it is, then need to run bulk. If it's not, need to run update. This might need to go into
  * the code for threeC
  */
-async function updateAPI(offset: number) {
+async function updateAPI(offset: number, type: string) {
 
   await deals(offset)
     .then((data: Type_Deals[]) => {
@@ -17,7 +17,10 @@ async function updateAPI(offset: number) {
       update('deals', data)
     })
 
-  await getAccountData()
+    if(type !== 'autoSync'){
+      await getAccountData()
+    }
+  
 }
 
 async function getAccountData() {

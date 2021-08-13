@@ -87,7 +87,6 @@ function Table({
                         //@ts-ignore
                         <tr {...row.getRowProps(getRowProps(row))}>
                             {row.cells.map(cell => {
-
                                 return (
                                     <td
                                         // Return an array of prop objects and react-table will merge them appropriately
@@ -105,6 +104,7 @@ function Table({
                                         ])}
                                     >
                                         {cell.render('Cell')}
+ 
                                     </td>
                                 )
                             })}

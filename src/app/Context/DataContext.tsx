@@ -369,7 +369,32 @@ const DataProvider = ({ children }: any) => {
         }
 
         updateIsSyncing(false)
+    }
 
+    const updateAutoSync = async (offset: number) => {
+        updateIsSyncing(true)
+        try {
+            await updateThreeCData(offset, 'autoSync')
+                .then(async () => {
+                    // await fetchBotData()
+                    await fetchProfitMetrics()
+                    await fetchPerformanceData()
+                    await getActiveDeals()
+
+                    // if (config && dotProp.has(config, 'general.defaultCurrency')) {
+                    //     console.log('ran this')
+                    //     await getAccountData(config)
+                    // }
+
+                    calculateMetrics()
+
+                })
+        } catch (error) {
+            console.error(error)
+            alert('Error updating your data. Check the console for more information.')
+        }
+
+        updateIsSyncing(false)
     }
 
     /**
@@ -379,10 +404,11 @@ const DataProvider = ({ children }: any) => {
     const [buttonEnabled, setButtonEnabled] = useState<boolean>(false)
     const [interval, setIntervalState] = useState<NodeJS.Timeout | null | number>()
 
+    // Timer is set to a 15 second refresh interval right now.
     const timer = () => setIntervalState(setInterval(() => {
-        updateAllData(25)
+        updateAutoSync(25)
         console.log('updating data from the button')
-    }, 10000))
+    }, 15000))
     const stopAutoSync = () => {
 
         //@ts-ignore
