@@ -10,7 +10,8 @@ const Styles = styled.div`
 
   table {
     border-spacing: 0;
-    background-color: var(--color-text-lightbackground)
+    background-color: var(--color-background-light)
+    color: var(--color-text-lightbackground)
 
     th,
     td {
@@ -22,12 +23,13 @@ const Styles = styled.div`
     tbody{
         tr {
             :nth-child(2n+2) {
-                background-color: var(--color-secondary-light87)
+                background-color: var(--color-secondary-light87);
             }
     
             :hover {
-                background-color: var(--color-secondary-light50);
-                background-color: var(--color-text-darkbackground)
+                background-color: var(--color-secondary-light25);
+                color: var(--color-text-darkbackground);
+
             }
         };
     }

@@ -7,6 +7,8 @@ const MuiClassObject = makeStyles(
         border: 0,
         padding: 0,
         fontFamily: 'Open Sans',
+        color: 'var(--text-color-lightbackground)',
+        borderBottom: 'none',
         '& .MuiDataGrid-iconSeparator': {
           display: 'none',
         },
@@ -34,6 +36,9 @@ const MuiClassObject = makeStyles(
         },
         '& .MuiDataGrid-row.Mui-even': {
           backgroundColor: 'var(--color-secondary-light87)'
+        },
+        '& .MuiDataGrid-cell, .MuiDataGrid-columnsContainer': {
+          borderBottom: 'none'
         }
       },
     }),

@@ -55,6 +55,7 @@ const lightMode = {
 const darkMode = {
     '--color-primary': '#212B3B',
     '--color-primary-dark25': '#19202C',
+    
     // this is not the right color below~1
     '--color-secondary-light87': '#617389',
     '--color-secondary-light50': '#C5DDDD',
