@@ -74,8 +74,6 @@ const BotPlannerPage = () => {
 
     const addToTable = () => {
         updateLocalBotData((prevState: Type_Query_bots[]) => {
-            console.log('adding blank object')
-            console.log(prevState)
             return [
                 blankObject,
                 ...prevState
@@ -88,10 +86,10 @@ const BotPlannerPage = () => {
         const customBots = localBotData.filter(bot => bot.origin === 'custom')
 
         // @ts-ignore - electron
-        await electron.database.update('bots', customBots)
+        if(customBots.length > 0) await electron.database.update('bots', customBots)
 
         // @ts-ignore - electron
-        await electron.database.query("select * from bots where origin = 'custom'; ")
+        electron.database.query("select * from bots where origin = 'custom'; ")
             .then((table: Type_Query_bots[]) => {
                 const customBotIds = customBots.map(bot => bot.id);
                 if (customBotIds.length === 0) {
