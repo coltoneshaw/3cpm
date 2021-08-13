@@ -4,43 +4,26 @@
  */
  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap');
 
- :root{
-  --color-primary: #8BBABC;
-  --color-primary-dark25: #59999B;
-  --color-secondary-light87: #DEE3EC;
-  --color-secondary-light50: #7990B4;
-  --color-secondary-light25: #475C7E;
-  --color-secondary: #212B3B;
-  --color-secondary-dark25: #19202C;
-  --color-CTA: #FFC20A;
-  --color-CTA-light25: #FFD147;
-  --color-CTA-dark25: #C79500;
-  --color-background: #E7EAEE;
-  --color-light: #FFFFFF;
-
-  --color-dark-text: black;
- }
-
-// :root{
-//   --color-primary: #1C6E8C;
-//   --color-primary-dark25: #155369;
-//   --color-secondary-light87: #F8FAFF;
-//   --color-secondary-light50: #E3ECFF;
-//   --color-secondary-light25: #D5E2FF;
-//   --color-secondary: #C6D8FF;
-//   --color-secondary-dark25: #558BFF;
-//   --color-CTA: #E6AF2E;
-//   --color-CTA-light25: #EDC362;
-//   --color-CTA-dark25: #B98816;
-//   --color-background: #C6D8FF;
+//  :root{
+//   --color-primary: #8BBABC;
+//   --color-primary-dark25: #59999B;
+//   --color-secondary-light87: #DEE3EC;
+//   --color-secondary-light50: #7990B4;
+//   --color-secondary-light25: #475C7E;
+//   --color-secondary: #212B3B;
+//   --color-secondary-dark25: #19202C;
+//   --color-CTA: #FFC20A;
+//   --color-CTA-light25: #FFD147;
+//   --color-CTA-dark25: #C79500;
+//   --color-background: #E7EAEE;
 //   --color-light: #FFFFFF;
+//   --color-dark-text: black;
+//  }
 
-//   --color-dark-text: #100B00;
+
+//  @function color($color-name) {
+//   @return var(--color-#{$color-name});
 // }
-
- @function color($color-name) {
-  @return var(--color-#{$color-name});
-}
 
  body {
    font-family: 'Open Sans', sans-serif;
@@ -48,7 +31,7 @@
    -moz-osx-font-smoothing: grayscale;
  }
 
- html, body, #root {
+ html, body, #root, .rootDiv {
    height: 100%;
    /* // overflow: hidden; */
    margin: 0;
@@ -60,7 +43,7 @@
  }
 
 
- #root {
+.rootDiv {
    display: flex;  /* enables flex content for its children */
    box-sizing: border-box;
  }
@@ -75,11 +58,12 @@
    font-size: 2em;
    letter-spacing: 1px;
    font-weight: 600;
+   color: var(--color-text-lightbackground)
  }
 
  #sidebar {
      flex-basis: 5%;
-     background-color: color(primary);
+     background-color: var(--color-primary);
      min-width: 50px;
      max-width: 75px;
      height: 100%;
@@ -96,7 +80,7 @@
 
  .mainWindow{
      flex-grow: 1;
-     background-color: color(background);
+     background-color: var(--color-background);
      padding: 3%;
      overflow: scroll;
 
@@ -107,6 +91,7 @@
  .flex-row{
      display: flex;
      flex-direction: row;
+     color: var(--color-text-lightbackground)
  }
 
  .flex-column{
@@ -120,10 +105,10 @@
 
  .boxData {
      border-radius: 15px;
-     background-color: #F3F5F7;
+     background-color: var(--color-background-light);
      text-align: center;
-     color: #212B3B;
-     box-shadow: 0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);
+     color: var(--color-text-lightbackground);
+     box-shadow: 0 5px 10px var(--color-boxshadow-1), 0 15px 40px var(--color-boxshadow-2);
      padding: 2%;
  }
 
@@ -178,7 +163,7 @@
 
 .CtaButton {
   background-color: var(--color-CTA) !important;
-  color: var(--color-dark-text) !important;
+  color: var(--color-text-darkbackground) !important;
   border: 1px solid var(--color-CTA) !important;
 }
 

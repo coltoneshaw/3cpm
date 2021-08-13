@@ -10,6 +10,7 @@ const Styles = styled.div`
 
   table {
     border-spacing: 0;
+    background-color: var(--color-text-lightbackground)
 
     th,
     td {
@@ -26,7 +27,7 @@ const Styles = styled.div`
     
             :hover {
                 background-color: var(--color-secondary-light50);
-                color: white;
+                background-color: var(--color-text-darkbackground)
             }
         };
     }
