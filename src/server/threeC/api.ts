@@ -130,7 +130,7 @@ async function bots() {
       take_profit,
       take_profit_type,
       trailing_deviation,
-      type,
+      type: type.split('::')[1],
       drawdown: 0,
       price_deviation: calc_deviation( +max_safety_orders, +safety_order_step_percentage, +martingale_step_coefficient),
       maxCoveragePercent: null

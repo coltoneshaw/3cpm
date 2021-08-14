@@ -1,4 +1,5 @@
 const Store = require('electron-store');
+const { run } = require('@/server/database')
 
 import { defaultConfig, configSchema } from '@/utils/defaultConfig';
 
@@ -23,7 +24,12 @@ const config = new Store({
             console.info('migrating the config store to 0.0.4')
             console.log('adding a reserved funds array.')
             store.set('statSettings.reservedFunds', []);
+        },
+        '0.1.0': ( store: any )=>{
+            console.info('migrating the config store to 0.1.0')
+            run('drop table bots;')
         }
+        
     },
     defaults: defaultConfig
 });

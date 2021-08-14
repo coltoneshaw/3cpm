@@ -59,7 +59,7 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
                         type="category"
                         angle={45}
                         axisLine={false}
-                        height={125}
+                        height={75}
                         textLength={15}
                         textAnchor="start"
                         
@@ -122,10 +122,11 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
 function CustomTooltip({ active, payload, label }: Type_Tooltip) {
     if (active) {
         const data: Type_Bot_Performance_Metrics = payload[0].payload
-        const { total_profit, avg_completed_so, avg_profit, avg_deal_hours, bought_volume, number_of_deals, bot_name } = data
+        const { total_profit, avg_completed_so, avg_profit, avg_deal_hours, bought_volume, number_of_deals, bot_name, type } = data
         return (
             <div className="tooltop">
                 <h4>{bot_name}</h4>
+                <p>{type}</p>
                 <p><strong>Bought Volume:</strong> ${parseNumber(bought_volume)} </p>
                 <p><strong>Deal Count:</strong> {number_of_deals} </p>
                 <p><strong>Total Profit:</strong> ${parseNumber(total_profit)} </p>

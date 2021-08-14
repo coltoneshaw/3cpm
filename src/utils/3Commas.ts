@@ -53,7 +53,7 @@ const getFiltersQueryString = async () => {
 /**
  * @description This kicks off the update process that updates all 3Commas data within the database.
  */
-const updateThreeCData = async ( offset:number, type?:string ) => {
+const updateThreeCData = async (offset: number, type?: string) => {
 
     // @ts-ignore
     await electron.api.update(offset, type);
@@ -206,7 +206,11 @@ const fetchPerformanceDataFunction = async () => {
 /**
  * 
  * @returns An array containing the data for specific bot metrics.
+ * 
+ * TODO
+ * - Run a join on the bot table to correctly get the name / type or pull that information from the state.
  */
+
 const fetchBotPerformanceMetrics = async () => {
     const filtersQueryString = await getFiltersQueryString()
     const { currencyString, accountIdString, startString } = filtersQueryString;
@@ -215,20 +219,23 @@ const fetchBotPerformanceMetrics = async () => {
     const queryString = `
                 SELECT 
                     bot_id, 
-                    bot_name, 
                     sum(final_profit) as total_profit, 
                     avg(final_profit) as avg_profit,
                     count(*) as number_of_deals,
                     sum(bought_volume) as bought_volume,
                     avg(deal_hours) as avg_deal_hours,
-                    avg(completed_safety_orders_count + completed_manual_safety_orders_count) as avg_completed_so
+                    avg(completed_safety_orders_count + completed_manual_safety_orders_count) as avg_completed_so,
+                    bots.name as bot_name,
+                    bots.type as type
                 FROM 
-                    deals 
+                    deals
+                JOIN 
+                    bots on deals.bot_id = bots.id
                 WHERE
                     closed_at is not null
-                    and account_id in (${accountIdString}) 
-                    and currency in (${currencyString}) 
-                    and closed_at_iso_string > ${startString} 
+                    and deals.account_id in (${accountIdString}) 
+                    and deals.currency in (${currencyString}) 
+                    and deals.closed_at_iso_string > ${startString} 
                 GROUP BY 
                     bot_id;`
 
@@ -250,7 +257,7 @@ const fetchBotPerformanceMetrics = async () => {
  * 
  * @returns An array containing the data for specific bot metrics.
  */
- const fetchPairPerformanceMetrics = async () => {
+const fetchPairPerformanceMetrics = async () => {
     const filtersQueryString = await getFiltersQueryString()
     const { currencyString, accountIdString, startString } = filtersQueryString;
 

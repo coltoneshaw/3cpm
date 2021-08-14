@@ -36,6 +36,7 @@ export interface Type_Bot_Performance_Metrics {
     avg_profit: number
     bought_volume: number
     avg_deal_hours: number
+    type: string
 }
 
 export interface Type_Query_DealData {
