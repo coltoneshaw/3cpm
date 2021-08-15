@@ -71,17 +71,17 @@ const StatsPage = () => {
     // this needs to stay on this page
     const currentViewRender = () => {
         if (currentView === 'risk-monitor') {
-            return <RiskMonitor
+            return <RiskMonitor key="riskmonitor"
             />
         } else if (currentView === 'performance-monitor') {
-            return <PerformanceMonitor
+            return <PerformanceMonitor key="perfmonitor"
 
             />
         } else if (currentView === 'active-deals') {
-            return <ActiveDeals />
+            return <ActiveDeals key="activeDeals"/>
         }
 
-        return <SummaryStatistics
+        return <SummaryStatistics key="summaryStats"
 
         />
     }

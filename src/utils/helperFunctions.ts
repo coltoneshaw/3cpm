@@ -1,5 +1,12 @@
 import { parseISO, format, differenceInMilliseconds } from 'date-fns'
 
+
+/**
+ * 
+ * @param jsonString the json string to be validated
+ * @param options 
+ * @returns a parsed json string or false.
+ */
 function tryParseJSON_( jsonString:string , options:object ) {
     try {
       var o = JSON.parse(jsonString);
@@ -13,10 +20,23 @@ function tryParseJSON_( jsonString:string , options:object ) {
     return false;
 };
 
+
+/**
+ * 
+ * @param data The total data array
+ * @param idAttribute the ID attribute used to remove duplicate matches
+ * @returns cleaned array with only one item per ID attribute
+ */
 const removeDuplicatesInArray = (data: any[], idAttribute:any) => {
   return Array.from(new Set( data.map(a => a[idAttribute] ))).map(id => data.find(a => a[idAttribute] === id))
 }
 
+
+/**
+ * 
+ * @param property property to sort the array based on
+ * @returns function to be used in `.sort()`
+ */
 function dynamicSort(property:string ) {
   var sortOrder = 1;
   if(property[0] === "-") {
@@ -32,7 +52,12 @@ function dynamicSort(property:string ) {
   }
 }
 
-function convertMiliseconds(miliseconds: number, format?: string | undefined) {
+/**
+ * 
+ * @param miliseconds total number of miliseconds to convert into an object
+ * @returns object to filter the date string on.
+ */
+function convertMiliseconds(miliseconds: number) {
   let days, hours, minutes, seconds, total_hours, total_minutes, total_seconds;
 
   total_seconds = Math.floor(miliseconds / 1000);

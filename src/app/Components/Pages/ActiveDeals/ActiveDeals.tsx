@@ -8,7 +8,7 @@ import { UpdateDataButton, ToggleRefreshButton } from '@/app/Components/Buttons/
 import formatDeals from './Components/FormatDeals';
 import { useGlobalData } from '@/app/Context/DataContext';
 import { Card_ActiveDeals, Card_totalInDeals, Card_ActiveDealReserve, Card_TotalDayProfit } from '@/app/Components/Charts/DataCards';
-
+import { SyncToggles } from './Components/index';
 
 const ActiveDealsPage = () => {
 
@@ -47,7 +47,8 @@ const ActiveDealsPage = () => {
             </div>
 
 
-            <div className="boxData">
+            <div className="boxData flex-column" style={{padding: '0 2em 2em 2em'}}>
+                <SyncToggles />
                 <DealsTable data={localData} />
             </div>
         </>

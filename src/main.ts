@@ -150,8 +150,8 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
    return getDealsUpdate(limit)
  });
  
- ipcMain.handle('api-updateData', async (event, offset, type) => {
-   await updateAPI(offset, type)
+ ipcMain.handle('api-updateData', async (event, type, options) => {
+   await updateAPI(type, options)
  });
 
  ipcMain.handle('api-getAccountData', async (event, key?:string, secret?:string) => {
@@ -161,3 +161,12 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
  ipcMain.handle('api-getBots', async (event) => {
    await getAndStoreBotData()
  });
+
+
+ /************************************************************************
+  * 
+  * 
+  *                     Push Notification Settings
+  * 
+  * 
+  *************************************************************************/

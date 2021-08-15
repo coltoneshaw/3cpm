@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+// @ts-ignore
+import { version } from '#/package.json';
+
 import {
     ButtonGroup
 } from '@material-ui/core';
@@ -54,7 +57,7 @@ const SettingsPage = () => {
                         }}>
                             
 
-                            <p className="subText">Set your account filters and reserved funds below. Double click in the reserved fund box to update the value.</p>
+                            <p className="subText">Once you've tested the API keys be sure to enable an account below. In reserved funds you can set aside funds to be added / removed from DCA calculations. ex: ( -4000 will be added, 4000 will be removed.) Double click in the reserved fund box to update the value.</p>
                             <ReservedBankroll />
 
                         </div>
@@ -70,6 +73,7 @@ const SettingsPage = () => {
                     <Button onClick={() => window.open('https://forms.gle/2ihxsQtvG1yexPxW6')} style={{ margin: '25px', borderRight: 'none' }} >Leave Feedback</Button>
                     <Button onClick={() => window.open('https://forms.gle/CfzMy8E6zUe8UuzBA')} style={{ margin: '25px' }}>Report a Bug</Button>
                 </ButtonGroup>
+                <p className="versionNumber">v{version}</p>
             </div>
             <ToastNotifcation open={open} handleClose={handleClose} message="Config has been saved" />
         </>

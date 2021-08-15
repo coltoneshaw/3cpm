@@ -1,5 +1,5 @@
 const threeCommasAPI = require('3commas-api-node')
-import {  Type_Deals, Type_Query_Accounts, Type_API_bots } from '@/types/3Commas'
+import {  Type_Deals_API, Type_Query_Accounts, Type_API_bots } from '@/types/3Commas'
 import {  TconfigValues } from '@/types/config'
 
 import { config } from '@/utils/config';
@@ -223,7 +223,7 @@ async function getDealsUpdate( perSyncOffset: number) {
   if(!api) return []
 
   let responseArray = [];
-  let response:Type_Deals[] ;
+  let response:Type_Deals_API[] ;
   let offsetMax = 250000;
   let perOffset = (perSyncOffset) ? perSyncOffset : 500;
   let oldestDate, newLastSyncTime;
@@ -242,8 +242,8 @@ async function getDealsUpdate( perSyncOffset: number) {
     // limiting the offset to just 5000 here. This can be adjusted but made for some issues with writing to Sheets.
     if (response.length > 0) { responseArray.push(...response) }
 
-    console.log(response[0].updated_at)
-    console.log(response[response.length - 1].updated_at)
+    // console.log(response[0].updated_at)
+    // console.log(response[response.length - 1].updated_at)
 
 
 
@@ -296,7 +296,8 @@ async function deals( offset:number ) {
       completed_safety_orders_count, martingale_volume_coefficient,
       final_profit_percentage, pair, id, actual_usd_profit,
       bot_id, active_manual_safety_orders, bought_average_price,
-      current_price, actual_profit, bot_name
+      current_price, actual_profit, bot_name,
+      final_profit
     } = deal
     const activeDeal = (closed_at === null) ? true : false;
     const deal_hours = calc_dealHours(created_at, closed_at)
@@ -306,11 +307,12 @@ async function deals( offset:number ) {
       deal_hours,
       pair: pair.split("_")[1],
       currency: pair.split("_")[0],
-      bot_name: getBotName(botData, pair, bot_id, bot_name),
+      // bot_name: getBotName(botData, pair, bot_id, bot_name), // removed bot name since this can be merged from the database.
       max_deal_funds: (activeDeal) ? await max_deal_funds(id, bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, active_manual_safety_orders) : null,
       profitPercent: (activeDeal) ? null : ((final_profit_percentage / 100) / +deal_hours).toFixed(3),
       impactFactor: (activeDeal) ? (((bought_average_price - current_price) / bought_average_price) * (415 / (bought_volume ** 0.618))) / (actual_usd_profit / actual_profit) : null,
-      closed_at_iso_string: (activeDeal) ? null : new Date(closed_at).getTime()
+      closed_at_iso_string: (activeDeal) ? null : new Date(closed_at).getTime(),
+      final_profit: +final_profit
     }
 
 

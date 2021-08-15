@@ -33,15 +33,15 @@ const MainWindow = () => {
                 </Route>
 
                 <DataProvider>
-                    <Route exact path="/botplanner" render={() => <BotPlannerPage />} />
-                    <Route exact path="/stats" render={() => <StatsPage />} />
-                    <Route exact path="/settings" render={() => <SettingsPage />} />
-                    <Route exact path="/activeDeals" render={() => <ActiveDealsPage />} />
+                    <Route exact path="/botplanner" render={() => <BotPlannerPage key="botPlannerPage" />} />
+                    <Route exact path="/stats" render={() => <StatsPage key="statsPage" />} />
+                    <Route exact path="/settings" render={() => <SettingsPage key="settingsPage" />} />
+                    <Route exact path="/activeDeals" render={() => <ActiveDealsPage key="activeDealsPage" />} />
 
                 </DataProvider>
 
-                <Route exact path="/donate" render={() => <DonatePage />} />
-                <Route exact path="/backtesting" render={() => <TradingViewPage />} />
+                <Route exact path="/donate" render={() => <DonatePage  key="donatePage"/>} />
+                <Route exact path="/backtesting" render={() => <TradingViewPage  key="tradingViewPage"/>} />
 
             </div>
 

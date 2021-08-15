@@ -1,13 +1,13 @@
 const { contextBridge, ipcRenderer } = require('electron')
-
+import {Type_UpdateFunction } from '@/types/3Commas'
 
 async function setupContextBridge() {
 
   contextBridge.exposeInMainWorld('electron', {
     api: {
-      async update( offset:number, type: string ) {
+      async update( type: string, options: Type_UpdateFunction ) {
         console.log('Updating 3Commas data.')
-        await ipcRenderer.invoke('api-updateData', offset, type);
+        await ipcRenderer.invoke('api-updateData', type, options);
       },
       async updateBots() {
         console.log('Fetching Bot Data')

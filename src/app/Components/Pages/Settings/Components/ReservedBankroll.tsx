@@ -7,34 +7,12 @@ import { Type_ReservedFunds } from '@/types/config';
 
 import { useGlobalState } from '@/app/Context/Config';
 
-import { useGlobalData } from '@/app/Context/DataContext';
-
-import { removeDuplicatesInArray } from '@/utils/helperFunctions';
-
-
-const rows = [
-    { id: 16543213, account_name: 'My Binance', reserved_funds: 0, is_enabled: true },
-    { id: 232165432, account_name: 'ETH Wallet', reserved_funds: 0, is_enabled: true },
-    { id: 351654321, account_name: 'Another Account', reserved_funds: 0, is_enabled: true },
-    { id: 4321654321, account_name: 'Secretly Rich', reserved_funds: 0, is_enabled: false },
-];
-
-
-/**
- * 
- * TODO
- * - Need to see about finding all the existing accounts and merging that array with the config.
- */
 const ReservedBankroll = () => {
     const classes = MuiClassObject()
 
     // config state
     const configState = useGlobalState()
     const { config, state: { reservedFunds, updateReservedFunds } } = configState
-
-    /**
-     * Detect account data, merge accoutn data with the config data.
-     */
 
 
     const columns = [

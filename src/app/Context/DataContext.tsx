@@ -13,7 +13,8 @@ import {
     Type_Profit,
     Type_Bot_Performance_Metrics,
     Type_Performance_Metrics,
-    Type_Pair_Performance_Metrics
+    Type_Pair_Performance_Metrics,
+    Type_UpdateFunction
 
 } from '@/types/3Commas'
 import { TconfigValues } from '@/types/config'
@@ -77,7 +78,11 @@ interface Type_Data_Context {
     },
     autoSync: {
         buttonEnabled: boolean
-        setButtonEnabled: any // needs to be adjusted
+        setButtonEnabled: any // needs to be adjusted,
+        summarySync: boolean
+        setSummarySync: any
+        notifications:boolean
+        setNotifications: any
     }
 }
 
@@ -348,7 +353,7 @@ const DataProvider = ({ children }: any) => {
     const updateAllData = async (offset: number) => {
         updateIsSyncing(true)
         try {
-            await updateThreeCData(offset)
+            await updateThreeCData('fullSync', {offset})
                 .then(async () => {
                     await fetchBotData()
                     await fetchProfitMetrics()
@@ -371,46 +376,64 @@ const DataProvider = ({ children }: any) => {
         updateIsSyncing(false)
     }
 
-    const updateAutoSync = async (offset: number) => {
-        updateIsSyncing(true)
-        try {
-            await updateThreeCData(offset, 'autoSync')
-                .then(async () => {
-                    // await fetchBotData()
-                    await fetchProfitMetrics()
-                    await fetchPerformanceData()
-                    await getActiveDeals()
-
-                    // if (config && dotProp.has(config, 'general.defaultCurrency')) {
-                    //     console.log('ran this')
-                    //     await getAccountData(config)
-                    // }
-
-                    calculateMetrics()
-
-                })
-        } catch (error) {
-            console.error(error)
-            alert('Error updating your data. Check the console for more information.')
-        }
-
-        updateIsSyncing(false)
-    }
-
+    // const [lastSyncTime, updateLastSyncTime] = useState(() => )
     /**
      * Data Syncing state
      */
 
-    const [buttonEnabled, setButtonEnabled] = useState<boolean>(false)
-    const [interval, setIntervalState] = useState<NodeJS.Timeout | null | number>()
+     const [buttonEnabled, setButtonEnabled] = useState<boolean>(false)
+     const [interval, setIntervalState] = useState<NodeJS.Timeout | null | number>()
+
+    // update the summary value here to define what type of notifications are sent.
+    const [ summarySync, setSummarySync ] = useState(() => false)
+    const [ notifications, setNotifications ] = useState(() => true)
+     
+
+    let lastSyncTime = new Date().getTime()
+
+    /**
+     * 
+     * @param offset offset in which to sync 3C at
+     * @param lastSyncTime the milisecond time of the sync.
+     * @param summary boolean value that defines if it'll be a summary or individual notification set.
+     */
+    const updateAutoSync = async (offset: number ) => {
+        updateIsSyncing(true)
+
+        const time = lastSyncTime
+        let options = { time, summary: summarySync, offset, notifications } 
+        
+        try {
+            lastSyncTime = lastSyncTime + 15000
+            updateThreeCData('autoSync', options)
+                .then(async () => {
+                    await fetchProfitMetrics()
+                    await fetchPerformanceData()
+                    await getActiveDeals()
+
+                    calculateMetrics()
+                    updateIsSyncing(false)
+                })
+        } catch (error) {
+            console.error(error)
+            alert('Error updating your data. Check the console for more information.')
+            updateIsSyncing(false)
+
+        }
+    }
+
+
+
+
+
 
     // Timer is set to a 15 second refresh interval right now.
-    const timer = () => setIntervalState(setInterval(() => {
+    const timer = () => setIntervalState(
+        setInterval(() => {
         updateAutoSync(25)
-        console.log('updating data from the button')
     }, 15000))
-    const stopAutoSync = () => {
 
+    const stopAutoSync = () => {
         //@ts-ignore
         clearInterval(interval); // Not working
         setIntervalState(null)
@@ -458,7 +481,12 @@ const DataProvider = ({ children }: any) => {
             isSyncing
         },
         autoSync: {
-            buttonEnabled, setButtonEnabled
+            buttonEnabled, 
+            setButtonEnabled,
+            summarySync,
+            setSummarySync,
+            notifications,
+            setNotifications
         }
     }
 

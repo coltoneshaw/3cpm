@@ -136,6 +136,7 @@ export interface Type_Deals {
     impactFactor: number
 }
 
+
 export interface Type_ActiveDeals extends Type_Deals {
     max_deal_funds: number
     bought_volume: number
@@ -245,4 +246,100 @@ export interface Type_MarketOrders {
 export interface Type_BalanceData {
     on_orders: number
     position: number
+}
+
+
+export interface Type_UpdateFunction{
+    offset: number
+    time?:number
+    summary?: boolean
+    notifications?: boolean
+}
+
+
+/**********************************************************
+ * 
+ * 
+ */
+
+ export interface Type_Deals_API {
+    id: number // in use
+    type: string // in use
+    bot_id: number // in use
+    max_safety_orders: number // in use
+    deal_has_error: boolean 
+    from_currency_id: number // in use
+    to_currency_id: number // in use
+    account_id: number // in use
+    active_safety_orders_count: number // in use
+    created_at: string // in use
+    updated_at: string // in use
+    closed_at: string // in use
+    closed_at_iso_string: number // in use
+    finished: boolean // in use
+    current_active_safety_orders_count: boolean // in use
+    current_active_safety_orders: number // in use
+    completed_safety_orders_count: number // in use
+    completed_manual_safety_orders_count: number // in use
+    cancellable: boolean
+    panic_sellable: boolean
+    trailing_enabled: boolean
+    tsl_enabled: boolean
+    stop_loss_timeout_enabled: boolean
+    stop_loss_timeout_in_seconds: number
+    active_manual_safety_orders: number // in use
+    pair: string // in use
+    status: string  // in use
+    localized_status: string
+    take_profit: number // in use
+    base_order_volume: number // in use
+    safety_order_volume: number // in use
+    safety_order_step_percentage: number // in use
+    leverage_type: string
+    leverage_custom_value: number
+    bought_amount: number // in use
+    bought_volume: number // in use
+    bought_average_price: number 
+    base_order_average_price: number
+    sold_amount: number
+    sold_volume: number
+    sold_average_price: number
+    take_profit_type: string
+    final_profit: string // in use
+    martingale_coefficient: number
+    martingale_volume_coefficient: number
+    martingale_step_coefficient: number
+    stop_loss_percentage: number
+    error_message: string
+    profit_currency: string
+    stop_loss_type: string
+    safety_order_volume_type: string
+    base_order_volume_type: string
+    from_currency: string
+    to_currency: string
+    current_price: number
+    take_profit_price: number
+    stop_loss_price: number
+    final_profit_percentage: number
+    actual_profit_percentage: number
+    bot_name: string
+    account_name: string
+    usd_final_profit: number
+    actual_profit: number
+    actual_usd_profit: number
+    failed_message: string
+    reserved_base_coin: number
+    reserved_second_coin: number
+    trailing_deviation: number
+    trailing_max_price: number
+    tsl_max_price: number
+    strategy: string
+    reserved_quote_funds: string
+    reserved_base_funds: string
+    realized_actual_profit_usd: number
+    deal_hours: number
+    currency: string
+    max_deal_funds: number
+    profitPercent: number
+    impactFactor: number
 }
