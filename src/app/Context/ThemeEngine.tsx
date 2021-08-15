@@ -33,6 +33,7 @@ export interface MyCustomCSS extends CSSProperties {
 
 
 const lightMode = {
+    '--color-primary-light25' : '#A8CCCD',
     '--color-primary': '#8BBABC',
     '--color-primary-dark25': '#59999B',
     '--color-secondary-light87': '#DEE3EC',
@@ -55,8 +56,10 @@ const lightMode = {
 }
 
 const darkMode = {
+    '--color-primary-light25' : '475C7E',
     '--color-primary': '#212B3B',
     '--color-primary-dark25': '#19202C',
+
     
     // this is not the right color below~1
     '--color-secondary-light87': '#617389',

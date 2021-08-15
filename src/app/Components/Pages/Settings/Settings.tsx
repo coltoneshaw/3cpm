@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
 // @ts-ignore
 import { version } from '#/package.json';
@@ -20,6 +20,8 @@ import ToastNotifcation from '@/app/Components/ToastNotification'
 import ReservedBankroll from './Components/ReservedBankroll';
 import StartDatePicker from './Components/StartDatePicker';
 
+import { ChangelogModal } from '@/app/Features/Index';
+
 const SettingsPage = () => {
 
     const [open, setOpen] = React.useState(false);
@@ -34,6 +36,13 @@ const SettingsPage = () => {
         }
 
         setOpen(false);
+    };
+
+    const [openChangelog, setOpenChangelog] = useState(false);
+
+    const handleOpenChangelog = () => {
+        console.log('opening!')
+        setOpenChangelog(true);
     };
 
     return (
@@ -70,11 +79,15 @@ const SettingsPage = () => {
 
                 {/* These buttons still need to be wired up, but for now they are displayed. */}
                 <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ margin: 'auto' }}>
-                    <Button onClick={() => window.open('https://forms.gle/2ihxsQtvG1yexPxW6')} style={{ margin: '25px', borderRight: 'none' }} >Leave Feedback</Button>
-                    <Button onClick={() => window.open('https://forms.gle/CfzMy8E6zUe8UuzBA')} style={{ margin: '25px' }}>Report a Bug</Button>
+                    <Button onClick={() => window.open('https://forms.gle/2ihxsQtvG1yexPxW6')} style={{ margin: '1em', borderRight: 'none' }} >Leave Feedback</Button>
+                    <Button onClick={() => window.open('https://forms.gle/CfzMy8E6zUe8UuzBA')} style={{margin: '1em'}}>Report a Bug</Button>
                 </ButtonGroup>
-                <p className="versionNumber">v{version}</p>
+                <Button 
+                    variant="text" color="primary" 
+                    aria-label="text primary button" 
+                    className="versionNumber" onClick={handleOpenChangelog} style={{ width: '250px' }}>v{version}</Button>
             </div>
+            <ChangelogModal open={openChangelog} setOpen={setOpenChangelog}/>
             <ToastNotifcation open={open} handleClose={handleClose} message="Config has been saved" />
         </>
     )

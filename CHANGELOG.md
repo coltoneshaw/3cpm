@@ -72,8 +72,6 @@ v0.0.2-RC1
 - Spinning icons when the data is updating.
 - Added a rough description of API key perms needed to the settings page
 - Increased pie chart size (praise), added formatting to the tooltips
-- fixed application height issues
-- settings button height, and scrolling on that page.
 
 v0.0.1-RC1
 - added spinner to the update data icons

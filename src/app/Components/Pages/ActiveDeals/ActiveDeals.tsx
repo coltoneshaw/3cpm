@@ -10,6 +10,9 @@ import { useGlobalData } from '@/app/Context/DataContext';
 import { Card_ActiveDeals, Card_totalInDeals, Card_ActiveDealReserve, Card_TotalDayProfit } from '@/app/Components/Charts/DataCards';
 import { SyncToggles } from './Components/index';
 
+import { ChangelogModal } from '@/app/Features/Index';
+import { Button } from '@material-ui/core';
+
 const ActiveDealsPage = () => {
 
     const dataState = useGlobalData()
@@ -25,6 +28,9 @@ const ActiveDealsPage = () => {
     useEffect(() => {
         updateLocalData(formatDeals(activeDeals))
     }, [activeDeals])
+
+
+
 
     return (
         <>
@@ -47,7 +53,7 @@ const ActiveDealsPage = () => {
             </div>
 
 
-            <div className="boxData flex-column" style={{padding: '0 2em 2em 2em'}}>
+            <div className="boxData flex-column" style={{padding: '.5em 2em 2em 2em'}}>
                 <SyncToggles />
                 <DealsTable data={localData} />
             </div>

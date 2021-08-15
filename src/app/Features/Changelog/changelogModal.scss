@@ -1,0 +1,75 @@
+
+
+div.changelogModal {
+    background-color: var(--color-background);
+    height: 40vh;
+    width: 50vw;
+    position: relative;
+
+    .closeIcon{
+        position: absolute;
+        right: 2%;
+        top: 2%;
+        cursor: pointer;
+        width: 25px;
+        height: 25px;
+    }
+
+    .closeIcon:hover{
+        fill: var(--color-secondary-light25)
+    }
+    h3{
+        margin: 0;
+        padding: 1em;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+    }
+
+    div.versionDiv {
+        flex-basis: 25%;
+        background-color: var(--color-primary);
+        text-align: center;
+        overflow-x: visible;
+        overflow-y: scroll;
+        
+
+
+        span.version {
+            margin: 0 ;
+            padding: 1em;
+            letter-spacing: 1px;
+        }
+
+        span.version:hover {
+            background-color: var(--color-primary-dark25)
+        }
+
+        span.version.active {
+            background-color: var(--color-background);
+        }
+
+
+        
+    }
+
+    .changesDiv {
+        flex-basis: 75%;
+        padding-left: 1em;
+        overflow-x: scroll;
+
+        h3{ 
+            padding-left: 0;
+        }
+
+        h4 {
+            margin: 0
+        }
+
+        li {
+            font-weight: 300;
+            letter-spacing: .2px;
+        }
+    }
+}
+
+

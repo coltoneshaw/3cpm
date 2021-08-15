@@ -77,9 +77,9 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
                     <YAxis yAxisId="avg_deal_hours" orientation='right' hide={hide("avg_deal_hours")} domain={[0, 'auto']} allowDataOverflow={true} offset={20} />
                     <YAxis yAxisId="bought_volume" orientation='right' hide={hide("bought_volume") } domain={[0, 'auto']} allowDataOverflow={true} offset={20} />
 
-                    <Bar  name="Bought Volume" yAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.8} fill="#8BBABC" />
-                    <Bar name="Total Profit" dataKey="total_profit" fill="#E8AE00"  yAxisId="total_profit" />
-                    <Bar name="Avg. Deal Hours" dataKey="avg_deal_hours"  yAxisId="avg_deal_hours"/>
+                    <Scatter  name="Bought Volume" yAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.8} fill="#8BBABC" />
+                    <Scatter name="Total Profit" dataKey="total_profit" fill="#E8AE00"  yAxisId="total_profit" />
+                    <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours"  yAxisId="avg_deal_hours"/>
                     {/* <Line name="Total Profit" type="monotone" yAxisId="total_profit" dataKey="total_profit" stroke="#E8AE00" dot={false} strokeWidth={1.75} /> */}
                     {/* <Line name="Avg. Deal Hours" type="monotone" yAxisId="avg_deal_hours" dataKey="avg_deal_hours" dot={false} strokeWidth={1.75} /> */}
 
