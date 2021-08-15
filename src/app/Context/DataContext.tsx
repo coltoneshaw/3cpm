@@ -387,7 +387,7 @@ const DataProvider = ({ children }: any) => {
     // update the summary value here to define what type of notifications are sent.
     const [ summarySync, setSummarySync ] = useState(() => false)
     const [ notifications, setNotifications ] = useState(() => true)
-     
+
 
     let lastSyncTime = new Date().getTime()
 

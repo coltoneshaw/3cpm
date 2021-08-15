@@ -106,7 +106,8 @@ const versionInformation = [
 
         ],
         new: [
-            'Added active deals.'
+            'Added active deals.',
+            'Changelog popup and version information within the settings'
         ]
     },
 ]
