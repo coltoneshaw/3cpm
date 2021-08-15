@@ -13,7 +13,7 @@ import { useGlobalData } from '@/app/Context/DataContext';
 import dotProp from 'dot-prop';
 
 
-import { Card_ActiveDeals, Card_totalInDeals, Card_MaxDca, Card_TotalBankRoll, Card_TotalProfit } from '@/app/Components/Charts/DataCards';
+import { Card_ActiveDeals, Card_totalInDeals, Card_MaxDca, Card_TotalBankRoll, Card_TotalProfit, Card_MaxRiskPercent } from '@/app/Components/Charts/DataCards';
 
 
 
@@ -37,7 +37,7 @@ const StatsPage = () => {
     const { config, state: { reservedFunds } } = configState
     const state = useGlobalData()
     const { data: { metricsData, isSyncing }, actions: { updateAllData } } = state
-    const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal } = metricsData
+    const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')
     const date: undefined | number = dotProp.get(config, 'statSettings.startDate')
@@ -128,6 +128,7 @@ const StatsPage = () => {
                     <Card_ActiveDeals metric={activeDealCount} />
                     <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
                     <Card_MaxDca metric={maxRisk} />
+                    <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{totalBankroll, maxDCA: maxRisk}} />
                     <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
                     <Card_TotalProfit metric={totalProfit} />
                 </div>
