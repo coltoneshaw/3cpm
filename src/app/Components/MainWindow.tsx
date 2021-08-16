@@ -27,7 +27,6 @@ const MainWindow = () => {
     const [openChangelog, setOpenChangelog] = useState(false);
 
     const handleOpenChangelog = () => {
-        console.log('opening!')
         setOpenChangelog(true);
     };
 

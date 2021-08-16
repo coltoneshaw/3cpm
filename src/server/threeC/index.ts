@@ -16,7 +16,7 @@ async function updateAPI(type: string, options:Type_UpdateFunction ) {
 
   await deals(options.offset)
     .then((data: Type_Deals_API[]) => {
-      console.log('made it back here')
+
       if( type == 'autoSync' && options.notifications && options.time != undefined ) findAndNotifyNewDeals( data, options.time , options.summary )
       update('deals', data)
     })
@@ -46,7 +46,7 @@ async function getAndStoreBotData() {
     await bots()
       .then((data: Type_API_bots[]) => {
         if (data != null && data.length > 0) {
-          console.log('fetched bot Data')
+
           update('bots', data)
         }
 

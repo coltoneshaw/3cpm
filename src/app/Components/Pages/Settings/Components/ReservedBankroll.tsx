@@ -56,7 +56,6 @@ const ReservedBankroll = () => {
                 if (e !== undefined && e.target !== null) {
                     if (e.target.name == row.id) {
                         row.is_enabled = !row.is_enabled
-                        console.log(row.is_enabled)
                     }
                 }
                 return row
@@ -72,7 +71,7 @@ const ReservedBankroll = () => {
 
                     // @ts-ignore - validate props
                     row[e.field] = e.value
-                    console.log(`changed ${e.field} to ${e.value}`)
+                    // console.log(`changed ${e.field} to ${e.value}`)
 
                 }
                 return row

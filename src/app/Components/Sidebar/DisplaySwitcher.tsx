@@ -12,7 +12,6 @@ const DisplaySwitcher = () => {
 
 
     const displaySwitch = () => {
-        console.log('switching display mode')
 
         changeDisplay(!display)
         changeTheme()

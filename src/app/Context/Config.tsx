@@ -57,8 +57,7 @@ const ConfigProvider = ({ children }: any) => {
     const setNewCurrency = (config: TconfigValues) => {
         updateCurrency(() => {
             const newCurrency: string[] | undefined = dotProp.get(config, 'general.defaultCurrency')
-            console.log({newCurrency})
-            return (newCurrency) ? newCurrency : ["USD"]
+            return (newCurrency) ? [...newCurrency] : ["USD"]
         })
     }
 
@@ -181,14 +180,12 @@ const ConfigProvider = ({ children }: any) => {
     const fetchAccountsForRequiredFunds = async (key:string, secret:string) => {
         // @ts-ignore
         const accountSummary = await electron.api.getAccountData(key, secret)
-        console.log({accountSummary})
 
         if (accountSummary !== undefined || accountSummary.length > 0) {
             updateReservedFunds( prevState => {
 
                 // @ts-ignore
                     const filteredAccountData = removeDuplicatesInArray(accountSummary, 'id')
-                    console.log({filteredAccountData})
     
                     // checking to see if any reserved funds exist
                     if (prevState.length === 0 || prevState === []) {
@@ -218,7 +215,6 @@ const ConfigProvider = ({ children }: any) => {
                                 is_enabled: false
                             }
                         })
-                    console.log({ newAcounts, configuredAccountIds })
     
                     return [
                         ...prevState,

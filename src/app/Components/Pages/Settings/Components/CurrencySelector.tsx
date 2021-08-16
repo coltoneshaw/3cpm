@@ -59,8 +59,8 @@ const CurrencySelector = () => {
     const { config, state: { currency, updateCurrency } } = state
 
     const onChange = (e: any) => {
-        updateCurrency(e.target.value)
-        console.log(`Changing the default currency from ${config.general.defaultCurrency} to ${e.target.value}`)
+        updateCurrency([...e.target.value])
+        // console.log(`Changing the default currency from ${config.general.defaultCurrency} to ${e.target.value}`)
     }
 
     const returnCurrencyValues = (currencyData: Type_currency[], currencyArray: string[]) => {

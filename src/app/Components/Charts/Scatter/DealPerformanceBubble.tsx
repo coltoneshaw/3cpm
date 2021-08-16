@@ -45,8 +45,6 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
                 .filter(row => row.percentTotalVolume > 1.5)
             // 
 
-            console.log(newData)
-
             // 1. Find the metrics to filter based on
             // 2. identify what the high / low is and how to break out that metric
             // 3. push the coloring based on the answer to that.

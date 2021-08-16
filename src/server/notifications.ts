@@ -18,12 +18,12 @@ function showNotification(title: string, body: string) {
 }
 
 /**
- * 
+ *  d
  * @param data this is the recent synced string of data
  * @param lastSyncTime This is the miliseconds of the last sync.
  * @param summary boolean value to represent if notifications are summarized if multiple come in together.
  */
-function findAndNotifyNewDeals(data: Type_Deals_API[], lastSyncTime: number, summary?: boolean) {
+function findAndNotifyNewDeals(data: Type_Deals_API[], lastSyncTime: number, summary: boolean) {
 
     // filter for only deals that have closed
     // this will filter based on the ISO string of the closed at and if it's greater than
@@ -33,7 +33,6 @@ function findAndNotifyNewDeals(data: Type_Deals_API[], lastSyncTime: number, sum
     // remove deals that closed before the last sync and that have already been notified.
     data = data.filter(deal => deal.closed_at_iso_string > lastSyncTime && !dealsNotified.includes(deal.id))
 
-    console.log(dealsNotified)
 
     // end the function if no deals exist in the filtered array
     if(data.length === 0) return false
@@ -59,7 +58,7 @@ function findAndNotifyNewDeals(data: Type_Deals_API[], lastSyncTime: number, sum
             const notificationTitle = 'Deal Closed, profit was had.';
 
             const { bot_name, pair, final_profit, final_profit_percentage, from_currency, id } = deal;
-            const moneyBags = ( "💰".repeat(Math.round(final_profit_percentage)))
+            const moneyBags = (final_profit_percentage > 0) ? "💰".repeat(Math.abs(Math.round(final_profit_percentage))) : '';
             const notificationString = `(${id}) ${bot_name} - ${pair} closed a deal. Profit: ${parseNumber(final_profit, 5)} ${from_currency} ( ${final_profit_percentage} % ). ${moneyBags}`;
 
             try {

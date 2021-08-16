@@ -65,7 +65,6 @@ const DataTable = ({  localBotData, updateLocalBotData }:Type_DataTable) => {
 
 
   const handleEditCellChangeCommitted = (e: any) => {
-    console.log(e)
 
     /**
      * 1. Identify the row that was updated (e) and the value, then update it.
@@ -79,7 +78,6 @@ const DataTable = ({  localBotData, updateLocalBotData }:Type_DataTable) => {
 
           // @ts-ignore - validate props
           row[e.field] = e.value
-          console.log(`changed ${e.field} to ${e.value}`)
 
           /**
            * TODO
