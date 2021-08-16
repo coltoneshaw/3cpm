@@ -1,4 +1,4 @@
-import { getTime, sub } from 'date-fns'
+import { getTime, parseISO, formatISO } from 'date-fns'
 import React, { useContext, useState, useEffect, forwardRef } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 
@@ -20,8 +20,12 @@ export default function StartDatePicker() {
   const state = useGlobalState()
   const { state: { date, updateDate }, config } = state
 
+  const offset = (new Date()).getTimezoneOffset() * 60000
+
   const handleDateChange = ( date:any) => {
-    updateDate(getTime(date));
+    const dateString = formatISO( date, { representation: 'date' } )
+    const utcDate = dateString + 'T00:00:00Z'
+    updateDate(getTime(parseISO(utcDate)));
 
   };
 
@@ -34,7 +38,7 @@ export default function StartDatePicker() {
         margin="normal"
         id="date-picker-inline"
         label="Stats Start Date"
-        value={date}
+        value={date + offset}
         onChange={handleDateChange}
         KeyboardButtonProps={{
           'aria-label': 'change date',

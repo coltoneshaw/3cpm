@@ -10,7 +10,8 @@ import { CustomTooltip } from '@/app/Components/Charts/Tooltips';
 
 const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
 
-
+    const totalProfit = (data.length > 0) ? data.map(deal => deal.profit).reduce( ( sum, profit ) => sum + profit ) : 0
+    const average = totalProfit / data.length
 
 
     const renderChart = () => {
@@ -44,6 +45,8 @@ const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
                             return format(date, "M/d")
                         }}
                     />
+
+                    <ReferenceLine y={average}  stroke="var(--color-primary)" strokeWidth={2} />
                     <YAxis
                         dataKey={X}
                         tickLine={false}

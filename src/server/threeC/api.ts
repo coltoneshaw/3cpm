@@ -17,7 +17,7 @@ import {
 
 /**
  * 
- * @param {object} config This is the config string at the time of calling this function.
+ * @param {object} config This is the config stringat the time of calling this function.
  * @returns the 3Commas API object.
  * 
  * @description - required at the moment so when you make a config change on the frontend you're not using old data.

@@ -73,6 +73,7 @@ const fetchDealDataFunction = async () => {
                 ORDER BY
                     closed_at asc;`
 
+    console.log(query)
     // @ts-ignore
     let dataArray = await electron.database.query(query)
 
@@ -240,6 +241,33 @@ const fetchBotPerformanceMetrics = async () => {
 
 }
 
+const botQuery = async () => {
+    const filtersQueryString = await getFiltersQueryString()
+    const { currencyString, accountIdString, startString } = filtersQueryString;
+
+
+    const queryString = `
+                SELECT
+                    *
+                FROM 
+                    bots
+                WHERE
+                    account_id in (${accountIdString})
+                    OR origin = 'custom'`
+
+    // console.log(queryString)
+
+    // @ts-ignore
+    let databaseQuery = await electron.database.query(queryString);
+
+    if (databaseQuery == null || databaseQuery.length > 0) {
+        return databaseQuery
+    } else {
+        return []
+    }
+
+}
+
 /**
  * 
  * @returns An array containing the data for specific bot metrics.
@@ -356,7 +384,9 @@ const getAccountDataFunction = async (defaultCurrency: string[]) => {
 
     // @ts-ignore
     let accountData: Array<Type_Query_Accounts> = await electron.database.query(query)
-        .then((data: Type_Query_Accounts[]) => data.filter(row => defaultCurrency.includes(row.currency_code)))
+
+        // removed this since it seems redundant to the above query
+        // .then((data: Type_Query_Accounts[]) => data.filter(row => defaultCurrency.includes(row.currency_code)))
 
     if (accountData == null || accountData.length > 0) {
         let on_ordersTotal = 0;
@@ -406,7 +436,8 @@ export {
     getAccountDataFunction,
     accountDataAll,
     fetchBotPerformanceMetrics,
-    fetchPairPerformanceMetrics
+    fetchPairPerformanceMetrics,
+    botQuery
 }
 
 
