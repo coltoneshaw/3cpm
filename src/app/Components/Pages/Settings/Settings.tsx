@@ -38,6 +38,7 @@ const SettingsPage = () => {
         setOpen(false);
     };
 
+    // changelog state responsible for opening / closing the changelog
     const [openChangelog, setOpenChangelog] = useState(false);
 
     const handleOpenChangelog = () => {

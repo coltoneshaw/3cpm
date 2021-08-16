@@ -74,7 +74,8 @@ const defaultConfig:TconfigValues = {
     },
     "general": {
         "defaultCurrency": [],
-        "globalLimit": 250000
+        "globalLimit": 250000,
+        "updated" : false,
     },
     "syncStatus": {
         "deals": {

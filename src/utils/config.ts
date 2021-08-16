@@ -28,6 +28,7 @@ const config = new Store({
         '0.1.0': ( store: any )=>{
             console.info('migrating the config store to 0.1.0')
             run('drop table bots;')
+            store.set('general.updated', true)
         }
         
     },
