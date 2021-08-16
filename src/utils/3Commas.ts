@@ -78,7 +78,7 @@ const fetchDealDataFunction = async () => {
 
     // if no data return blank array.
     if (dataArray == null || dataArray.length === 0) {
-        console.log('no data')
+
         return {
             profitData: [],
             metrics: {
@@ -160,7 +160,7 @@ const fetchPerformanceDataFunction = async () => {
                 GROUP BY 
                     performance_id;`
 
-    console.log(queryString)
+    // console.log(queryString)
 
     // @ts-ignore
     let databaseQuery = await electron.database.query(queryString);
@@ -226,7 +226,7 @@ const fetchBotPerformanceMetrics = async () => {
                 GROUP BY 
                     bot_id;`
 
-    console.log(queryString)
+    // console.log(queryString)
 
     // @ts-ignore
     let databaseQuery = await electron.database.query(queryString);
@@ -268,7 +268,7 @@ const fetchPairPerformanceMetrics = async () => {
                 GROUP BY 
                     pair;`
 
-    console.log(queryString)
+    // console.log(queryString)
 
     // @ts-ignore
     let databaseQuery = await electron.database.query(queryString);
@@ -297,7 +297,7 @@ const getActiveDealsFunction = async () => {
                     and account_id in (${accountIdString} )
                     and currency in (${currencyString} )
                     `
-    console.log(query)
+    // console.log(query)
     // @ts-ignore
     let activeDeals: Array<Type_ActiveDeals> = await electron.database.query(query)
 

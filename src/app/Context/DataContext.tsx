@@ -110,7 +110,7 @@ const DataProvider = ({ children }: any) => {
         // console.log({config}, 'yolo')
         // console.log()
         if (config && dotProp.has(config, 'general.defaultCurrency')) {
-            console.log('ran this')
+
             try {
                 getAccountData(config)
             } catch (error) {
@@ -368,7 +368,7 @@ const DataProvider = ({ children }: any) => {
                     await getActiveDeals()
 
                     if (config && dotProp.has(config, 'general.defaultCurrency')) {
-                        console.log('ran this')
+
                         await getAccountData(config)
                     }
 
@@ -392,8 +392,8 @@ const DataProvider = ({ children }: any) => {
     const [interval, setIntervalState] = useState<NodeJS.Timeout | null | number>()
 
     // update the summary value here to define what type of notifications are sent.
-    const [summarySync, setSummarySync] = useState(() => false)
-    const [notifications, setNotifications] = useState(() => true)
+    const [summarySync, setSummarySync] = useState(false)
+    const [notifications, setNotifications] = useState(true)
 
 
     let lastSyncTime = new Date().getTime()
@@ -453,11 +453,9 @@ const DataProvider = ({ children }: any) => {
     useEffect(() => {
 
         if (buttonEnabled) {
-            console.log('enabling a timer')
             timer();
 
         } else {
-            console.log('disabling a timer')
             stopAutoSync()
         }
 

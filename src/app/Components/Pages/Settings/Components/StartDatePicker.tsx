@@ -23,7 +23,6 @@ export default function StartDatePicker() {
   const handleDateChange = ( date:any) => {
     updateDate(getTime(date));
 
-    console.log('changing the date')
   };
 
   return (

@@ -42,7 +42,6 @@ const SettingsPage = () => {
     const [openChangelog, setOpenChangelog] = useState(false);
 
     const handleOpenChangelog = () => {
-        console.log('opening!')
         setOpenChangelog(true);
     };
 

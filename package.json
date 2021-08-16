@@ -81,7 +81,8 @@
     "query-string": "^7.0.1"
   },
   "build": {
-    "appId": "portfoliomanager.electron.com",
+    "appId": "3CPortfolioManager",
+    "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
     "directories": {
       "output": "release"
     },
@@ -90,6 +91,7 @@
         "dmg"
       ],
       "type": "distribution",
+    "darkModeSupport": true,
       "hardenedRuntime": true,
       "entitlements": "assets/entitlements.mac.plist",
       "entitlementsInherit": "assets/entitlements.mac.plist",
@@ -113,7 +115,12 @@
     },
     "win": {
       "icon": "assets/icons/icon.ico",
-      "publisherName": "Colton Shaw"
+      "publisherName": "Colton Shaw",
+      "target": "NSIS"
+    },
+    "nsis": {
+      "createDesktopShortcut" : true,
+      "createStartMenuShortcut" : true
     },
     "linux": {
       "icon": "assets/icons"

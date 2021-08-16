@@ -228,7 +228,7 @@ async function getDealsUpdate( perSyncOffset: number) {
   let perOffset = (perSyncOffset) ? perSyncOffset : 1000;
   let oldestDate, newLastSyncTime;
 
-  console.log({perOffset})
+
 
 
   // converting the incoming dateUTC to the right format in case it's not done properly.
@@ -345,7 +345,7 @@ async function getAccountDetail() {
 
   for (let account of accountData) {
     const accountBalances = await api.accountLoadBalances(account.id)
-    console.log({accountBalances})
+
     let data = await api.accountTableData(account.id)
 
     const { name: account_name, exchange_name, market_code } = account
