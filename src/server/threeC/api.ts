@@ -225,7 +225,7 @@ async function getDealsUpdate( perSyncOffset: number) {
   let responseArray = [];
   let response:Type_Deals_API[] ;
   let offsetMax = 250000;
-  let perOffset = (perSyncOffset) ? perSyncOffset : 500;
+  let perOffset = (perSyncOffset) ? perSyncOffset : 1000;
   let oldestDate, newLastSyncTime;
 
   console.log({perOffset})
@@ -312,7 +312,8 @@ async function deals( offset:number ) {
       profitPercent: (activeDeal) ? null : ((final_profit_percentage / 100) / +deal_hours).toFixed(3),
       impactFactor: (activeDeal) ? (((bought_average_price - current_price) / bought_average_price) * (415 / (bought_volume ** 0.618))) / (actual_usd_profit / actual_profit) : null,
       closed_at_iso_string: (activeDeal) ? null : new Date(closed_at).getTime(),
-      final_profit: +final_profit
+      final_profit: +final_profit,
+      final_profit_percentage: +final_profit_percentage
     }
 
 
