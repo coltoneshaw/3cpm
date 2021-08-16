@@ -60,23 +60,28 @@ const fetchDealDataFunction = async () => {
     const filtersQueryString = await getFiltersQueryString()
     const { currencyString, accountIdString, startString } = filtersQueryString;
     const query = `
-                SELECT 
-                    final_profit, closed_at, id, deal_hours
-                FROM 
-                    deals 
-                WHERE
-                    closed_at != null 
-                    or finished = 1 
-                    and account_id in (${accountIdString}) 
-                    and currency in (${currencyString}) 
-                    and closed_at_iso_string > ${startString} 
-                ORDER BY
-                    closed_at asc;`
+            SELECT 
+                substr(closed_at, 0, 11) as closed_at_str,
+                sum(final_profit) as final_profit,
+                sum(deal_hours) as deal_hours
+            FROM 
+                deals 
+            WHERE
+                closed_at != null 
+                or finished = 1 
+                and account_id in (${accountIdString} )
+                and currency in (${currencyString} )
+                and closed_at_iso_string > ${startString} 
+            GROUP BY
+                 closed_at_str
+            ORDER BY
+                closed_at asc;`
 
     console.log(query)
     // @ts-ignore
     let dataArray = await electron.database.query(query)
 
+    console.log(dataArray)
     // if no data return blank array.
     if (dataArray == null || dataArray.length === 0) {
 
@@ -90,37 +95,29 @@ const fetchDealDataFunction = async () => {
         }
     }
 
-    let dates = Array.from(new Set(dataArray.map((row: Type_Query_DealData) => { if (row.closed_at) { return row.closed_at.split('T')[0] } })))
     let totalDealHours = dataArray.map((deal: Type_Query_DealData) => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours)
+    console.log(totalDealHours)
 
+    const profitArray: Type_Profit[] = [];
 
-    let profitArray: Type_ProfitArray = []
+    dataArray = dataArray.forEach(( day: any, index:number ) => {
 
-    dates.forEach((day: any, index) => {
-
-        // filtering the data array for only the deals that match the day we are filtering on.
-        let profit = dataArray.filter((deal: Type_Query_DealData) => deal.closed_at.split('T')[0] === day).map((deal: Type_Query_DealData) => deal.final_profit)
-        if (profit.length > 0) {
-            profit = profit.reduce((sum: number, profit: number) => sum + profit)
-        } else {
-            profit = 0
-        }
-
+        
         // adding the existing value to the previous value's running sum.
-        let runningSum = (index == 0) ? +profit : profitArray[index - 1].runningSum + +profit
+        let runningSum = (index == 0) ? day.final_profit  : profitArray[index - 1].runningSum + day.final_profit 
+        console.log(runningSum)
 
-        let dateObject = {
-            utc_date: day.toString(),
-            profit: +profit.toFixed(6),
-            runningSum: +runningSum.toFixed(6)
-        }
-        profitArray.push(dateObject)
+        profitArray.push({
+            utc_date: day.closed_at_str,
+            profit: day.final_profit,
+            runningSum: runningSum
+        })
     })
 
 
     const totalProfit = (profitArray.length > 0) ? +profitArray[profitArray.length - 1].runningSum : 0
     const averageDailyProfit = (profitArray.length > 0) ? totalProfit / (profitArray.length + 1) : 0;
-    const averageDealHours = (profitArray.length > 0) ? totalDealHours / (dataArray.length + 1) : 0;
+    const averageDealHours = (profitArray.length > 0) ? totalDealHours / (profitArray.length + 1) : 0;
 
     return {
         profitData: profitArray,
