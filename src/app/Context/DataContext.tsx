@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, createRef } from 'react';
+import React, { createContext, useState, useEffect, createRef, SetStateAction } from 'react';
 import dotProp from 'dot-prop';
 
 // Contect Providers
@@ -13,7 +13,8 @@ import {
     Type_Profit,
     Type_Bot_Performance_Metrics,
     Type_Performance_Metrics,
-    Type_Pair_Performance_Metrics
+    Type_Pair_Performance_Metrics,
+    Type_UpdateFunction
 
 } from '@/types/3Commas'
 import { TconfigValues } from '@/types/config'
@@ -74,6 +75,14 @@ interface Type_Data_Context {
         additionalData: { accountName: string[] }[]
         accountData: Type_Query_Accounts[]
         isSyncing: boolean
+    },
+    autoSync: {
+        buttonEnabled: boolean
+        setButtonEnabled: any // needs to be adjusted,
+        summarySync: boolean
+        setSummarySync: any
+        notifications:boolean
+        setNotifications: any
     }
 }
 
@@ -95,9 +104,6 @@ const DataProvider = ({ children }: any) => {
     const [metricsData, updateMetricsData] = useState(() => defaultMetrics)
     const [additionalData, setAdditionalData] = useState<{ accountName: string[] }[]>([])
     const [isSyncing, updateIsSyncing] = useState(false)
-
-
-
 
 
     useEffect(() => {
@@ -344,10 +350,10 @@ const DataProvider = ({ children }: any) => {
         })
     }
 
-    const updateAllData = async () => {
+    const updateAllData = async (offset: number) => {
         updateIsSyncing(true)
         try {
-            await updateThreeCData()
+            await updateThreeCData('fullSync', {offset})
                 .then(async () => {
                     await fetchBotData()
                     await fetchProfitMetrics()
@@ -368,20 +374,82 @@ const DataProvider = ({ children }: any) => {
         }
 
         updateIsSyncing(false)
-
     }
 
-    // const refreshData = () => {
-    //     fetchBotData()
-    //     fetchProfitMetrics()
-    //     fetchPerformanceData()
-    //     getActiveDeals()
+    // const [lastSyncTime, updateLastSyncTime] = useState(() => )
+    /**
+     * Data Syncing state
+     */
 
-    //     if (config && dotProp.has(config, 'general.defaultCurrency')) {
-    //         console.log('ran this')
-    //         getAccountData(config)
-    //     }
-    // }
+     const [buttonEnabled, setButtonEnabled] = useState<boolean>(false)
+     const [interval, setIntervalState] = useState<NodeJS.Timeout | null | number>()
+
+    // update the summary value here to define what type of notifications are sent.
+    const [ summarySync, setSummarySync ] = useState(() => false)
+    const [ notifications, setNotifications ] = useState(() => true)
+
+
+    let lastSyncTime = new Date().getTime()
+
+    /**
+     * 
+     * @param offset offset in which to sync 3C at
+     * @param lastSyncTime the milisecond time of the sync.
+     * @param summary boolean value that defines if it'll be a summary or individual notification set.
+     */
+    const updateAutoSync = async (offset: number ) => {
+        updateIsSyncing(true)
+
+        const time = lastSyncTime
+        let options = { time, summary: summarySync, offset, notifications } 
+        
+        try {
+            lastSyncTime = lastSyncTime + 15000
+            updateThreeCData('autoSync', options)
+                .then(async () => {
+                    await fetchProfitMetrics()
+                    await fetchPerformanceData()
+                    await getActiveDeals()
+
+                    calculateMetrics()
+                    updateIsSyncing(false)
+                })
+        } catch (error) {
+            console.error(error)
+            alert('Error updating your data. Check the console for more information.')
+            updateIsSyncing(false)
+
+        }
+    }
+
+
+
+
+
+
+    // Timer is set to a 15 second refresh interval right now.
+    const timer = () => setIntervalState(
+        setInterval(() => {
+        updateAutoSync(25)
+    }, 15000))
+
+    const stopAutoSync = () => {
+        //@ts-ignore
+        clearInterval(interval); // Not working
+        setIntervalState(null)
+    }
+    useEffect(() => {
+
+        if (buttonEnabled) {
+            console.log('enabling a timer')
+            timer();
+
+        } else {
+            console.log('disabling a timer')
+            stopAutoSync()
+        }
+
+    }, [buttonEnabled]);
 
 
 
@@ -411,6 +479,14 @@ const DataProvider = ({ children }: any) => {
             // @ts-ignore
             accountData,
             isSyncing
+        },
+        autoSync: {
+            buttonEnabled, 
+            setButtonEnabled,
+            summarySync,
+            setSummarySync,
+            notifications,
+            setNotifications
         }
     }
 

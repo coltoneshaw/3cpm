@@ -4,13 +4,15 @@
  */
  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap');
 
+
+
  body {
    font-family: 'Open Sans', sans-serif;
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
  }
 
- html, body, #root {
+ html, body, #root, .rootDiv {
    height: 100%;
    /* // overflow: hidden; */
    margin: 0;
@@ -22,7 +24,7 @@
  }
 
 
- #root {
+.rootDiv {
    display: flex;  /* enables flex content for its children */
    box-sizing: border-box;
  }
@@ -37,11 +39,12 @@
    font-size: 2em;
    letter-spacing: 1px;
    font-weight: 600;
+   color: var(--color-text-lightbackground)
  }
 
  #sidebar {
      flex-basis: 5%;
-     background-color: #8BBABC;
+     background-color: var(--color-primary);
      min-width: 50px;
      max-width: 75px;
      height: 100%;
@@ -58,7 +61,7 @@
 
  .mainWindow{
      flex-grow: 1;
-     background-color: #E7EAEE;
+     background-color: var(--color-background);
      padding: 3%;
      overflow: scroll;
 
@@ -69,6 +72,7 @@
  .flex-row{
      display: flex;
      flex-direction: row;
+     color: var(--color-text-lightbackground)
  }
 
  .flex-column{
@@ -82,11 +86,11 @@
 
  .boxData {
      border-radius: 15px;
-     background-color: #F3F5F7;
+     background-color: var(--color-background-light);
      text-align: center;
-     color: #212B3B;
-     box-shadow: 0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);
-     padding: 2%;
+     color: var(--color-text-lightbackground);
+     box-shadow: 0 5px 10px var(--color-boxshadow-1), 0 15px 40px var(--color-boxshadow-2);
+     padding: 2em;
  }
 
 
@@ -102,9 +106,18 @@
   }
 
   100% {
-      transform: rotate(360deg);
+      transform: rotate(-360deg);
   }
 }
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
 
 
 @import url('./Components/Pages/BotPlanner/BotPlanner.scss');
@@ -112,3 +125,74 @@
 @import url('./Components/Pages/Stats/Stats.scss');
 @import url('./Components/Charts/DataCards/Card.scss');
 @import url('./Components/Sidebar/Sidebar.scss');
+@import url('./Components/Pages/ActiveDeals/ActiveDeals.scss');
+
+
+.MuiSwitch-track{
+  background-color: var(--color-secondary-light50) !important;
+}
+
+.Mui-checked + .MuiSwitch-track {
+  background-color: var(--color-primary-dark25) !important;
+
+}
+
+.MuiSelect-root,
+.MuiFormLabel-root,
+.MuiInput-input,
+.MuiSelect-icon,
+.MuiIconButton-label {
+  color: var(--color-text-lightbackground) !important;
+}
+
+
+.secondaryButton-outline {
+  background-color: none !important;
+  color: var(--color-secondary-light50) !important;
+  border: 1px solid var(--color-secondary-light50) !important;
+}
+
+
+
+.primaryButton-outline {
+  color: var(--color-primary-light25) !important;
+  border: 1px solid var(--color-primary-light25) !important;
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+.primaryButton-outline:hover,
+.secondaryButton-outline:hover {
+  background-color: none !important;
+  color: var(--color-primary-light25) !important;
+  border: 1px solid var(--color-primary-light25) !important;
+}
+
+.CtaButton {
+  background-color: var(--color-CTA) !important;
+  color: black !important;
+  border: 1px solid var(--color-CTA) !important;
+}
+
+.CtaButton:hover {
+  background-color: var(--color-CTA-light25) !important;
+  color: black !important;
+  border: 1px solid var(--color-CTA-light25) !important;
+}
+
+.MuiSwitch-colorPrimary.Mui-checked + .MutiSwitch-track {
+  background-color: var(--color-secondary-light25) !important;
+}
+
+.MuiSwitch-thumb {
+  background-color: var(--color-secondary) !important;
+}
+
+.MuiCheckbox-colorSecondary.Mui-checked,
+.MuiButton-textPrimary  {
+  color: var(--color-secondary) !important;
+}
+
+.recharts-text,
+.current-value{
+  fill: var(--color-text-lightbackground) !important;
+}

@@ -1,22 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { format } from 'date-fns';
 
 import { Button, ButtonGroup } from '@material-ui/core';
-import SyncIcon from '@material-ui/icons/Sync';
 
 import { RiskMonitor, SummaryStatistics, PerformanceMonitor, ActiveDeals } from './Views/Index';
-
-import { findAccounts } from '@/utils/defaultConfig'
+import { UpdateDataButton } from '@/app/Components/Buttons/Index'
 
 // import './Stats.scss'
 import { useGlobalState } from '@/app/Context/Config';
 import { useGlobalData } from '@/app/Context/DataContext';
 
 import dotProp from 'dot-prop';
-import ToastNotifcation from '@/app/Components/ToastNotification'
 
 
-import { Card_ActiveDeals, Card_totalInDeals, Card_MaxDca, Card_TotalBankRoll, Card_TotalProfit } from '@/app/Components/Charts/DataCards';
+import { Card_ActiveDeals, Card_totalInDeals, Card_MaxDca, Card_TotalBankRoll, Card_TotalProfit, Card_MaxRiskPercent } from '@/app/Components/Charts/DataCards';
 
 
 
@@ -40,7 +37,7 @@ const StatsPage = () => {
     const { config, state: { reservedFunds } } = configState
     const state = useGlobalData()
     const { data: { metricsData, isSyncing }, actions: { updateAllData } } = state
-    const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal } = metricsData
+    const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')
     const date: undefined | number = dotProp.get(config, 'statSettings.startDate')
@@ -74,17 +71,17 @@ const StatsPage = () => {
     // this needs to stay on this page
     const currentViewRender = () => {
         if (currentView === 'risk-monitor') {
-            return <RiskMonitor
+            return <RiskMonitor key="riskmonitor"
             />
         } else if (currentView === 'performance-monitor') {
-            return <PerformanceMonitor
+            return <PerformanceMonitor key="perfmonitor"
 
             />
         } else if (currentView === 'active-deals') {
-            return <ActiveDeals />
+            return <ActiveDeals key="activeDeals"/>
         }
 
-        return <SummaryStatistics
+        return <SummaryStatistics key="summaryStats"
 
         />
     }
@@ -92,20 +89,6 @@ const StatsPage = () => {
     const dateString = (date: undefined | number) => {
         return (date) ? format(date, "MM/dd/yyyy") : ""
     }
-
-    const [open, setOpen] = React.useState(false);
-
-    const handleClick = () => {
-        setOpen(true);
-    };
-
-    const handleClose = (event: any, reason: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setOpen(false);
-    };
 
 
     return (
@@ -117,25 +100,14 @@ const StatsPage = () => {
                         <ButtonGroup aria-label="outlined primary button group" disableElevation disableRipple>
                             {
                                 buttonElements.map(button => {
-                                    if (button.id === currentView) return <Button onClick={() => viewChanger(button.id)} color="primary" >{button.name}</Button>
-                                    return <Button key={button.id} onClick={() => viewChanger(button.id)} >{button.name}</Button>
+                                    if (button.id === currentView) return <Button onClick={() => viewChanger(button.id)} className="primaryButton-outline">{button.name}</Button>
+                                    return <Button className="secondaryButton-outline" key={button.id} onClick={() => viewChanger(button.id)} >{button.name}</Button>
 
                                 })
                             }
                         </ButtonGroup>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={async () => {
-                                await updateAllData()
-                                handleClick()
-                            }}
-                            disableElevation
-                            endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
-                            style={{ margin: "auto", height: "36px", marginLeft: "15px" }}
-                        >
-                            Update Data
-                        </Button>
+                        <UpdateDataButton className="CtaButton" style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }} />
+                        
                     </div>
                 </div>
 
@@ -156,6 +128,7 @@ const StatsPage = () => {
                     <Card_ActiveDeals metric={activeDealCount} />
                     <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
                     <Card_MaxDca metric={maxRisk} />
+                    <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{totalBankroll, maxDCA: maxRisk}} />
                     <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
                     <Card_TotalProfit metric={totalProfit} />
                 </div>
@@ -165,7 +138,7 @@ const StatsPage = () => {
 
             {/* // Returning the current view rendered in the function above. */}
             {currentViewRender()}
-            <ToastNotifcation open={open} handleClose={handleClose} message="Sync finished." />
+            
 
         </>
 

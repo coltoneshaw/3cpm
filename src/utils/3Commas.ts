@@ -3,7 +3,8 @@ import {
     Type_Query_DealData,
     Type_Profit,
     Type_ActiveDeals,
-    Type_Query_Accounts
+    Type_Query_Accounts,
+    Type_UpdateFunction
 } from '@/types/3Commas'
 
 import { Type_ReservedFunds } from '@/types/config'
@@ -18,30 +19,12 @@ const getFiltersQueryString = async () => {
 
     const { statSettings: { startDate, reservedFunds }, general: { defaultCurrency } } = config
 
-    // always will have a start date of 90 days out. There should not be a time that this is null
-    // const startString = `closed_at_iso_string > ${startDate}`
-
-    // may not always have an account_id if it's not been configured, this needs to detect null or not.
-    // const accountIdString = (account_id.length > 0) ? `and account_id in ( ${account_id} )` : ""
-
-    // should never have a time where there is not a currency.
-    // const currencyString = `and currency = '${defaultCurrency}'`
-    // console.log({defaultCurrency})
-
-
-    // const currencyString = (defaultCurrency.length > 0) ? `and currency in ( ${defaultCurrency.map( (b:string) => "'" + b + "'")} )` : ""
-
-    // combining the above filters
-    // no OR starting the string.
-    // const fullQueryString = `${startString} ${accountIdString} ${currencyString}`
-
     const currencyString = (defaultCurrency) ? defaultCurrency.map((b: string) => "'" + b + "'") : ""
     const startString = startDate
     const accountIdString = reservedFunds.filter((account: Type_ReservedFunds) => account.is_enabled).map((account: Type_ReservedFunds) => account.id)
 
 
     return {
-        // fullQueryString,
         currencyString,
         accountIdString,
         startString
@@ -50,13 +33,24 @@ const getFiltersQueryString = async () => {
 }
 
 
+interface Type_Update{
+    offset: number
+    lastSyncTime?:number
+    summary?: boolean
+}
+
 /**
  * @description This kicks off the update process that updates all 3Commas data within the database.
+ * 
+ * @params - type 'autoSync'
+ * @params {options} - option string
  */
-const updateThreeCData = async () => {
+const updateThreeCData = async (type: string, options: Type_UpdateFunction  ) => {
+
+    console.error({options})
 
     // @ts-ignore
-    await electron.api.update();
+    await electron.api.update(type, options);
 }
 
 
@@ -67,8 +61,7 @@ const fetchDealDataFunction = async () => {
     const { currencyString, accountIdString, startString } = filtersQueryString;
     const query = `
                 SELECT 
-                    final_profit, closed_at, id, 
-                    deal_hours
+                    final_profit, closed_at, id, deal_hours
                 FROM 
                     deals 
                 WHERE
@@ -83,6 +76,7 @@ const fetchDealDataFunction = async () => {
     // @ts-ignore
     let dataArray = await electron.database.query(query)
 
+    // if no data return blank array.
     if (dataArray == null || dataArray.length === 0) {
         console.log('no data')
         return {
@@ -98,7 +92,6 @@ const fetchDealDataFunction = async () => {
     let dates = Array.from(new Set(dataArray.map((row: Type_Query_DealData) => { if (row.closed_at) { return row.closed_at.split('T')[0] } })))
     let totalDealHours = dataArray.map((deal: Type_Query_DealData) => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours)
 
-    console.log({ dates })
 
     let profitArray: Type_ProfitArray = []
 
@@ -139,11 +132,6 @@ const fetchDealDataFunction = async () => {
 
 }
 
-/**
-     * TODO
-     * - Does this need to be everything, or just things that are not null?
-     * - Need to add account / currency filters on this.
-     */
 const fetchPerformanceDataFunction = async () => {
     const filtersQueryString = await getFiltersQueryString()
     const { currencyString, accountIdString, startString } = filtersQueryString;
@@ -207,7 +195,9 @@ const fetchPerformanceDataFunction = async () => {
 /**
  * 
  * @returns An array containing the data for specific bot metrics.
+ * 
  */
+
 const fetchBotPerformanceMetrics = async () => {
     const filtersQueryString = await getFiltersQueryString()
     const { currencyString, accountIdString, startString } = filtersQueryString;
@@ -216,20 +206,23 @@ const fetchBotPerformanceMetrics = async () => {
     const queryString = `
                 SELECT 
                     bot_id, 
-                    bot_name, 
                     sum(final_profit) as total_profit, 
                     avg(final_profit) as avg_profit,
                     count(*) as number_of_deals,
                     sum(bought_volume) as bought_volume,
                     avg(deal_hours) as avg_deal_hours,
-                    avg(completed_safety_orders_count + completed_manual_safety_orders_count) as avg_completed_so
+                    avg(completed_safety_orders_count + completed_manual_safety_orders_count) as avg_completed_so,
+                    bots.name as bot_name,
+                    bots.type as type
                 FROM 
-                    deals 
+                    deals
+                JOIN 
+                    bots on deals.bot_id = bots.id
                 WHERE
                     closed_at is not null
-                    and account_id in (${accountIdString}) 
-                    and currency in (${currencyString}) 
-                    and closed_at_iso_string > ${startString} 
+                    and deals.account_id in (${accountIdString}) 
+                    and deals.currency in (${currencyString}) 
+                    and deals.closed_at_iso_string > ${startString} 
                 GROUP BY 
                     bot_id;`
 
@@ -251,7 +244,7 @@ const fetchBotPerformanceMetrics = async () => {
  * 
  * @returns An array containing the data for specific bot metrics.
  */
- const fetchPairPerformanceMetrics = async () => {
+const fetchPairPerformanceMetrics = async () => {
     const filtersQueryString = await getFiltersQueryString()
     const { currencyString, accountIdString, startString } = filtersQueryString;
 
@@ -376,7 +369,7 @@ const getAccountDataFunction = async (defaultCurrency: string[]) => {
 
         }
 
-        console.log({ on_ordersTotal, positionTotal })
+        // console.log({ on_ordersTotal, positionTotal })
         return {
             accountData,
             balance: {

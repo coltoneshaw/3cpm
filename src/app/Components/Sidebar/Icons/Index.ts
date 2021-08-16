@@ -4,7 +4,8 @@ import Cog from "./Cog";
 import Moon from "./Moon";
 import Sun from "./Sun";
 import PieChart from "./PieChart";
-import BackwardClock from './BackwardClock'
+import BackwardClock from './BackwardClock';
+import ActiveDealsIcon from "./ActiveDeals";
 
 export {
     BotPlannerIcon,
@@ -13,5 +14,6 @@ export {
     Moon,
     Sun,
     PieChart,
-    BackwardClock
+    BackwardClock,
+    ActiveDealsIcon
 }

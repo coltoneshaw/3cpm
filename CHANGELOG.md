@@ -1,3 +1,27 @@
+# v0.1.0
+
+## Enhancements
+- Risk % is now a KPI within Stats
+- App Version and the changelog can be found at the bottom of Settings
+- Clarified the Reserved funds as it adds/subtracts funds from the calculations
+- Added the bot type to the bot performance chart
+- Charts are sorted by default desc now
+
+## Bug Fixes
+- Fixed bug where the bot names were incorrect because it was stored directly on the deals table
+- Adjusted the direction that the update spinner went.
+- Fixed bug with clearing the data causing the application to crash
+- Fixed bug where deleting the fake bots from the bot planner was unable to save
+
+## New Features
+- Added active deals tab with a ton of fun data!
+- Changelog popup and version information within the settings
+- Changed the color pallet across the application
+- Added ability for auto-refreshing the data on a 15 second interval.
+- DARK MODE is officially released.
+
+
+
 # v0.0.5
 
 ## New Features:
@@ -72,8 +96,6 @@ v0.0.2-RC1
 - Spinning icons when the data is updating.
 - Added a rough description of API key perms needed to the settings page
 - Increased pie chart size (praise), added formatting to the tooltips
-- fixed application height issues
-- settings button height, and scrolling on that page.
 
 v0.0.1-RC1
 - added spinner to the update data icons

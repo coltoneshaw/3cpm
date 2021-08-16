@@ -1,7 +1,9 @@
 import { update, run } from '@/server/database';
 const { bots, getAccountDetail, deals, getDealsBulk, getDealsUpdate, getAccountSummary } = require('./api');
 
-import { Type_Deals, Type_Query_Accounts, Type_API_bots } from '@/types/3Commas'
+import { findAndNotifyNewDeals } from '@/server/notifications'
+
+import { Type_Deals_API, Type_Query_Accounts, Type_API_bots, Type_UpdateFunction } from '@/types/3Commas'
 
 /**
  * 
@@ -9,15 +11,20 @@ import { Type_Deals, Type_Query_Accounts, Type_API_bots } from '@/types/3Commas'
  * - Inspect if the lastSyncTime is set. If it is, then need to run bulk. If it's not, need to run update. This might need to go into
  * the code for threeC
  */
-async function updateAPI(limit: number) {
+async function updateAPI(type: string, options:Type_UpdateFunction ) {
 
-  await deals(limit)
-    .then((data: Type_Deals[]) => {
+
+  await deals(options.offset)
+    .then((data: Type_Deals_API[]) => {
       console.log('made it back here')
+      if( type == 'autoSync' && options.notifications && options.time != undefined ) findAndNotifyNewDeals( data, options.time , options.summary )
       update('deals', data)
     })
 
-  await getAccountData()
+    if(type !== 'autoSync'){
+      await getAccountData()
+    }
+  
 }
 
 async function getAccountData() {

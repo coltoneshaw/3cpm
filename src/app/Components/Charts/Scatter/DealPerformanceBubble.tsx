@@ -74,7 +74,7 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
                         left: 20,
                     }}
                 >
-                    <CartesianGrid />
+                    <CartesianGrid opacity={.3}/>
                     <XAxis
                         type="number"
                         dataKey="averageDealHours"

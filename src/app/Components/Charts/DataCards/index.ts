@@ -11,6 +11,8 @@ import Card_TotalDeals from "./metrics/TotalDeals";
 import Card_TotalRoi from "./metrics/TotalRoi";
 import Card_AverageDailyProfit from "./metrics/AverageDailyProfit";
 import Card_AverageDealHours from "./metrics/AverageDealHours";
+import Card_TotalDayProfit from './metrics/TotalDayProfit'
+import Card_ActiveDealReserve from "./metrics/ActiveDealReserve";
 
 
 export {
@@ -26,5 +28,7 @@ export {
     Card_TotalDeals,
     Card_TotalRoi,
     Card_AverageDailyProfit,
-    Card_AverageDealHours
+    Card_AverageDealHours,
+    Card_TotalDayProfit,
+    Card_ActiveDealReserve
 }

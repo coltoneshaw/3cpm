@@ -76,8 +76,7 @@ const ApiSettings = () => {
             </div>
 
             <Button 
-                variant="contained"
-                color="primary"
+                className="CtaButton"
                 disableElevation
                 onClick={
                     async () => {

@@ -74,7 +74,8 @@ const defaultConfig:TconfigValues = {
     },
     "general": {
         "defaultCurrency": [],
-        "globalLimit": 250000
+        "globalLimit": 250000,
+        "updated" : false,
     },
     "syncStatus": {
         "deals": {
@@ -91,13 +92,11 @@ const defaultConfig:TconfigValues = {
 // finding the data that exists based on the dotprop.
 const findConfigData = ( config:object , path:string ) => {
     console.log('running find data')
-    console.log({ config, path })
     if (dotProp.has(config, path)) return dotProp.get(config, path)
     return ""
 }
 
 export const findAccounts = ( config:object , path:string ) => {
-    console.log({ config, path })
     if (dotProp.has(config, path)){
         const definedAccounts: [] | undefined = dotProp.get(config, path)
         if(definedAccounts == null || definedAccounts.length == 0 ){

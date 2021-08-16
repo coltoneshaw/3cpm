@@ -1,8 +1,8 @@
 .tooltop {
     border-radius: .25em;
-    background-color: white;
+    background-color: var(--color-background-light);
     opacity: .9;
-    color: #000;
+    color: var(--color-text-lightbackground);
     padding: 5px;
     text-align: center;
 }
@@ -31,9 +31,6 @@
     padding: 5%
 }
 
-.button{
-    color: orange;
-}
 
 .statHeaderRow{
     padding-bottom: 15px;
@@ -78,7 +75,4 @@
 
 .stat-chart {
     margin: 0;
-}
-
-.bubble-chart {
 }

@@ -235,6 +235,7 @@ const ConfigProvider = ({ children }: any) => {
     useEffect(() => {
         getConfig()
     }, [])
+    
 
     useEffect(() => {
 

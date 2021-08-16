@@ -7,10 +7,6 @@ import { dynamicSort } from '@/utils/helperFunctions';
 
 import NoData from '@/app/Components/Pages/Stats/Components/NoData';
 
-const legendFind = ( value:string ) => {
-    if (value == "bought_volume") return "Bought Volume"
-    return "SO Volume Remaining"
-}
 
 const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
 
@@ -29,18 +25,11 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
                             width={500}
                             height={200}
                             data={data}
-                            margin={{
-                                top: 20,
-                                right: 30,
-                                left: 20,
-                                bottom: 5,
-                            }}
+
                             stackOffset="expand"
                         >
-                            <Legend
-                                formatter={value => legendFind(value)}
-                            />
-                            <CartesianGrid strokeDasharray="3 3" />
+                            <Legend />
+                            <CartesianGrid  opacity={.3} vertical={false}/>
                             <Tooltip
                                 // @ts-ignore - handle props
                                 // TODO - typescript - properly handle the props being passed
@@ -61,8 +50,8 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
                             />
     
     
-                            <Bar dataKey="percentTotalVolume" fill="#8884d8" />
-                            <Bar dataKey="percentTotalProfit" fill="#82ca9d" />
+                            <Bar dataKey="percentTotalVolume" fill="var(--color-secondary-light25)" name="% Total Volume" />
+                            <Bar dataKey="percentTotalProfit" fill="var(--color-primary)" name="% Total Profit" />
                         </BarChart>
                     </ResponsiveContainer>)
             }

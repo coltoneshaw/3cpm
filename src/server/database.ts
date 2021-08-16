@@ -220,6 +220,12 @@ function normalizeData( data:any ) {
  * @description Inserting data into a table. Data coming in needs to be an array of objects.
  */
 async function update(table:string, data:any[] ) {
+
+    if(data.length == 0) {
+        console.log('no data to write')
+        return false
+    }
+
     let normalizedData = data.map(row => {
         let newRow:any = {};
         Object.keys(row).forEach(item => {

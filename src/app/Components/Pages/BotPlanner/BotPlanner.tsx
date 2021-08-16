@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
 import DataTable from './DataTable';
-
-import ToastNotifcation from '@/app/Components/ToastNotification'
-
+import {UpdateDataButton } from '@/app/Components/Buttons/Index'
+import SaveButton from './Components/SaveButton'
 
 // import './BotPlanner.scss';
 
 import Risk from "./Risk";
 
 import Button from '@material-ui/core/Button';
-import SyncIcon from '@material-ui/icons/Sync';
-import SaveIcon from '@material-ui/icons/Save';
 import AddIcon from '@material-ui/icons/Add';
 import { useGlobalData } from '@/app/Context/DataContext';
 import { calc_dropMetrics } from '@/utils/formulas'
@@ -21,7 +18,7 @@ import { Type_Query_bots } from '@/types/3Commas';
 const BotPlannerPage = () => {
 
     const state = useGlobalData();
-    const { actions: { fetchBotData, updateAllData }, data: { botData, isSyncing, metricsData: { totalBankroll } } } = state;
+    const { data: { botData, metricsData: { totalBankroll } } } = state;
 
     const [localBotData, updateLocalBotData] = useState<Type_Query_bots[]>([])
 
@@ -77,8 +74,6 @@ const BotPlannerPage = () => {
 
     const addToTable = () => {
         updateLocalBotData((prevState: Type_Query_bots[]) => {
-            console.log('adding blank object')
-            console.log(prevState)
             return [
                 blankObject,
                 ...prevState
@@ -91,10 +86,10 @@ const BotPlannerPage = () => {
         const customBots = localBotData.filter(bot => bot.origin === 'custom')
 
         // @ts-ignore - electron
-        await electron.database.update('bots', customBots)
+        if(customBots.length > 0) await electron.database.update('bots', customBots)
 
         // @ts-ignore - electron
-        await electron.database.query("select * from bots where origin = 'custom'; ")
+        electron.database.query("select * from bots where origin = 'custom'; ")
             .then((table: Type_Query_bots[]) => {
                 const customBotIds = customBots.map(bot => bot.id);
                 if (customBotIds.length === 0) {
@@ -114,22 +109,7 @@ const BotPlannerPage = () => {
             })
         // alert('Saved to the bots table!')
     }
-    const [open, setOpen] = useState(false);
-    const [toastMessage, changeToastMessage] = useState("");
 
-    const handleToast = (message: string) => {
-        changeToastMessage(message)
-        setOpen(true);
-    };
-
-    const handleClose = (event: any, reason: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setOpen(false);
-        changeToastMessage("")
-    };
 
 
 
@@ -140,55 +120,24 @@ const BotPlannerPage = () => {
 
             <Risk localBotData={localBotData} />
             <div className="flex-row" style={{justifyContent: "flex-end"}}>
-                <Button
-                    variant="outlined"
-                    endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
-                    onClick={async () => {
-                        await updateAllData()
-                        handleToast("Sync Completed.")
-                        setOpen(true)
-                    }}
-
+                <UpdateDataButton 
                     style={{
                         width: '200px',
                         margin: '5px 5px 10px 5px',
                         alignSelf: 'flex-end'
 
                     }}
-                >
-                    Update data
-                </Button>
+                    className="button-botPlanner secondaryButton-outline"
+                />
+                <SaveButton 
+                className="button-botPlanner secondaryButton-outline"
+                saveFunction={saveCustomDeals} />
+
+                
                 <Button
-                    variant="outlined"
-                    color="primary"
-                    endIcon={<SaveIcon />}
-                    onClick={() => {
-
-                        saveCustomDeals()
-                        handleToast("Saved table data.")
-                        setOpen(true)
-                    }}
-
-                    style={{
-                        width: '200px',
-                        margin: '5px 5px 10px 5px',
-                        alignSelf: 'flex-end'
-
-                    }}
-                >
-                    Save table data
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
                     endIcon={<AddIcon />}
                     onClick={() => { addToTable() }}
-                    style={{
-                        width: '200px',
-                        margin: '5px 5px 10px 5px',
-                        alignSelf: 'flex-end'
-
-                    }}
+                    className="button-botPlanner CtaButton"
                     disableElevation
                 >
                     add row
@@ -200,8 +149,6 @@ const BotPlannerPage = () => {
                 localBotData={localBotData}
                 updateLocalBotData={updateLocalBotData}
             />
-
-            <ToastNotifcation open={open} handleClose={handleClose} message={toastMessage} />
 
 
         </>
