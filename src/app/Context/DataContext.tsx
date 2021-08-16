@@ -81,7 +81,7 @@ interface Type_Data_Context {
         setButtonEnabled: any // needs to be adjusted,
         summarySync: boolean
         setSummarySync: any
-        notifications:boolean
+        notifications: boolean
         setNotifications: any
     }
 }
@@ -110,7 +110,7 @@ const DataProvider = ({ children }: any) => {
         // console.log({config}, 'yolo')
         // console.log()
         if (config && dotProp.has(config, 'general.defaultCurrency')) {
-            console.log('ran this')
+
             try {
                 getAccountData(config)
             } catch (error) {
@@ -352,8 +352,15 @@ const DataProvider = ({ children }: any) => {
 
     const updateAllData = async (offset: number) => {
         updateIsSyncing(true)
+
+        const options = { 
+            time: 0, 
+            summary: false, 
+            offset, 
+            notifications: false
+        }
         try {
-            await updateThreeCData('fullSync', {offset})
+            await updateThreeCData('fullSync', options)
                 .then(async () => {
                     await fetchBotData()
                     await fetchProfitMetrics()
@@ -361,7 +368,7 @@ const DataProvider = ({ children }: any) => {
                     await getActiveDeals()
 
                     if (config && dotProp.has(config, 'general.defaultCurrency')) {
-                        console.log('ran this')
+
                         await getAccountData(config)
                     }
 
@@ -381,12 +388,12 @@ const DataProvider = ({ children }: any) => {
      * Data Syncing state
      */
 
-     const [buttonEnabled, setButtonEnabled] = useState<boolean>(false)
-     const [interval, setIntervalState] = useState<NodeJS.Timeout | null | number>()
+    const [buttonEnabled, setButtonEnabled] = useState<boolean>(false)
+    const [interval, setIntervalState] = useState<NodeJS.Timeout | null | number>()
 
     // update the summary value here to define what type of notifications are sent.
-    const [ summarySync, setSummarySync ] = useState(() => false)
-    const [ notifications, setNotifications ] = useState(() => true)
+    const [summarySync, setSummarySync] = useState(false)
+    const [notifications, setNotifications] = useState(true)
 
 
     let lastSyncTime = new Date().getTime()
@@ -397,12 +404,17 @@ const DataProvider = ({ children }: any) => {
      * @param lastSyncTime the milisecond time of the sync.
      * @param summary boolean value that defines if it'll be a summary or individual notification set.
      */
-    const updateAutoSync = async (offset: number ) => {
+    const updateAutoSync = async (offset: number) => {
         updateIsSyncing(true)
 
         const time = lastSyncTime
-        let options = { time, summary: summarySync, offset, notifications } 
-        
+        let options = { 
+            time, 
+            summary: summarySync, 
+            offset, 
+            notifications
+        }
+
         try {
             lastSyncTime = lastSyncTime + 15000
             updateThreeCData('autoSync', options)
@@ -430,8 +442,8 @@ const DataProvider = ({ children }: any) => {
     // Timer is set to a 15 second refresh interval right now.
     const timer = () => setIntervalState(
         setInterval(() => {
-        updateAutoSync(25)
-    }, 15000))
+            updateAutoSync(25)
+        }, 15000))
 
     const stopAutoSync = () => {
         //@ts-ignore
@@ -441,11 +453,9 @@ const DataProvider = ({ children }: any) => {
     useEffect(() => {
 
         if (buttonEnabled) {
-            console.log('enabling a timer')
             timer();
 
         } else {
-            console.log('disabling a timer')
             stopAutoSync()
         }
 
@@ -481,7 +491,7 @@ const DataProvider = ({ children }: any) => {
             isSyncing
         },
         autoSync: {
-            buttonEnabled, 
+            buttonEnabled,
             setButtonEnabled,
             summarySync,
             setSummarySync,

@@ -251,9 +251,9 @@ export interface Type_BalanceData {
 
 export interface Type_UpdateFunction{
     offset: number
-    time?:number
-    summary?: boolean
-    notifications?: boolean
+    time:number
+    summary: boolean
+    notifications: boolean
 }
 
 

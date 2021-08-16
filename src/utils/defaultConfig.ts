@@ -91,7 +91,7 @@ const defaultConfig:TconfigValues = {
 
 // finding the data that exists based on the dotprop.
 const findConfigData = ( config:object , path:string ) => {
-    console.log('running find data')
+ 
     if (dotProp.has(config, path)) return dotProp.get(config, path)
     return ""
 }

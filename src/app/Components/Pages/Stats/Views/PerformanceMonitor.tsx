@@ -14,7 +14,7 @@ const PerformanceMonitor = () => {
 
     const state = useGlobalData();
     const { data: { performanceData, metricsData } } = state;
-    console.log(performanceData)
+    // console.log(performanceData)
 
     const { totalDeals, boughtVolume, totalProfit_perf, averageDailyProfit, averageDealHours } = metricsData
 

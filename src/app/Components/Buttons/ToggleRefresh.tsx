@@ -27,7 +27,7 @@ const ToggleRefreshButton = ({ style, className }: Type_ButtonProps) => {
             onClick={async () => {
                 // activate the interval timer here.
                 setButtonEnabled( ( prevState:boolean ) => {
-                    console.log(`timer was ${prevState} and now it's ${!prevState}`)
+                    // console.log(`timer was ${prevState} and now it's ${!prevState}`)
                     return !prevState
                 })
             }}

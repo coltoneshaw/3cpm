@@ -13,14 +13,12 @@ const SyncToggles = () => {
     const dataState = useGlobalData()
     const { autoSync: { summarySync, setSummarySync, notifications, setNotifications } } = dataState
 
-    const changeSummary = (event:React.ChangeEvent<HTMLInputElement>) => {
-        setSummarySync(() => event.target.checked)
-        console.log(event.target.checked)
+    const changeSummary = () => {
+        setSummarySync((prevState: boolean) => !prevState)
     }
 
-    const changeNotifications = (event:React.ChangeEvent<HTMLInputElement>) => {
-        setNotifications(() => event.target.checked)
-        console.log(event.target.checked)
+    const changeNotifications = () => {
+        setNotifications((prevState: boolean) => !prevState)
     }
 
 

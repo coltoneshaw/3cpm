@@ -111,7 +111,6 @@ ipcMain.handle('config-clear', (event) => {
 
  ipcMain.handle('query-database', (event, queryString) => {
 
-  console.log('running from the main process' + " " + queryString)
   return query(queryString)
 });
 
