@@ -107,10 +107,11 @@ const versionInformation = [
             'Fixed bug where deleting the fake bots from the bot planner was unable to save'
         ],
         new: [
-            'Added active deals.',
+            'Added active deals tab with a ton of fun data!',
             'Changelog popup and version information within the settings',
             'Changed the color pallet across the application',
             'Added ability for auto-refreshing the data on a 15 second interval.',
+            'DARK MODE is officially released.'
 
         ]
     },

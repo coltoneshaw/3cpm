@@ -187,7 +187,8 @@
   background-color: var(--color-secondary) !important;
 }
 
-.MuiCheckbox-colorSecondary.Mui-checked {
+.MuiCheckbox-colorSecondary.Mui-checked,
+.MuiButton-textPrimary  {
   color: var(--color-secondary) !important;
 }
 
