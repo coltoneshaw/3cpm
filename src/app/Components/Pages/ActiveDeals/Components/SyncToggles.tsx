@@ -32,7 +32,8 @@ const SyncToggles = () => {
                     checked={summarySync}
                     onChange={changeSummary}
                     name="summary"
-                    color="primary"
+                    style={{color: 'var(--color-secondary)'}}
+
                 />
             }
             label="Summary Notifications"
@@ -45,9 +46,12 @@ const SyncToggles = () => {
                     onChange={changeNotifications}
                     name="notifications"
                     color="primary"
+                    style={{color: 'var(--color-secondary)'}}
+
                 />
             }
             label="Enable Notifications"
+
         />
         </div>
     )

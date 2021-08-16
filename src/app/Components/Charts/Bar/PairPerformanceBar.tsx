@@ -35,19 +35,19 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
             return (<NoData />)
         } else {
             data = data.sort(dynamicSort(sort))
-            return (<ResponsiveContainer width="100%" height="90%" minHeight="300px">
+            return (<ResponsiveContainer width="100%" height="100%" minHeight="300px">
                 <ComposedChart
 
                     data={data}
-                    margin={{
-                        top: 20,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                    }}
+                    // margin={{
+                    //     top: 20,
+                    //     right: 30,
+                    //     left: 20,
+                    //     bottom: 5,
+                    // }}
                     stackOffset="expand"
                 >
-                    <CartesianGrid strokeDasharray="5 5" opacity={.7} />
+                    <CartesianGrid opacity={.3} vertical={false} />
                     <Legend verticalAlign="top" height={36} />
                     <Tooltip
                         // @ts-ignore - tooltip refactoring
@@ -65,13 +65,13 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
                         height={75}
 
                     />
-                    <YAxis yAxisId="total_profit" orientation='right' hide={hide("total_profit")} domain={[0, 'auto']} allowDataOverflow={true} offset={20}/>
-                    <YAxis yAxisId="avg_deal_hours" orientation='right' hide={hide("avg_deal_hours")} domain={[0, 'auto']} allowDataOverflow={true} offset={20} />
-                    <YAxis yAxisId="bought_volume" orientation='right' hide={hide("bought_volume") } domain={[0, 'auto']} allowDataOverflow={true} offset={20} />
+                    <YAxis yAxisId="total_profit" orientation='left' hide={hide("-total_profit")} domain={[0, 'auto']} allowDataOverflow={true} offset={20}/>
+                    <YAxis yAxisId="avg_deal_hours" orientation='left' hide={hide("-avg_deal_hours")} domain={[0, 'auto']} allowDataOverflow={true} offset={20} />
+                    <YAxis yAxisId="bought_volume" orientation='left' hide={hide("-bought_volume") } domain={[0, 'auto']} allowDataOverflow={true} offset={20} />
 
-                    <Bar  name="Bought Volume" yAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.8} fill="#8BBABC" />
-                    <Line name="Total Profit" type="monotone" yAxisId="total_profit" dataKey="total_profit" stroke="#E8AE00" dot={false} strokeWidth={1.75} />
-                    <Line name="Avg. Deal Hours" type="monotone" yAxisId="avg_deal_hours" dataKey="avg_deal_hours" dot={false} strokeWidth={1.75} />
+                    <Bar  name="Bought Volume" yAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.8} fill="var(--color-primary)" />
+                    <Line name="Total Profit" type="monotone" yAxisId="total_profit" dataKey="total_profit" stroke="var(--color-CTA-dark25)" dot={false} strokeWidth={1.75} />
+                    <Line name="Avg. Deal Hours" type="monotone" yAxisId="avg_deal_hours" dataKey="avg_deal_hours" stroke="var(--color-secondary)" dot={false} strokeWidth={1.75} />
 
                 </ComposedChart>
             </ResponsiveContainer>)

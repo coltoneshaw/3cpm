@@ -26,18 +26,11 @@ const DealSoUtilizationBar = ({ title, data }: Type_ActiveDealCharts) => {
                     <BarChart
                         // width={500}
                         data={data}
-                        margin={{
-                            top: 20,
-                            right: 30,
-                            left: 20,
-                            bottom: 5,
-                        }}
+
                         stackOffset="expand"
                     >
-                        <Legend
-                            
-                        />
-                        <CartesianGrid strokeDasharray="3 3" />
+                        <Legend/>
+                        <CartesianGrid opacity={.3} vertical={false}/>
                         <Tooltip
                             // @ts-ignore - Pass tooltip props down properly.
                             content={<CustomTooltip />}
@@ -60,8 +53,8 @@ const DealSoUtilizationBar = ({ title, data }: Type_ActiveDealCharts) => {
                         />
 
 
-                        <Bar dataKey="bought_volume" stackId="a" fill="#8884d8" name="% Bought Volume" />
-                        <Bar dataKey="so_volume_remaining" stackId="a" fill="#82ca9d" name="% Deal Count"  />
+                        <Bar dataKey="bought_volume" stackId="a" fill="var(--color-secondary-light25)" name="% Bought Volume" />
+                        <Bar dataKey="so_volume_remaining" stackId="a" fill="var(--color-primary)" opacity={.6} name="% SO Volume Remaining"  />
                     </BarChart>
                 </ResponsiveContainer>)
         }

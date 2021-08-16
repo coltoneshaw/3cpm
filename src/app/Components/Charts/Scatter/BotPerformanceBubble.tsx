@@ -35,7 +35,7 @@ const BotPerformanceBubble = ({ title, data }: Type_BotPerformanceCharts) => {
                         left: 20,
                     }}
                 >
-                    <CartesianGrid />
+                    <CartesianGrid  opacity={.3}/>
 
                     {/* 
                         X - Average Deal Hours

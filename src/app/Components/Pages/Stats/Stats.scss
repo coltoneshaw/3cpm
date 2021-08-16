@@ -1,8 +1,8 @@
 .tooltop {
     border-radius: .25em;
-    background-color: var(--color-light);
+    background-color: var(--color-background-light);
     opacity: .9;
-    color: #000;
+    color: var(--color-text-lightbackground);
     padding: 5px;
     text-align: center;
 }

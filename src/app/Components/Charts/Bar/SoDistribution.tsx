@@ -6,10 +6,6 @@ import { parseNumber, formatPercent } from '@/utils/number_formatting';
 
 import { Type_Tooltip, Type_SoDistribution } from '@/types/Charts';
 
-const legendFind = (value: string) => {
-    if (value == "bought_volume") return "Bought Volume"
-    return "SO Volume Remaining"
-}
 
 interface Type_SoDistributionArray {
     SO: number
@@ -63,10 +59,8 @@ const SoDistribution = ({ title, data, metrics }: Type_SoDistribution) => {
                     }}
                     stackOffset="expand"
                 >
-                    <Legend
-                        formatter={value => legendFind(value)}
-                    />
-                    <CartesianGrid strokeDasharray="3 3" />
+                    <Legend/>
+                    <CartesianGrid opacity={.3} vertical={false} />
                     <Tooltip
                         // @ts-ignore - tooltip refactoring
                         // todo - improve how tooltops can pass the values.
@@ -74,13 +68,8 @@ const SoDistribution = ({ title, data, metrics }: Type_SoDistribution) => {
                     />
                     <XAxis 
                         dataKey="SO"
-                        angle={45}
-                        dx={0}
-                        textAnchor="start"
-                        dy={20}
                         minTickGap={-200}
                         axisLine={false}
-                        height={75}
                     />
 
                     <YAxis
@@ -88,8 +77,8 @@ const SoDistribution = ({ title, data, metrics }: Type_SoDistribution) => {
                     />
 
 
-                    <Bar dataKey="percentOfDeals" fill="#8884d8" />
-                    <Bar dataKey="percentOfVolume" fill="#82ca9d" />
+                    <Bar dataKey="percentOfDeals" fill="var(--color-primary)" name='% of deals'/>
+                    <Bar dataKey="percentOfVolume" fill="var(--color-secondary-light25)" name='% of volume' />
 
                 </BarChart>
             </ResponsiveContainer>)

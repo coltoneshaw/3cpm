@@ -74,7 +74,7 @@ const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
                             <stop offset={off} stopColor="#9BABC7" stopOpacity={1} />
                         </linearGradient>
                     </defs> */}
-                    <Bar type="monotone" dataKey={X} fill="var(--color-primary)" />
+                    <Bar type="monotone" dataKey={X} fill="var(--color-secondary)" />
                 </BarChart>
 
             </ResponsiveContainer>)
