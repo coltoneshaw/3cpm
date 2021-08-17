@@ -10,7 +10,7 @@ The 3C Portfolio Manager is an essential addon to your 3Commas experience. It en
     - [Initial Setup](#initial-setup)
     - [Why did we change?](#why-did-we-change)
     - [Why did we go with a downloadable application?](#why-did-we-go-with-a-downloadable-application)
-    - [Why should I trust this?](why-should-i-trust-this)
+    - [Why should I trust this?](#why-should-i-trust-this)
 - [Change Log](https://github.com/coltoneshaw/3c-portfolio-manager/blob/main/CHANGELOG.md)
 
 # Initial Setup
