@@ -4,6 +4,14 @@ import { Type_Deals_API } from '@/types/3Commas'
 import { formatPercent, parseNumber } from '@/utils/number_formatting'
 var path = require('path');
 
+import { config } from '@/utils/config'
+
+const accountFilters = () => {
+
+    //@ts-ignore
+    return config.get('statSettings.reservedFunds').filter( account => account.is_enabled).map(account => account.id)
+}
+
 // This is added to prevent duplicate notifications from happening when the computer is asleep
 let dealsNotified: number[] = []
 
@@ -25,13 +33,15 @@ function showNotification(title: string, body: string) {
  */
 function findAndNotifyNewDeals(data: Type_Deals_API[], lastSyncTime: number, summary: boolean) {
 
+    const filters = accountFilters()
+
     // filter for only deals that have closed
     // this will filter based on the ISO string of the closed at and if it's greater than
     // the last sync time. If so, it means it's a newly closed deal.
     // Additionally this filters out any deals it's already notified of
 
     // remove deals that closed before the last sync and that have already been notified.
-    data = data.filter(deal => deal.closed_at_iso_string > lastSyncTime && !dealsNotified.includes(deal.id))
+    data = data.filter(deal => deal.closed_at_iso_string > lastSyncTime && !dealsNotified.includes(deal.id) && filters.includes(deal.account_id))
 
 
     // end the function if no deals exist in the filtered array
