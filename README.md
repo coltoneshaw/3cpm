@@ -12,6 +12,7 @@ The 3C Portfolio Manager is an essential addon to your 3Commas experience. It en
     - [Why did we go with a downloadable application?](#why-did-we-go-with-a-downloadable-application)
     - [Why should I trust this?](#why-should-i-trust-this)
 - [Change Log](https://github.com/coltoneshaw/3c-portfolio-manager/blob/main/CHANGELOG.md)
+- [Screenshots](#screenshots)
 
 # Initial Setup
 
@@ -68,3 +69,27 @@ We have reduced the need for data altogether in this project. The keys are **rea
 
 ### 3. It's open-source, so you can review the code and even compile it yourself!
 You can search through the code for anything you want to find, it's all available to you. Many people have used this, ran it through virus scanners and the works. At the end of the day I'm building this for myself but the community benefits as well.
+
+# Screenshots
+
+## Dark Mode!
+<img width="500" alt="Stats Dark Mode" src="https://user-images.githubusercontent.com/46071821/129786728-0b809352-4577-407f-9be2-0cbadf502e51.png">
+
+## Active Deals
+<img width="500" alt="Active Deals" src="https://user-images.githubusercontent.com/46071821/129786817-9baf215d-4dbe-4561-ae3f-5b9bfc33e8f4.png">
+
+## Bot Planner
+<img width="500" alt="Bot Planner" src="https://user-images.githubusercontent.com/46071821/129786825-b63830c5-f171-48af-a63c-29b90b451e50.png">
+
+## Stats - Performance Monitor
+<img width="500" alt="Stats - Performance Monitor" src="https://user-images.githubusercontent.com/46071821/129786830-923fa6af-1603-49ab-bbbe-f053c4d1f881.png">
+
+## Stats - Risk Monitor
+<img width="500" alt="Stats - Risk Monitor" src="https://user-images.githubusercontent.com/46071821/129786831-1394a978-7250-4c17-bea7-85869bfa10fa.png">
+
+## Stats - Summary
+<img width="500" alt="Stats - Summary" src="https://user-images.githubusercontent.com/46071821/129786832-10048284-7b3f-42bf-b3f3-287b3f87fcd0.png">
+
+## Settings
+<img width="500" alt="Screen Shot 2021-08-17 at 3 18 17 PM" src="https://user-images.githubusercontent.com/46071821/129787149-8404a624-9b8b-4770-a8cf-2d0131498f3a.png">
+
