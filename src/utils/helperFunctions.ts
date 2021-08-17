@@ -91,9 +91,16 @@ const getDateString = (created_at: string) => {
   return day + hour + minute + seconds
 }
 
+function getLang() {
+  if (navigator.languages != undefined) 
+    return navigator.languages[0]; 
+  return navigator.language;
+}
+
 export {
   removeDuplicatesInArray,
   tryParseJSON_,
   dynamicSort,
-  getDateString
+  getDateString,
+  getLang
 }

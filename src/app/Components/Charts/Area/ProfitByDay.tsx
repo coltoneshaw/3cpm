@@ -1,6 +1,9 @@
 import React, { PureComponent } from 'react';
 import { parseISO, format } from 'date-fns'
 
+import { getLang } from '@/utils/helperFunctions';
+const lang = getLang()
+
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
@@ -12,6 +15,7 @@ const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
 
     const totalProfit = (data.length > 0) ? data.map(deal => deal.profit).reduce( ( sum, profit ) => sum + profit ) : 0
     const average = totalProfit / data.length
+
 
 
     const renderChart = () => {
@@ -41,8 +45,10 @@ const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
                         minTickGap={50}
                         tickFormatter={(str) => {
                             if (str == 'auto') return ""
-                            let date = parseISO(new Date(str).toISOString())
-                            return format(date, "M/d")
+                            // let date = parseISO(new Date(str).toISOString())
+                            // return format(date, "dd-MMM", )
+
+                            return new Date(str).toLocaleDateString(lang, { month: '2-digit', day: '2-digit' })
                         }}
                     />
 
