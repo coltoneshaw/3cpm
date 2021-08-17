@@ -44,8 +44,11 @@ async function getAccountData() {
 async function getAndStoreBotData() {
   try {
     await bots()
-      .then((data: Type_API_bots[]) => {
+      .then(async (data: Type_API_bots[]) => {
         if (data != null && data.length > 0) {
+
+          const botIDs = data.map(account => account.id)
+          await run(`DELETE FROM bots WHERE id not in ( ${botIDs.join()});`)
 
           update('bots', data)
         }

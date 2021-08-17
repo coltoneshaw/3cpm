@@ -1,5 +1,5 @@
 .dataCard {
-    width: 200px;
+    width: 150px;
     text-align: center;
     color: var(--color-text-lightbackground);
     min-width: 100px;
@@ -7,17 +7,17 @@
     height: 65px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
 }
 
 .dataCard h2 {
-    font-size: 2em;
+    font-size: 1.7em;
     margin: 0;
 
 }
 
 .dataCard h4 {
-    font-size: .8em;
+    font-size: .7em;
     font-weight: 300;
     margin: 0;
     text-transform: uppercase;

@@ -5,8 +5,7 @@ import { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts'
 import { Type_Bot_Performance_Metrics } from '@/types/3Commas';
 import { parseNumber } from '@/utils/number_formatting';
 import NoData from '@/app/Components/Pages/Stats/Components/NoData';
-import { scaleOrdinal } from 'd3-scale';
-import { schemeBlues} from 'd3-scale-chromatic';
+
 
 const colors = ["#cfe1f2","#b5d4e9","#93c3df","#6daed5","#4b97c9","#2f7ebc","#1864aa","#0a4a90","#08306b"]
 
@@ -22,6 +21,7 @@ const BotPerformanceBubble = ({ title, data }: Type_BotPerformanceCharts) => {
         if (data == undefined || data.length === 0) {
             return (<NoData />)
         } else {
+
 
             return (<ResponsiveContainer width="100%"  height="100%" minHeight="400px">
 
@@ -60,8 +60,8 @@ const BotPerformanceBubble = ({ title, data }: Type_BotPerformanceCharts) => {
 
                     <YAxis
                         type="number"
-                        dataKey="avg_profit"
-                        name="Avg. Profit Per Deal"
+                        dataKey="avg_deal_hours"
+                        name="Avg. Deal Hours"
                         allowDataOverflow={true}
                         
 
@@ -73,7 +73,7 @@ const BotPerformanceBubble = ({ title, data }: Type_BotPerformanceCharts) => {
                         />
                         </YAxis>
                     {/* Range is lowest number and highest number. */}
-                    <ZAxis type="number" dataKey="number_of_deals" range={[0, Math.max(...data.map(deal => deal.number_of_deals))]} name="# of Deals Completed" />
+                    <ZAxis type="number" dataKey="number_of_deals" range={[Math.min(...data.map(deal => deal.number_of_deals)) + 200,  Math.max(...data.map(deal => deal.number_of_deals)) + 200]} name="# of Deals Completed" />
 
 
                     

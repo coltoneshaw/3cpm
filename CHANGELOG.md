@@ -1,3 +1,19 @@
+# v0.1.1
+
+## Enhancements
+- Added average line to the profit by day chart
+- Fixed KPI display on smaller screens.
+- Improved the performance of the profit query metrics
+
+## Bug Fixes
+- Redid the entire date filter to now work based on UTC dates instead of splitting the 1st date in a range
+- Database was showing deleted bots, now the bots table gets cleared on each sync.
+
+## New Features
+- Filters now work for the bots table and the deal notifications
+
+
+
 # v0.1.0
 
 ## Enhancements
