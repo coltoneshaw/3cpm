@@ -77,11 +77,9 @@ const fetchDealDataFunction = async () => {
             ORDER BY
                 closed_at asc;`
 
-    console.log(query)
     // @ts-ignore
     let dataArray = await electron.database.query(query)
 
-    console.log(dataArray)
     // if no data return blank array.
     if (dataArray == null || dataArray.length === 0) {
 
@@ -96,7 +94,6 @@ const fetchDealDataFunction = async () => {
     }
 
     let totalDealHours = dataArray.map((deal: Type_Query_DealData) => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours)
-    console.log(totalDealHours)
 
     const profitArray: Type_Profit[] = [];
 
@@ -105,7 +102,6 @@ const fetchDealDataFunction = async () => {
         
         // adding the existing value to the previous value's running sum.
         let runningSum = (index == 0) ? day.final_profit  : profitArray[index - 1].runningSum + day.final_profit 
-        console.log(runningSum)
 
         profitArray.push({
             utc_date: day.closed_at_str,

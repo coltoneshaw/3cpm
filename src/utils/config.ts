@@ -16,7 +16,6 @@ const config = new Store({
         '0.0.3': ( store: any )=>{
             console.info('migrating the config store to 0.0.2-RC1')
             store.set('statSettings.account_id', []);
-
             migrateCurrencyToArray(store)
             
         },
@@ -28,6 +27,9 @@ const config = new Store({
         '0.1.0': ( store: any )=>{
             console.info('migrating the config store to 0.1.0')
             run('drop table bots;')
+            store.set('general.updated', true)
+        },
+        '0.1.1': ( store: any )=>{
             store.set('general.updated', true)
         }
         
