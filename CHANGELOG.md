@@ -58,24 +58,8 @@
     - Issue with calculations when using multiple acounts. This should be resolved
     - Bot Planner screen was not properly updating calculations.
 
-## Known Bugs / Issues:
-- Trading View page requires you to click the icon twice to load. 
-- Dark mode does not exist yet, but the button is there.
-- You may see an invalid date on settings when first setting up the application.
-- No right clicking inside of text boxes.
-- Multiple scrollable views inside of the Bot planner chart. 
-- When pressing the reset button it does not always clear API keys and the API test button won't work after reset.
 
-
-## Things you can test / Feedback on
-- Does setting reserved funds properly remove from your bankroll?
-- Verify all calculations that you can across the application.
-- Are you seeing anything cut off on your screen horizontally? 
-- How easy is the Bot planner to use / understand?
-- What charts / data view do you think is missing?
-
-
-v0.0.3
+# v0.0.3
 
 - Multi-Currency selector
 - Feedback / bug report links in the settings
@@ -86,7 +70,7 @@ v0.0.3
 - Added a multi-Account selector
 - Cleaned up the functions to into utility files.
 
-v0.0.2-RC1
+# v0.0.2-RC1
 
 - Fixed issue where the data table hid the overflow and prevented scrolling. Will need further improvements for responsiveness.
 - Added alerts when making changes to the settings page to inform you of a needed refresh
@@ -97,14 +81,14 @@ v0.0.2-RC1
 - Added a rough description of API key perms needed to the settings page
 - Increased pie chart size (praise), added formatting to the tooltips
 
-v0.0.1-RC1
+# v0.0.1-RC1
 - added spinner to the update data icons
 - added description of API keys
 - modified the chart to show thousands
 - application height issues resolved
 - settings button height has been updated
 
-v0.0.1
+# v0.0.1
 - implemented and tested the mac dmg installer
 - moved files from public into the src
 - moved asset files around
