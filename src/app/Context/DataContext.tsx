@@ -33,7 +33,7 @@ import {
     fetchBotPerformanceMetrics,
     fetchPairPerformanceMetrics,
     botQuery
-} from '@/utils/3Commas';
+} from '@/app/Features/3Commas/3Commas';
 
 
 const defaultBalance = {

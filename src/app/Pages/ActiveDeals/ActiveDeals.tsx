@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
-
 import DealsTable from './DealsTable';
-
 import { UpdateDataButton, ToggleRefreshButton } from '@/app/Components/Buttons/Index'
 
 
-import formatDeals from './Components/FormatDeals';
 import { useGlobalData } from '@/app/Context/DataContext';
 import { Card_ActiveDeals, Card_totalInDeals, Card_ActiveDealReserve, Card_TotalDayProfit } from '@/app/Components/Charts/DataCards';
-import { SyncToggles } from './Components/index';
+import { SyncToggles, formatDeals } from './Components/index';
 
-import { ChangelogModal } from '@/app/Features/Index';
-import { Button } from '@material-ui/core';
+import './ActiveDeals.scss'
 
 const ActiveDealsPage = () => {
 

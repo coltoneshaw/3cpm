@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { parseISO, format } from 'date-fns'
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
-import NoData from '@/app/Components/Pages/Stats/Components/NoData';
+import NoData from '@/app/Pages/Stats/Components/NoData';
 
 import { Type_ProfitChart } from '@/types/Charts';
 

@@ -1,5 +1,5 @@
 const Store = require('electron-store');
-const { run } = require('@/server/database')
+const { run } = require('@/app/Features/Database/database')
 
 import { defaultConfig, configSchema } from '@/utils/defaultConfig';
 

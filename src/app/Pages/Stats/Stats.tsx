@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
+import dotProp from 'dot-prop';
 
+import './Stats.scss'
 import { Button, ButtonGroup } from '@material-ui/core';
 
-import { RiskMonitor, SummaryStatistics, PerformanceMonitor, ActiveDeals } from './Views/Index';
+import { RiskMonitor, SummaryStatistics, PerformanceMonitor } from './Views/Index';
 import { UpdateDataButton } from '@/app/Components/Buttons/Index'
 
 // import './Stats.scss'
 import { useGlobalState } from '@/app/Context/Config';
 import { useGlobalData } from '@/app/Context/DataContext';
-
-import dotProp from 'dot-prop';
-
 
 import { 
     Card_ActiveDeals, Card_totalInDeals, Card_MaxDca, 
@@ -82,8 +81,6 @@ const StatsPage = () => {
             return <PerformanceMonitor key="perfmonitor"
 
             />
-        } else if (currentView === 'active-deals') {
-            return <ActiveDeals key="activeDeals"/>
         }
 
         return <SummaryStatistics key="summaryStats"

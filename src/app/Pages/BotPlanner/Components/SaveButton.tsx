@@ -1,5 +1,5 @@
 import React, { FunctionComponentFactory, ReactEventHandler } from "react";
-import ToastNotifcation from '@/app/Components/ToastNotification'
+import { ToastNotifcations } from '@/app/Features/Index'
 import { Button } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 
@@ -37,7 +37,7 @@ const SaveButton = ({saveFunction, className} : Type_SaveButton ) => {
         >
             Save table data
         </Button>
-        <ToastNotifcation open={open} handleClose={handleClose} message="Sync finished." />
+        <ToastNotifcations open={open} handleClose={handleClose} message="Sync finished." />
 
         </>
     )

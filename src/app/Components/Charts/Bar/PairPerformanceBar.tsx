@@ -4,7 +4,7 @@ import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Respo
 
 import {InputLabel, MenuItem, FormControl, Select, FormHelperText} from '@material-ui/core';
 
-import NoData from '@/app/Components/Pages/Stats/Components/NoData';
+import NoData from '@/app/Pages/Stats/Components/NoData';
 
 import { parseNumber, formatPercent } from '@/utils/number_formatting';
 import { dynamicSort } from '@/utils/helperFunctions';

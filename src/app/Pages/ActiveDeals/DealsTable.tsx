@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import Table from './Components/Table';
-// import formatDeals from './Components/FormatDeals';
+import { Table } from './Components/index';
 import { getDateString } from '@/utils/helperFunctions';
 import { parseNumber } from '@/utils/number_formatting';
 

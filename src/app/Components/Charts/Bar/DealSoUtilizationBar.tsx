@@ -5,7 +5,7 @@ import { parseNumber, formatPercent } from '@/utils/number_formatting';
 import { Type_Tooltip, Type_ActiveDealCharts } from '@/types/Charts';
 import { dynamicSort } from '@/utils/helperFunctions';
 
-import NoData from '@/app/Components/Pages/Stats/Components/NoData';
+import NoData from '@/app/Pages/Stats/Components/NoData';
 
 
 

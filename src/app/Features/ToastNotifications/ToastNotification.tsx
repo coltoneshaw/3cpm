@@ -9,7 +9,7 @@ interface Type_Snack {
     message: string
 }
 
-const SimpleSnackbar = ({open, handleClose, message}: Type_Snack) => {
+const ToastNotifcations = ({open, handleClose, message}: Type_Snack) => {
   return (
     <>
       <Snackbar
@@ -33,4 +33,4 @@ const SimpleSnackbar = ({open, handleClose, message}: Type_Snack) => {
   );
 }
 
-export default SimpleSnackbar;
+export default ToastNotifcations;

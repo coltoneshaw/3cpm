@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-import NoData from '@/app/Components/Pages/Stats/Components/NoData';
+import NoData from '@/app/Pages/Stats/Components/NoData';
 
 import { parseISO, format } from 'date-fns'
 import { parseNumber } from '@/utils/number_formatting';

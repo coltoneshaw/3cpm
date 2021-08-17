@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState, FC, ReactElement } from 'react';
 
 import { Route, Redirect } from 'react-router-dom'
-import { DonatePage, BotPlannerPage, TradingViewPage, SettingsPage, StatsPage, ActiveDealsPage } from './Pages/Index'
-import { ConfigProvider, useGlobalState } from '../Context/Config';
-import { DataProvider } from '../Context/DataContext';
+import { BotPlannerPage, TradingViewPage, SettingsPage, StatsPage, ActiveDealsPage } from '@/app/Pages/Index'
+import { ConfigProvider, useGlobalState } from '@/app/Context/Config';
+import { DataProvider } from '@/app/Context/DataContext';
 
-import { ChangelogModal } from '../Features/Index';
+import { ChangelogModal } from '@/app/Features/Index';
 
 const MainWindow = () => {
 
@@ -58,7 +58,6 @@ const MainWindow = () => {
                     <Route exact path="/activeDeals" render={() => <ActiveDealsPage key="activeDealsPage" />} />
                 </DataProvider>
 
-                <Route exact path="/donate" render={() => <DonatePage key="donatePage" />} />
                 <Route exact path="/backtesting" render={() => <TradingViewPage key="tradingViewPage" />} />
 
             </div>

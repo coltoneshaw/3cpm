@@ -5,7 +5,7 @@ import { InputLabel, MenuItem, FormControl, Select, FormHelperText } from '@mate
 import { Type_Tooltip, Type_DealPerformanceCharts } from '@/types/Charts'
 import { Type_Query_PerfArray } from '@/types/3Commas';
 import { parseNumber } from '@/utils/number_formatting';
-import NoData from '@/app/Components/Pages/Stats/Components/NoData';
+import NoData from '@/app/Pages/Stats/Components/NoData';
 import { dynamicSort } from '@/utils/helperFunctions';
 
 const colors = ["#cfe1f2", "#b5d4e9", "#93c3df", "#6daed5", "#4b97c9", "#2f7ebc", "#1864aa", "#0a4a90", "#08306b"]

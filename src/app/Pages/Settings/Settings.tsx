@@ -1,26 +1,25 @@
 import React, { useState } from 'react';
 
+import './Settings.scss'
+
 // @ts-ignore
 import { version } from '#/package.json';
 
 import {
-    ButtonGroup
+    ButtonGroup,
+    Button
 } from '@material-ui/core';
 
-import Button from '@material-ui/core/Button';
+import {
+    CurrencySelector,
+    SaveSubmitButtons,
+    ApiSettings,
+    ReservedBankroll,
+    StartDatePicker
+} from './Components/Index'
 
-import './Settings.scss';
 
-
-import CurrencySelector from './Components/CurrencySelector';
-import SaveSubmitButtons from './Components/SaveSubmitButtons';
-import ApiSettings from './Components/ApiSettings';
-
-import ToastNotifcation from '@/app/Components/ToastNotification'
-import ReservedBankroll from './Components/ReservedBankroll';
-import StartDatePicker from './Components/StartDatePicker';
-
-import { ChangelogModal } from '@/app/Features/Index';
+import { ChangelogModal, ToastNotifcations } from '@/app/Features/Index';
 
 const SettingsPage = () => {
 
@@ -88,7 +87,7 @@ const SettingsPage = () => {
                     className="versionNumber" onClick={handleOpenChangelog} style={{ width: '250px' }}>v{version}</Button>
             </div>
             <ChangelogModal open={openChangelog} setOpen={setOpenChangelog}/>
-            <ToastNotifcation open={open} handleClose={handleClose} message="Config has been saved" />
+            <ToastNotifcations open={open} handleClose={handleClose} message="Config has been saved" />
         </>
     )
 }

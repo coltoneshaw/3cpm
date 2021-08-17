@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 import DataTable from './DataTable';
-import {UpdateDataButton } from '@/app/Components/Buttons/Index'
+import { UpdateDataButton } from '@/app/Components/Buttons/Index'
 import SaveButton from './Components/SaveButton'
 
-// import './BotPlanner.scss';
+import './BotPlanner.scss';
 
 import Risk from "./Risk";
 

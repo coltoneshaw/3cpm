@@ -1,7 +1,7 @@
-import { update, run } from '@/server/database';
+import { update, run } from '@/app/Features/Database/database';
 const { bots, getAccountDetail, deals, getDealsBulk, getDealsUpdate, getAccountSummary } = require('./api');
 
-import { findAndNotifyNewDeals } from '@/server/notifications'
+import { findAndNotifyNewDeals } from '@/app/Features/Notifications/notifications'
 
 import { Type_Deals_API, Type_Query_Accounts, Type_API_bots, Type_UpdateFunction } from '@/types/3Commas'
 

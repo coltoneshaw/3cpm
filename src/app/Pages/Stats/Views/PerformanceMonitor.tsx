@@ -8,7 +8,6 @@ import { DealPerformanceBubble, BotPerformanceBubble } from '@/app/Components/Ch
 import { DealAllocationBar } from '@/app/Components/Charts/Bar';
 
 import { useGlobalData } from '@/app/Context/DataContext';
-import { Card_TotalBoughtVolume, Card_TotalDeals, Card_TotalRoi, Card_AverageDailyProfit, Card_AverageDealHours } from '@/app/Components/Charts/DataCards';
 
 const PerformanceMonitor = () => {
 
