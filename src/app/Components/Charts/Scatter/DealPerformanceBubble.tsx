@@ -43,23 +43,6 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
         } else {
             const newData = data
                 .filter(row => row.percentTotalVolume > 1.5)
-            // 
-
-            // 1. Find the metrics to filter based on
-            // 2. identify what the high / low is and how to break out that metric
-            // 3. push the coloring based on the answer to that.
-
-            /**
-             * - Bot stats need to come from the bots data and filter based on the bot ID. Might need to add another column to the performance metric.
-             * - Downside of Take Profit is that it's only a current metric.
-             */
-
-            // metrics:
-            // Take Profit
-            // % of total Volume
-            // % of total profit - percentTotalProfit
-            // % total deals
-
 
             return (<ResponsiveContainer width="100%" height="100%" minHeight="400px">
                 <ScatterChart
@@ -103,8 +86,8 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
                         type="number" 
                         dataKey="total_profit" 
                         range={[
-                            Math.min(...newData.map(deal => deal.total_profit)), 
-                            Math.max(...newData.map(deal => deal.total_profit))
+                            Math.min(...newData.map(deal => deal.total_profit)) * 4 , 
+                            Math.max(...newData.map(deal => deal.total_profit)) * 4
                         ]} 
                         name="Bought Volume" />
 

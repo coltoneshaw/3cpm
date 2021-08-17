@@ -18,7 +18,7 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
 
                 // removing everything over a specific percent of total volume.
                 data = data.filter( row => row.percentTotalVolume > .15)
-                    .sort(dynamicSort("percentTotalProfit"))
+                    .sort(dynamicSort("-percentTotalProfit"))
                 return (
                     <ResponsiveContainer width="100%" minHeight="300px">
                         <BarChart

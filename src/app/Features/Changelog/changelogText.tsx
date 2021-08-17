@@ -1,5 +1,5 @@
 
-const mostRecent = '0.1.0'
+const mostRecent = '0.1.1'
 
 
 const versionInformation = [
@@ -113,6 +113,21 @@ const versionInformation = [
             'Added ability for auto-refreshing the data on a 15 second interval.',
             'DARK MODE is officially released.'
 
+        ]
+    },
+    {
+        version: '0.1.1',
+        enhancements: [
+            'Added average line to the profit by day chart',
+            'Fixed KPI display on smaller screens.',
+            'Improved the performance of the profit query metrics'
+        ],
+        bugs: [
+            'Redid the entire date filter to now work based on UTC dates instead of splitting the 1st date in a range',
+            'Database was showing deleted bots, now the bots table gets cleared on each sync.'
+        ],
+        new: [
+            'Filters now work for the bots table and the deal notifications'
         ]
     },
 ]

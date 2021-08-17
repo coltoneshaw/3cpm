@@ -10,20 +10,8 @@ import { CustomTooltip } from '@/app/Components/Charts/Tooltips';
 
 const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
 
-    const gradientOffset = () => {
-        const dataMax = Math.max(...data.map(i => i.profit));
-        const dataMin = Math.min(...data.map(i => i.profit));
-
-        if (dataMax <= 0) {
-            return 0;
-        }
-        if (dataMin >= 0) {
-            return 1;
-        }
-
-        return dataMax / (dataMax - dataMin);
-    };
-    const off = gradientOffset();
+    const totalProfit = (data.length > 0) ? data.map(deal => deal.profit).reduce( ( sum, profit ) => sum + profit ) : 0
+    const average = totalProfit / data.length
 
 
     const renderChart = () => {
@@ -57,6 +45,8 @@ const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
                             return format(date, "M/d")
                         }}
                     />
+
+                    <ReferenceLine y={average}  stroke="var(--color-primary)" strokeWidth={2} />
                     <YAxis
                         dataKey={X}
                         tickLine={false}
@@ -68,13 +58,7 @@ const ProfitByDay = ({ data, X }:Type_ProfitChart ) => {
                      {/* TODO - pass the custom props down properly here.  */}
                     {/* @ts-ignore */}
                     <Tooltip content={ <CustomTooltip />} cursor={{ strokeDasharray: '3 3' }}/>
-                    {/* <defs>
-                        <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset={off} stopColor="#DEE3EC" stopOpacity={1} />
-                            <stop offset={off} stopColor="#9BABC7" stopOpacity={1} />
-                        </linearGradient>
-                    </defs> */}
-                    <Bar type="monotone" dataKey={X} fill="var(--color-secondary)" />
+                    <Bar type="monotone" dataKey={X} fill="var(--color-secondary-light25)" />
                 </BarChart>
 
             </ResponsiveContainer>)

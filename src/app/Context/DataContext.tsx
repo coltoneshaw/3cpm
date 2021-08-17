@@ -31,7 +31,8 @@ import {
     updateThreeCData,
     getAccountDataFunction,
     fetchBotPerformanceMetrics,
-    fetchPairPerformanceMetrics
+    fetchPairPerformanceMetrics,
+    botQuery
 } from '@/utils/3Commas';
 
 
@@ -152,7 +153,7 @@ const DataProvider = ({ children }: any) => {
             await electron.api.updateBots()
 
             // @ts-ignore
-            await electron.database.query('select * from bots;')
+            botQuery()
                 .then((result: Type_Query_bots[]) => {
                     // alert('Bot data is updated')
                     if (result != null && result.length > 0) {

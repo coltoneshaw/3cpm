@@ -69,8 +69,8 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
                     <YAxis yAxisId="avg_deal_hours" orientation='left' hide={hide("-avg_deal_hours")} domain={[0, 'auto']} allowDataOverflow={true} offset={20} />
                     <YAxis yAxisId="bought_volume" orientation='left' hide={hide("-bought_volume") } domain={[0, 'auto']} allowDataOverflow={true} offset={20} />
 
-                    <Bar  name="Bought Volume" yAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.8} fill="var(--color-primary)" />
-                    <Line name="Total Profit" type="monotone" yAxisId="total_profit" dataKey="total_profit" stroke="var(--color-CTA-dark25)" dot={false} strokeWidth={1.75} />
+                    <Bar name="Total Profit" type="monotone" yAxisId="total_profit" fillOpacity={.8}  dataKey="total_profit" fill="var(--color-CTA-dark25)" />
+                    <Line  name="Bought Volume" yAxisId="bought_volume" dataKey="bought_volume" stroke="var(--color-primary)" dot={false} strokeWidth={1.75} />
                     <Line name="Avg. Deal Hours" type="monotone" yAxisId="avg_deal_hours" dataKey="avg_deal_hours" stroke="var(--color-secondary)" dot={false} strokeWidth={1.75} />
 
                 </ComposedChart>

@@ -7,10 +7,6 @@ import { dynamicSort } from '@/utils/helperFunctions';
 
 import NoData from '@/app/Components/Pages/Stats/Components/NoData';
 
-// const legendFind = (value: string) => {
-//     if (value == "bought_volume") return "Bought Volume"
-//     return "SO Volume Remaining"
-// }
 
 
 const DealSoUtilizationBar = ({ title, data }: Type_ActiveDealCharts) => {
@@ -20,7 +16,8 @@ const DealSoUtilizationBar = ({ title, data }: Type_ActiveDealCharts) => {
         if (data.length === 0) {
             return (<NoData />)
         } else {
-            data = data.sort(dynamicSort("bought_volume"))
+            data = data.sort(dynamicSort("-bought_volume"))
+
             return (
                 <ResponsiveContainer width="100%" height="90%" minHeight="300px">
                     <BarChart

@@ -16,19 +16,9 @@ const PerformanceMonitor = () => {
     const { data: { performanceData, metricsData } } = state;
     // console.log(performanceData)
 
-    const { totalDeals, boughtVolume, totalProfit_perf, averageDailyProfit, averageDealHours } = metricsData
-
-
-
     return (
         <>
-            <div className="riskDiv">
-                <Card_TotalBoughtVolume metric={boughtVolume} />
-                <Card_TotalDeals metric={totalDeals} />
-                <Card_TotalRoi additionalData={{ totalProfit_perf, boughtVolume }} />
-                <Card_AverageDailyProfit metric={averageDailyProfit} />
-                <Card_AverageDealHours metric={averageDealHours} />
-            </div>
+
 
             <Grid container spacing={8}>
                 <Grid item xs={12}>

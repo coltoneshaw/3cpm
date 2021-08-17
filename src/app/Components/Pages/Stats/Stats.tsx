@@ -13,7 +13,12 @@ import { useGlobalData } from '@/app/Context/DataContext';
 import dotProp from 'dot-prop';
 
 
-import { Card_ActiveDeals, Card_totalInDeals, Card_MaxDca, Card_TotalBankRoll, Card_TotalProfit, Card_MaxRiskPercent } from '@/app/Components/Charts/DataCards';
+import { 
+    Card_ActiveDeals, Card_totalInDeals, Card_MaxDca, 
+    Card_TotalBankRoll, Card_TotalProfit, Card_MaxRiskPercent, 
+    Card_TotalBoughtVolume, Card_TotalDeals, Card_TotalRoi, 
+    Card_AverageDailyProfit, Card_AverageDealHours 
+} from '@/app/Components/Charts/DataCards';
 
 
 
@@ -37,7 +42,7 @@ const StatsPage = () => {
     const { config, state: { reservedFunds } } = configState
     const state = useGlobalData()
     const { data: { metricsData, isSyncing }, actions: { updateAllData } } = state
-    const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent } = metricsData
+    const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent, totalDeals, boughtVolume, totalProfit_perf, averageDailyProfit, averageDealHours } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')
     const date: undefined | number = dotProp.get(config, 'statSettings.startDate')
@@ -86,6 +91,19 @@ const StatsPage = () => {
         />
     }
 
+    const additionalMetrics = () => {
+        if (currentView === 'performance-monitor') {
+            return (
+            <>
+                <Card_TotalBoughtVolume metric={boughtVolume} />
+                <Card_TotalDeals metric={totalDeals} />
+                <Card_TotalRoi additionalData={{ totalProfit_perf, boughtVolume }} />
+                <Card_AverageDailyProfit metric={averageDailyProfit} />
+                <Card_AverageDealHours metric={averageDealHours} />
+            </>)
+        }
+    }
+
     const dateString = (date: undefined | number) => {
         return (date) ? format(date, "MM/dd/yyyy") : ""
     }
@@ -131,6 +149,7 @@ const StatsPage = () => {
                     <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{totalBankroll, maxDCA: maxRisk}} />
                     <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
                     <Card_TotalProfit metric={totalProfit} />
+                    {additionalMetrics()}
                 </div>
 
             </div>

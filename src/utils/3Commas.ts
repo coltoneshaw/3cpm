@@ -60,18 +60,22 @@ const fetchDealDataFunction = async () => {
     const filtersQueryString = await getFiltersQueryString()
     const { currencyString, accountIdString, startString } = filtersQueryString;
     const query = `
-                SELECT 
-                    final_profit, closed_at, id, deal_hours
-                FROM 
-                    deals 
-                WHERE
-                    closed_at != null 
-                    or finished = 1 
-                    and account_id in (${accountIdString}) 
-                    and currency in (${currencyString}) 
-                    and closed_at_iso_string > ${startString} 
-                ORDER BY
-                    closed_at asc;`
+            SELECT 
+                substr(closed_at, 0, 11) as closed_at_str,
+                sum(final_profit) as final_profit,
+                sum(deal_hours) as deal_hours
+            FROM 
+                deals 
+            WHERE
+                closed_at != null 
+                or finished = 1 
+                and account_id in (${accountIdString} )
+                and currency in (${currencyString} )
+                and closed_at_iso_string > ${startString} 
+            GROUP BY
+                 closed_at_str
+            ORDER BY
+                closed_at asc;`
 
     // @ts-ignore
     let dataArray = await electron.database.query(query)
@@ -89,37 +93,27 @@ const fetchDealDataFunction = async () => {
         }
     }
 
-    let dates = Array.from(new Set(dataArray.map((row: Type_Query_DealData) => { if (row.closed_at) { return row.closed_at.split('T')[0] } })))
     let totalDealHours = dataArray.map((deal: Type_Query_DealData) => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours)
 
+    const profitArray: Type_Profit[] = [];
 
-    let profitArray: Type_ProfitArray = []
+    dataArray = dataArray.forEach(( day: any, index:number ) => {
 
-    dates.forEach((day: any, index) => {
-
-        // filtering the data array for only the deals that match the day we are filtering on.
-        let profit = dataArray.filter((deal: Type_Query_DealData) => deal.closed_at.split('T')[0] === day).map((deal: Type_Query_DealData) => deal.final_profit)
-        if (profit.length > 0) {
-            profit = profit.reduce((sum: number, profit: number) => sum + profit)
-        } else {
-            profit = 0
-        }
-
+        
         // adding the existing value to the previous value's running sum.
-        let runningSum = (index == 0) ? +profit : profitArray[index - 1].runningSum + +profit
+        let runningSum = (index == 0) ? day.final_profit  : profitArray[index - 1].runningSum + day.final_profit 
 
-        let dateObject = {
-            utc_date: day.toString(),
-            profit: +profit.toFixed(6),
-            runningSum: +runningSum.toFixed(6)
-        }
-        profitArray.push(dateObject)
+        profitArray.push({
+            utc_date: day.closed_at_str,
+            profit: day.final_profit,
+            runningSum: runningSum
+        })
     })
 
 
     const totalProfit = (profitArray.length > 0) ? +profitArray[profitArray.length - 1].runningSum : 0
     const averageDailyProfit = (profitArray.length > 0) ? totalProfit / (profitArray.length + 1) : 0;
-    const averageDealHours = (profitArray.length > 0) ? totalDealHours / (dataArray.length + 1) : 0;
+    const averageDealHours = (profitArray.length > 0) ? totalDealHours / (profitArray.length + 1) : 0;
 
     return {
         profitData: profitArray,
@@ -240,6 +234,33 @@ const fetchBotPerformanceMetrics = async () => {
 
 }
 
+const botQuery = async () => {
+    const filtersQueryString = await getFiltersQueryString()
+    const { currencyString, accountIdString, startString } = filtersQueryString;
+
+
+    const queryString = `
+                SELECT
+                    *
+                FROM 
+                    bots
+                WHERE
+                    account_id in (${accountIdString})
+                    OR origin = 'custom'`
+
+    // console.log(queryString)
+
+    // @ts-ignore
+    let databaseQuery = await electron.database.query(queryString);
+
+    if (databaseQuery == null || databaseQuery.length > 0) {
+        return databaseQuery
+    } else {
+        return []
+    }
+
+}
+
 /**
  * 
  * @returns An array containing the data for specific bot metrics.
@@ -356,7 +377,9 @@ const getAccountDataFunction = async (defaultCurrency: string[]) => {
 
     // @ts-ignore
     let accountData: Array<Type_Query_Accounts> = await electron.database.query(query)
-        .then((data: Type_Query_Accounts[]) => data.filter(row => defaultCurrency.includes(row.currency_code)))
+
+        // removed this since it seems redundant to the above query
+        // .then((data: Type_Query_Accounts[]) => data.filter(row => defaultCurrency.includes(row.currency_code)))
 
     if (accountData == null || accountData.length > 0) {
         let on_ordersTotal = 0;
@@ -406,7 +429,8 @@ export {
     getAccountDataFunction,
     accountDataAll,
     fetchBotPerformanceMetrics,
-    fetchPairPerformanceMetrics
+    fetchPairPerformanceMetrics,
+    botQuery
 }
 
 
