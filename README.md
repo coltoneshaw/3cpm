@@ -17,12 +17,14 @@ The 3C Portfolio Manager is an essential addon to your 3Commas experience. It en
 # Initial Setup
 
 1. Download the latest release for your OS from the sidebar.
+    - Depending on how you're downloading this file you could get
 2. Run the installer on your computer (or a local VM)
 3. Add your API keys to the application, run `Test API keys`
+    - The API keys should be **read-only** access in 3C to bots / smart trades / accounts
 4. Choose a filter currency, the start date, and enable an account.
     - If you have funds in your account that you **do not** want to be used in calculations add that to the `Reserved Bankroll` field
 5. Click Save. This will download the deal data, bots, and account information from 3commas
-6. Start to profit!
+8. Start to profit!
 
 
 # Frequently Asked Questions
@@ -43,7 +45,7 @@ How long have you used the sheet? Was it during the period when we had a new upd
 2. Delete your old sheet
 3. Regenerate your API keys
 4. Put them in the new sheet
-5. Hope she sheet took them without hitting an error that required private browsing... 
+5. Hope the sheet took them without hitting an error that required private browsing... 
 6. Resync the entire sheet
 7. Now you have your data again.
 
