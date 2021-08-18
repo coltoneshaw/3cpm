@@ -1,7 +1,13 @@
 import React, { useContext, useEffect, useState, FC, ReactElement } from 'react';
-
 import { Route, Redirect } from 'react-router-dom'
-import { BotPlannerPage, TradingViewPage, SettingsPage, StatsPage, ActiveDealsPage } from '@/app/Pages/Index'
+import { 
+    BotPlannerPage, 
+    TradingViewPage, 
+    SettingsPage, 
+    StatsPage, 
+    ActiveDealsPage
+ } from '@/app/Pages/Index'
+ 
 import { ConfigProvider, useGlobalState } from '@/app/Context/Config';
 import { DataProvider } from '@/app/Context/DataContext';
 

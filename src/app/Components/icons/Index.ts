@@ -6,6 +6,7 @@ import Sun from "./Sun";
 import PieChart from "./PieChart";
 import BackwardClock from './BackwardClock';
 import ActiveDealsIcon from "./ActiveDeals";
+import LoaderIcon from "./Loading/Loading";
 
 export {
     BotPlannerIcon,
@@ -15,5 +16,6 @@ export {
     Sun,
     PieChart,
     BackwardClock,
-    ActiveDealsIcon
+    ActiveDealsIcon,
+    LoaderIcon
 }

@@ -4,7 +4,7 @@ import { Button } from '@material-ui/core';
 
 import { useGlobalState } from '@/app/Context/Config';
 import { useGlobalData } from '@/app/Context/DataContext';
-import LoaderIcon from '@/app/Components/icons/Loading'
+import LoaderIcon from '@/app/Components/icons/Loading/Loading'
 
 interface SubmitButtons {
     setOpen: any
