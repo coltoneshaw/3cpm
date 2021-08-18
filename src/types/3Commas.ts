@@ -158,7 +158,7 @@ export interface Type_Query_Accounts {
 }
 
 export interface Type_bots {
-    id: number
+    id: number | string
     origin: string
     account_id: number
     account_name?: string

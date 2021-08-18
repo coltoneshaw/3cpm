@@ -39,7 +39,7 @@ const BotPlannerPage = () => {
 
 
     const blankObject = {
-        id: parseInt(Math.random().toString(16).slice(2)),
+        id: Math.random().toString(16).slice(2),
         origin: 'custom',
         name: 'edit me',
         is_enabled: false,
@@ -74,6 +74,7 @@ const BotPlannerPage = () => {
 
     const addToTable = () => {
         updateLocalBotData((prevState: Type_Query_bots[]) => {
+            console.log(blankObject)
             return [
                 blankObject,
                 ...prevState
