@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { formatISO } from 'date-fns';
 
 
 import MenuItem from '@material-ui/core/MenuItem';
@@ -12,28 +11,30 @@ const lang = getLang()
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
-import { Type_ProfitChart } from '@/types/Charts';
-
-import { CustomTooltip } from '@/app/Components/Charts/Tooltips';
+import { Type_ProfitChart, Type_Tooltip } from '@/types/Charts';
 
 
-// TODO
-// Fix the tool tip to allow for better date filters on month / year.
+interface Type_NewDateProfit {
+    date: string
+    profit: number
+    type: string
+}
 
-const convertToNewDates = (data: Type_Profit[], langString: any) => {
+const convertToNewDates = (data: Type_Profit[], langString: any, type: string) => {
 
-    const mappedArray = data.map( day => {
-        
+    const mappedArray = data.map(day => {
         return {
             date: new Date(day.utc_date).toLocaleString(getLang(), langString),
             profit: day.profit
-    }})
+        }
+    })
 
-    const primaryDates =  Array.from ( new Set( mappedArray.map( day => day.date) ) )
+    const primaryDates = Array.from(new Set(mappedArray.map(day => day.date)))
 
-    return primaryDates.map( date => ({
-            date,
-            profit: mappedArray.filter(y => y.date === date).map(y => y.profit).reduce( (sum, profit) => sum + profit)
+    return primaryDates.map(date => ({
+        date,
+        profit: mappedArray.filter(y => y.date === date).map(y => y.profit).reduce((sum, profit) => sum + profit),
+        type
     }))
 
 }
@@ -41,27 +42,24 @@ const convertToNewDates = (data: Type_Profit[], langString: any) => {
 
 const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
 
-    const totalProfit = (data.length > 0) ? data.map(deal => deal.profit).reduce((sum, profit) => sum + profit) : 0
-    const average = totalProfit / data.length
-
-    const [range, setRange] = useState('day');
-    const [ filterString, setFilterString ] = useState<{}>({month: '2-digit', day: '2-digit'}) 
+    const [dateType, setDateType] = useState('day');
+    const [filterString, setFilterString] = useState<{}>({ month: '2-digit', day: '2-digit' })
 
     useEffect(() => {
-        if (range === 'year') {
-            setFilterString( { year: 'numeric' })
-        } else if (range === 'month') {
-            setFilterString ( { month: 'short', year: '2-digit' }) 
+        if (dateType === 'year') {
+            setFilterString({ year: 'numeric' })
+        } else if (dateType === 'month') {
+            setFilterString({ month: 'short', year: 'numeric' })
         } else {
-            setFilterString( {month: '2-digit', day: '2-digit'}) 
+            setFilterString({ month: '2-digit', day: '2-digit', year: '2-digit' })
         }
-    
-    }, [range] )
+
+    }, [dateType])
 
 
 
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setRange(event.target.value as string);
+        setDateType(event.target.value as string);
     };
 
 
@@ -70,7 +68,7 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
         return (
             <FormControl >
                 <Select
-                    value={range}
+                    value={dateType}
                     onChange={handleChange}
                     style={{
                         fontWeight: 300,
@@ -89,6 +87,12 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
 
 
 
+    const filteredData = convertToNewDates(data, filterString, dateType)
+    const calculateAverage = () => {
+        const totalProfit = (filteredData.length > 0) ? filteredData.map(deal => deal.profit).reduce((sum, profit) => sum + profit) : 0
+        return totalProfit / filteredData.length
+
+    }
     const renderChart = () => {
         if (data.length === 0) {
             return (<NoData />)
@@ -98,7 +102,7 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
                     <BarChart
                         width={500}
                         height={300}
-                        data={convertToNewDates(data, filterString)}
+                        data={filteredData}
                         margin={{
                             top: 5,
                             right: 30,
@@ -113,10 +117,20 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
                             dataKey="date"
                             axisLine={false}
                             tickLine={false}
-                            minTickGap={50}
+                            minTickGap={( filteredData.length > 6) ? 40 : 0}
+                            tickFormatter={(str) => {
+                                if (str == 'auto') return ""
+                                if(dateType === 'day'){
+                                    return new Date(str).toLocaleDateString(lang, { month: '2-digit', day: '2-digit' })
+                                } else if (dateType ==='year' || dateType === 'month'){
+                                    return str
+                                } else {
+                                    return ''
+                                }
+                            }}
                         />
 
-                        <ReferenceLine y={average} stroke="var(--color-primary)" strokeWidth={2} />
+                        <ReferenceLine y={calculateAverage()} stroke="var(--color-primary)" strokeWidth={2} />
                         <YAxis
                             dataKey={X}
                             tickLine={false}
@@ -144,4 +158,25 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
 
 }
 
+
+function CustomTooltip({ active, payload, label }: Type_Tooltip) {
+    if (active) {
+        const data: Type_NewDateProfit = payload[0].payload
+        let { date, profit, type } = data
+
+        if (type === 'day') {
+            date = new Date(date).toLocaleString(lang, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+        }
+
+        // format the date
+        return (
+            <div className="tooltop">
+                <h4>{date}</h4>
+                <p>$ {profit.toLocaleString()}</p>
+            </div>
+        )
+    } else {
+        return <></>
+    }
+}
 export default ProfitByDay;
