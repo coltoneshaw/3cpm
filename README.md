@@ -17,7 +17,7 @@ The 3C Portfolio Manager is an essential addon to your 3Commas experience. It en
 # Initial Setup
 
 1. Download the latest release for your OS from the sidebar.
-    - Depending on how you're downloading this file you could get
+    - Depending on how you're downloading this file you could get an unsafe file warning. For more information read [Why should I trust this?](#why-should-i-trust-this) and [Unsafe File Warning](#unsafe-file-warning).
 2. Run the installer on your computer (or a local VM)
 3. Add your API keys to the application, run `Test API keys`
     - The API keys should be **read-only** access in 3C to bots / smart trades / accounts
@@ -71,6 +71,17 @@ We have reduced the need for data altogether in this project. The keys are **rea
 
 ### 3. It's open-source, so you can review the code and even compile it yourself!
 You can search through the code for anything you want to find, it's all available to you. Many people have used this, ran it through virus scanners and the works. At the end of the day I'm building this for myself but the community benefits as well.
+
+## Unsafe File Warning
+
+If you are downloading this for the first time you may get an `Unsafe file warning` within Edge / Chrome / Firefox. This is because the file is currently an unsigned download. Code Signing costs money and takes time. Unfortunetly, this project has not reached that point yet.
+
+How can you help?
+1. Consider buying a coffee to support the project. If we can raise enough we can look into getting a code signing certificate. They run about $300 - $600 / yr. [You can buy a coffee here!](https://www.buymeacoffee.com/ColtonS)
+2. Flag the file as safe once you've downloaded this. The more reports we get the less it'll happen!
+    - Edge: Click the three dots > `report this file as safe`. 
+
+If you still feel unsafe downloading this file you can download the source code and compile it yourself, or run it through any virus scanner. 
 
 # Screenshots
 
