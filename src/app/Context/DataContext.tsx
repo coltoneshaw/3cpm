@@ -393,8 +393,8 @@ const DataProvider = ({ children }: any) => {
     const [interval, setIntervalState] = useState<NodeJS.Timeout | null | number>()
 
     // update the summary value here to define what type of notifications are sent.
-    const [summarySync, setSummarySync] = useState(false)
-    const [notifications, setNotifications] = useState(true)
+    const [summarySync, setSummarySync] = useState(() => false)
+    const [notifications, setNotifications] = useState(() => true)
 
 
     let lastSyncTime = new Date().getTime()
@@ -406,14 +406,21 @@ const DataProvider = ({ children }: any) => {
      * @param summary boolean value that defines if it'll be a summary or individual notification set.
      */
     const updateAutoSync = async (offset: number) => {
+
+        console.log({summarySync, notifications})
         updateIsSyncing(true)
 
         const time = lastSyncTime
+
+        // temp fix for notification state issues
+        const summary = summarySync
+        const notificationTest = notifications
+
         let options = { 
             time, 
-            summary: summarySync, 
+            summary, 
             offset, 
-            notifications
+            notifications: notificationTest
         }
 
         try {

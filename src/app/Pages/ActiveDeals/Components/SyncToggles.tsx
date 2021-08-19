@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { FormControlLabel, Checkbox} from '@material-ui/core';
 
@@ -14,12 +14,18 @@ const SyncToggles = () => {
     const { autoSync: { summarySync, setSummarySync, notifications, setNotifications } } = dataState
 
     const changeSummary = () => {
+        // console.log(e.target.value)
         setSummarySync((prevState: boolean) => !prevState)
     }
 
     const changeNotifications = () => {
         setNotifications((prevState: boolean) => !prevState)
     }
+
+    // can't have notifications disabled and summary enabled
+    useEffect(() => {
+        if(!notifications) setSummarySync(false)
+    }, [notifications])
 
 
     return (
