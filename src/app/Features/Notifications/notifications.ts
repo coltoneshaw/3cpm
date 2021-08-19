@@ -6,6 +6,8 @@ var path = require('path');
 
 import { config } from '@/utils/config'
 
+import { convertMiliseconds } from '@/utils/helperFunctions'
+
 const accountFilters = () => {
 
     //@ts-ignore
@@ -25,6 +27,22 @@ function showNotification(title: string, body: string) {
     new Notification(options).show()
 }
 
+
+const calcDealTime = (created_at:string , closed_at:string ) => {
+    const createdAtMiliseconds = new Date(created_at).getTime()
+    const closedAtMiliseconds = new Date(closed_at).getTime()
+
+    const dateObj = convertMiliseconds(closedAtMiliseconds - createdAtMiliseconds)
+
+    const {d,h,m,s} = dateObj
+
+    if( d > 0) return (d > 1 ) ? `about ${d} days.` : `about ${d} day.`
+    else if ( h > 0 ) return  (h > 1 ) ? `about ${h} hours.` : `about ${h} hour.`
+    else if ( m > 0) return  (m > 1 ) ? `about ${m} minutes.` : `about ${m} minute.`
+    else if ( s > 0 ) return  (s > 1 ) ? `about ${s} seconds.` : `about ${s} second.`
+    else return ''
+
+}
 /**
  *  d
  * @param data this is the recent synced string of data
@@ -67,9 +85,15 @@ function findAndNotifyNewDeals(data: Type_Deals_API[], lastSyncTime: number, sum
         for (let deal of data) {
             const notificationTitle = 'Deal Closed, profit was had.';
 
-            const { bot_name, pair, final_profit, final_profit_percentage, from_currency, id } = deal;
+            const { bot_name, pair, final_profit, final_profit_percentage, from_currency, id, created_at, closed_at } = deal;
+
+            // deal length:
+
+            // calculate difference in miliseconds between created_at and closed_at
+            // decide if it's days / hours / minutes / seconds
+            // add to end of string
             const moneyBags = (final_profit_percentage > 0) ? "💰".repeat(Math.abs(Math.round(final_profit_percentage))) : '';
-            const notificationString = `(${id}) ${bot_name} - ${pair} closed a deal. Profit: ${parseNumber(final_profit, 5)} ${from_currency} ( ${final_profit_percentage} % ). ${moneyBags}`;
+            const notificationString = `(${id}) ${bot_name} - ${pair} closed a deal. Profit: ${parseNumber(final_profit, 5)} ${from_currency} ( ${final_profit_percentage} % ). ${calcDealTime(created_at, closed_at)}${moneyBags}`;
 
             try {
                 showNotification(notificationTitle, notificationString);

@@ -102,5 +102,6 @@ export {
   tryParseJSON_,
   dynamicSort,
   getDateString,
-  getLang
+  getLang,
+  convertMiliseconds
 }
