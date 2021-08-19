@@ -28,7 +28,7 @@ const formatDeals = (activeDeals: Type_ActiveDeals[]) => {
             max_deviation: calc_deviation(max_safety_orders, safety_order_step_percentage, martingale_step_coefficient),
             in_profit: (actual_usd_profit > 0) ? true : false,
             bot_settings: `TP: ${take_profit}, BO: ${base_order_volume}, SO: ${safety_order_volume}, SOS: ${safety_order_step_percentage}%, OS: ${martingale_volume_coefficient}, SS: ${martingale_step_coefficient}, MSTC: ${max_safety_orders}`,
-            bought_volume: bought_volume.toFixed(2),
+            bought_volume: (bought_volume != undefined || bought_volume != null) ? bought_volume.toFixed(2) : 0,
             bought_amount: bought_amount + ' ' + pair,
             unrealized_profit: ( take_profit / 100 ) * bought_volume
         }
