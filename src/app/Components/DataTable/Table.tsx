@@ -1,6 +1,6 @@
-import { dynamicSort } from "@/utils/helperFunctions";
-import React from "react";
-import formatDeal from './FormatDeals';
+// import { dynamicSort } from "@/utils/helperFunctions";
+import React, { useState, useEffect } from "react";
+// import formatDeal from './FormatDeals';
 
 import { useTable, useSortBy } from 'react-table'
 
@@ -9,7 +9,7 @@ const defaultPropGetter = () => ({})
 
 // Expose some prop getters for headers, rows and cells, or more if you want!
 // @ts-ignore
-function Table({
+function CustomTable({
     // @ts-ignore
     columns,
     // @ts-ignore
@@ -18,6 +18,10 @@ function Table({
     getColumnProps = defaultPropGetter,
     getRowProps = defaultPropGetter,
     getCellProps = defaultPropGetter,
+
+    //@ts-ignore
+    updateLocalBotData,
+    // skipPageReset
 }) {
     const {
         getTableProps,
@@ -31,6 +35,15 @@ function Table({
             data,
             //@ts-ignore
             autoResetSortBy: false,
+            // defaultColumn,
+            // use the skipPageReset option to disable page resetting temporarily
+            // autoResetPage: !skipPageReset,
+            // updateMyData isn't part of the API, but
+            // anything we put into these options will
+            // automatically be available on the instance.
+            // That way we can call this function from our
+            // cell renderer!
+            updateLocalBotData,
 
         },
         useSortBy
@@ -104,7 +117,7 @@ function Table({
                                         ])}
                                     >
                                         {cell.render('Cell')}
- 
+
                                     </td>
                                 )
                             })}
@@ -116,4 +129,4 @@ function Table({
     )
 }
 
-export default Table
+export default CustomTable

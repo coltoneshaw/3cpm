@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { Table } from './Components/index';
+import { CustomTable } from '@/app/Components/DataTable/Index'
 import { getDateString } from '@/utils/helperFunctions';
 import { parseNumber } from '@/utils/number_formatting';
 
@@ -12,6 +12,7 @@ const Styles = styled.div`
     border-spacing: 0;
     background-color: var(--color-background-light);
     color: var(--color-text-lightbackground);
+    font-size: .875em;
 
     th,
     td {
@@ -47,7 +48,6 @@ function DealsTable({ data }: { data: object[] }) {
         updateLocalData(data)
     }, [data])
 
-    // let sortMe = useMemo( (rowA, rowB, id, desc) => 
 
     const sortMe = (rowA: any, rowB: any, columnId: string, desc: boolean) => {
         return (rowA.original[columnId] > rowB.original[columnId]) ? -1 : 1
@@ -205,7 +205,7 @@ function DealsTable({ data }: { data: object[] }) {
 
     return (
         <Styles>
-            <Table
+            <CustomTable
                 columns={columns}
                 data={localData}
                 disableMultiSort={true}

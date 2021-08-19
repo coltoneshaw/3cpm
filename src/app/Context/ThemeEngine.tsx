@@ -38,6 +38,7 @@ const lightMode = {
     '--color-primary': '#8BBABC',
     '--color-primary-dark25': '#59999B',
     '--color-secondary-light87': '#DEE3EC',
+    '--color-secondary-light75': '#BCC7D9',
     '--color-secondary-light50': '#7990B4',
     '--color-secondary-light25': '#475C7E',
     '--color-secondary': '#212B3B',
@@ -65,6 +66,7 @@ const darkMode = {
     
     // this is not the right color below~1
     '--color-secondary-light87': '#617389',
+    '--color-secondary-light75': '#E2EEEE',
     '--color-secondary-light50': '#C5DDDD',
     '--color-secondary-light25': '#A8CCCD',
     '--color-secondary': '#8BBABC',

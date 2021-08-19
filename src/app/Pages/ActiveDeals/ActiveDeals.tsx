@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import DealsTable from './DealsTable';
 import { UpdateDataButton, ToggleRefreshButton } from '@/app/Components/Buttons/Index'
-
+import { formatDeals } from '@/app/Components/DataTable/Index'
 
 import { useGlobalData } from '@/app/Context/DataContext';
 import { Card_ActiveDeals, Card_totalInDeals, Card_ActiveDealReserve, Card_TotalDayProfit } from '@/app/Components/Charts/DataCards';
-import { SyncToggles, formatDeals } from './Components/index';
+import { SyncToggles } from './Components/index';
 
 import './ActiveDeals.scss'
 
