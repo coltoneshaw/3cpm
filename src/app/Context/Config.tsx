@@ -182,10 +182,11 @@ const ConfigProvider = ({ children }: any) => {
         const accountSummary = await electron.api.getAccountData(key, secret)
 
         if (accountSummary !== undefined || accountSummary.length > 0) {
-            updateReservedFunds( prevState => {
+            updateReservedFunds( ( prevState: Type_ReservedFunds[]) => {
 
-                // @ts-ignore
+                    // new data coming in, removing the dups from the array
                     const filteredAccountData = removeDuplicatesInArray(accountSummary, 'id')
+                    // console.log(filteredAccountData)
     
                     // checking to see if any reserved funds exist
                     if (prevState.length === 0 || prevState === []) {
@@ -201,25 +202,30 @@ const ConfigProvider = ({ children }: any) => {
                         })
                     }
     
+                    // getting account IDs from the reserved funds
                     const configuredAccountIds = removeDuplicatesInArray(reservedFunds.map(account => account.id), 'id') 
+                    console.log(configuredAccountIds)
     
                     // finding any accounts that did not exist since the last sync.
-                    const newAcounts = filteredAccountData
-                        .filter( account => !configuredAccountIds.includes(account.id) )
+                    return filteredAccountData
+                        // .filter( account => !configuredAccountIds.includes(account.id) )
                         .map( account => {
-                            const { id, name } = account
+                            let { id, name } = account
+                            let reserved_funds = 0;
+                            let is_enabled = false;
+                            
+                            let filteredAccount = prevState.find(account => account.id == id)
+                            if(filteredAccount != undefined ){
+                                reserved_funds = filteredAccount.reserved_funds;
+                                is_enabled = filteredAccount.is_enabled;
+                            } 
                             return {
                                 id,
-                                account_name : name,
-                                reserved_funds: 0,
-                                is_enabled: false
+                                account_name: name,
+                                reserved_funds,
+                                is_enabled
                             }
                         })
-    
-                    return [
-                        ...prevState,
-                        ...newAcounts
-                    ]
                 
             })
         }
