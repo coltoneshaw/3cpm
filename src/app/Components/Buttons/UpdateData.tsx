@@ -9,8 +9,9 @@ import { ToastNotifcations } from '@/app/Features/Index'
 interface Type_ButtonProps {
     style?: object,
     className?: string
+    disabled?: boolean
 }
-const UpdateDataButton = ({ style, className }: Type_ButtonProps) => {
+const UpdateDataButton = ({ style, className, disabled }: Type_ButtonProps) => {
 
     const state = useGlobalData()
     const { data: { metricsData, isSyncing }, actions: { updateAllData } } = state
@@ -35,10 +36,10 @@ const UpdateDataButton = ({ style, className }: Type_ButtonProps) => {
             <Button
                 // variant="contained"
                 // color="primary"
+                disabled={isSyncing? true : false}
                 className={className}
-                onClick={async () => {
-                    await updateAllData()
-                    handleClick()
+                onClick={() => {
+                    updateAllData(1000, handleClick)
                 }}
                 disableElevation
                 endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}

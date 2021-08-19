@@ -115,7 +115,7 @@ function findAndNotifyNewDeals(data: Type_Deals_API[], lastSyncTime: number, sum
             // decide if it's days / hours / minutes / seconds
             // add to end of string
             const moneyBags = (final_profit_percentage > 0) ? "💰".repeat(Math.abs(Math.round(final_profit_percentage))) : '';
-            const notificationString = `(${id}) ${bot_name} - ${pair} closed a deal. Profit: ${parseNumber(final_profit, 5)} ${from_currency} ( ${final_profit_percentage} % ). ${calcDealTime(created_at, closed_at)}${moneyBags}`;
+            const notificationString = `(${id}) ${bot_name} - ${pair} closed a deal. Profit: ${parseNumber(final_profit, 5)} ${from_currency} ( ${final_profit_percentage} % ) ${calcDealTime(created_at, closed_at)}${moneyBags}`;
 
             try {
                 showNotification(notificationTitle, notificationString);
