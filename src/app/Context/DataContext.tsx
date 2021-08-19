@@ -240,12 +240,12 @@ const DataProvider = ({ children }: any) => {
      * @data - active deals, entire array returned by 3C
      * Confirmed working
      */
-    const getActiveDeals = () => {
-        getActiveDealsFunction()
+    const getActiveDeals = async () => {
+        await getActiveDealsFunction()
             .then(data => {
                 console.log('updated active deals and related metrics!')
                 const { activeDeals, metrics } = data
-                updateActiveDeals(activeDeals)
+                updateActiveDeals(() => activeDeals)
                 updateMetricsData(prevMetrics => {
                     return {
                         ...prevMetrics,
@@ -441,10 +441,10 @@ const DataProvider = ({ children }: any) => {
             let syncCount = prevState.syncCount
             try {
                 updateThreeCData('autoSync', options)
-                    .then(async () => {
-                        await fetchProfitMetrics()
-                        await fetchPerformanceData()
-                        await getActiveDeals()
+                    .then(() => {
+                        fetchProfitMetrics()
+                        fetchPerformanceData()
+                        getActiveDeals()
                         calculateMetrics()
                         updateIsSyncing(false)
                     })
@@ -480,7 +480,9 @@ const DataProvider = ({ children }: any) => {
 
         setIntervalState(
             setInterval(() => {
-                updateAutoSync(25)
+
+                // TODO - need to set this to possibly be the length of active deals so catch all the data.
+                updateAutoSync(200)
             }, 15000))
     }
 

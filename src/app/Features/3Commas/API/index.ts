@@ -20,6 +20,7 @@ async function updateAPI(type: string, options:Type_UpdateFunction ) {
       // if notifications need to be enabled for the fullSync then the type below needs to be updated.
       if(type ==='autoSync' &&options.notifications && options.time != undefined ) findAndNotifyNewDeals( data, options.time , options.summary )
       update('deals', data)
+      // console.log(data)
     })
 
     if(type !== 'autoSync' || options.syncCount === 20){

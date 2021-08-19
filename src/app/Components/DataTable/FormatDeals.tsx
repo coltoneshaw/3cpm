@@ -21,6 +21,10 @@ const formatDeals = (activeDeals: Type_ActiveDeals[]) => {
 
         return {
             ...deal,
+            actual_usd_profit,
+            actual_profit_percentage,
+            current_price,
+            take_profit_price,
             safetyOrderString,
             max_deal_funds: parseNumber(max_deal_funds),
             pair: pair + " / " + currency,

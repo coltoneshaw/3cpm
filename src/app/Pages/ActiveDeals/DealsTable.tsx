@@ -93,6 +93,7 @@ function DealsTable({ data }: { data: object[] }) {
                         Header: 'Current',
                         accessor: 'current_price',
                         className: 'text-center',
+                        sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
                             return <>$ {parseNumber( cell.value, 4) }</>
                         }
@@ -101,6 +102,7 @@ function DealsTable({ data }: { data: object[] }) {
                         Header: 'TP',
                         accessor: 'take_profit_price',
                         className: 'text-center',
+                        sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
                             return <>$ {parseNumber( cell.value, 4) }</>
                         }
@@ -211,7 +213,7 @@ function DealsTable({ data }: { data: object[] }) {
                 disableMultiSort={true}
                 autoResetSortBy={false}
                 // autoResetPage={false}
-                manualSortBy={true}
+                // manualSortBy={true}
                 //@ts-ignore
                 getHeaderProps={column => ({
                     // onClick: () => setSort(column.id),
