@@ -62,10 +62,11 @@ const darkMode = {
     '--color-primary-light25' : '#475C7E',
     '--color-primary': '#212B3B',
     '--color-primary-dark25': '#19202C',
-
     
     // this is not the right color below~1
-    '--color-secondary-light87': '#617389',
+    '--color-secondary-light87': '#313945',
+
+
     '--color-secondary-light75': '#E2EEEE',
     '--color-secondary-light50': '#C5DDDD',
     '--color-secondary-light25': '#A8CCCD',
@@ -78,11 +79,11 @@ const darkMode = {
     '--color-background-light' : '#495667',
     '--color-light': '#000',
     '--color-text-darkbackground': 'black',
-    '--color-text-lightbackground': 'lightgrey',
+    '--color-text-lightbackground': '#BFBFBF',
     '--color-boxshadow-1' : 'rgba(154,160,185,.00)',
     '--color-boxshadow-2' : 'rgba(166,173,201,.0)',
     '--color-red' : '#E23D28',
-    '--color-green' : '#50C878'
+    '--color-green' : '#03C03C'
 }
 
 const ThemeEngine = ({ children }: any) => {
