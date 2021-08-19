@@ -42,7 +42,7 @@ const ActiveDealsPage = () => {
                 </div>
 
                 <div className="filters activeDealButtons" >
-                    <UpdateDataButton className="CtaButton" style={{ width: '250px', margin: '5px' }} />
+                    <UpdateDataButton className="CtaButton" style={{ width: '250px', margin: '5px' }} disabled={true} />
                     <ToggleRefreshButton style={{ width: '250px', margin: '5px' }} />
                 </div>
 

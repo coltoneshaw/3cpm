@@ -254,6 +254,7 @@ export interface Type_UpdateFunction{
     time:number
     summary: boolean
     notifications: boolean
+    syncCount: number
 }
 
 

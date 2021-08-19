@@ -358,7 +358,7 @@ const getActiveDealsFunction = async () => {
  * @param {string} defaultCurrency This is the default currency configured in settings and used as a filter
  * @returns 
  */
-const getAccountDataFunction = async (defaultCurrency: string[]) => {
+const getAccountDataFunction = async () => {
     // console.log({accountData:  await accountDataAll()})
 
     const filtersQueryString = await getFiltersQueryString()
