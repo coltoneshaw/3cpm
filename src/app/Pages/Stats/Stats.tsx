@@ -19,7 +19,8 @@ import {
     Card_AverageDailyProfit, Card_AverageDealHours 
 } from '@/app/Components/Charts/DataCards';
 
-
+import { getLang } from '@/utils/helperFunctions';
+const lang = getLang()
 
 const buttonElements = [
     {
@@ -102,7 +103,15 @@ const StatsPage = () => {
     }
 
     const dateString = (date: undefined | number) => {
-        return (date) ? format(date, "MM/dd/yyyy") : ""
+
+        if(date != undefined){
+            const adjustedTime = date + ( (new Date()).getTimezoneOffset() * 60000 )
+            const dateString = new Date(adjustedTime).toUTCString()
+            return new Date(dateString).toLocaleString(lang, { month: '2-digit', day: '2-digit', year: 'numeric' })
+        }
+
+        return ""
+        
     }
 
 
@@ -127,9 +136,9 @@ const StatsPage = () => {
                 </div>
 
                 <div className="flex-row filters" >
-                    <p><strong>Account: </strong>{returnAccountNames()}</p>
-                    <p><strong>Start Date: </strong>{dateString(date)} </p>
-                    <p><strong>Default Currency: </strong>{returnCurrencyValues()}</p>
+                    <p><strong>Account: </strong><br/>{returnAccountNames()}</p>
+                    <p><strong>Start Date: </strong><br/>{dateString(date)} </p>
+                    <p><strong>Default Currency: </strong><br/>{returnCurrencyValues()}</p>
                 </div>
 
             </div>

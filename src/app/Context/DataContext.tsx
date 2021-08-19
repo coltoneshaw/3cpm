@@ -443,10 +443,6 @@ const DataProvider = ({ children }: any) => {
     }
 
 
-
-
-
-
     // Timer is set to a 15 second refresh interval right now.
     const timer = () => setIntervalState(
         setInterval(() => {

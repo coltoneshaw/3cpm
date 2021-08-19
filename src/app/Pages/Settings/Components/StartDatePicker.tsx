@@ -10,9 +10,6 @@ import {
 
 import { useGlobalState } from '@/app/Context/Config';
 
-import { findConfigData } from '@/utils/defaultConfig';
-const startDatePath = 'statSettings.startDate'
-
 
 
 
@@ -20,14 +17,25 @@ export default function StartDatePicker() {
   const state = useGlobalState()
   const { state: { date, updateDate }, config } = state
 
-  const offset = (new Date()).getTimezoneOffset() * 60000
+  const [localDate, setLocalDate] = useState<string>();
 
-  const handleDateChange = ( date:any) => {
-    const dateString = formatISO( date, { representation: 'date' } )
+  const handleDateChange = (date: any) => {
+    setLocalDate(date)
+
+    // getting the shortform utc date, stripping and converting to ISO
+    const dateString = formatISO(date, { representation: 'date' })
     const utcDate = dateString + 'T00:00:00Z'
     updateDate(getTime(parseISO(utcDate)));
-
   };
+
+  // converting the date into a ISO date and storing it.
+  useEffect(() => {
+    const adjustedTime = date + ( (new Date()).getTimezoneOffset() * 60000 )
+    const dateString = new Date(adjustedTime).toUTCString()
+    console.log(dateString)
+    setLocalDate(dateString)
+  }, [])
+
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -38,7 +46,7 @@ export default function StartDatePicker() {
         margin="normal"
         id="date-picker-inline"
         label="Stats Start Date"
-        value={date + offset}
+        value={localDate}
         onChange={handleDateChange}
         KeyboardButtonProps={{
           'aria-label': 'change date',
