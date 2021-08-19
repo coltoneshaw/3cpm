@@ -14,7 +14,8 @@ import {
     Type_Bot_Performance_Metrics,
     Type_Performance_Metrics,
     Type_Pair_Performance_Metrics,
-    Type_UpdateFunction
+    Type_UpdateFunction,
+    Type_SyncOptions
 
 } from '@/types/3Commas'
 import { TconfigValues } from '@/types/config'
@@ -80,10 +81,8 @@ interface Type_Data_Context {
     autoSync: {
         buttonEnabled: boolean
         setButtonEnabled: any // needs to be adjusted,
-        summarySync: boolean
-        setSummarySync: any
-        notifications: boolean
-        setNotifications: any
+        syncOptions: Type_SyncOptions
+        setSyncOptions: any
     }
 }
 
@@ -354,10 +353,10 @@ const DataProvider = ({ children }: any) => {
     const updateAllData = async (offset: number) => {
         updateIsSyncing(true)
 
-        const options = { 
-            time: 0, 
-            summary: false, 
-            offset, 
+        const options = {
+            time: 0,
+            summary: false,
+            offset,
             notifications: false
         }
         try {
@@ -393,11 +392,16 @@ const DataProvider = ({ children }: any) => {
     const [interval, setIntervalState] = useState<NodeJS.Timeout | null | number>()
 
     // update the summary value here to define what type of notifications are sent.
-    const [summarySync, setSummarySync] = useState(() => false)
-    const [notifications, setNotifications] = useState(() => true)
+    // const [summarySync, setSummarySync] = useState(false)
+    // const [notifications, setNotifications] = useState(true)
 
-
-    let lastSyncTime = new Date().getTime()
+    const defaultSyncOptions = {
+        summary: false,
+        notifications: true,
+        time: new Date().getTime(),
+        // offset: 25
+    }
+    const [syncOptions, setSyncOptions] = useState(defaultSyncOptions)
 
     /**
      * 
@@ -406,40 +410,35 @@ const DataProvider = ({ children }: any) => {
      * @param summary boolean value that defines if it'll be a summary or individual notification set.
      */
     const updateAutoSync = async (offset: number) => {
-
-        console.log({summarySync, notifications})
         updateIsSyncing(true)
 
-        const time = lastSyncTime
+        setSyncOptions(prevState => {
+            const options = {
+                ...prevState,
+                offset
+            }
+            try {
+                updateThreeCData('autoSync', options)
+                    .then(async () => {
+                        await fetchProfitMetrics()
+                        await fetchPerformanceData()
+                        await getActiveDeals()
 
-        // temp fix for notification state issues
-        const summary = summarySync
-        const notificationTest = notifications
+                        calculateMetrics()
+                        updateIsSyncing(false)
+                    })
+            } catch (error) {
+                console.error(error)
+                alert('Error updating your data. Check the console for more information.')
+                updateIsSyncing(false)
 
-        let options = { 
-            time, 
-            summary, 
-            offset, 
-            notifications: notificationTest
-        }
+            }
+            return {
+                ...prevState,
+                time: prevState.time + 15000
+            }
+        })
 
-        try {
-            lastSyncTime = lastSyncTime + 15000
-            updateThreeCData('autoSync', options)
-                .then(async () => {
-                    await fetchProfitMetrics()
-                    await fetchPerformanceData()
-                    await getActiveDeals()
-
-                    calculateMetrics()
-                    updateIsSyncing(false)
-                })
-        } catch (error) {
-            console.error(error)
-            alert('Error updating your data. Check the console for more information.')
-            updateIsSyncing(false)
-
-        }
     }
 
 
@@ -497,10 +496,12 @@ const DataProvider = ({ children }: any) => {
         autoSync: {
             buttonEnabled,
             setButtonEnabled,
-            summarySync,
-            setSummarySync,
-            notifications,
-            setNotifications
+            // summarySync,
+            // setSummarySync,
+            // notifications,
+            // setNotifications,
+            syncOptions,
+            setSyncOptions
         }
     }
 

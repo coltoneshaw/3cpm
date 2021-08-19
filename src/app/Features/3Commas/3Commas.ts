@@ -47,7 +47,7 @@ interface Type_Update{
  */
 const updateThreeCData = async (type: string, options: Type_UpdateFunction  ) => {
 
-    console.error({options})
+    console.info({options})
 
     // @ts-ignore
     await electron.api.update(type, options);

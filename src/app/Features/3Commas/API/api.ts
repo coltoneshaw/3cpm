@@ -344,8 +344,11 @@ async function getAccountDetail() {
   let array = [];
 
   for (let account of accountData) {
+
+    // this loads the account balances from the exchange to 3C ensuring the numbers are updated
     const accountBalances = await api.accountLoadBalances(account.id)
 
+    // this is where we get the coins and position per account.
     let data = await api.accountTableData(account.id)
 
     const { name: account_name, exchange_name, market_code } = account

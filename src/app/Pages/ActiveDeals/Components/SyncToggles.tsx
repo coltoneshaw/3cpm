@@ -4,6 +4,8 @@ import { FormControlLabel, Checkbox} from '@material-ui/core';
 
 import { useGlobalData } from "@/app/Context/DataContext";
 
+import { Type_SyncOptions } from "@/types/3Commas";
+
 /**
  * 
  * @returns Checkboxes for configuring the state of auto sync.
@@ -11,29 +13,38 @@ import { useGlobalData } from "@/app/Context/DataContext";
 const SyncToggles = () => {
 
     const dataState = useGlobalData()
-    const { autoSync: { summarySync, setSummarySync, notifications, setNotifications } } = dataState
+    const { autoSync: { syncOptions, setSyncOptions } } = dataState
 
-    const changeSummary = () => {
-        // console.log(e.target.value)
-        setSummarySync((prevState: boolean) => !prevState)
+    const changeSummary = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSyncOptions( ( prevState:Type_SyncOptions ) => ({
+            ...prevState,
+            summary: event.target.checked
+        }))
     }
 
-    const changeNotifications = () => {
-        setNotifications((prevState: boolean) => !prevState)
+    const changeNotifications = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSyncOptions( ( prevState:Type_SyncOptions ) => ({
+            ...prevState,
+            notifications: event.target.checked
+        }))
     }
 
     // can't have notifications disabled and summary enabled
     useEffect(() => {
-        if(!notifications) setSummarySync(false)
-    }, [notifications])
-
+        if(!syncOptions.notifications) {
+            setSyncOptions( ( prevState:Type_SyncOptions ) => ({
+                ...prevState,
+                summary: false
+            }))
+        }
+    }, [syncOptions.notifications])
 
     return (
         <div style={{alignSelf: 'flex-start'}}>
         <FormControlLabel
             control={
                 <Checkbox
-                    checked={summarySync}
+                    checked={syncOptions.summary}
                     onChange={changeSummary}
                     name="summary"
                     style={{color: 'var(--color-secondary)'}}
@@ -46,7 +57,7 @@ const SyncToggles = () => {
         <FormControlLabel
             control={
                 <Checkbox
-                    checked={notifications}
+                    checked={syncOptions.notifications}
                     onChange={changeNotifications}
                     name="notifications"
                     color="primary"

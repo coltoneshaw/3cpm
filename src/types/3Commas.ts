@@ -343,3 +343,10 @@ export interface Type_UpdateFunction{
     profitPercent: number
     impactFactor: number
 }
+
+export interface Type_SyncOptions {
+    time: number,
+    summary: boolean,
+    offset: number,
+    notifications: boolean
+}
