@@ -31,18 +31,40 @@ function showNotification(title: string, body: string) {
 const calcDealTime = (created_at:string , closed_at:string ) => {
     const createdAtMiliseconds = new Date(created_at).getTime()
     const closedAtMiliseconds = new Date(closed_at).getTime()
-
     const dateObj = convertMiliseconds(closedAtMiliseconds - createdAtMiliseconds)
 
-    const {d,h,m,s} = dateObj
+    const { d, h, m, s } = dateObj
+    let timeString;
+    let type = 'second'
+    
+    if ( d > 0) {
+        const hours = (h > 0) ?  h / 24 : 0
+        timeString = d + hours
+        type = 'day'
+    } else if ( h > 0 ) {
+        const minutes = (m > 0) ?  m / 60 : 0
+        timeString = h + minutes
+        type = 'hour'
+    } else if ( m > 0)  {
+        const seconds = (s > 0) ?  s / 60 : 0
+        timeString = m + seconds
+        type = 'minute'
+    } else {
+        type = 'second'
+        timeString = s
+    }
 
-    if( d > 0) return (d > 1 ) ? `about ${d} days.` : `about ${d} day.`
-    else if ( h > 0 ) return  (h > 1 ) ? `about ${h} hours.` : `about ${h} hour.`
-    else if ( m > 0) return  (m > 1 ) ? `about ${m} minutes.` : `about ${m} minute.`
-    else if ( s > 0 ) return  (s > 1 ) ? `about ${s} seconds.` : `about ${s} second.`
-    else return ''
+    if (timeString != undefined || timeString != 0){
+        timeString = Math.round(timeString)
+        return (timeString > 1 ) ? `about ${timeString} ${type}s.` : `about ${timeString} ${type}.`
+    } else {
+        return ''
+    }
+    
+
 
 }
+
 /**
  *  d
  * @param data this is the recent synced string of data
