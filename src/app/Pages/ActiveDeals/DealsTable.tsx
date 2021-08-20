@@ -17,7 +17,7 @@ const Styles = styled.div`
     th,
     td {
       margin: 0;
-      padding: 0.2rem .2rem .5rem .5rem;
+      padding: 0.5rem .2rem .5rem .2rem;
     }
 
     
@@ -34,6 +34,24 @@ const Styles = styled.div`
 
             }
         };
+
+        .pill {
+            padding: .1em;
+            display: block;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .red {
+            background-color: var(--color-red);
+            opacity: var(--opacity-pill);
+        }
+
+        .green {
+            background-color: var(--color-green);
+            opacity: var(--opacity-pill)
+        }
     }
 
 
@@ -154,7 +172,9 @@ function DealsTable({ data }: { data: object[] }) {
                         className: 'text-center',
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
-                            return <span >$ {parseNumber( cell.value, 2) }</span>
+
+                            const in_profit = (cell.row.original.in_profit) ? 'green' : 'red'
+                            return <span className={"pill " + in_profit} > $ {parseNumber( cell.value, 2) }</span>
                         }
                     },
                     {
@@ -163,7 +183,8 @@ function DealsTable({ data }: { data: object[] }) {
                         className: 'text-center',
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
-                            return <span >{+cell.value} %</span>
+                            const in_profit = (cell.row.original.in_profit) ? 'green' : 'red'
+                            return <span className={"pill " + in_profit} >{+cell.value} %</span>
                         }
                     },
                     {
@@ -234,10 +255,10 @@ function DealsTable({ data }: { data: object[] }) {
                 //@ts-ignore
                 getCellProps={cellInfo => ({
 
-                    style: {
-                        color: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? (cellInfo.row.original.in_profit) ? 'var(--color-green)' : 'var(--color-red)': null,
-                        fontWeight: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? '700' : null
-                    }
+                    // style: {
+                    //     color: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? (cellInfo.row.original.in_profit) ? 'var(--color-green)' : 'var(--color-red)': null,
+                    //     fontWeight: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? '700' : null
+                    // }
 
                 })}
             />

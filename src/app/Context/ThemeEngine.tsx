@@ -53,8 +53,11 @@ const lightMode = {
     '--color-text-lightbackground': 'black',
     '--color-boxshadow-1' : 'rgba(154,160,185,.05)',
     '--color-boxshadow-2' : 'rgba(166,173,201,.2)',
-    '--color-red' : '#CC0000',
-    '--color-green' : '#03C03C'
+
+    // Tailwinds 600
+    '--color-red' : '#DC2626',
+    '--color-green' : '#059669',
+    '--opacity-pill' : '1'
 }
 
 const darkMode = {
@@ -82,8 +85,11 @@ const darkMode = {
     '--color-text-lightbackground': '#BFBFBF',
     '--color-boxshadow-1' : 'rgba(154,160,185,.00)',
     '--color-boxshadow-2' : 'rgba(166,173,201,.0)',
-    '--color-red' : '#E23D28',
-    '--color-green' : '#03C03C'
+
+    // Tailwinds 600
+    '--color-red' : '#EF4444',
+    '--color-green' : '#10B981',
+    '--opacity-pill' : '.8'
 }
 
 const ThemeEngine = ({ children }: any) => {
