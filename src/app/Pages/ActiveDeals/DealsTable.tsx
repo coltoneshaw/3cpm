@@ -7,17 +7,19 @@ import { parseNumber } from '@/utils/number_formatting';
 
 
 const Styles = styled.div`
+    overflow: scroll;
 
   table {
     border-spacing: 0;
     background-color: var(--color-background-light);
     color: var(--color-text-lightbackground);
     font-size: .875em;
+    min-width: 1200px;
 
     th,
     td {
       margin: 0;
-      padding: 0.5rem .2rem .5rem .2rem;
+      padding: 0.3rem .2rem .3rem .2rem;
     }
 
     

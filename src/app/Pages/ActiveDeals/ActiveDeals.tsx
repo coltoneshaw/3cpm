@@ -49,7 +49,7 @@ const ActiveDealsPage = () => {
             </div>
 
 
-            <div className="boxData flex-column" style={{padding: '.5em 2em 2em 2em'}}>
+            <div className="boxData flex-column" style={{padding: '.5em 2em 2em 2em', overflow: 'hidden'}}>
                 <SyncToggles />
                 <DealsTable data={localData} />
             </div>

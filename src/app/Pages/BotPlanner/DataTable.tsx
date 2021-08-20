@@ -23,12 +23,14 @@ import { Type_Query_bots } from '@/types/3Commas'
 import { CustomTable } from '@/app/Components/DataTable/Index'
 
 const Styles = styled.div`
+  overflow: scroll;
 
   table {
     border-spacing: 0;
     background-color: var(--color-background-light);
     color: var(--color-text-lightbackground);
     font-size: .875em;
+    min-width: 1200px;
 
     th,
     td {
@@ -52,6 +54,7 @@ const Styles = styled.div`
         margin: 0;
         border: 0;
         background-color: var(--color-background-light);
+        color: var(--color-text-lightbackground);
       }
 
         tr {
@@ -136,7 +139,7 @@ const EditableCell = ({
     setValue(String(initialValue))
   }, [initialValue])
 
-  return <span style={{display: 'flex', justifyContent: 'center'}}><input value={value} onChange={onChange} onBlur={onBlur} size={size} style={{textAlign: 'center'}} />{ending()}</span>
+  return <span style={{ display: 'flex', justifyContent: 'center' }}><input value={value} onChange={onChange} onBlur={onBlur} size={size} style={{ textAlign: 'center' }} />{ending()}</span>
 }
 
 interface Type_DataTable {

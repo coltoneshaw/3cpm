@@ -57,7 +57,7 @@ const lightMode = {
     // Tailwinds 600
     '--color-red' : '#DC2626',
     '--color-green' : '#059669',
-    '--opacity-pill' : '1'
+    '--opacity-pill' : '.9'
 }
 
 const darkMode = {
