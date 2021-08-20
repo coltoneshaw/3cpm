@@ -5,7 +5,7 @@ const path = require("path");
 const isDev = !app.isPackaged;
 
 
-const { update, query, checkOrMakeTables, run, deleteAllData } = require( '@/app/Features/Database/database');
+const { update, query, checkOrMakeTables, run, deleteAllData, upsert } = require( '@/app/Features/Database/database');
 
 let win;
 
@@ -116,6 +116,10 @@ ipcMain.handle('config-clear', (event) => {
 
 ipcMain.handle('update-database', (event, table, updateData) => {
   return update(table, updateData)
+});
+
+ipcMain.handle('upsert-database', (event, table:string, data:any[], id:string, updateColumn:string) => {
+  return upsert(table, data, id, updateColumn)
 });
 
 ipcMain.handle('run-database', (event, queryString) => {

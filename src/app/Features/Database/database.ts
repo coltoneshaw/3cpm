@@ -48,7 +48,8 @@ function initializeBotsTable() {
             price_deviation NUMBER,
             drawdown NUMBER,
             maxCoveragePercent NUMBER,
-            maxSoReached NUMBER
+            maxSoReached NUMBER,
+            hide BOOLEAN
             )`);
 
     const info = stmt.run();
@@ -238,10 +239,42 @@ async function update(table:string, data:any[] ) {
     const KEYS = Object.keys(normalizedData[0]).map(e => normalizeData(e)).join()
     const valueKey = Object.keys(normalizedData[0]).map(key => '@' + key).map(e => normalizeData(e)).join()
 
+    
+
     const statement = db.prepare(`INSERT OR REPLACE INTO ${table} (${KEYS}) VALUES (${valueKey})`)
 
     const insertMany = db.transaction((dataArray) => {
         for (const row of dataArray) {
+            statement.run(row)
+        }
+    });
+
+    await insertMany(normalizedData)
+}
+
+async function upsert( table:string, data:any[], id:string, updateColumn:string ){
+
+    if(data.length == 0) {
+        console.log('no data to write')
+        return false
+    }
+
+    // removing any inconsistencies with how sqlite handles the data.
+    let normalizedData = data.map(row => {
+        let newRow:any = {};
+        Object.keys(row).forEach(item => {
+            newRow[normalizeData(item)] = normalizeData(row[item])
+        })
+        return newRow
+    })
+
+
+    // const KEYS = Object.keys(normalizedData[0]).map(e => normalizeData(e)).join()
+    // const valueKey = Object.keys(normalizedData[0]).map(key => '@' + key).map(e => normalizeData(e)).join()
+    
+    const insertMany = db.transaction((dataArray) => {
+        for (const row of dataArray) {
+            const statement = db.prepare(`UPDATE ${table} SET ${updateColumn} = ${row[updateColumn]} where ${id} = ${row[id]};`)
             statement.run(row)
         }
     });
@@ -284,5 +317,6 @@ export {
     query,
     run,
     checkOrMakeTables,
-    deleteAllData
+    deleteAllData,
+    upsert
 }

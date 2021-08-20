@@ -203,6 +203,7 @@ export interface Type_bots {
     drawdown?: number
     maxCoveragePercent: number | null
     maxSoReached?: number
+    hide: boolean
 }
 
 export interface Type_Query_bots extends Type_bots {

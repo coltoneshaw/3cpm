@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Switch } from '@material-ui/core';
-import { Delete as DeleteIcon, VerticalAlignBottom } from '@material-ui/icons';
+import { Switch, Checkbox } from '@material-ui/core';
+import { Delete as DeleteIcon } from '@material-ui/icons';
 import styled from 'styled-components'
 
 import { useGlobalData } from '@/app/Context/DataContext';
@@ -179,7 +179,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
   }
 
 
-  const handleEditCellChangeCommitted = (id: number, column: string, value: string, original: Type_Query_bots) => {
+  const handleEditCellChangeCommitted = (id: number, column: string, value: string | boolean, original: Type_Query_bots) => {
     updateLocalBotData((prevState: Type_Query_bots[]) => {
       const newRows = prevState.map(row => {
         if (id == row.id) {
@@ -226,6 +226,19 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
             onClick={handleOnOff}
             name={cell.row.original.id}
             inputProps={{ 'aria-label': 'secondary checkbox' }}
+          />
+        }
+      },
+      {
+        Header: 'Hide?',
+        accessor: 'hide',
+        Cell: ({ cell }: any) => {
+          return <Checkbox
+            checked={(cell.value === 1 || cell.value === true) ? true : false}
+            onChange={() => handleEditCellChangeCommitted(cell.row.original.id, 'hide', !cell.value, cell.row.original)}
+            name="summary"
+            style={{ color: 'var(--color-secondary)' }}
+
           />
         }
       },

@@ -1,4 +1,4 @@
-import { update, run } from '@/app/Features/Database/database';
+import { update, run, query } from '@/app/Features/Database/database';
 const { bots, getAccountDetail, deals, getDealsBulk, getDealsUpdate, getAccountSummary } = require('./api');
 
 import { findAndNotifyNewDeals } from '@/app/Features/Notifications/notifications'
@@ -50,8 +50,21 @@ async function getAndStoreBotData() {
       .then(async (data: Type_API_bots[]) => {
         if (data != null && data.length > 0) {
 
+          // deleting the bots that do not exist in the sync
+          // this helps to keep the database clean since bots can be removed from 3C but there is no `deleted_at` flag in the APO
           const botIDs = data.map(account => account.id)
           await run(`DELETE FROM bots WHERE id not in ( ${botIDs.join()});`)
+
+          // // grabbing the existing bots
+          const currentBots = await query("select id, hide from bots where origin = 'sync'")
+
+          data = data.map( bot => {
+            const hide = currentBots.find( b => b.id == bot.id).hide
+            return {
+              ...bot,
+              hide
+            }
+          })
 
           update('bots', data)
         }

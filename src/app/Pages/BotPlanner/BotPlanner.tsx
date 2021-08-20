@@ -43,6 +43,7 @@ const BotPlannerPage = () => {
         origin: 'custom',
         name: 'edit me',
         is_enabled: false,
+        hide: false,
         pairs: '',
         from_currency: 'USD',
         take_profit: 1,
@@ -87,28 +88,36 @@ const BotPlannerPage = () => {
         const customBots = localBotData.filter(bot => bot.origin === 'custom')
 
         // @ts-ignore - electron
-        if(customBots.length > 0) await electron.database.update('bots', customBots)
+        if (customBots.length > 0) await electron.database.update('bots', customBots)
 
-        // @ts-ignore - electron
-        electron.database.query("select * from bots where origin = 'custom'; ")
-            .then((table: Type_Query_bots[]) => {
-                const customBotIds = customBots.map(bot => bot.id);
-                if (customBotIds.length === 0) {
 
-                    // @ts-ignore - electron
-                    electron.database.run(`DELETE from bots where origin = 'custom'`)
-                } else {
+        // Deciding what bots to delete if they're included in the local bot data or not.
+        // Needs to have the logic thought through again. There seems to be reduncant calls here.
+        const customBotIds = customBots.map(bot => bot.id);
+        if (customBotIds.length === 0) {
+            // @ts-ignore - electron
+            electron.database.run(`DELETE from bots where origin = 'custom'`)
+        } else {
+            // @ts-ignore - electron
+            electron.database.query("select * from bots where origin = 'custom'; ")
+                .then((table: Type_Query_bots[]) => {
                     for (let row of table) {
                         if (!customBotIds.includes(row.id)) {
-
                             // @ts-ignore - electron
                             electron.database.run(`DELETE from bots where id = '${row.id}'`)
                         }
                     }
-                }
+                });
+        }
 
-            })
-        // alert('Saved to the bots table!')
+        // const existingBots = localBotData.filter(bot => bot.origin === 'sync').map(bot => ({id: bot.id, metrics: bot.metrics}))
+
+        // console.log(existingBots)
+
+        // @ts-ignore
+        await electron.database.upsert('bots', localBotData, 'id', 'hide')
+
+
     }
 
 
@@ -117,11 +126,11 @@ const BotPlannerPage = () => {
     return (
         <>
             {/* <h1 style={{margin: "auto"}}>Bot Planner</h1> */}
-    
+
 
             <Risk localBotData={localBotData} />
-            <div className="flex-row" style={{justifyContent: "flex-end"}}>
-                <UpdateDataButton 
+            <div className="flex-row" style={{ justifyContent: "flex-end" }}>
+                <UpdateDataButton
                     style={{
                         width: '200px',
                         margin: '5px 5px 10px 5px',
@@ -130,11 +139,11 @@ const BotPlannerPage = () => {
                     }}
                     className="button-botPlanner secondaryButton-outline"
                 />
-                <SaveButton 
-                className="button-botPlanner secondaryButton-outline"
-                saveFunction={saveCustomDeals} />
+                <SaveButton
+                    className="button-botPlanner secondaryButton-outline"
+                    saveFunction={saveCustomDeals} />
 
-                
+
                 <Button
                     endIcon={<AddIcon />}
                     onClick={() => { addToTable() }}
