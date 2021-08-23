@@ -17,6 +17,8 @@ const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
     const {actions: {updateAllData}} = dataState
     const [ loader, setLoaderIcon ] = useState(false)
 
+    const callback = () => setOpen(true)
+
 
     return (
         <div className="flex-row padding settingsButtonDiv" >
@@ -44,8 +46,7 @@ const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
                     try{
                         const config = await setConfigBulk() 
                         if(config){
-                            setOpen(true)
-                            await updateAllData()
+                            await updateAllData(1000, callback)
                         }
                     } catch (error) {
                         console.log(error)

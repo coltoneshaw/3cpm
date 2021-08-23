@@ -31,7 +31,7 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
 
             // @ts-ignore
 
-            return <Cell key={entry.performance_id} fill={colors[Math.round((index / length) * (colors.length - 1))]} />
+            return <Cell key={entry.performance_id} fill={colors[Math.round((index / length) * (colors.length - 1))]} opacity={.8}/>
         })
 
     }

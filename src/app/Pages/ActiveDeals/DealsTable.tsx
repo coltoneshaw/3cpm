@@ -1,64 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import styled from 'styled-components'
 import { CustomTable } from '@/app/Components/DataTable/Index'
 import { getDateString } from '@/utils/helperFunctions';
 import { parseNumber } from '@/utils/number_formatting';
 
 
-
-const Styles = styled.div`
-    overflow: scroll;
-
-  table {
-    border-spacing: 0;
-    background-color: var(--color-background-light);
-    color: var(--color-text-lightbackground);
-    font-size: .875em;
-    min-width: 1200px;
-
-    th,
-    td {
-      margin: 0;
-      padding: 0.3rem .2rem .3rem .2rem;
-    }
-
-    
-    tbody{
-
-        tr {
-            :nth-child(2n+2) {
-                background-color: var(--color-secondary-light87);
-            }
-    
-            :hover {
-                background-color: var(--color-secondary-light25);
-                color: var(--color-text-darkbackground);
-
-            }
-        };
-
-        .pill {
-            padding: .1em;
-            display: block;
-            border-radius: 10px;
-            color: white;
-            font-weight: 700;
-        }
-
-        .red {
-            background-color: var(--color-red);
-            opacity: var(--opacity-pill);
-        }
-
-        .green {
-            background-color: var(--color-green);
-            opacity: var(--opacity-pill)
-        }
-    }
+import Styles from './StyledDiv'
 
 
-  }
-`
 
 function DealsTable({ data }: { data: object[] }) {
 
@@ -190,12 +138,12 @@ function DealsTable({ data }: { data: object[] }) {
                         }
                     },
                     {
-                        Header: 'UR',
+                        Header: 'Unrealized',
                         accessor: 'unrealized_profit',
                         className: 'text-center',
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
-                            return <span >$ {parseNumber( cell.value, 3) }</span>
+                            return <span>$ {parseNumber( cell.value, 3) }</span>
                         }
                     }
                 ]

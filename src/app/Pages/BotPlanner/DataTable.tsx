@@ -23,7 +23,7 @@ import { Type_Query_bots } from '@/types/3Commas'
 import { CustomTable } from '@/app/Components/DataTable/Index'
 
 const Styles = styled.div`
-  overflow: scroll;
+  overflow: auto;
 
   table {
     border-spacing: 0;
@@ -31,18 +31,26 @@ const Styles = styled.div`
     color: var(--color-text-lightbackground);
     font-size: .875em;
     min-width: 1200px;
+    width: 100%;
 
     th,
     td {
       margin: 0;
-      padding: 0.2rem .2rem .5rem .5rem;
-    }
+      padding: 0.3rem .2rem .3rem .2rem;
+    };
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 44px;
+      background-color: var(--color-secondary-light87);
+
+  }
 
     thead {
-      background-color: var(--color-secondary-light87);
-      .darkHeader {
-        background-color: var(--color-secondary-light75);
-      }
+
+      
     }
 
     
@@ -365,8 +373,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
 
   return (
 
-    <div style={{ display: 'flex' }} className="boxData">
-      <div className="dataTable"  >
+      <div className="boxData flex-column" style={{padding: '2em 2em 2em 2em', overflow: 'hidden'}}>      {/* <div className="dataTable"  > */}
         <Styles>
           <CustomTable
             columns={columns}
@@ -378,10 +385,6 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
             updateLocalBotData={handleEditCellChangeCommitted}
             //@ts-ignore
             getHeaderProps={column => ({
-              style: {
-                height: '44px',
-
-              },
 
             })}
             //@ts-ignore
@@ -398,7 +401,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
             })}
           />
         </Styles>
-      </div>
+      {/* </div> */}
     </div>
 
   );
