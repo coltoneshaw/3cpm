@@ -2,6 +2,8 @@
 
 The 3C Portfolio Manager is an essential addon to your 3Commas experience. It enables you to manage your DCA bots with greater analytics, real-time alerting, and tons of additional features. It's a downloadable desktop application that's supported across Mac OS, Windows, and Linux operating systems. We are always expanding and adding new features! You may have seen this before as the 3C Portfolio Manager. That Google Sheet was the project that paved the way for the success of this application.
 
+<a href="https://www.buymeacoffee.com/ColtonS" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
 
 # Table of Contents
 
@@ -18,6 +20,7 @@ The 3C Portfolio Manager is an essential addon to your 3Commas experience. It en
 
 1. Download the latest release for your OS from the sidebar.
     - Depending on how you're downloading this file you could get an unsafe file warning. For more information read [Why should I trust this?](#why-should-i-trust-this) and [Unsafe File Warning](#unsafe-file-warning).
+    - You can find the latest release [here](https://github.com/coltoneshaw/3c-portfolio-manager/releases). Scroll to the bottom and you'll find the download links under `Assets`.
 2. Run the installer on your computer (or a local VM)
 3. Add your API keys to the application, run `Test API keys`
     - The API keys should be **read-only** access in 3C to bots / smart trades / accounts
