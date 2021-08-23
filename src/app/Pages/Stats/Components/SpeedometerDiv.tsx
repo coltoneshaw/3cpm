@@ -16,33 +16,33 @@ const SpeedometerDiv = ({metrics}: Speedometer_Type ) => {
             <MaxRiskSpeedometer
                 metric={maxRiskPercent}
                 min={0}
-                max={500}
+                max={400}
                 colorArray={["rgb(96, 213, 46)", "rgb(150, 222, 42)", "rgb(212, 231, 37)", "rgb(239, 197, 33)", "rgb(247, 138, 29)", "rgb(255, 71, 26)"]}
                 labelArray={[
                     {
                         text: '50%',
                         position: "OUTSIDE",
-                        color: "#555",
+                        color: "var(--color-text-lightbackground)",
                     },
                     {
                         text: "150%",
                         position: "OUTSIDE",
-                        color: "#555",
+                        color: "var(--color-text-lightbackground)",
                     },
                     {
                         text: "250%",
                         position: "OUTSIDE",
-                        color: "#555",
+                        color: "var(--color-text-lightbackground)",
                     },
                     {
                         text: "350%",
                         position: "OUTSIDE",
-                        color: "#555",
+                        color: "var(--color-text-lightbackground)",
                     },
                     {
-                        text: "450%",
+                        text: "",
                         position: "OUTSIDE",
-                        color: "#555",
+                        color: "",
                     }]}
                 title="Risk %" />
 
@@ -55,27 +55,27 @@ const SpeedometerDiv = ({metrics}: Speedometer_Type ) => {
                     {
                         text: '20%',
                         position: "OUTSIDE",
-                        color: "#555",
+                        color: "var(--color-text-lightbackground)",
                     },
                     {
                         text: "40%",
                         position: "OUTSIDE",
-                        color: "#555",
+                        color: "var(--color-text-lightbackground)",
                     },
                     {
                         text: "60%",
                         position: "OUTSIDE",
-                        color: "#555",
+                        color: "var(--color-text-lightbackground)",
                     },
                     {
                         text: "80%",
                         position: "OUTSIDE",
-                        color: "#555",
+                        color: "var(--color-text-lightbackground)",
                     },
                     {
                         text: "90%",
                         position: "OUTSIDE",
-                        color: "#555",
+                        color: "var(--color-text-lightbackground)",
                     }]}
             />
 
