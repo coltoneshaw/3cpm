@@ -1,4 +1,4 @@
-import { getTime, parseISO, formatISO } from 'date-fns'
+import { getTime, parseISO, formatISO, isValid } from 'date-fns'
 import React, { useContext, useState, useEffect, forwardRef } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 
@@ -20,17 +20,20 @@ export default function StartDatePicker() {
   const [localDate, setLocalDate] = useState<string>();
 
   const handleDateChange = (date: any) => {
-    setLocalDate(date)
+    if (date != undefined && isValid(new Date(date))) {
+      setLocalDate(date)
 
-    // getting the shortform utc date, stripping and converting to ISO
-    const dateString = formatISO(date, { representation: 'date' })
-    const utcDate = dateString + 'T00:00:00Z'
-    updateDate(getTime(parseISO(utcDate)));
+      // getting the shortform utc date, stripping and converting to ISO
+      const dateString = formatISO(date, { representation: 'date' })
+      const utcDate = dateString + 'T00:00:00Z'
+      updateDate(getTime(parseISO(utcDate)));
+    }
+
   };
 
   // converting the date into a ISO date and storing it.
   useEffect(() => {
-    const adjustedTime = date + ( (new Date()).getTimezoneOffset() * 60000 )
+    const adjustedTime = date + ((new Date()).getTimezoneOffset() * 60000)
     const dateString = new Date(adjustedTime).toUTCString()
     console.log(dateString)
     setLocalDate(dateString)
