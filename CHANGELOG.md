@@ -1,3 +1,7 @@
+# v0.2.2
+## Bug
+- Issue with bot manager not properly pulling in the bots.
+
 # v0.2.1
 
 ## Enhancements

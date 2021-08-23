@@ -59,7 +59,8 @@ async function getAndStoreBotData() {
           const currentBots = await query("select id, hide from bots where origin = 'sync'")
 
           data = data.map( bot => {
-            const hide = currentBots.find( b => b.id == bot.id).hide
+            const current = currentBots.find( b => b.id == bot.id)
+            const hide = (current != undefined) ? current.hide : false;
             return {
               ...bot,
               hide

@@ -1,5 +1,5 @@
 
-const mostRecent = '0.2.1'
+const mostRecent = '0.2.2'
 
 
 const versionInformation = [
@@ -163,6 +163,15 @@ const versionInformation = [
         bugs: [
             'Manually typing into the date selector would crash the application.',
             'Avg Deal hours was incorrectly averaging the sum by date instead of by deal.'
+        ],
+        new: []
+    },
+    {
+        version: '0.2.2',
+        enhancements: [
+        ],
+        bugs: [
+            'Bot manager was not properly downloading the bots'
         ],
         new: []
     },
