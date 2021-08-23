@@ -11,13 +11,14 @@ const descriptions = {
         totalInDeals: ( on_orders:number , totalBoughtVolume:number ) => ` adds together the total amount of funds that you have within a deal. This consists of funds on order of ${parseNumber(on_orders)} and total bought volume of your deals of ${parseNumber(totalBoughtVolume)}.`,
         totalProfit: ` is the sum of all the profit you've made within the filtered time period.`,
         totalRoi: ( totalProfit_perf:number , boughtVolume:number ) => ` calculates the total return on your investment based on the bought volume of ${parseNumber(boughtVolume)} divided by the total profit of ${parseNumber(totalProfit_perf)}`,
+        averageDealHours: (totalClosedDeals:number , totalDealHours:number ) => ` is the average amount of time it takes for your deals to close. You have ${parseNumber(totalClosedDeals)} deals and ${parseNumber(totalDealHours)} hours in those deals.`,
+
 
     },
     metrics: {
         totalBoughtVolume: ` is the total that your bots have put into a deal.`,
         totalDeals: ` is the total amount of deals closed during the filtered period.`,
         averageDailyProfit: ` is the amount of total profit you've made divided by the total number of days included in your filter.`,
-        averageDealHours: ` is the total average amount of time it takes for your deals to close.`,
         todaysProfit: ` is the sum of the profit you've made in UTC today. Note this does not always reset at midnight, depending on your timezone`,
         activeDealReserves: ` is the sum of all your deals current profit. This number can be postive / negative based on where all your deals are currently.`
     }

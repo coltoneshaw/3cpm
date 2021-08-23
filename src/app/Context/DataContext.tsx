@@ -52,7 +52,8 @@ const defaultMetrics = {
     position: 0,
     on_orders: 0,
     totalInDeals: 0,
-    reservedFundsTotal: 0
+    reservedFundsTotal: 0,
+    totalClosedDeals: 0
 }
 
 

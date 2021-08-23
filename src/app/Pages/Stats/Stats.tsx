@@ -42,7 +42,7 @@ const StatsPage = () => {
     const { config, state: { reservedFunds } } = configState
     const state = useGlobalData()
     const { data: { metricsData, isSyncing }, actions: { updateAllData } } = state
-    const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent, totalDeals, boughtVolume, totalProfit_perf, averageDailyProfit, averageDealHours } = metricsData
+    const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent, totalDeals, boughtVolume, totalProfit_perf, averageDailyProfit, averageDealHours, totalClosedDeals, totalDealHours } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')
     const date: undefined | number = dotProp.get(config, 'statSettings.startDate')
@@ -97,7 +97,7 @@ const StatsPage = () => {
                 <Card_TotalDeals metric={totalDeals} />
                 <Card_TotalRoi additionalData={{ totalProfit_perf, boughtVolume }} />
                 <Card_AverageDailyProfit metric={averageDailyProfit} />
-                <Card_AverageDealHours metric={averageDealHours} />
+                <Card_AverageDealHours metric={averageDealHours} additionalData={{totalClosedDeals, totalDealHours}}/>
             </>)
         }
     }
