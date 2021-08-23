@@ -138,7 +138,9 @@ const versionInformation = [
             'Project code was restructured to improve understanding for future contributors.',
             'Added an average line to the daily profit chart',
             'Improved profit by day to include month / year on the filter.',
-            'Improved readability of the tables in darkmode - Thanks @vdmsmnk!'
+            'Improved readability of the tables in darkmode - Thanks @vdmsmnk!',
+            'Adjusted the Y axis to avg deal for Bot Performance scatter.',
+            'Risk speedometer now caps at 350%'
         ],
         bugs: [
             'Deals with 0 BO would cause the application to crash because null was not handled',
@@ -148,7 +150,9 @@ const versionInformation = [
         ],
         new: [
             'Added a checkbox to allow you to choose what bots are calculated into the metrics',
-            'Added deal length to the push notifications'
+            'Added deal length to the push notifications',
+            'UNTESTED - Added BTC / ETH to the currency selector',
+            'Added additional filters to Bot / Pair performance charts'
         ]
     },
 ]
