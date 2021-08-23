@@ -14,7 +14,8 @@ import {
     Type_Bot_Performance_Metrics,
     Type_Performance_Metrics,
     Type_Pair_Performance_Metrics,
-    Type_UpdateFunction
+    Type_UpdateFunction,
+    Type_SyncOptions
 
 } from '@/types/3Commas'
 import { TconfigValues } from '@/types/config'
@@ -33,7 +34,7 @@ import {
     fetchBotPerformanceMetrics,
     fetchPairPerformanceMetrics,
     botQuery
-} from '@/utils/3Commas';
+} from '@/app/Features/3Commas/3Commas';
 
 
 const defaultBalance = {
@@ -80,10 +81,8 @@ interface Type_Data_Context {
     autoSync: {
         buttonEnabled: boolean
         setButtonEnabled: any // needs to be adjusted,
-        summarySync: boolean
-        setSummarySync: any
-        notifications: boolean
-        setNotifications: any
+        syncOptions: Type_SyncOptions
+        setSyncOptions: any
     }
 }
 
@@ -107,35 +106,36 @@ const DataProvider = ({ children }: any) => {
     const [isSyncing, updateIsSyncing] = useState(false)
 
 
-    useEffect(() => {
-        // console.log({config}, 'yolo')
-        // console.log()
-        if (config && dotProp.has(config, 'general.defaultCurrency')) {
+    // useEffect(() => {
+    //     // console.log({config}, 'yolo')
+    //     // console.log()
+    //     if (config && dotProp.has(config, 'general.defaultCurrency')) {
 
-            try {
-                getAccountData(config)
-            } catch (error) {
-                console.error(error)
-            }
-        }
+    //         try {
+                
+    //         } catch (error) {
+    //             console.error(error)
+    //         }
+    //     }
 
 
-    }, [config])
+    // }, [config])
 
     // @ts-ignore
     useEffect(async () => {
         updateIsSyncing(true)
         try {
             await fetchBotData()
-            await fetchProfitMetrics()
-            await fetchPerformanceData()
-            await getActiveDeals()
+            fetchProfitMetrics()
+            fetchPerformanceData()
+            getActiveDeals()
+            await getAccountData()
+            updateIsSyncing(false)
+
         } catch (error) {
             console.error(error)
+            updateIsSyncing(false)
         }
-        updateIsSyncing(false)
-
-
     }, [config])
 
     /**
@@ -240,12 +240,12 @@ const DataProvider = ({ children }: any) => {
      * @data - active deals, entire array returned by 3C
      * Confirmed working
      */
-    const getActiveDeals = () => {
-        getActiveDealsFunction()
+    const getActiveDeals = async () => {
+        await getActiveDealsFunction()
             .then(data => {
                 console.log('updated active deals and related metrics!')
                 const { activeDeals, metrics } = data
-                updateActiveDeals(activeDeals)
+                updateActiveDeals(() => activeDeals)
                 updateMetricsData(prevMetrics => {
                     return {
                         ...prevMetrics,
@@ -266,8 +266,8 @@ const DataProvider = ({ children }: any) => {
      * @balance - on_orders, position
      * @metrics - same as balance.
      */
-    const getAccountData = (config: TconfigValues) => {
-        getAccountDataFunction(config.general.defaultCurrency)
+    const getAccountData = async () => {
+        await getAccountDataFunction()
             .then(data => {
                 const { accountData, balance } = data
 
@@ -351,53 +351,76 @@ const DataProvider = ({ children }: any) => {
         })
     }
 
-    const updateAllData = async (offset: number) => {
-        updateIsSyncing(true)
+    const updateAllData = async (offset: number = 1000, callback: CallableFunction) => {
 
-        const options = { 
-            time: 0, 
-            summary: false, 
-            offset, 
-            notifications: false
-        }
-        try {
-            await updateThreeCData('fullSync', options)
-                .then(async () => {
-                    await fetchBotData()
-                    await fetchProfitMetrics()
-                    await fetchPerformanceData()
-                    await getActiveDeals()
+        // const options = {
+        //     time: 0,
+        //     summary: false,
+        //     offset,
+        //     notifications: false
+        // }
 
-                    if (config && dotProp.has(config, 'general.defaultCurrency')) {
+        await setSyncOptions( (prevState) => { 
+            updateIsSyncing(true)
+            let syncCount = prevState.syncCount
+            const options = {
+                ...prevState,
+                offset
+            }
 
-                        await getAccountData(config)
+            try {
+                updateThreeCData('fullSync', options)
+                    .then(async () => {
+                        await fetchBotData()
+                        fetchProfitMetrics()
+                        fetchPerformanceData()
+                        getActiveDeals()
+                        await getAccountData()
+                        calculateMetrics()
+                        updateIsSyncing(false)
+                        callback()
+    
+                    })
+                    return {
+                        ...prevState,
+                        syncCount: 0
                     }
+            } catch (error) {
+                console.error(error)
+                alert('Error updating your data. Check the console for more information.')
+                updateIsSyncing(false)
+                return {
+                    ...prevState,
+                    syncCount
+                }
+            }
 
-                    calculateMetrics()
+           
+        })
+        
 
-                })
-        } catch (error) {
-            console.error(error)
-            alert('Error updating your data. Check the console for more information.')
-        }
-
-        updateIsSyncing(false)
     }
 
-    // const [lastSyncTime, updateLastSyncTime] = useState(() => )
     /**
      * Data Syncing state
      */
 
     const [buttonEnabled, setButtonEnabled] = useState<boolean>(false)
     const [interval, setIntervalState] = useState<NodeJS.Timeout | null | number>()
+    const defaultSyncOptions = {
+        summary: false,
+        notifications: true,
+        time: 0,
+        syncCount: 0
+        // offset: 25,
+    }
+    const [syncOptions, setSyncOptions] = useState(defaultSyncOptions)
 
-    // update the summary value here to define what type of notifications are sent.
-    const [summarySync, setSummarySync] = useState(false)
-    const [notifications, setNotifications] = useState(true)
+    // update accounts every 5 minutes
+    // 1. make a counter to keep track of syncs. Every 20 syncs update the accounts
+    // 2. increment the counter for each sync that happens. Reset the counter if a full sync was ran.
+    // 3. if syncs > 20, run the account update function. reset counter to 0.
 
-
-    let lastSyncTime = new Date().getTime()
 
     /**
      * 
@@ -408,58 +431,78 @@ const DataProvider = ({ children }: any) => {
     const updateAutoSync = async (offset: number) => {
         updateIsSyncing(true)
 
-        const time = lastSyncTime
-        let options = { 
-            time, 
-            summary: summarySync, 
-            offset, 
-            notifications
-        }
+        setSyncOptions(prevState => {
+            const options = {
+                ...prevState,
+                offset
+            }
+            
+            console.log(options)
+            let syncCount = prevState.syncCount
+            try {
+                updateThreeCData('autoSync', options)
+                    .then(() => {
+                        fetchProfitMetrics()
+                        fetchPerformanceData()
+                        getActiveDeals()
+                        calculateMetrics()
+                        updateIsSyncing(false)
+                    })
+            } catch (error) {
+                console.error(error)
+                alert('Error updating your data. Check the console for more information.')
+                updateIsSyncing(false)
+            }
 
-        try {
-            lastSyncTime = lastSyncTime + 15000
-            updateThreeCData('autoSync', options)
-                .then(async () => {
-                    await fetchProfitMetrics()
-                    await fetchPerformanceData()
-                    await getActiveDeals()
+            if(prevState.syncCount === 20) {
+                console.error('updating the sync count to 0')
+                syncCount = 0;
+            }
 
-                    calculateMetrics()
-                    updateIsSyncing(false)
-                })
-        } catch (error) {
-            console.error(error)
-            alert('Error updating your data. Check the console for more information.')
-            updateIsSyncing(false)
+            return {
+                ...prevState,
+                time: prevState.time + 15000,
+                syncCount: syncCount + 1
+            }
+        })
 
-        }
     }
 
 
-
-
-
-
     // Timer is set to a 15 second refresh interval right now.
-    const timer = () => setIntervalState(
-        setInterval(() => {
-            updateAutoSync(25)
-        }, 15000))
+    const timer = () => {
+
+        // setting a new start for the time each time the timer is called.
+        setSyncOptions(prevState => ({
+            ...prevState,
+            time: new Date().getTime()
+        }))
+
+        setIntervalState(
+            setInterval(() => {
+
+                // TODO - need to set this to possibly be the length of active deals so catch all the data.
+                updateAutoSync(200)
+            }, 15000))
+    }
 
     const stopAutoSync = () => {
         //@ts-ignore
         clearInterval(interval); // Not working
         setIntervalState(null)
+
+        // setting the sync count to 0 when auto sync is stopped
+        setSyncOptions(prevState => ({
+            ...prevState,
+            syncCount: 0
+        }))
     }
     useEffect(() => {
-
         if (buttonEnabled) {
             timer();
-
         } else {
             stopAutoSync()
         }
-
     }, [buttonEnabled]);
 
 
@@ -494,10 +537,12 @@ const DataProvider = ({ children }: any) => {
         autoSync: {
             buttonEnabled,
             setButtonEnabled,
-            summarySync,
-            setSummarySync,
-            notifications,
-            setNotifications
+            // summarySync,
+            // setSummarySync,
+            // notifications,
+            // setNotifications,
+            syncOptions,
+            setSyncOptions
         }
     }
 

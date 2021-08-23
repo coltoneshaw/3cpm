@@ -2,9 +2,12 @@ import React, { PureComponent } from 'react';
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-import NoData from '@/app/Components/Pages/Stats/Components/NoData';
+import NoData from '@/app/Pages/Stats/Components/NoData';
 
 import { parseISO, format } from 'date-fns'
+import { getLang } from '@/utils/helperFunctions';
+
+const lang = getLang()
 import { parseNumber } from '@/utils/number_formatting';
 
 import { CustomTooltip } from '@/app/Components/Charts/Tooltips';
@@ -38,8 +41,8 @@ const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
                         minTickGap={50}
                         tickFormatter={(str) => {
                             if (str == 'auto') return ""
-                            let date = parseISO(new Date(str).toISOString())
-                            return format(date, "M/d")
+                            return new Date(str).toLocaleDateString(lang, { month: '2-digit', day: '2-digit' })
+
                         }}
                     />
                     <YAxis
@@ -51,7 +54,7 @@ const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
                         // TODO - Need to look at passing in a tick array that contains the values rounded to 100s.
                         type="number" 
                         allowDecimals={false}
-                        domain={[(dataMin: number) => Math.floor(dataMin / 100 ) * 100, (dataMax: number) =>  Math.round(dataMax / 100 ) * 100]}
+                        domain={[(dataMin: number) => Math.floor(dataMin / 100 ) * 100, (dataMax: number) =>  Math.ceil(dataMax / 100 ) * 100]}
                     />
 
                     <Tooltip 

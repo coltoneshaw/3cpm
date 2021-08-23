@@ -2,7 +2,7 @@ import React from 'react';
 
 import CardTooltip from './CustomToolTip';
 
-// import './Card.scss';
+import './Card.scss';
 // " is calculated by taking your total DCA Max Risk of 35,746 and dividing it by your current bankroll of 14,644." 
 
 const Card = ({ title, metric, message }: { title: string, metric: number | string, message?: string }) => {

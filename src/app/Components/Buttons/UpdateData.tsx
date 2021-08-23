@@ -4,13 +4,14 @@ import { Button } from '@material-ui/core';
 import SyncIcon from '@material-ui/icons/Sync';
 
 import { useGlobalData } from '@/app/Context/DataContext';
-import ToastNotifcation from '@/app/Components/ToastNotification'
+import { ToastNotifcations } from '@/app/Features/Index'
 
 interface Type_ButtonProps {
     style?: object,
     className?: string
+    disabled?: boolean
 }
-const UpdateDataButton = ({ style, className }: Type_ButtonProps) => {
+const UpdateDataButton = ({ style, className, disabled }: Type_ButtonProps) => {
 
     const state = useGlobalData()
     const { data: { metricsData, isSyncing }, actions: { updateAllData } } = state
@@ -35,10 +36,10 @@ const UpdateDataButton = ({ style, className }: Type_ButtonProps) => {
             <Button
                 // variant="contained"
                 // color="primary"
+                disabled={isSyncing? true : false}
                 className={className}
-                onClick={async () => {
-                    await updateAllData()
-                    handleClick()
+                onClick={() => {
+                    updateAllData(1000, handleClick)
                 }}
                 disableElevation
                 endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
@@ -46,7 +47,7 @@ const UpdateDataButton = ({ style, className }: Type_ButtonProps) => {
             >
                 Update Data
             </Button>
-            <ToastNotifcation open={open} handleClose={handleClose} message="Sync finished." />
+            <ToastNotifcations open={open} handleClose={handleClose} message="Sync finished." />
         </>
     )
 }

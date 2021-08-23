@@ -130,6 +130,31 @@ const versionInformation = [
             'Filters now work for the bots table and the deal notifications'
         ]
     },
+    {
+        version: '0.2.0',
+        enhancements: [
+            'Improved the autosync to bring account data every 5 minutes to keep the bankroll metric correct',
+            'Improved the overall responsiveness and scrollbars on the Bot Planner',
+            'Project code was restructured to improve understanding for future contributors.',
+            'Added an average line to the daily profit chart',
+            'Improved profit by day to include month / year on the filter.',
+            'Improved readability of the tables in darkmode - Thanks @vdmsmnk!',
+            'Adjusted the Y axis to avg deal for Bot Performance scatter.',
+            'Risk speedometer now caps at 350%'
+        ],
+        bugs: [
+            'Deals with 0 BO would cause the application to crash because null was not handled',
+            'Renaming or deleting an account in 3C would not updating the Reserved Bankroll accounts',
+            'The checkbox state for notifications / sync was not properly updating',
+            'The metrics on the active deal table were not getting properly updated with each sync.'
+        ],
+        new: [
+            'Added a checkbox to allow you to choose what bots are calculated into the metrics',
+            'Added deal length to the push notifications',
+            'UNTESTED - Added BTC / ETH to the currency selector',
+            'Added additional filters to Bot / Pair performance charts'
+        ]
+    },
 ]
 
 export {

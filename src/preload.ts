@@ -59,6 +59,10 @@ async function setupContextBridge() {
         console.log('updating the database.')
         return await ipcRenderer.invoke('update-database', table, updateData);
       },
+      async upsert(table:string, data:any[], id:string, updateColumn:string) {
+        console.log('running upsert on the database.')
+        return await ipcRenderer.invoke('upsert-database', table, data, id, updateColumn);
+      },
       async run(query:string) {
         console.log('running query' + query)
         return await ipcRenderer.invoke('run-database', query);

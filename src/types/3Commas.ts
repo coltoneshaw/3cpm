@@ -158,7 +158,7 @@ export interface Type_Query_Accounts {
 }
 
 export interface Type_bots {
-    id: number
+    id: number | string
     origin: string
     account_id: number
     account_name?: string
@@ -203,6 +203,7 @@ export interface Type_bots {
     drawdown?: number
     maxCoveragePercent: number | null
     maxSoReached?: number
+    hide: boolean
 }
 
 export interface Type_Query_bots extends Type_bots {
@@ -254,6 +255,7 @@ export interface Type_UpdateFunction{
     time:number
     summary: boolean
     notifications: boolean
+    syncCount: number
 }
 
 
@@ -342,4 +344,11 @@ export interface Type_UpdateFunction{
     max_deal_funds: number
     profitPercent: number
     impactFactor: number
+}
+
+export interface Type_SyncOptions {
+    time: number,
+    summary: boolean,
+    offset: number,
+    notifications: boolean
 }

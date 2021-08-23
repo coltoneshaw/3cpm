@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
-import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Line, Area } from 'recharts';
+import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Line, Label } from 'recharts';
 
 
 import {InputLabel, MenuItem, FormControl, Select, FormHelperText} from '@material-ui/core';
 
-import NoData from '@/app/Components/Pages/Stats/Components/NoData';
+import NoData from '@/app/Pages/Stats/Components/NoData';
 
 import { parseNumber, formatPercent } from '@/utils/number_formatting';
 import { dynamicSort } from '@/utils/helperFunctions';
@@ -22,6 +22,7 @@ const legendFind = (value: string) => {
 const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
 
     const [sort, setSort] = React.useState('-total_profit');
+    const [filter, setFilter] = React.useState('all');
 
     const handleChange = (event:any) => {
         setSort(event.target.value);
@@ -30,21 +31,48 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
     const hide = (id:string ) => {
         return (id == sort) ? false : true  
     }
+
+
+    const handleFilterchange = (event: any) => {
+        setFilter(event.target.value);
+    };
+    const filterData = (data: Type_Pair_Performance_Metrics[] ) => {
+        data = data.sort(dynamicSort('-total_profit'));
+        const length = data.length;
+        const fiftyPercent = length / 2
+        const twentyPercent = length / 5
+
+        if (filter === 'top20')  {
+            data = data.sort(dynamicSort('-total_profit'));
+            return data.filter( (bot, index) => index < twentyPercent)
+        } else if (filter === 'top50')  {
+            data = data.sort(dynamicSort('-total_profit'));
+            return data.filter( (bot, index) => index < fiftyPercent)
+        } else if (filter === 'bottom50')  {
+            data = data.sort(dynamicSort('total_profit'));
+            return data.filter( (bot, index) => index < fiftyPercent)
+        } else if (filter === 'bottom20')  {
+            data = data.sort(dynamicSort('total_profit'));
+            return data.filter( (bot, index) => index < twentyPercent)
+        } else {
+            return data;
+        }
+
+        
+
+    }
     const renderChart = () => {
         if (data == undefined || data.length === 0) {
             return (<NoData />)
         } else {
+            data = filterData(data)
             data = data.sort(dynamicSort(sort))
+
             return (<ResponsiveContainer width="100%" height="100%" minHeight="300px">
                 <ComposedChart
 
                     data={data}
-                    // margin={{
-                    //     top: 20,
-                    //     right: 30,
-                    //     left: 20,
-                    //     bottom: 5,
-                    // }}
+
                     stackOffset="expand"
                 >
                     <CartesianGrid opacity={.3} vertical={false} />
@@ -65,9 +93,47 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
                         height={75}
 
                     />
-                    <YAxis yAxisId="total_profit" orientation='left' hide={hide("-total_profit")} domain={[0, 'auto']} allowDataOverflow={true} offset={20}/>
-                    <YAxis yAxisId="avg_deal_hours" orientation='left' hide={hide("-avg_deal_hours")} domain={[0, 'auto']} allowDataOverflow={true} offset={20} />
-                    <YAxis yAxisId="bought_volume" orientation='left' hide={hide("-bought_volume") } domain={[0, 'auto']} allowDataOverflow={true} offset={20} />
+                    <YAxis 
+                        yAxisId="total_profit" 
+                        orientation='left' 
+                        hide={hide("-total_profit")} 
+                        domain={[0, 'auto']} 
+                        allowDataOverflow={true} offset={20}>
+                        <Label value="Total Profit"
+                                angle={-90}
+                                dy={0}
+                                dx={-20}
+                            />
+                    
+                    </YAxis>
+
+                    <YAxis 
+                        yAxisId="avg_deal_hours" 
+                        orientation='left' 
+                        hide={hide("-avg_deal_hours")} 
+                        domain={[0, 'auto']} 
+                        allowDataOverflow={true} 
+                        offset={20} >
+                        <Label value="Avg. Deal Hours"
+                                angle={-90}
+                                dy={0}
+                                dx={-20}
+                            />
+                    
+                    </YAxis>
+                    <YAxis 
+                        yAxisId="bought_volume" 
+                        orientation='left' 
+                        hide={hide("-bought_volume") } 
+                        domain={[0, 'auto']} 
+                        allowDataOverflow={true} 
+                        offset={40} >
+                        {/* <Label value="Bought Volume"
+                                angle={-90}
+                                dy={0}
+                                dx={-40}
+                            /> */}
+                    </YAxis>
 
                     <Bar name="Total Profit" type="monotone" yAxisId="total_profit" fillOpacity={.8}  dataKey="total_profit" fill="var(--color-CTA-dark25)" />
                     <Line  name="Bought Volume" yAxisId="bought_volume" dataKey="bought_volume" stroke="var(--color-primary)" dot={false} strokeWidth={1.75} />
@@ -97,6 +163,24 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
                         <MenuItem value="-avg_deal_hours">Avg. Deal Hours</MenuItem>
                     </Select>
                 </FormControl>
+                </div>
+                <div style={{ position:"absolute", left: 0, top: 0, height: "50px", zIndex: 5}}>
+                <FormControl  >
+                        <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={filter}
+                            onChange={handleFilterchange}
+                            style={{ width: "150px" }}
+                        >
+                            <MenuItem value="all">All</MenuItem>
+                            <MenuItem value="top20">Top 20%</MenuItem>
+                            <MenuItem value="top50">Top 50%</MenuItem>
+                            <MenuItem value="bottom50">Bottom 50%</MenuItem>
+                            <MenuItem value="bottom20">Bottom 20%</MenuItem>
+                        </Select>
+                    </FormControl>
                 </div>
                    
 

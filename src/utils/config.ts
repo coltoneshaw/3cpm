@@ -1,5 +1,5 @@
 const Store = require('electron-store');
-const { run } = require('@/server/database')
+const { run } = require('@/app/Features/Database/database')
 
 import { defaultConfig, configSchema } from '@/utils/defaultConfig';
 
@@ -31,6 +31,11 @@ const config = new Store({
         },
         '0.1.1': ( store: any )=>{
             store.set('general.updated', true)
+        },
+        '0.2.0': ( store: any ) => {
+
+            // removing the bots that have been synced so they can be resynced and a new column added
+            run('ALTER TABLE bots ADD COLUMN hide boolean;')
         }
         
     },

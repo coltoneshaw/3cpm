@@ -91,7 +91,7 @@
         "dmg"
       ],
       "type": "distribution",
-    "darkModeSupport": true,
+      "darkModeSupport": true,
       "hardenedRuntime": true,
       "entitlements": "assets/entitlements.mac.plist",
       "entitlementsInherit": "assets/entitlements.mac.plist",
@@ -119,8 +119,8 @@
       "target": "NSIS"
     },
     "nsis": {
-      "createDesktopShortcut" : true,
-      "createStartMenuShortcut" : true
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
     },
     "linux": {
       "icon": "assets/icons"

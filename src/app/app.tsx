@@ -5,7 +5,7 @@ import Sidebar from './Components/Sidebar/Sidebar';
 
 import { HashRouter } from 'react-router-dom'
 
-import MainWindow from "./Components/MainWindow"
+import { MainWindow } from "@/app/Pages/Index"
 
 import { ConfigProvider } from './Context/Config';
 import { useThemeProvidor } from './Context/ThemeEngine';
@@ -20,9 +20,6 @@ const App = () => {
     <HashRouter>
         <div style={styles} className="rootDiv">
           <ConfigProvider>
-
-            {/* Need to update this to properly pass down the config from the app to the components.*/}
-
             <Sidebar />
             <MainWindow />
           </ConfigProvider>

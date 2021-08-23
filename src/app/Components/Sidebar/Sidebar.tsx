@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-// import './Sidebar.scss';
+import './Sidebar.scss';
 
 
-import { ActiveDealsIcon, BackwardClock, BotPlannerIcon, Coffee, Cog, PieChart } from './Icons/Index'
+import { ActiveDealsIcon, BackwardClock, BotPlannerIcon, Coffee, Cog, PieChart } from '@/app/Components/icons/Index';
 
 import { SidebarNav, SidebarLink } from './Components';
 

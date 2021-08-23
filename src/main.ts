@@ -5,7 +5,7 @@ const path = require("path");
 const isDev = !app.isPackaged;
 
 
-const { update, query, checkOrMakeTables, run, deleteAllData } = require( './server/database');
+const { update, query, checkOrMakeTables, run, deleteAllData, upsert } = require( '@/app/Features/Database/database');
 
 let win;
 
@@ -118,6 +118,10 @@ ipcMain.handle('update-database', (event, table, updateData) => {
   return update(table, updateData)
 });
 
+ipcMain.handle('upsert-database', (event, table:string, data:any[], id:string, updateColumn:string) => {
+  return upsert(table, data, id, updateColumn)
+});
+
 ipcMain.handle('run-database', (event, queryString) => {
   return run(queryString)
 });
@@ -138,7 +142,7 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
  * 
  */
 
- const { updateAPI, bots, getDealsBulk, getDealsUpdate, getAndStoreBotData, getAccountSummary } = require('./server/threeC/index');
+ const { updateAPI, bots, getDealsBulk, getDealsUpdate, getAndStoreBotData, getAccountSummary } = require('@/app/Features/3Commas/API/index');
 
 
  ipcMain.handle('api-getDealsBulk', (event, limit) => {
