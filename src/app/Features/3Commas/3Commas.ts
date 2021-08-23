@@ -63,7 +63,8 @@ const fetchDealDataFunction = async () => {
             SELECT 
                 substr(closed_at, 0, 11) as closed_at_str,
                 sum(final_profit) as final_profit,
-                sum(deal_hours) as deal_hours
+                sum(deal_hours) as deal_hours,
+                count(id) as total_deals
             FROM 
                 deals 
             WHERE
@@ -106,21 +107,26 @@ const fetchDealDataFunction = async () => {
         profitArray.push({
             utc_date: day.closed_at_str,
             profit: day.final_profit,
-            runningSum: runningSum
+            runningSum: runningSum,
+            total_deals: day.total_deals
         })
     })
 
 
     const totalProfit = (profitArray.length > 0) ? +profitArray[profitArray.length - 1].runningSum : 0
     const averageDailyProfit = (profitArray.length > 0) ? totalProfit / (profitArray.length + 1) : 0;
-    const averageDealHours = (profitArray.length > 0) ? totalDealHours / (profitArray.length + 1) : 0;
+    const totalClosedDeals = (profitArray.length > 0) ? profitArray.map(day => day.total_deals).reduce( (sum:number, total_deals: number) => sum + total_deals) : 0;
+    const averageDealHours = (profitArray.length > 0) ? totalDealHours / totalClosedDeals : 0;
+    console.log({totalDealHours, profitArray, totalClosedDeals})
 
     return {
         profitData: profitArray,
         metrics: {
             totalProfit,
             averageDailyProfit,
-            averageDealHours
+            averageDealHours,
+            totalClosedDeals,
+            totalDealHours
         }
     }
 

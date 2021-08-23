@@ -14,7 +14,7 @@ const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
     const { reset, setConfigBulk }  = configState
 
     const dataState = useGlobalData()
-    const {actions: {updateAllData}} = dataState
+    const {actions: { updateAllData  }, data: { isSyncing}} = dataState
     const [ loader, setLoaderIcon ] = useState(false)
 
     const callback = () => setOpen(true)
@@ -55,7 +55,7 @@ const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
                 }}
                 disableElevation
             >
-                {( loader) ? <> Syncing... <LoaderIcon /> </> : "Save"}
+                {( isSyncing) ? <> Syncing... <LoaderIcon /> </> : "Save"}
             </Button>
         </div>
     )

@@ -1,5 +1,5 @@
 
-const mostRecent = '0.1.1'
+const mostRecent = '0.2.1'
 
 
 const versionInformation = [
@@ -154,6 +154,17 @@ const versionInformation = [
             'UNTESTED - Added BTC / ETH to the currency selector',
             'Added additional filters to Bot / Pair performance charts'
         ]
+    },
+    {
+        version: '0.2.1',
+        enhancements: [
+            'Added a calculated tooltip to avg deal hours',
+        ],
+        bugs: [
+            'Manually typing into the date selector would crash the application.',
+            'Avg Deal hours was incorrectly averaging the sum by date instead of by deal.'
+        ],
+        new: []
     },
 ]
 

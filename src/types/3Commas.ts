@@ -44,12 +44,15 @@ export interface Type_Query_DealData {
     closed_at: string
     id: number
     deal_hours: number,
+    total_deals: number
 }
 
 export type Type_Profit = {
     utc_date: string
     profit: number
     runningSum: number
+    total_deals: number
+
 }
 
 
@@ -228,10 +231,12 @@ export interface Type_MetricData {
     bankrollAvailable: number
     totalBankroll: number
     position: number
-    on_orders: number
+    on_orders: number // total number of funds in an exchange order that's not filled
     totalInDeals: number
     availableBankroll: number,
-    reservedFundsTotal: number
+    reservedFundsTotal: number,
+    totalClosedDeals: number, // total number of deals closed for the filtered time
+    totalDealHours: number // this is the total hours in deals you have for the filtered time
 }
 
 export interface Type_MarketOrders {
