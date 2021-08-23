@@ -1,3 +1,12 @@
+# v0.2.1
+
+## Enhancements
+- Added a calculated tooltip to avg deal hours
+
+## Bug
+- Manually typing into the date selector would crash the application.
+- Avg Deal hours was incorrectly averaging the sum by date instead of by deal.
+
 # v0.2.0
 
 ##  Enhancements
