@@ -24,7 +24,7 @@ const convertToNewDates = (data: Type_Profit[], langString: any, type: string) =
 
     const mappedArray = data.map(day => {
         return {
-            date: new Date(day.utc_date).toLocaleString(getLang(), langString),
+            date: new Date(day.utc_date).toLocaleString(lang, langString),
             profit: day.profit
         }
     })
@@ -85,18 +85,15 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
         )
     }
 
-
-
-    const filteredData = convertToNewDates(data, filterString, dateType)
-    const calculateAverage = () => {
-        const totalProfit = (filteredData.length > 0) ? filteredData.map(deal => deal.profit).reduce((sum, profit) => sum + profit) : 0
-        return totalProfit / filteredData.length
-
-    }
     const renderChart = () => {
         if (data.length === 0) {
             return (<NoData />)
         } else {
+            const filteredData = (data != undefined && data.length > 0) ? convertToNewDates(data, filterString, dateType) : [];
+            const calculateAverage = () => {
+                const totalProfit = (filteredData.length > 0) ? filteredData.map(deal => deal.profit).reduce((sum, profit) => sum + profit) : 0
+                return totalProfit / filteredData.length
+            }
             return (
                 <ResponsiveContainer width="100%" height="100%" minHeight="300px">
                     <BarChart
@@ -119,7 +116,7 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
                             tickLine={false}
                             minTickGap={( filteredData.length > 6) ? 40 : 0}
                             tickFormatter={(str) => {
-                                if (str == 'auto') return ""
+                                if (str == 'auto' || str == undefined) return ""
                                 if(dateType === 'day'){
                                     return new Date(str).toLocaleDateString(lang, { month: '2-digit', day: '2-digit' })
                                 } else if (dateType ==='year' || dateType === 'month'){
