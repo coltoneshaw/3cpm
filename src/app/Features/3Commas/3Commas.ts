@@ -114,7 +114,7 @@ const fetchDealDataFunction = async () => {
 
 
     const totalProfit = (profitArray.length > 0) ? +profitArray[profitArray.length - 1].runningSum : 0
-    const averageDailyProfit = (profitArray.length > 0) ? totalProfit / (profitArray.length + 1) : 0;
+    const averageDailyProfit = (profitArray.length > 0) ? totalProfit / (profitArray.length ) : 0;
     const totalClosedDeals = (profitArray.length > 0) ? profitArray.map(day => day.total_deals).reduce( (sum:number, total_deals: number) => sum + total_deals) : 0;
     const averageDealHours = (profitArray.length > 0) ? totalDealHours / totalClosedDeals : 0;
     console.log({totalDealHours, profitArray, totalClosedDeals})
