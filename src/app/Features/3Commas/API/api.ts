@@ -66,7 +66,9 @@ async function bots() {
   const api = threeCapi(config)
   if(!api) return []
 
-  let data:Type_API_bots[] = await api.getBots();
+  // added this to be the max amount of bots returned. Eventually this needs to be handled in a loop
+  // however, the chances of 1000+ bots is a bit low.
+  let data:Type_API_bots[] = await api.getBots({ limit: 1000, sort_by: 'updated_at', order_direction: 'desc' });
 
   const dataArray = []
 
