@@ -35,7 +35,6 @@ export default function StartDatePicker() {
   useEffect(() => {
     const adjustedTime = date + ((new Date()).getTimezoneOffset() * 60000)
     const dateString = new Date(adjustedTime).toUTCString()
-    console.log(dateString)
     setLocalDate(dateString)
   }, [])
 

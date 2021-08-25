@@ -90,7 +90,7 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
             return (<NoData />)
         } else {
             const filteredData = (data != undefined && data.length > 0) ? convertToNewDates(data, filterString, dateType) : [];
-            console.log(filteredData)
+            // console.log(filteredData)
             const calculateAverage = () => {
                 const totalProfit = (filteredData.length > 0) ? filteredData.map(deal => deal.profit).reduce((sum, profit) => sum + profit) : 0
                 return totalProfit / filteredData.length
