@@ -1,3 +1,8 @@
+# v0.2.3
+## Bug
+- Fixed bug in the avg daily profit KPI
+- Bot manager was capping results at 50 bots. Adjusted this to 1000 and will address looping in a future release.
+
 # v0.2.2
 ## Bug
 - Issue with bot manager not properly pulling in the bots.
