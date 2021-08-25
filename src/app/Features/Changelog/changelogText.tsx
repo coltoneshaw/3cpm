@@ -1,5 +1,5 @@
 
-const mostRecent = '0.2.2'
+const mostRecent = '0.2.3'
 
 
 const versionInformation = [
@@ -172,6 +172,16 @@ const versionInformation = [
         ],
         bugs: [
             'Bot manager was not properly downloading the bots'
+        ],
+        new: []
+    },
+    {
+        version: '0.2.3',
+        enhancements: [
+        ],
+        bugs: [
+            'Fixed bug in the avg daily profit KPI',
+            'Bot manager was capping results at 50 bots. Adjusted this to 1000 and will address looping in a future release.'
         ],
         new: []
     },

@@ -66,14 +66,24 @@ async function bots() {
   const api = threeCapi(config)
   if(!api) return []
 
+  let responseArray = [];
+  let response:Type_API_bots[] ;
+  let offsetMax = 5000;
+  let perOffset = 1000;
+
+
+
+  for (let offset = 0; offset < offsetMax; offset += perOffset) {
+    response = await api.getBots({ limit: 1000, sort_by: 'updated_at', order_direction: 'desc', offset });
+
+    if (response.length > 0) { responseArray.push(...response) }
+    if (response.length != perOffset) break
+
+  }
   // added this to be the max amount of bots returned. Eventually this needs to be handled in a loop
   // however, the chances of 1000+ bots is a bit low.
-  let data:Type_API_bots[] = await api.getBots({ limit: 1000, sort_by: 'updated_at', order_direction: 'desc' });
 
-  const dataArray = []
-
-  for (let bot of data) {
-
+  responseArray = responseArray.map( bot => {
     let {
       id, account_id, account_name, is_enabled,
       max_safety_orders, active_safety_orders_count,
@@ -95,7 +105,7 @@ async function bots() {
 
 
   
-    const tempObject = {
+    return {
       id,
       origin: 'sync',
       account_id,
@@ -137,11 +147,10 @@ async function bots() {
       price_deviation: calc_deviation( +max_safety_orders, +safety_order_step_percentage, +martingale_step_coefficient),
       maxCoveragePercent: null
     }
+  })
 
-    dataArray.push(tempObject)
-  }
 
-  return dataArray
+  return responseArray
 }
 
 /**
@@ -171,49 +180,6 @@ async function getMarketOrders( deal_id:number ) {
   return dataArray
 }
 
-// /**
-//  * 
-//  * @param {*} api 
-//  * @param {*} limit 
-//  * @returns 
-//  * @description - DO NOT USE THIS FUNCTION AT THE MOMENT
-//  */
-// async function getDealsBulk( limit:number ) {
-
-//   let responseArray = [];
-//   let response;
-//   let offsetMax = (!limit) ? 250000 : limit;
-//   const api = threeCapi(config) 
-
-//   for (let offset = 0; offset < offsetMax; offset += 1000) {
-
-//     response = await api.getDeals({ scope: 'completed', limit: 1000, offset })
-
-//     // limiting the offset to just 5000 here. This can be adjusted but made for some issues with writing to Sheets.
-//     if (response.length > 0) {
-//       responseArray.push(...response)
-//     }
-
-//     console.info({
-//       'responseArrayLength': responseArray.length,
-//       'currentResponse': response.length,
-//       offset,
-//       id: response[0].id
-//     })
-
-//     if (response.length != 1000) {
-//       break;
-//     }
-
-//     // if(offset == offsetMax){ break; }
-
-
-//   }
-
-//   console.log('Response data Length: ' + responseArray.length)
-//   return responseArray
-
-// }
 
 /**
  * 
@@ -243,11 +209,6 @@ async function getDealsUpdate( perSyncOffset: number) {
 
     // limiting the offset to just 5000 here. This can be adjusted but made for some issues with writing to Sheets.
     if (response.length > 0) { responseArray.push(...response) }
-
-    // console.log(response[0].updated_at)
-    // console.log(response[response.length - 1].updated_at)
-
-
 
     // this pulls the oldest date of the final item in the array.
     oldestDate = new Date(response[response.length - 1].updated_at).getTime()
