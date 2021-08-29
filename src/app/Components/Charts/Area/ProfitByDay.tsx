@@ -18,22 +18,25 @@ interface Type_NewDateProfit {
     date: string
     profit: number
     type: string
+    utc_date: string
 }
 
 const convertToNewDates = (data: Type_Profit[], langString: any, type: string) => {
 
     const mappedArray = data.map(day => {
         return {
-            date: new Date(day.utc_date).toLocaleString(lang, langString),
+            converted_date: new Date(day.utc_date).toLocaleString(lang, langString),
+            utc_date: day.utc_date,
             profit: day.profit
         }
     })
 
-    const primaryDates = Array.from(new Set(mappedArray.map(day => day.date)))
+    const primaryDates = Array.from(new Set(mappedArray.map(day => { return { converted_date: day.converted_date, utc_date: day.utc_date} } )))
 
     return primaryDates.map(date => ({
-        date,
-        profit: mappedArray.filter(y => y.date === date).map(y => y.profit).reduce((sum, profit) => sum + profit),
+        converted_date: date.converted_date,
+        utc_date: date.utc_date,
+        profit: mappedArray.filter(y => y.converted_date === date.converted_date).map(y => y.profit).reduce((sum, profit) => sum + profit),
         type
     }))
 
@@ -43,7 +46,7 @@ const convertToNewDates = (data: Type_Profit[], langString: any, type: string) =
 const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
 
     const [dateType, setDateType] = useState('day');
-    const [filterString, setFilterString] = useState<{}>({ month: '2-digit', day: '2-digit' })
+    const [filterString, setFilterString] = useState<{}>({ month: '2-digit', day: '2-digit', year: '2-digit' })
 
     useEffect(() => {
         if (dateType === 'year') {
@@ -90,7 +93,6 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
             return (<NoData />)
         } else {
             const filteredData = (data != undefined && data.length > 0) ? convertToNewDates(data, filterString, dateType) : [];
-            // console.log(filteredData)
             const calculateAverage = () => {
                 const totalProfit = (filteredData.length > 0) ? filteredData.map(deal => deal.profit).reduce((sum, profit) => sum + profit) : 0
                 return totalProfit / filteredData.length
@@ -112,15 +114,13 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
 
                         <CartesianGrid opacity={.3} vertical={false} />
                         <XAxis
-                            dataKey="date"
+                            dataKey="converted_date"
                             axisLine={false}
                             tickLine={false}
                             minTickGap={( filteredData.length > 6) ? 40 : 0}
                             tickFormatter={(str) => {
                                 if (str == 'auto' || str == undefined) return ""
-                                if(dateType === 'day'){
-                                    return new Date(str).toLocaleDateString(lang, { month: '2-digit', day: '2-digit' })
-                                } else if (dateType ==='year' || dateType === 'month'){
+                                if(dateType === 'day' || dateType ==='year' || dateType === 'month'){
                                     return str
                                 } else {
                                     return ''
@@ -160,10 +160,12 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
 function CustomTooltip({ active, payload, label }: Type_Tooltip) {
     if (active) {
         const data: Type_NewDateProfit = payload[0].payload
-        let { date, profit, type } = data
+        let { date, profit, type, utc_date } = data
 
         if (type === 'day') {
-            date = new Date(date).toLocaleString(lang, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+            console.log(utc_date)
+            date = new Date(utc_date).toLocaleString(getLang(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+
         }
 
         // format the date
