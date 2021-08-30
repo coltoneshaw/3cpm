@@ -2,6 +2,8 @@ import React from "react";
 
 import Card from "../Card";
 import descriptions from "@/descriptions";
+import { parseNumber } from "@/utils/number_formatting"
+ 
 
 
 interface Type_Card {
@@ -18,7 +20,7 @@ const Card_DropCoverage = ({metric}:Type_Card) => {
     const message = descriptions.calculations.dropCoverage
     const key = title.replace(/\s/g, '')
     return (
-        <Card title={title} message={message} key={key} metric={metric.toFixed(2) + "%"} />
+        <Card title={title} message={message} key={key} metric={parseNumber( metric, 2) + "%"} />
     )
 }
 

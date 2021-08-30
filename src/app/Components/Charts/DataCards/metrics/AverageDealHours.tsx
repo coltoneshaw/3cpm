@@ -25,7 +25,7 @@ const Card_AverageDealHours = ({metric, additionalData}:Type_Card) => {
     const message = descriptions.calculations.averageDealHours( totalClosedDeals, totalDealHours)
     const key = title.replace(/\s/g, '')
     return (
-        <Card title={title} message={message} key={key} metric={metric.toFixed(2)} />
+        <Card title={title} message={message} key={key} metric={ parseNumber( metric, 2) } />
     )
 }
 

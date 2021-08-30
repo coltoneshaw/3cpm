@@ -4,14 +4,13 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
-import { parseISO, format } from 'date-fns'
 import { getLang } from '@/utils/helperFunctions';
 
 const lang = getLang()
 import { parseNumber } from '@/utils/number_formatting';
 
-import { CustomTooltip } from '@/app/Components/Charts/Tooltips';
-import { Type_ProfitChart } from '@/types/Charts';
+import { Type_ProfitChart, Type_Tooltip } from '@/types/Charts';
+
 
 
 const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
@@ -49,7 +48,7 @@ const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
                         dataKey={X}
                         tickLine={false}
                         axisLine={false}
-                        tickFormatter={tick => parseNumber(tick)}
+                        tickFormatter={tick => parseNumber(tick, 0)}
                         tickCount={9}
                         // TODO - Need to look at passing in a tick array that contains the values rounded to 100s.
                         type="number" 
@@ -83,6 +82,21 @@ const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
 
         </div>
     )
+}
+
+const CustomTooltip = ({ active , payload , label }:Type_Tooltip) => {
+    if (active) {
+        label = new Date(label).toLocaleString(getLang(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+
+        return (
+            <div className="tooltop">
+                <h4>{label}</h4>
+                <p>$ {payload[0].value.toLocaleString()}</p>
+            </div>
+        )
+    } else {
+        return null
+    }
 }
 
 export default SummaryProfitByDay;

@@ -22,7 +22,7 @@ const Card_TotalRoi = ({additionalData}:Type_Card) => {
     const title = "Total ROI"
     const message = descriptions.calculations.totalRoi(totalProfit_perf, boughtVolume)
     const key = title.replace(/\s/g, '')
-    const metric = ((totalProfit_perf / boughtVolume) * 100).toFixed(2) + "%"
+    const metric = parseNumber( ( (totalProfit_perf / boughtVolume) * 100 ), 2) + "%"
 
     return (
         <Card title={title} message={message} key={key} metric={metric} />

@@ -77,10 +77,10 @@ function CustomTooltip({ active, payload, label }:Type_Tooltip) {
             <div className="tooltop">
                 <h4>{pair}</h4>
                 <p><strong>Bot:</strong> {bot_name}</p>
-                <p><strong>Total Profit:</strong> ${parseNumber(total_profit)}</p>
-                <p><strong>Bought Volume:</strong> ${parseNumber(bought_volume)}</p>
-                <p><strong>% of Total Volume:</strong> {percentTotalVolume.toFixed(2)}%</p>
-                <p><strong>% of Total Profit:</strong> {percentTotalProfit.toFixed(3)}%</p>
+                <p><strong>Total Profit:</strong> ${parseNumber(total_profit, 2)}</p>
+                <p><strong>Bought Volume:</strong> ${parseNumber(bought_volume, 0)}</p>
+                <p><strong>% of Total Volume:</strong> {parseNumber(percentTotalVolume, 3)}%</p>
+                <p><strong>% of Total Profit:</strong> {parseNumber(percentTotalProfit, 3)}%</p>
 
             </div>
         )

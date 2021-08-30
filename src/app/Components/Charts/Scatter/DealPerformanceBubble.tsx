@@ -151,8 +151,8 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
                 <h4>{pair}</h4>
                 <p><strong>Bot:</strong> {bot_name}</p>
                 <p><strong>Total Profit:</strong> ${parseNumber(total_profit)}</p>
-                <p><strong>Average Deal Hours:</strong> {averageDealHours.toFixed(2)}</p>
-                <p><strong>Average Hourly Profit Percent:</strong> {averageHourlyProfitPercent.toFixed(8)}%</p>
+                <p><strong>Average Deal Hours:</strong> {parseNumber( averageDealHours, 2) }</p>
+                <p><strong>Average Hourly Profit Percent:</strong> { parseNumber( averageHourlyProfitPercent, 8) }%</p>
                 <p><strong># of Deals:</strong>{number_of_deals}</p>
                 <p><strong>Bought Volume:</strong>{parseNumber(bought_volume)}</p>
 

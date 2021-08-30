@@ -6,10 +6,17 @@
  * @returns returns a number to 0 decimals and comma seperated
  */
 const parseNumber = (number: number | string, digits:number = 0) => {
-    if (typeof number === "string") {
-        number = parseInt(number)
+
+    if(number != undefined){
+        if (typeof number === "string") {
+            number = parseInt(number)
+        }
+    } else {
+        number = 0
     }
+
     return number.toLocaleString(undefined, { 'minimumFractionDigits': digits, 'maximumFractionDigits': digits })
+
 }
 
 /**
@@ -19,7 +26,7 @@ const parseNumber = (number: number | string, digits:number = 0) => {
  * @returns a parsed string to fixed 0 with %
  */
 const formatPercent = (num1:number , num2:number) => {
-    return ((num1 / num2) * 100).toFixed(0) + "%"
+    return parseNumber ( ( (num1 / num2) * 100 ) , 0 ) + "%"
 }
 
 export {
