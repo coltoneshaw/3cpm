@@ -31,14 +31,22 @@ const convertToNewDates = (data: Type_Profit[], langString: any, type: string) =
         }
     })
 
-    const primaryDates = Array.from(new Set(mappedArray.map(day => { return { converted_date: day.converted_date, utc_date: day.utc_date} } )))
 
-    return primaryDates.map(date => ({
-        converted_date: date.converted_date,
-        utc_date: date.utc_date,
-        profit: mappedArray.filter(y => y.converted_date === date.converted_date).map(y => y.profit).reduce((sum, profit) => sum + profit),
-        type
-    }))
+    let primaryDates = Array.from(new Set( mappedArray.map(day => { return {converted_date: day.converted_date, utc_date: day.utc_date } }   )))
+    primaryDates = removeDuplicatesInArray(primaryDates, 'converted_date')
+
+    return primaryDates.map(date => {
+
+        const filteredDate = mappedArray.filter(y => y.converted_date === date.converted_date)
+        return {
+            converted_date: date.converted_date,
+            utc_date: date.utc_date,
+            profit: filteredDate.map(y => y.profit).reduce((sum, profit) => sum + profit),
+            type
+        }
+
+    })
+        
 
 }
 
