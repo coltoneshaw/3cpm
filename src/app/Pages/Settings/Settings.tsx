@@ -78,8 +78,9 @@ const SettingsPage = () => {
 
                 {/* These buttons still need to be wired up, but for now they are displayed. */}
                 <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ margin: 'auto' }}>
-                    <Button onClick={() => window.open('https://forms.gle/2ihxsQtvG1yexPxW6')} style={{ margin: '1em', borderRight: 'none' }} >Leave Feedback</Button>
-                    <Button onClick={() => window.open('https://forms.gle/CfzMy8E6zUe8UuzBA')} style={{margin: '1em'}}>Report a Bug</Button>
+
+                    {/* @ts-ignore */}
+                    <Button onClick={() => electron.general.openLink('https://github.com/coltoneshaw/3c-portfolio-manager#feedback-or-bug-submission')} style={{ margin: '1em', borderRight: 'none' }} >Leave Feedback / Report a bug</Button>
                 </ButtonGroup>
                 <Button 
                     variant="text" color="primary" 

@@ -8,6 +8,7 @@ The 3C Portfolio Manager is an essential addon to your 3Commas experience. It en
 # Table of Contents
 
 - [Initial Setup](#initial-setup)
+- [Feedback / Bug reports](#feedback-or-bug-submission)
 - [Frequently Asked Questions](#frequently-asked-questions)
     - [Initial Setup](#initial-setup)
     - [Why did we change?](#why-did-we-change)
@@ -29,6 +30,15 @@ The 3C Portfolio Manager is an essential addon to your 3Commas experience. It en
 5. Click Save. This will download the deal data, bots, and account information from 3commas
 8. Start to profit!
 
+
+# Feedback or Bug Submission
+
+We welcome all feedback and bug reports as it helps us improve the project for everyone. You can submit these reports in two ways:
+
+1. (Preferred) If you have a Github account do so on [the issues page](https://github.com/coltoneshaw/3c-portfolio-manager/issues) and select the right type of report.
+2. If you do not have a GitHub account you can use our Google Form [here](https://forms.gle/EZeXuLcR8eosikkAA).
+
+If you have any issues don't hesitate to reach out to me on Discord @the_okayest_human#1680
 
 # Frequently Asked Questions
 
