@@ -160,6 +160,12 @@ export interface Type_Query_Accounts {
     market_code: number
 }
 
+export interface Type_Pair_By_Date {
+    date: string
+    pair: string
+    profit: number
+}
+
 export interface Type_bots {
     id: number | string
     origin: string

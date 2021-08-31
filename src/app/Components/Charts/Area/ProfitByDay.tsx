@@ -171,7 +171,6 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
         let { date, profit, type, utc_date } = data
 
         if (type === 'day') {
-            console.log(utc_date)
             date = new Date(utc_date).toLocaleString(getLang(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 
         }

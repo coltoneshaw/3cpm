@@ -97,11 +97,49 @@ function getLang() {
   return navigator.language;
 }
 
+/**
+ * 
+ * @param startDate string date formatted like `YYYY-mm-dd`
+ * @param endDate string date formatted like `YYYY-mm-dd`
+ * @returns array of months, years, and dates between the start / finish day.
+ * 
+ * https://stackoverflow.com/a/64057471/13836826
+ */
+function getDatesBetweenTwoDates(startDate:string, endDate:string) {
+  const days = [],  
+        months = new Set(),
+        years = new Set()
+
+  const dateMove = new Date(startDate)
+  let date = startDate
+
+  while (date < endDate){
+    date = dateMove.toISOString().slice(0,10)
+    months.add(date.slice(0, 7))
+    years.add(date.slice(0, 4))
+    days.push(date)
+    dateMove.setDate(dateMove.getDate()+1) // increment day
+  }
+  return {years: [...Array.from(years)], months: [...Array.from(months)], days} // return arrays
+}
+
+// console.log(getDates('2016-02-28', '2016-03-01')) // leap year
+// /* =>
+//  {
+//     years: [ '2016' ],
+//     months: [ '2016-02', '2016-03' ],
+//     days: [ '2016-02-28', '2016-02-29', '2016-03-01' ]
+//   }
+// */
+// const {months} = getDates('2016-02-28', '2016-03-01') // get only months
+
+
 export {
   removeDuplicatesInArray,
   tryParseJSON_,
   dynamicSort,
   getDateString,
   getLang,
-  convertMiliseconds
+  convertMiliseconds,
+  getDatesBetweenTwoDates
 }

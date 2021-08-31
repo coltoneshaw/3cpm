@@ -6,6 +6,7 @@ import { Grid } from '@material-ui/core';
 // custom charts
 import { DealPerformanceBubble, BotPerformanceBubble } from '@/app/Components/Charts/Scatter';
 import { DealAllocationBar } from '@/app/Components/Charts/Bar';
+import { PairPerformanceByDate } from '@/app/Components/Charts/Line';
 
 import { useGlobalData } from '@/app/Context/DataContext';
 
@@ -29,6 +30,11 @@ const PerformanceMonitor = () => {
                 </Grid>
                 <Grid item xs={12} lg={6}>
                     <BotPerformanceBubble title="Bot Performance Scatter" data={performanceData.bot} />
+
+                </Grid>
+
+                <Grid item xs={12}>
+                    <PairPerformanceByDate />
 
                 </Grid>
             </Grid>

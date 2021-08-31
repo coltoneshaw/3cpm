@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, createRef, SetStateAction } from 'react';
 import dotProp from 'dot-prop';
 
-// Contect Providers
+// Context Providers
 import { useGlobalState } from './Config';
 
 import {
@@ -33,7 +33,8 @@ import {
     getAccountDataFunction,
     fetchBotPerformanceMetrics,
     fetchPairPerformanceMetrics,
-    botQuery
+    botQuery,
+    getSelectPairDataByDate
 } from '@/app/Features/3Commas/3Commas';
 
 
@@ -107,21 +108,6 @@ const DataProvider = ({ children }: any) => {
     const [isSyncing, updateIsSyncing] = useState(false)
 
 
-    // useEffect(() => {
-    //     // console.log({config}, 'yolo')
-    //     // console.log()
-    //     if (config && dotProp.has(config, 'general.defaultCurrency')) {
-
-    //         try {
-                
-    //         } catch (error) {
-    //             console.error(error)
-    //         }
-    //     }
-
-
-    // }, [config])
-
     // @ts-ignore
     useEffect(async () => {
         updateIsSyncing(true)
@@ -192,12 +178,18 @@ const DataProvider = ({ children }: any) => {
             })
     }
 
+    // const fetchPairDataByDate = (pairs: string[]) => {
+    //     getSelectPairDataByDate(pairs)
+    //         .then( data =>  console.log(data))
+    // }
+
     /**
      * @data - returns an array with a `bot_id - pair` key that's unique. Only specific data on that pair that's needed.
      * Update the database query for more.
      * Confirmed working
      */
     const fetchPerformanceData = () => {
+        
         fetchPerformanceDataFunction()
             .then(((data: Type_Query_PerfArray[]) => {
                 console.log('updated Performance Data!')
@@ -314,7 +306,7 @@ const DataProvider = ({ children }: any) => {
      * sum - ((balanceData.on_orders + balanceData.position + balanceData.on_orders)) - this comes from the accounts endpoint.
      * totalBoughtVolume - Active Deals bot volume total.
      * 
-     * postition - this includes what's on orders!!!!!
+     * position - this includes what's on orders!!!!!
      */
     const calculateMetrics = () => {
         updateMetricsData(prevState => {
@@ -353,13 +345,6 @@ const DataProvider = ({ children }: any) => {
     }
 
     const updateAllData = async (offset: number = 1000, callback: CallableFunction) => {
-
-        // const options = {
-        //     time: 0,
-        //     summary: false,
-        //     offset,
-        //     notifications: false
-        // }
 
         await setSyncOptions( (prevState) => { 
             updateIsSyncing(true)
@@ -426,7 +411,7 @@ const DataProvider = ({ children }: any) => {
     /**
      * 
      * @param offset offset in which to sync 3C at
-     * @param lastSyncTime the milisecond time of the sync.
+     * @param lastSyncTime the millisecond time of the sync.
      * @param summary boolean value that defines if it'll be a summary or individual notification set.
      */
     const updateAutoSync = async (offset: number) => {

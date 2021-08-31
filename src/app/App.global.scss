@@ -196,3 +196,9 @@
 .current-value{
   fill: var(--color-text-lightbackground) !important;
 }
+
+
+.MuiList-root {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr !important;
+  }
