@@ -31,6 +31,22 @@ The 3C Portfolio Manager is an essential addon to your 3Commas experience. It en
 5. Click Save. This will download the deal data, bots, and account information from 3commas
 8. Start to profit!
 
+## Supported Operating Systems
+
+- Debian:
+    - 10 - Seems to have a bug when attempting to run an Electron application
+    - 11 - Works with the `.Appimage`
+- Chrome OS - Works with the `.Appimage`
+- MacOS - M1 and Intel are fully supported
+- Windows
+    - <10 - Untested, if it works let me know!
+    - 10 - Fully supported
+    - 11 - Untested
+- Linux
+    - Ubuntu - Fully Supported
+    - Other distros are currently untested.
+
+
 
 # Feedback or Bug Submission
 
