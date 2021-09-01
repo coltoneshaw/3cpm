@@ -16,7 +16,7 @@ const colors = ["#cfe1f2", "#b5d4e9", "#93c3df", "#6daed5", "#4b97c9", "#2f7ebc"
  * - Look at combining this chart by "pair-BO" to minimize bubbles on the chart.
  */
 const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
-    const [sort, setSort] = React.useState('total_profit');
+    const [sort, setSort] = React.useState('percentTotalProfit');
 
     const handleChange = (event: any) => {
         setSort(event.target.value);
