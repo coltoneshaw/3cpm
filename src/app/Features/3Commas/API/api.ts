@@ -180,13 +180,45 @@ async function getMarketOrders( deal_id:number ) {
   return dataArray
 }
 
+async function getActiveDeals() {
+  const api = threeCapi(config)
+  if(!api) return []
+
+  const response:Type_Deals_API[] = await api.getDeals({ limit: 500, scope: 'active' })
+
+  return response
+
+
+}
+
+let activeDealIDs = <number[]>[]
+
 
 /**
  * 
  * @param {number} offset - Total to sync per update
  * @returns object array of deals.
  */
-async function getDealsUpdate( perSyncOffset: number) {
+async function getDealsUpdate( perSyncOffset: number, type:string) {
+  const api = threeCapi(config)
+  if(!api) return []
+
+  if(type === 'autoSync'){
+    const activeDeals = await getActiveDeals()
+    const newActiveDealIds = activeDeals.map( deal => deal.id )
+
+    if ( activeDealIDs === newActiveDealIds ){
+      return activeDeals
+    } else {
+      const updatedDeals = await getDealsThatAreUpdated(perSyncOffset)
+      return [...activeDeals, ...updatedDeals]
+    }
+  } else {
+    return await getDealsThatAreUpdated(perSyncOffset)
+  }
+}
+
+async function getDealsThatAreUpdated(perSyncOffset: number){
   const api = threeCapi(config)
   if(!api) return []
 
@@ -195,8 +227,6 @@ async function getDealsUpdate( perSyncOffset: number) {
   let offsetMax = 250000;
   let perOffset = (perSyncOffset) ? perSyncOffset : 1000;
   let oldestDate, newLastSyncTime;
-
-
 
 
   // converting the incoming dateUTC to the right format in case it's not done properly.
@@ -241,14 +271,14 @@ async function getDealsUpdate( perSyncOffset: number) {
 
   // updating the last sync time if it's actually changed.
   if (lastSyncTime != newLastSyncTime) { config.set('syncStatus.deals.lastSyncTime', newLastSyncTime) }
-  return responseArray
 
+  return responseArray
 }
 
 
-async function deals( offset:number ) {
-  let deals = await getDealsUpdate(offset);
-  let botData = await bots();
+async function deals( offset:number, type:string ) {
+  let deals = await getDealsUpdate(offset, type);
+  // let botData = await bots();
 
   let dealArray = [];
 

@@ -123,15 +123,6 @@ function getDatesBetweenTwoDates(startDate:string, endDate:string) {
   return {years: [...Array.from(years)], months: [...Array.from(months)], days} // return arrays
 }
 
-// console.log(getDates('2016-02-28', '2016-03-01')) // leap year
-// /* =>
-//  {
-//     years: [ '2016' ],
-//     months: [ '2016-02', '2016-03' ],
-//     days: [ '2016-02-28', '2016-02-29', '2016-03-01' ]
-//   }
-// */
-// const {months} = getDates('2016-02-28', '2016-03-01') // get only months
 
 
 export {

@@ -4,6 +4,7 @@ import dotProp from 'dot-prop';
 // Context Providers
 import { useGlobalState } from './Config';
 
+
 import {
     Type_Query_PerfArray,
     Type_Query_bots,
@@ -402,10 +403,6 @@ const DataProvider = ({ children }: any) => {
     }
     const [syncOptions, setSyncOptions] = useState(defaultSyncOptions)
 
-    // update accounts every 5 minutes
-    // 1. make a counter to keep track of syncs. Every 20 syncs update the accounts
-    // 2. increment the counter for each sync that happens. Reset the counter if a full sync was ran.
-    // 3. if syncs > 20, run the account update function. reset counter to 0.
 
 
     /**
@@ -426,6 +423,7 @@ const DataProvider = ({ children }: any) => {
             console.log(options)
             let syncCount = prevState.syncCount
             try {
+
                 updateThreeCData('autoSync', options)
                     .then(() => {
                         fetchProfitMetrics()

@@ -14,7 +14,7 @@ import { Type_Deals_API, Type_Query_Accounts, Type_API_bots, Type_UpdateFunction
 async function updateAPI(type: string, options:Type_UpdateFunction ) {
 
 
-  await deals(options.offset)
+  await deals(options.offset, type)
     .then((data: Type_Deals_API[]) => {
 
       // if notifications need to be enabled for the fullSync then the type below needs to be updated.

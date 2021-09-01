@@ -183,7 +183,7 @@ function DealsTable({ data }: { data: object[] }) {
                 data={localData}
                 disableMultiSort={true}
                 autoResetSortBy={false}
-                // autoResetPage={false}
+                autoResetPage={false}
                 // manualSortBy={true}
                 //@ts-ignore
                 getHeaderProps={column => ({
