@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
 
-import { Select, InputLabel, FormControl, MenuItem, Checkbox, ListItemText, Input } from '@material-ui/core';
-
+import { Select, InputLabel, FormControl, MenuItem, Checkbox, ListItemText, Input, Menu } from '@material-ui/core';
 
 import { getLang, removeDuplicatesInArray } from '@/utils/helperFunctions';
 const lang = getLang()
 
-import { ComposedChart, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line } from 'recharts';
+import { ComposedChart, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line, Area, AreaChart } from 'recharts';
 
 const colors = ["#374151", "#B91C1C", "#B45309", "#047857", "#1D4ED8", "#4338CA", "#6D28D9", "#BE185D"]
 
@@ -21,32 +20,32 @@ interface pairByDate {
 }
 
 
-
 const PairPerformanceByDate = () => {
 
-
     const [localData, updateLocalData] = useState<pairByDate[]>([]);
-    const [pairs, updatePairs ] = useState<string[]>([])
+    const [pairs, updatePairs] = useState<{ pair: string, opacity: number }[]>([])
     const [pairFilters, updatePairFilters] = useState<string[]>([]);
 
 
     const handleChange = (event: any) => {
 
-        let filter = event.target.value;
-
-        if (filter.length > 8) filter = filter.filter(( pair:string, index:number) => index > 0)
+        let filter = event.target.value
+        // preventing more than 8 items from showing at any given time.
+        if (filter.length > 8) filter = filter.filter((pair: string, index: number) => index > 0)
 
         updatePairFilters([...filter]);
     };
 
     useEffect(() => {
+
+        // selecting the pair data and sorting by profit for easier viewing.
         //@ts-ignore
         electron.database.query('select pair, sum(actual_profit) as total_profit from deals group by pair order by total_profit desc;')
-            .then(( result: {pair:string}[]) => {
-                updatePairs(result.map(pair => pair.pair) )
+            .then((result: { pair: string }[]) => {
+                updatePairs(result.map(pair => ({ pair: pair.pair, opacity: 1 })))
 
-
-                updatePairFilters(result.map(pair => pair.pair).filter( ( pair, index) => index < 8))
+                // adds the top 5 pairs by profit to the chart by default
+                updatePairFilters(result.map(pair => pair.pair).filter((pair, index) => index < 2))
             })
 
     }, [])
@@ -64,7 +63,7 @@ const PairPerformanceByDate = () => {
 
                 <div style={{ position: "absolute", left: 0, top: 0, height: "50px", zIndex: 5 }}>
                     <FormControl>
-                        <InputLabel>Filter By</InputLabel>
+                        <InputLabel>Show</InputLabel>
 
                         <Select
                             multiple
@@ -73,22 +72,31 @@ const PairPerformanceByDate = () => {
                             input={<Input />}
                             // @ts-ignore
                             renderValue={() => (pairFilters.length > 0) ? pairFilters.join() : ""}
-                            style={{width: "150px"}}
-                            >
+                            style={{ width: "150px" }}
 
+                            MenuProps={{
+                                MenuListProps: {
+                                    style: {
+                                        display: 'grid',
+                                        gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
+                                    }
+                                }
+                        }}
+
+
+                        >
                             {
                                 pairs.map(pair => (
-
-                                    <MenuItem value={pair}>
-                                        
-                                        <Checkbox checked={pairFilters.indexOf(pair) > - 1} />
-                                        <ListItemText primary={pair} />
+                                    <MenuItem value={pair.pair} key={pair.pair}>
+                                        <Checkbox checked={pairFilters.indexOf(pair.pair) > - 1} />
+                                        <ListItemText primary={pair.pair} />
                                     </MenuItem>
                                 ))
                             }
+
                         </Select>
                     </FormControl>
-                    
+
                 </div>
             </div>
 
@@ -104,12 +112,30 @@ const PairPerformanceByDate = () => {
                         left: 20,
                         bottom: 5,
                     }}
-                    stackOffset="expand"
-
                 >
 
                     <CartesianGrid opacity={.3} vertical={false} />
-                    <Legend verticalAlign="top" height={36} />
+                    <Legend verticalAlign="top" height={36}
+
+                        onMouseEnter={(e) => {
+                            updatePairs(prevState => {
+                                return prevState.map(p => ({
+                                    ...p,
+                                    opacity: (p.pair != e.payload.dataKey) ? .2 : 1
+                                }))
+                            })
+                        }}
+
+                        onMouseLeave={(e) => {
+                            updatePairs(prevState => {
+                                return prevState.map(p => ({
+                                    ...p,
+                                    opacity: 1
+                                }))
+                            })
+                        }}
+
+                    />
 
                     <XAxis
                         dataKey="date"
@@ -133,9 +159,16 @@ const PairPerformanceByDate = () => {
                     {/* TODO - pass the custom props down properly here.  */}
                     {/* @ts-ignore */}
                     <Tooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3' }} />
+
+
                     {
                         pairFilters.map((pair, index) => {
-                            return <Line name={pair} type="monotone" dataKey={pair} stroke={colors[index]}  dot={false} strokeWidth={1.75} />
+                            const filteredPair = pairs.find(p => p.pair == pair)
+
+                            const opacity = (filteredPair != undefined && filteredPair.opacity != undefined) ? filteredPair.opacity : 1;
+                            return <Line name={pair} type="monotone" dataKey={pair} stroke={colors[index]} dot={false} strokeWidth={1.75} opacity={opacity} />
+                            // return <Area type="monotone" name={pair} stackId="1" dataKey={pair} fill={colors[index]} stroke={colors[index]}  />
+
                         })
                     }
 
@@ -156,8 +189,8 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
         const returnPairData = () => {
             const pairs = { ...payload[0].payload }
             delete pairs.date;
-            
-            if(pairs == undefined || pairs == {}) return ''
+
+            if (pairs == undefined || pairs == {}) return ''
 
             return Object.keys(pairs).map(pair => {
                 return <p><strong>{pair}</strong> ${pairs[pair].toLocaleString()}</p>
@@ -170,7 +203,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
             <div className="tooltop">
                 <h4>{date}</h4>
                 {
-                   returnPairData() 
+                    returnPairData()
                 }
             </div>
         )
