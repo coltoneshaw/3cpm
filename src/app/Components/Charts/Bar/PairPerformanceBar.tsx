@@ -79,7 +79,7 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
                     <Legend verticalAlign="top" height={36} />
                     <Tooltip
                         // @ts-ignore - tooltip refactoring
-                        // todo - improve how tooltops can pass the values.
+                        // todo - improve how tooltips can pass the values.
                         content={<CustomTooltip />}
                     />
                     <XAxis dataKey="pair"
@@ -198,7 +198,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
         const data: Type_Pair_Performance_Metrics = payload[0].payload
         const { total_profit, avg_completed_so, avg_profit, pair, avg_deal_hours, bought_volume, number_of_deals } = data
         return (
-            <div className="tooltop">
+            <div className="tooltip">
                 <h4>{pair}</h4>
                 <p><strong>Bought Volume:</strong> ${parseNumber(bought_volume)} </p>
                 <p><strong>Deal Count:</strong> {number_of_deals} </p>

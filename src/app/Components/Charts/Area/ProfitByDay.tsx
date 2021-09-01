@@ -177,7 +177,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
 
         // format the date
         return (
-            <div className="tooltop">
+            <div className="tooltip">
                 <h4>{date}</h4>
                 <p>$ {profit.toLocaleString()}</p>
             </div>

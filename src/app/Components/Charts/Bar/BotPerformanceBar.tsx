@@ -86,7 +86,7 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
                     <Legend verticalAlign="top" height={36} />
                     <Tooltip
                         // @ts-ignore - tooltip refactoring
-                        // todo - improve how tooltops can pass the values.
+                        // todo - improve how tooltips can pass the values.
                         content={<CustomTooltip />}
                     />
                     <XAxis 
@@ -208,7 +208,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
         const data: Type_Bot_Performance_Metrics = payload[0].payload
         const { total_profit, avg_completed_so, avg_profit, avg_deal_hours, bought_volume, number_of_deals, bot_name, type } = data
         return (
-            <div className="tooltop">
+            <div className="tooltip">
                 <h4>{bot_name}</h4>
                 <p>{type}</p>
                 <p><strong>Bought Volume:</strong> ${parseNumber(bought_volume)} </p>

@@ -1,4 +1,4 @@
-.tooltop {
+.tooltip {
     border-radius: .25em;
     background-color: var(--color-background-light);
     opacity: .9;
@@ -7,7 +7,7 @@
     text-align: center;
 }
 
-.tooltop h4, .tooltop p {
+.tooltip h4, .tooltip p {
     padding: 0;
     margin: 0;
 }

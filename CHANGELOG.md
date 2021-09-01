@@ -1,3 +1,15 @@
+# v0.3.0
+## Bug
+- Fixed bug in the date display that caused dates to show as an invalid Date
+- Active Deals were not properly updating if a deal was open longer than your last 1000 closed deals. Rewrote the sync logic
+- Bot planner did not properly filter/sort based on the enabled status if it was changed on the UI.
+- Tooltips would crash the UI if an undefined value was found.
+
+## Enhancements
+- Updated the auto-sync to be more preformat. Now it'll update only active deals, then if a new active deal is found it updates all deals.
+- Active Bots is renamed to Enabled Bots
+- Bot API looping. Now if you have more than 1000 bots it'll sync all of them. Also, more than 1000 bots is... nuts. Are you rich?
+
 # v0.2.3
 ## Bug
 - Fixed bug in the avg daily profit KPI

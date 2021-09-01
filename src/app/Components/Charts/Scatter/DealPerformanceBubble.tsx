@@ -147,7 +147,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
 
         const { total_profit, bot_name, pair, averageHourlyProfitPercent, averageDealHours, number_of_deals, bought_volume } = payload[0].payload
         return (
-            <div className="tooltop">
+            <div className="tooltip">
                 <h4>{pair}</h4>
                 <p><strong>Bot:</strong> {bot_name}</p>
                 <p><strong>Total Profit:</strong> ${parseNumber(total_profit)}</p>

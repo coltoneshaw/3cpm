@@ -200,7 +200,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
         let date = new Date(label).toLocaleString(getLang(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 
         return (
-            <div className="tooltop">
+            <div className="tooltip">
                 <h4>{date}</h4>
                 {
                     returnPairData()

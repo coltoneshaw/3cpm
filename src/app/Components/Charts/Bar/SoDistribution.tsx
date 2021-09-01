@@ -63,7 +63,7 @@ const SoDistribution = ({ title, data, metrics }: Type_SoDistribution) => {
                     <CartesianGrid opacity={.3} vertical={false} />
                     <Tooltip
                         // @ts-ignore - tooltip refactoring
-                        // todo - improve how tooltops can pass the values.
+                        // todo - improve how tooltips can pass the values.
                         content={<CustomTooltip />}
                     />
                     <XAxis 
@@ -99,7 +99,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
 
         const { percentOfDeals, percentOfVolume, volume, numberOfDeals } = payload[0].payload
         return (
-            <div className="tooltop">
+            <div className="tooltip">
                 <h4>SO # {label}</h4>
                 <p><strong>Bought Volume:</strong> ${parseNumber(volume)} ( { parseNumber( (percentOfVolume * 100), 2) } %)</p>
                 <p><strong>Deal Count:</strong> {numberOfDeals} ( { parseNumber( (percentOfDeals * 100), 2) } %)</p>

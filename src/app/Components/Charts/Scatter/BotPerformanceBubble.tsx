@@ -181,7 +181,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
         const data: Type_Bot_Performance_Metrics = payload[0].payload
         const { total_profit, bot_name, avg_completed_so, avg_profit, avg_deal_hours, bought_volume, number_of_deals, bot_id } = data
         return (
-            <div className="tooltop">
+            <div className="tooltip">
                 <h4>{bot_name}</h4>
                 <p><strong>Total Profit:</strong> ${parseNumber(total_profit)}</p>
                 <p><strong>Average Deal Hours:</strong> {parseNumber( avg_deal_hours, 2)}</p>

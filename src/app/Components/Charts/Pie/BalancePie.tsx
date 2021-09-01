@@ -83,7 +83,7 @@ function CustomTooltip({ active, payload }: Type_Tooltip) {
     if (active) {
         const { name, value } = payload[0]
         return (
-            <div className="tooltop">
+            <div className="tooltip">
                 <h4>{name}</h4>
                 <p>${parseNumber(value)}</p>
             </div>
