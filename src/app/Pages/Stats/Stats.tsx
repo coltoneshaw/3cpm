@@ -102,7 +102,7 @@ const StatsPage = () => {
             <>
                 <Card_TotalBoughtVolume metric={boughtVolume} />
                 <Card_TotalDeals metric={totalDeals} />
-                <Card_TotalRoi additionalData={{ totalProfit_perf, boughtVolume }} />
+                <Card_TotalRoi additionalData={{ totalProfit, totalBankroll }} />
                 <Card_AverageDailyProfit metric={averageDailyProfit} />
                 <Card_AverageDealHours metric={averageDealHours} additionalData={{totalClosedDeals, totalDealHours}}/>
             </>)
