@@ -17,7 +17,7 @@ const generateEnhancements = (enhancements: string[]) => {
         <>
             <h4>Enhancements:</h4>
             <ul>
-                {enhancements.map(n => (<li>{n}</li>))}
+                {enhancements.map((n, index) => (<li key={index}>{n}</li>))}
             </ul>
         </>
     )
@@ -30,7 +30,7 @@ const generateBugs = (bugs: string[]) => {
         <>
             <h4>Bug Fixes:</h4>
             <ul>
-                {bugs.map(n => (<li>{n}</li>))}
+                {bugs.map((n, index) => (<li key={index}>{n}</li>))}
             </ul>
         </>
     )
@@ -43,7 +43,7 @@ const generateNewFeatures = (newFeatures: string[]) => {
         <>
             <h4>New Features:</h4>
             <ul>
-                {newFeatures.map(n => (<li>{n}</li>))}
+                {newFeatures.map((n, index) => (<li key={index}>{n}</li>))}
             </ul>
         </>
     )
@@ -109,7 +109,7 @@ const ChangelogModal = ({ open, setOpen }: { open: boolean, setOpen: any }) => {
                         {
                             versions.map(version => {
                                 const primary = (version == versionView) ? 'active' : '';
-                                return <span className={`version ${primary}`} onClick={() => changeVersion(version)}>v{version}</span>
+                                return <span className={`version ${primary}`} onClick={() => changeVersion(version)} key={version}>v{version}</span>
                             })
                         }
 

@@ -3,7 +3,8 @@ import { tryParseJSON_ } from "@/utils/helperFunctions"
 
 const storageItem = {
     navigation: {
-        homePage: 'homePage' // the home page the application navigates to
+        homePage: 'homePage', // the home page the application navigates to
+        statsPage: 'nav-statsPage'
     },
     settings: {
         displayMode: 'displayMode' // the dark mode switcher. Values are 'lightMode' and 'darkMode'

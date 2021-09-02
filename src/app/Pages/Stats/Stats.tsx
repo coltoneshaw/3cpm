@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { format } from 'date-fns';
+import React, { useState, useEffect } from 'react';
 import dotProp from 'dot-prop';
 
 import './Stats.scss'
@@ -8,7 +7,6 @@ import { Button, ButtonGroup } from '@material-ui/core';
 import { RiskMonitor, SummaryStatistics, PerformanceMonitor } from './Views/Index';
 import { UpdateDataButton } from '@/app/Components/Buttons/Index'
 
-// import './Stats.scss'
 import { useGlobalState } from '@/app/Context/Config';
 import { useGlobalData } from '@/app/Context/DataContext';
 
@@ -21,6 +19,11 @@ import {
 
 import { getLang } from '@/utils/helperFunctions';
 const lang = getLang()
+
+import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+const defaultNav = 'day';
+const localStorageSortName = storageItem.navigation.statsPage
+
 
 const buttonElements = [
     {
@@ -49,6 +52,12 @@ const StatsPage = () => {
 
     // const account_id = findAccounts(config, 'statSettings.account_id')
 
+    useEffect(() => {
+        const getSortFromStorage = getStorageItem(localStorageSortName);
+        changeView((getSortFromStorage != undefined) ? getSortFromStorage : defaultNav);
+    }, [])
+
+
 
     const returnAccountNames = () => {
         if (reservedFunds.length > 0) {
@@ -71,22 +80,20 @@ const StatsPage = () => {
 
     // this needs to stay on this page
     const viewChanger = (newView: string) => {
-        changeView(newView)
+
+        const selectedNav = (newView != undefined) ? newView : defaultNav;
+        changeView(selectedNav);
+        setStorageItem(localStorageSortName, selectedNav)
     }
     // this needs to stay on this page
     const currentViewRender = () => {
         if (currentView === 'risk-monitor') {
-            return <RiskMonitor key="riskmonitor"
-            />
+            return <RiskMonitor key="risk-monitor" />
         } else if (currentView === 'performance-monitor') {
-            return <PerformanceMonitor key="perfmonitor"
-
-            />
+            return <PerformanceMonitor key="performance-monitor" />
         }
 
-        return <SummaryStatistics key="summaryStats"
-
-        />
+        return <SummaryStatistics key="summary-stats" />
     }
 
     const additionalMetrics = () => {
@@ -124,13 +131,13 @@ const StatsPage = () => {
                         <ButtonGroup aria-label="outlined primary button group" disableElevation disableRipple>
                             {
                                 buttonElements.map(button => {
-                                    if (button.id === currentView) return <Button onClick={() => viewChanger(button.id)} className="primaryButton-outline">{button.name}</Button>
+                                    if (button.id === currentView) return <Button key={button.id} onClick={() => viewChanger(button.id)} className="primaryButton-outline">{button.name}</Button>
                                     return <Button className="secondaryButton-outline" key={button.id} onClick={() => viewChanger(button.id)} >{button.name}</Button>
 
                                 })
                             }
                         </ButtonGroup>
-                        <UpdateDataButton className="CtaButton" style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }} />
+                        <UpdateDataButton key="updateDataButton" className="CtaButton" style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }} />
                         
                     </div>
                 </div>

@@ -29,6 +29,8 @@ function CustomTable({
 
     //@ts-ignore
     updateLocalBotData,
+    //@ts-ignore
+    updateReservedFunds,
 
     //@ts-ignore
     localStorageSortName,
@@ -51,6 +53,7 @@ function CustomTable({
             //@ts-ignore
             autoResetSortBy: false,
             updateLocalBotData,
+            updateReservedFunds,
             manualSortBy: true,
 
             //@ts-ignore

@@ -126,7 +126,7 @@ const ReservedBankroll = () => {
                     checked={cell.value}
                     color="primary"
                     onClick={handleOnOff}
-                    name={cell.row.original.id}
+                    name={String(cell.row.original.id)}
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                 /> )
           },
@@ -148,8 +148,9 @@ const ReservedBankroll = () => {
     const handleOnOff = (e: any) => {
         updateReservedFunds((prevState: Type_ReservedFunds[]) => {
             return prevState.map(row => {
-                if (e !== undefined && e.target !== null) {
+                if (e != undefined && e.target !== null) {
                     if (e.target.name == row.id) {
+                      console.log(row.is_enabled)
                         row.is_enabled = !row.is_enabled
                       }
                 }

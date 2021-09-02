@@ -4,6 +4,7 @@
 - Active Deals were not properly updating if a deal was open longer than your last 1000 closed deals. Rewrote the sync logic
 - Bot planner did not properly filter/sort based on the enabled status if it was changed on the UI.
 - Tooltips would crash the UI if an undefined value was found.
+- Fixed bug where reserved funds was not properly saving to the config
 
 ## Enhancements
 - Updated the auto-sync to be more preformat. Now it'll update only active deals, then if a new active deal is found it updates all deals.
@@ -12,6 +13,7 @@
 
 ## New Features
 - Pair performance by Date within Settings > Performance monitor. This allows you to compare profits on up to 8 pairs at a time by date.
+- All UI filters / settings now persist upon refresh!
 
 # v0.2.3
 ## Bug

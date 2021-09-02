@@ -119,7 +119,6 @@ const EditableCell = ({
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
     setSize(e.target.value.length)
-    console.log(e.target.value.length)
 
   }
 
@@ -168,10 +167,8 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
     updateLocalBotData((prevState: Type_Query_bots[]) => {
       const newRows = prevState.map((row: Type_Query_bots) => {
 
-        if (e !== undefined && e.target !== null) {
+        if (e != undefined && e.target !== null) {
           if (e.target.name == row.id) {
-            console.log({name: e.target.name, id: row.id})
-            console.log(row)
             row.is_enabled = (row.is_enabled == 1) ? 0 : 1;
           }
         }
