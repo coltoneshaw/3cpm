@@ -235,7 +235,8 @@ async function getDealsThatAreUpdated(perSyncOffset: number){
   for (let offset = 0; offset < offsetMax; offset += perOffset) {
 
     // can look into using the from tag to filter on the last created deal.
-    response= await api.getDeals({ limit: perOffset, order: 'updated_at', order_direction: 'desc', offset })
+    // this now filters out any deals that were cancelled or failed due a bug in how 3C reports that data.
+    response= await api.getDeals({ limit: perOffset, order: 'updated_at', order_direction: 'desc', offset, scope: 'active, completed, finished' })
 
     // limiting the offset to just 5000 here. This can be adjusted but made for some issues with writing to Sheets.
     if (response.length > 0) { responseArray.push(...response) }

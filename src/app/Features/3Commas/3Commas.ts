@@ -434,7 +434,7 @@ const accountDataAll = async () => {
  * 
  * @param pairs An array of the pairs to return from the database.
  * 
- * @description This is used to see pairs on a per date bases in charts. This is not used in the DataContext state.
+ * @description This is used to see pairs on a per date bases in charts. This is not used in the DataContext state. This reports based on the usd_final_profit only
  */
 const getSelectPairDataByDate = async (pairs:string[]) => {
     const filtersQueryString = await getFiltersQueryString()
@@ -447,7 +447,7 @@ const getSelectPairDataByDate = async (pairs:string[]) => {
         SELECT 
             substr(closed_at, 0, 11) as date,
             pair,
-            sum(actual_profit) as profit
+            sum(usd_final_profit) as profit
         FROM
             deals
         WHERE

@@ -13,6 +13,7 @@ import NoData from '@/app/Pages/Stats/Components/NoData';
 
 import { Type_ProfitChart, Type_Tooltip } from '@/types/Charts';
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+import { parseNumber } from '@/utils/number_formatting';
 
 
 interface Type_NewDateProfit {
@@ -190,7 +191,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
         return (
             <div className="tooltip">
                 <h4>{date}</h4>
-                <p>$ {profit.toLocaleString()}</p>
+                <p>$ {parseNumber(profit, 2)}</p>
             </div>
         )
     } else {
