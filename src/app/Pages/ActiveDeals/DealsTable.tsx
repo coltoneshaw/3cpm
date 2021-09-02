@@ -124,7 +124,7 @@ function DealsTable({ data }: { data: object[] }) {
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
 
-                            const in_profit = (cell.row.original.in_profit) ? 'green' : 'red'
+                            const in_profit = (cell.value > 0) ? 'green' : 'red'
                             return <span className={"pill " + in_profit} > $ {parseNumber( cell.value, 2) }</span>
                         }
                     },
@@ -134,8 +134,8 @@ function DealsTable({ data }: { data: object[] }) {
                         className: 'text-center',
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
-                            const in_profit = (cell.row.original.in_profit) ? 'green' : 'red'
-                            return <span className={"pill " + in_profit} >{+cell.value} %</span>
+                            const in_profit = (cell.value > 0) ? 'green' : 'red'
+                            return <span className={"pill " +  in_profit } >{parseNumber( cell.value, 2) } %</span>
                         }
                     },
                     {

@@ -1,3 +1,12 @@
+# v0.3.1
+
+## Bug
+- Fixed bug in how the pair by date was calculated. This was using `actual_profit` from 3C which returns the profit if you never sold the coin
+
+## Enhancement
+- Changed the USD profits from showing 3 decimals to 2. 
+- Changed the ROI metric from ROI on bought volume to ROI from total profit and bankroll.
+
 # v0.3.0
 ## Bug
 - Fixed bug in the date display that caused dates to show as an invalid Date

@@ -85,17 +85,17 @@ const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
 }
 
 const CustomTooltip = ({ active , payload , label }:Type_Tooltip) => {
-    if (active) {
+    if (active && payload != undefined && payload[0] != undefined) {
         label = new Date(label).toLocaleString(getLang(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 
         return (
             <div className="tooltip">
                 <h4>{label}</h4>
-                <p>$ {payload[0].value.toLocaleString()}</p>
+                <p>$ {parseNumber( payload[0].value, 2) }</p>
             </div>
         )
     } else {
-        return null
+        return <></>
     }
 }
 
