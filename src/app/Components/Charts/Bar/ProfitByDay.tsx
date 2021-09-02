@@ -12,6 +12,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
 import { Type_ProfitChart, Type_Tooltip } from '@/types/Charts';
+import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 
 interface Type_NewDateProfit {
@@ -53,7 +54,11 @@ const convertToNewDates = (data: Type_Profit[], langString: any, type: string) =
 
 const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
 
-    const [dateType, setDateType] = useState('day');
+    const defaultSort = 'day';
+
+    const localStorageSortName = storageItem.charts.ProfitByDay.sort
+
+    const [dateType, setDateType] = useState(defaultSort);
     const [filterString, setFilterString] = useState<{}>({ month: '2-digit', day: '2-digit', year: '2-digit' })
 
     useEffect(() => {
@@ -68,9 +73,15 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
     }, [dateType])
 
 
+    useEffect(() => {
+        const getSortFromStorage = getStorageItem(localStorageSortName);
+        setDateType((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
+    }, [])
 
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setDateType(event.target.value as string);
+        const selectedSort = (event.target.value != undefined) ? event.target.value as string : defaultSort;
+        setDateType(selectedSort);
+        setStorageItem(localStorageSortName, selectedSort)
     };
 
 

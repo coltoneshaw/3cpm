@@ -7,6 +7,7 @@ import { useGlobalData } from '@/app/Context/DataContext';
 import { Card_ActiveDeals, Card_totalInDeals, Card_ActiveDealReserve, Card_TotalDayProfit } from '@/app/Components/Charts/DataCards';
 import { SyncToggles } from './Components/index';
 
+
 import './ActiveDeals.scss'
 
 const ActiveDealsPage = () => {
@@ -24,6 +25,8 @@ const ActiveDealsPage = () => {
     useEffect(() => {
         updateLocalData(formatDeals(activeDeals))
     }, [activeDeals])
+
+    
 
 
 

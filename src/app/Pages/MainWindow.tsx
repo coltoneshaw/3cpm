@@ -1,31 +1,43 @@
 import React, { useContext, useEffect, useState, FC, ReactElement } from 'react';
 import { Route, Redirect } from 'react-router-dom'
-import { 
-    BotPlannerPage, 
-    TradingViewPage, 
-    SettingsPage, 
-    StatsPage, 
+import {
+    BotPlannerPage,
+    TradingViewPage,
+    SettingsPage,
+    StatsPage,
     ActiveDealsPage
- } from '@/app/Pages/Index'
- 
+} from '@/app/Pages/Index'
+
 import { ConfigProvider, useGlobalState } from '@/app/Context/Config';
 import { DataProvider } from '@/app/Context/DataContext';
-
 import { ChangelogModal } from '@/app/Features/Index';
+
+import { getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+
 
 const MainWindow = () => {
 
     const configState = useGlobalState()
     const { state: { apiData }, config } = configState;
 
-    const [homePage, updateHomePage] = useState<ReactElement>()
+    const [homePage, updateHomePage] = useState<string>('/activeDeals')
 
     useEffect(() => {
-        if (apiData.key !== "" || apiData.secret !== "") {
-            updateHomePage(<Redirect to="/activeDeals" />)
+
+        if (apiData.key !== "" && apiData.secret !== "") {
+            const home = getStorageItem(storageItem.navigation.homePage)
+
+            if (home) {
+                updateHomePage(home)
+            } else {
+                updateHomePage('/activeDeals')
+            }
         } else {
-            updateHomePage(<Redirect to="/settings" />)
+            updateHomePage('/settings')
         }
+
+
+
     }, [apiData])
 
 
@@ -36,8 +48,8 @@ const MainWindow = () => {
         setOpenChangelog(true);
     };
 
-    useEffect( () => {
-        if(config.general.updated) {
+    useEffect(() => {
+        if (config.general.updated) {
             handleOpenChangelog()
 
             // setting to false so this does not open again
@@ -54,7 +66,7 @@ const MainWindow = () => {
                 <ChangelogModal open={openChangelog} setOpen={setOpenChangelog} />
 
                 <Route path='/'>
-                    {homePage}
+                    <Redirect to={homePage} />
                 </Route>
 
                 <DataProvider>

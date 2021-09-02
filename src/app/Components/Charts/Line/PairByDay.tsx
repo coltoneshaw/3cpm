@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 
 
 import { Select, InputLabel, FormControl, MenuItem, Checkbox, ListItemText, Input, Menu } from '@material-ui/core';
-
-import { getLang, removeDuplicatesInArray } from '@/utils/helperFunctions';
-const lang = getLang()
-
 import { ComposedChart, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line, Area, AreaChart } from 'recharts';
 
-const colors = ["#374151", "#B91C1C", "#B45309", "#047857", "#1D4ED8", "#4338CA", "#6D28D9", "#BE185D"]
+import { getLang, removeDuplicatesInArray } from '@/utils/helperFunctions';
+import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+
+const lang = getLang()
 
 import { Type_ProfitChart, Type_Tooltip } from '@/types/Charts';
-
 import { getSelectPairDataByDate } from '@/app/Features/3Commas/3Commas';
+
+const colors = ["#374151", "#B91C1C", "#B45309", "#047857", "#1D4ED8", "#4338CA", "#6D28D9", "#BE185D"]
 
 interface pairByDate {
     date: string
@@ -34,6 +34,7 @@ const PairPerformanceByDate = () => {
         if (filter.length > 8) filter = filter.filter((pair: string, index: number) => index > 0)
 
         updatePairFilters([...filter]);
+        setStorageItem(storageItem.charts.pairByDateFilter, [...filter])
     };
 
     useEffect(() => {
@@ -44,8 +45,15 @@ const PairPerformanceByDate = () => {
             .then((result: { pair: string }[]) => {
                 updatePairs(result.map(pair => ({ pair: pair.pair, opacity: 1 })))
 
-                // adds the top 5 pairs by profit to the chart by default
-                updatePairFilters(result.map(pair => pair.pair).filter((pair, index) => index < 2))
+                const storedPairs = getStorageItem(storageItem.charts.pairByDateFilter)
+
+                if (storedPairs != undefined) {
+                    updatePairFilters(storedPairs)
+                } else {
+                    // adds the top 5 pairs by profit to the chart by default
+                    updatePairFilters(result.map(pair => pair.pair).filter((pair, index) => index < 2))
+                }
+
             })
 
     }, [])
@@ -81,7 +89,7 @@ const PairPerformanceByDate = () => {
                                         gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
                                     }
                                 }
-                        }}
+                            }}
 
 
                         >
@@ -167,7 +175,7 @@ const PairPerformanceByDate = () => {
 
                             const opacity = (filteredPair != undefined && filteredPair.opacity != undefined) ? filteredPair.opacity : 1;
                             return <Line name={pair} type="monotone" dataKey={pair} stroke={colors[index]} dot={false} strokeWidth={1.75} opacity={opacity} />
-                            // return <Area type="monotone" name={pair} stackId="1" dataKey={pair} fill={colors[index]} stroke={colors[index]}  />
+                            // return <Area type="monotone" name={pair} stackId="1" dataKey={pair} fill={colors[index]} stroke={colors[index]} opacity={opacity} />
 
                         })
                     }

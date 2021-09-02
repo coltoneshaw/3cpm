@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, CSSProperties } from 'react';
-
+import { setStorageItem, getStorageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 
 // TODO - see about setting this to something other than null for the default Value
@@ -96,16 +96,34 @@ const ThemeEngine = ({ children }: any) => {
     const [theme, updateTheme] = useState('lightMode')
 
     const [ styles, setStyles  ] = useState<MyCustomCSS>(() => lightMode)
-    
+
+
+    useEffect(() => {
+        let localDisplay = getStorageItem('displayMode')
+        console.log(localDisplay)
+        let displayString = (localDisplay != undefined) ? localDisplay : 'lightMode';
+
+        if(displayString === 'darkMode') {
+            setStyles(darkMode)
+            updateTheme('darkMode')
+        } else {
+            setStyles(lightMode)
+            updateTheme('lightMode')
+        }
+
+    },[])
+
 
 
     const changeTheme = () => {
         updateTheme( prevTheme => {
             if(prevTheme === 'lightMode') {
                 setStyles(darkMode)
+                setStorageItem('displayMode','darkMode')
                 return 'darkMode'
             } else {
                 setStyles(lightMode)
+                setStorageItem('displayMode','lightMode')
                 return 'lightMode'
             }
         })

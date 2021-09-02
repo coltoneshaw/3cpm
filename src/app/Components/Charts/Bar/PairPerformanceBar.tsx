@@ -1,31 +1,49 @@
-import React, { PureComponent } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Line, Label } from 'recharts';
-
-
 import {InputLabel, MenuItem, FormControl, Select, FormHelperText} from '@material-ui/core';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
-import { parseNumber, formatPercent } from '@/utils/number_formatting';
-import { dynamicSort } from '@/utils/helperFunctions';
-
 import { Type_Pair_Performance_Metrics } from '@/types/3Commas';
 import { Type_Tooltip, Type_Pair_Performance } from '@/types/Charts';
 
-const legendFind = (value: string) => {
-    if (value == "bought_volume") return "Bought Volume"
-    return "SO Volume Remaining"
-}
-
-
+import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+import { parseNumber, formatPercent } from '@/utils/number_formatting';
+import { dynamicSort } from '@/utils/helperFunctions';
 
 const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
 
-    const [sort, setSort] = React.useState('-total_profit');
-    const [filter, setFilter] = React.useState('all');
+    const defaultFilter = 'all';
+    const defaultSort = '-total_profit';
 
-    const handleChange = (event:any) => {
-        setSort(event.target.value);
+    const localStorageFilterName = storageItem.charts.PairPerformanceBar.filter
+    const localStorageSortName = storageItem.charts.PairPerformanceBar.sort
+
+
+    const [sort, setSort] = useState(defaultSort);
+    const [filter, setFilter] = useState(defaultFilter);
+
+
+    useEffect(() => {
+        const getFilterFromStorage = getStorageItem(localStorageFilterName);
+        setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
+
+        const getSortFromStorage = getStorageItem(localStorageSortName);
+        setSort((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
+
+    }, [])
+
+
+    const handleSortChange = (event:any) => {
+        const selectedSort = (event.target.value != undefined) ? event.target.value : defaultSort;
+        setSort(selectedSort);
+        setStorageItem(localStorageSortName, selectedSort)
+    };
+
+    const handleFilterChange = (event: any) => {
+        const selectedFilter = (event.target.value != undefined) ? event.target.value : defaultFilter;
+        setFilter(selectedFilter);
+        setStorageItem(localStorageFilterName, selectedFilter)
     };
 
     const hide = (id:string ) => {
@@ -33,9 +51,7 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
     }
 
 
-    const handleFilterchange = (event: any) => {
-        setFilter(event.target.value);
-    };
+
     const filterData = (data: Type_Pair_Performance_Metrics[] ) => {
         data = data.sort(dynamicSort('-total_profit'));
         const length = data.length;
@@ -155,7 +171,7 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={sort}
-                        onChange={handleChange}
+                        onChange={handleSortChange}
                         style={{width: "150px"}}
                     >
                         <MenuItem value="-total_profit">Profit</MenuItem>
@@ -171,7 +187,7 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={filter}
-                            onChange={handleFilterchange}
+                            onChange={handleFilterChange}
                             style={{ width: "150px" }}
                         >
                             <MenuItem value="all">All</MenuItem>

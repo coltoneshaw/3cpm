@@ -10,6 +10,9 @@
 - Active Bots is renamed to Enabled Bots
 - Bot API looping. Now if you have more than 1000 bots it'll sync all of them. Also, more than 1000 bots is... nuts. Are you rich?
 
+## New Features
+- Pair performance by Date within Settings > Performance monitor. This allows you to compare profits on up to 8 pairs at a time by date.
+
 # v0.2.3
 ## Bug
 - Fixed bug in the avg daily profit KPI

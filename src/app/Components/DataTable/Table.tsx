@@ -3,9 +3,17 @@ import React, { useState, useEffect } from "react";
 // import formatDeal from './FormatDeals';
 
 import { useTable, useSortBy } from 'react-table'
+import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
-
+// const initialSortBy = [{ id: "created_at", desc: false }]
 const defaultPropGetter = () => ({})
+
+
+const initialSortBy = (localStorageSortName:string) => {
+    const getSortFromStorage = getStorageItem(localStorageSortName);
+    return  (getSortFromStorage != undefined) ? getSortFromStorage : [];
+}
+
 
 // Expose some prop getters for headers, rows and cells, or more if you want!
 // @ts-ignore
@@ -21,7 +29,10 @@ function CustomTable({
 
     //@ts-ignore
     updateLocalBotData,
-    // skipPageReset
+
+    //@ts-ignore
+    localStorageSortName,
+
 }) {
     const {
         getTableProps,
@@ -29,25 +40,38 @@ function CustomTable({
         headerGroups,
         rows,
         prepareRow,
+        // setSortBy,
+        //@ts-ignore
+
+        state: { sortBy   }
     } = useTable(
         {
             columns,
             data,
             //@ts-ignore
             autoResetSortBy: false,
-            // defaultColumn,
-            // use the skipPageReset option to disable page resetting temporarily
-            // autoResetPage: !skipPageReset,
-            // updateMyData isn't part of the API, but
-            // anything we put into these options will
-            // automatically be available on the instance.
-            // That way we can call this function from our
-            // cell renderer!
             updateLocalBotData,
+            manualSortBy: true,
 
+            //@ts-ignore
+            initialState: { sortBy: initialSortBy(localStorageSortName) },
         },
-        useSortBy
-    )
+        useSortBy,
+        
+    );
+
+
+    useEffect(() => {
+        if(sortBy != undefined) setSortStorage(sortBy)
+    }, [sortBy]);
+
+
+    const setSortStorage = (sort:object[]) => {
+        setStorageItem(localStorageSortName, sort)
+    }
+
+    // console.log(initialStateSort2)
+
 
 
     return (

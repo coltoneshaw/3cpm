@@ -7,7 +7,7 @@ import { parseISO, format, differenceInMilliseconds } from 'date-fns'
  * @param options 
  * @returns a parsed json string or false.
  */
-function tryParseJSON_( jsonString:string , options:object ) {
+function tryParseJSON_( jsonString:string , options?:object ) {
     try {
       var o = JSON.parse(jsonString);
       console.log(typeof o)
