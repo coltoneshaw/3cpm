@@ -15,6 +15,7 @@
 - Pair performance by Date within Settings > Performance monitor. This allows you to compare profits on up to 8 pairs at a time by date.
 - All UI filters / settings now persist upon refresh!
 - Unrealized profit KPI on active deals.
+- Added EUR to the currency selector
 
 # v0.2.3
 ## Bug
