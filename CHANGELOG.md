@@ -7,13 +7,14 @@
 - Fixed bug where reserved funds was not properly saving to the config
 
 ## Enhancements
-- Updated the auto-sync to be more preformat. Now it'll update only active deals, then if a new active deal is found it updates all deals.
+- Updated the auto-sync to be more preformat. Now it will update only active deals, then if a new active deal is found it updates all deals.
 - Active Bots is renamed to Enabled Bots
 - Bot API looping. Now if you have more than 1000 bots it'll sync all of them. Also, more than 1000 bots is... nuts. Are you rich?
 
 ## New Features
 - Pair performance by Date within Settings > Performance monitor. This allows you to compare profits on up to 8 pairs at a time by date.
 - All UI filters / settings now persist upon refresh!
+- Unrealized profit KPI on active deals.
 
 # v0.2.3
 ## Bug
