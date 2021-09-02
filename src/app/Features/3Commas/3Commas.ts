@@ -4,10 +4,13 @@ import {
     Type_Profit,
     Type_ActiveDeals,
     Type_Query_Accounts,
-    Type_UpdateFunction
+    Type_UpdateFunction,
+    Type_Pair_By_Date
 } from '@/types/3Commas'
 
 import { Type_ReservedFunds } from '@/types/config'
+
+import { getDatesBetweenTwoDates } from '@/utils/helperFunctions'
 
 
 interface Type_ProfitArray extends Array<Type_Profit> { }
@@ -427,6 +430,64 @@ const accountDataAll = async () => {
 }
 
 
+/**
+ * 
+ * @param pairs An array of the pairs to return from the database.
+ * 
+ * @description This is used to see pairs on a per date bases in charts. This is not used in the DataContext state.
+ */
+const getSelectPairDataByDate = async (pairs:string[]) => {
+    const filtersQueryString = await getFiltersQueryString()
+    const { currencyString, accountIdString, startString } = filtersQueryString
+
+    const pairString = (pairs) ? pairs.map((b: string) => "'" + b + "'") : ""
+
+
+    const query = `
+        SELECT 
+            substr(closed_at, 0, 11) as date,
+            pair,
+            sum(actual_profit) as profit
+        FROM
+            deals
+        WHERE
+            closed_at is not null
+            and account_id IN ( ${accountIdString} )
+            and from_currency IN ( ${currencyString} )
+            and pair in (${pairString})
+            and closed_at_iso_string > ${startString} 
+        GROUP BY
+        date, pair;
+    `
+
+    // @ts-ignore
+    let pairData: Array<Type_Pair_By_Date> = await electron.database.query(query);
+
+    const {days} =  getDatesBetweenTwoDates((new Date(startString)).toISOString().split('T')[0], (new Date()).toISOString().split('T')[0])
+
+
+    const dateObject = days.map( day => {
+        const filteredData = pairData.filter(deal => deal.date === day)
+
+        interface subDateObject {
+            pair: number
+        }
+        const subDateObject = <any>{date: day};
+        pairs.forEach(pair => {
+            const filteredForPair = filteredData.find( deal => deal.pair === pair)
+            const profit = (filteredForPair != undefined) ? filteredForPair.profit : 0;
+
+            subDateObject[pair as keyof subDateObject] = profit
+        })
+
+        return subDateObject;
+    })
+
+
+    return dateObject
+ 
+}
+
 export {
     fetchDealDataFunction,
     fetchPerformanceDataFunction,
@@ -436,7 +497,8 @@ export {
     accountDataAll,
     fetchBotPerformanceMetrics,
     fetchPairPerformanceMetrics,
-    botQuery
+    botQuery,
+    getSelectPairDataByDate
 }
 
 

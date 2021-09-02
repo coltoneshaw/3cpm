@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { CustomTable } from '@/app/Components/DataTable/Index'
 import { getDateString } from '@/utils/helperFunctions';
 import { parseNumber } from '@/utils/number_formatting';
+import {  storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 
 import Styles from './StyledDiv'
@@ -9,18 +10,18 @@ import Styles from './StyledDiv'
 
 
 function DealsTable({ data }: { data: object[] }) {
+    const localStorageSortName = storageItem.tables.DealsTable.sort;
 
     const [localData, updateLocalData] = useState<object[]>([])
+
 
     useEffect(() => {
         updateLocalData(data)
     }, [data])
 
-
     const sortMe = (rowA: any, rowB: any, columnId: string, desc: boolean) => {
         return (rowA.original[columnId] > rowB.original[columnId]) ? -1 : 1
     }
-
 
     const columns = React.useMemo(
         () => [
@@ -34,7 +35,7 @@ function DealsTable({ data }: { data: object[] }) {
                             return (
                                 <span
                                     data-text={cell.row.original.bot_settings}
-                                    className="tooltip">
+                                    className="tooltip-activeDeals">
                                     {cell.value}
                                 </span>
                             )
@@ -175,16 +176,15 @@ function DealsTable({ data }: { data: object[] }) {
 
 
 
-
-    return (
+   return (
         <Styles>
             <CustomTable
                 columns={columns}
                 data={localData}
                 disableMultiSort={true}
                 autoResetSortBy={false}
-                // autoResetPage={false}
-                // manualSortBy={true}
+                autoResetPage={false}
+                localStorageSortName={localStorageSortName}
                 //@ts-ignore
                 getHeaderProps={column => ({
                     // onClick: () => setSort(column.id),

@@ -1,3 +1,21 @@
+# v0.3.0
+## Bug
+- Fixed bug in the date display that caused dates to show as an invalid Date
+- Active Deals were not properly updating if a deal was open longer than your last 1000 closed deals. Rewrote the sync logic
+- Bot planner did not properly filter/sort based on the enabled status if it was changed on the UI.
+- Tooltips would crash the UI if an undefined value was found.
+- Fixed bug where reserved funds was not properly saving to the config
+
+## Enhancements
+- Updated the auto-sync to be more preformat. Now it will update only active deals, then if a new active deal is found it updates all deals.
+- Active Bots is renamed to Enabled Bots
+- Bot API looping. Now if you have more than 1000 bots it'll sync all of them. Also, more than 1000 bots is... nuts. Are you rich?
+
+## New Features
+- Pair performance by Date within Settings > Performance monitor. This allows you to compare profits on up to 8 pairs at a time by date.
+- All UI filters / settings now persist upon refresh!
+- Unrealized profit KPI on active deals.
+
 # v0.2.3
 ## Bug
 - Fixed bug in the avg daily profit KPI
@@ -19,12 +37,12 @@
 # v0.2.0
 
 ##  Enhancements
-- Improved the autosync to bring account data every 5 minutes to keep the bankroll metric correct
-- Improved the overall responsiveness and scrollbars on the Bot Planner
+- Improved the auto-sync to bring account data every 5 minutes to keep the bankroll metric correct
+- Improved the overall responsiveness and scrollbar on the Bot Planner
 - Project code was restructured to improve understanding for future contributors.
 - Added an average line to the daily profit chart
 - Improved profit by day to include month / year on the filter.
-- #9 - Improved readability of the tables in darkmode - Thanks @vdmsmnk!
+- #9 - Improved readability of the tables in dark mode - Thanks @vdmsmnk!
 - Adjusted the Y axis to avg deal for Bot Performance scatter.
 - Risk speedometer now caps at 350%'
 - Migrated the data tables from DataGrid (Material-UI) to React-table and made these a bit more responsive. This also fixed a bug with multiple scroll bars.
@@ -108,7 +126,7 @@
 
 # v0.0.4
 - a TON of settings and user flow updates
-    - New structure to the settings page to utalize more of the screen
+    - New structure to the settings page to utilize more of the screen
     - API key test so you can verify easily if you've properly uploaded the keys
     - Reserved funds that you can set per account
     - Auto updating data when you save settings. This prevents the need to manually refresh anything. The only downside is the initial load can take some time. Added a fun loader.
@@ -119,7 +137,7 @@
 - Added basic responsiveness to the containers. 
 - Donate button.
 - Bug Fixes:
-    - Issue with calculations when using multiple acounts. This should be resolved
+    - Issue with calculations when using multiple accounts. This should be resolved
     - Bot Planner screen was not properly updating calculations.
 
 
@@ -156,5 +174,5 @@
 - implemented and tested the mac dmg installer
 - moved files from public into the src
 - moved asset files around
-- fixed a bug in the lenght of the name array for filters causing an error
+- fixed a bug in the length of the name array for filters causing an error
 - added columns to the bots table

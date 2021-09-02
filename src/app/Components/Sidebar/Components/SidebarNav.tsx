@@ -1,6 +1,7 @@
 import React from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 import { NavLink } from 'react-router-dom'
+import { setStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 interface Props {
     // In your case
@@ -13,7 +14,7 @@ const SidebarNav= ({ Icon, name, link }: Props) => {
 
 
     return (
-        <div className="sidebarOption">
+        <div className="sidebarOption" onClick={() => setStorageItem(storageItem.navigation.homePage, link)}>
             <NavLink exact to={link} >
                 <Tooltip title={name} placement="right" arrow>
                     <span>

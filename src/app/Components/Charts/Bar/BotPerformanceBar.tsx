@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Area, Scatter } from 'recharts';
 
 
@@ -12,28 +12,42 @@ import { dynamicSort } from '@/utils/helperFunctions';
 import { Type_Bot_Performance_Metrics } from '@/types/3Commas';
 import { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts';
 
-const legendFind = (value: string) => {
-    if (value == "bought_volume") return "Bought Volume"
-    return "SO Volume Remaining"
-}
+import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 
 
 const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
 
-    const [sort, setSort] = React.useState('-total_profit');
-    const [filter, setFilter] = React.useState('all');
+    const defaultFilter = 'all';
+    const defaultSort = '-total_profit';
 
+    const localStorageFilterName = storageItem.charts.BotPerformanceBar.filter
+    const localStorageSortName = storageItem.charts.BotPerformanceBar.sort
 
-    const handleChange = (event:any) => {
-        setSort(event.target.value);
+    const [sort, setSort] = useState(defaultSort);
+    const [filter, setFilter] = useState(defaultFilter);
+
+    useEffect(() => {
+        const getFilterFromStorage = getStorageItem(localStorageFilterName);
+        setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
+
+        const getSortFromStorage = getStorageItem(localStorageSortName);
+        setSort((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
+
+    }, [])
+
+    const handleSortChange = (event:any) => {
+        const selectedSort = (event.target.value != undefined) ? event.target.value : defaultSort;
+        setSort(selectedSort);
+        setStorageItem(localStorageSortName, selectedSort)
     };
 
-
-
-    const handleFilterchange = (event: any) => {
-        setFilter(event.target.value);
+    const handleFilterChange = (event: any) => {
+        const selectedFilter = (event.target.value != undefined) ? event.target.value : defaultFilter;
+        setFilter(selectedFilter);
+        setStorageItem(localStorageFilterName, selectedFilter)
     };
+
 
     const hide = (id:string ) => {
         return (id == sort) ? false : true  
@@ -86,7 +100,7 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
                     <Legend verticalAlign="top" height={36} />
                     <Tooltip
                         // @ts-ignore - tooltip refactoring
-                        // todo - improve how tooltops can pass the values.
+                        // todo - improve how tooltips can pass the values.
                         content={<CustomTooltip />}
                     />
                     <XAxis 
@@ -164,7 +178,7 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={sort}
-                        onChange={handleChange}
+                        onChange={handleSortChange}
                         style={{width: "150px"}}
                     >
                         <MenuItem value="-total_profit">Profit</MenuItem>
@@ -181,7 +195,7 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={filter}
-                            onChange={handleFilterchange}
+                            onChange={handleFilterChange}
                             style={{ width: "150px" }}
                         >
                             <MenuItem value="all">All</MenuItem>
@@ -208,7 +222,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
         const data: Type_Bot_Performance_Metrics = payload[0].payload
         const { total_profit, avg_completed_so, avg_profit, avg_deal_hours, bought_volume, number_of_deals, bot_name, type } = data
         return (
-            <div className="tooltop">
+            <div className="tooltip">
                 <h4>{bot_name}</h4>
                 <p>{type}</p>
                 <p><strong>Bought Volume:</strong> ${parseNumber(bought_volume)} </p>

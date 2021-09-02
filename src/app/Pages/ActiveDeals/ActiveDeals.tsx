@@ -4,8 +4,9 @@ import { UpdateDataButton, ToggleRefreshButton } from '@/app/Components/Buttons/
 import { formatDeals } from '@/app/Components/DataTable/Index'
 
 import { useGlobalData } from '@/app/Context/DataContext';
-import { Card_ActiveDeals, Card_totalInDeals, Card_ActiveDealReserve, Card_TotalDayProfit } from '@/app/Components/Charts/DataCards';
+import { Card_ActiveDeals, Card_totalInDeals, Card_ActiveDealReserve, Card_TotalDayProfit, Card_TotalUnrealizedProfit } from '@/app/Components/Charts/DataCards';
 import { SyncToggles } from './Components/index';
+
 
 import './ActiveDeals.scss'
 
@@ -16,6 +17,7 @@ const ActiveDealsPage = () => {
 
     const todaysProfit = (profitData.length > 0) ? profitData[profitData.length - 1].profit : 0 
     const activeDealReserve = (activeDeals.length > 0) ? activeDeals.map( deal => deal.actual_usd_profit ).reduce( (sum, profit) => sum  + profit ) : 0;
+    const unrealizedProfitTotal = (activeDeals.length > 0) ? activeDeals.map( deal => ( deal.take_profit / 100 ) * deal.bought_volume).reduce( (sum, profit) => sum  + profit ) : 0;
     
     const { activeDealCount, totalInDeals,  on_orders, totalBoughtVolume } = metricsData
 
@@ -24,6 +26,8 @@ const ActiveDealsPage = () => {
     useEffect(() => {
         updateLocalData(formatDeals(activeDeals))
     }, [activeDeals])
+
+    
 
 
 
@@ -37,6 +41,7 @@ const ActiveDealsPage = () => {
                         <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
                         <Card_TotalDayProfit metric={todaysProfit} />
                         <Card_ActiveDealReserve metric={activeDealReserve} />
+                        <Card_TotalUnrealizedProfit metric={unrealizedProfitTotal} />
                     </div>
 
                 </div>

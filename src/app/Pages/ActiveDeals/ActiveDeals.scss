@@ -32,13 +32,13 @@
     width: 100%
 }
 
-.tooltip {
+.tooltip-activeDeals {
     position:relative; /* making the .tooltip span a container for the tooltip text */
     border-bottom:1px dashed #000; /* little indicater to indicate it's hoverable */
   }
 
 
-  .tooltip:before {
+  .tooltip-activeDeals:before {
     content: attr(data-text); /* here's the magic */
     position:absolute;
     
@@ -62,7 +62,7 @@
     display:none; /* hide by default */
   }
 
-  .tooltip:after {
+  .tooltip-activeDeals:after {
     content: "";
     position:absolute;
     
@@ -80,7 +80,7 @@
     
     display:none;
   }
-  .tooltip:hover:before, .tooltip:hover:after {
+  .tooltip-activeDeals:hover:before, .tooltip-activeDeals:hover:after {
     display:block;
   }
 

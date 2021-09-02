@@ -12,6 +12,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
 import { Type_ProfitChart, Type_Tooltip } from '@/types/Charts';
+import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 
 interface Type_NewDateProfit {
@@ -31,21 +32,33 @@ const convertToNewDates = (data: Type_Profit[], langString: any, type: string) =
         }
     })
 
-    const primaryDates = Array.from(new Set(mappedArray.map(day => { return { converted_date: day.converted_date, utc_date: day.utc_date} } )))
 
-    return primaryDates.map(date => ({
-        converted_date: date.converted_date,
-        utc_date: date.utc_date,
-        profit: mappedArray.filter(y => y.converted_date === date.converted_date).map(y => y.profit).reduce((sum, profit) => sum + profit),
-        type
-    }))
+    let primaryDates = Array.from(new Set( mappedArray.map(day => { return {converted_date: day.converted_date, utc_date: day.utc_date } }   )))
+    primaryDates = removeDuplicatesInArray(primaryDates, 'converted_date')
+
+    return primaryDates.map(date => {
+
+        const filteredDate = mappedArray.filter(y => y.converted_date === date.converted_date)
+        return {
+            converted_date: date.converted_date,
+            utc_date: date.utc_date,
+            profit: filteredDate.map(y => y.profit).reduce((sum, profit) => sum + profit),
+            type
+        }
+
+    })
+        
 
 }
 
 
 const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
 
-    const [dateType, setDateType] = useState('day');
+    const defaultSort = 'day';
+
+    const localStorageSortName = storageItem.charts.ProfitByDay.sort
+
+    const [dateType, setDateType] = useState(defaultSort);
     const [filterString, setFilterString] = useState<{}>({ month: '2-digit', day: '2-digit', year: '2-digit' })
 
     useEffect(() => {
@@ -60,9 +73,15 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
     }, [dateType])
 
 
+    useEffect(() => {
+        const getSortFromStorage = getStorageItem(localStorageSortName);
+        setDateType((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
+    }, [])
 
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setDateType(event.target.value as string);
+        const selectedSort = (event.target.value != undefined) ? event.target.value as string : defaultSort;
+        setDateType(selectedSort);
+        setStorageItem(localStorageSortName, selectedSort)
     };
 
 
@@ -163,14 +182,13 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
         let { date, profit, type, utc_date } = data
 
         if (type === 'day') {
-            console.log(utc_date)
             date = new Date(utc_date).toLocaleString(getLang(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 
         }
 
         // format the date
         return (
-            <div className="tooltop">
+            <div className="tooltip">
                 <h4>{date}</h4>
                 <p>$ {profit.toLocaleString()}</p>
             </div>

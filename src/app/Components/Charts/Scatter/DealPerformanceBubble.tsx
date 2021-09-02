@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis } from 'recharts';
 import { InputLabel, MenuItem, FormControl, Select, FormHelperText } from '@material-ui/core';
 
@@ -8,6 +8,8 @@ import { parseNumber } from '@/utils/number_formatting';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 import { dynamicSort } from '@/utils/helperFunctions';
 
+import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+
 const colors = ["#cfe1f2", "#b5d4e9", "#93c3df", "#6daed5", "#4b97c9", "#2f7ebc", "#1864aa", "#0a4a90", "#08306b"]
 
 
@@ -16,11 +18,23 @@ const colors = ["#cfe1f2", "#b5d4e9", "#93c3df", "#6daed5", "#4b97c9", "#2f7ebc"
  * - Look at combining this chart by "pair-BO" to minimize bubbles on the chart.
  */
 const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
-    const [sort, setSort] = React.useState('total_profit');
+
+    const defaultSort = 'percentTotalProfit';
+    const localStorageSortName = storageItem.charts.DealPerformanceBubble.sort
+
+    const [sort, setSort] = useState(defaultSort);
+
+    useEffect(() => {
+        const getSortFromStorage = getStorageItem(localStorageSortName);
+        setSort((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
+    }, [])
 
     const handleChange = (event: any) => {
-        setSort(event.target.value);
+        const selectedSort = (event.target.value != undefined) ? event.target.value : defaultSort;
+        setSort(selectedSort);
+        setStorageItem(localStorageSortName, selectedSort)
     };
+
 
     const getPosition = (data: Type_Query_PerfArray[], metric: string) => {
         data = data.sort(dynamicSort(metric))
@@ -147,7 +161,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
 
         const { total_profit, bot_name, pair, averageHourlyProfitPercent, averageDealHours, number_of_deals, bought_volume } = payload[0].payload
         return (
-            <div className="tooltop">
+            <div className="tooltip">
                 <h4>{pair}</h4>
                 <p><strong>Bot:</strong> {bot_name}</p>
                 <p><strong>Total Profit:</strong> ${parseNumber(total_profit)}</p>

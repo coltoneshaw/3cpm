@@ -40,11 +40,9 @@ const createWindow = (): void => {
 
   });
 
-  console.log(isDev);
 
   if (isDev) {
 		win.webContents.openDevTools();
-    installExtensions()
     win.loadURL('http://localhost:9000');
 
 	} else {
@@ -64,6 +62,7 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the

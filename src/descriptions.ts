@@ -20,7 +20,8 @@ const descriptions = {
         totalDeals: ` is the total amount of deals closed during the filtered period.`,
         averageDailyProfit: ` is the amount of total profit you've made divided by the total number of days included in your filter.`,
         todaysProfit: ` is the sum of the profit you've made in UTC today. Note this does not always reset at midnight, depending on your timezone`,
-        activeDealReserves: ` is the sum of all your deals current profit. This number can be postive / negative based on where all your deals are currently.`
+        activeDealReserves: ` is the sum of all your deals current profit. This number can be positive / negative based on where all your deals are currently.`,
+        totalUnrealizedProfit: ` is the total you would make if all your deals closed at their current settings.`
     }
 }
 

@@ -13,6 +13,7 @@ import Card_AverageDailyProfit from "./metrics/AverageDailyProfit";
 import Card_AverageDealHours from "./metrics/AverageDealHours";
 import Card_TotalDayProfit from './metrics/TotalDayProfit'
 import Card_ActiveDealReserve from "./metrics/ActiveDealReserve";
+import Card_TotalUnrealizedProfit from "./metrics/TotalUnrealizedProfit";
 
 
 export {
@@ -30,5 +31,6 @@ export {
     Card_AverageDailyProfit,
     Card_AverageDealHours,
     Card_TotalDayProfit,
-    Card_ActiveDealReserve
+    Card_ActiveDealReserve,
+    Card_TotalUnrealizedProfit
 }

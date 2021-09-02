@@ -89,7 +89,7 @@ const CustomTooltip = ({ active , payload , label }:Type_Tooltip) => {
         label = new Date(label).toLocaleString(getLang(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 
         return (
-            <div className="tooltop">
+            <div className="tooltip">
                 <h4>{label}</h4>
                 <p>$ {payload[0].value.toLocaleString()}</p>
             </div>

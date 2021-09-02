@@ -14,7 +14,7 @@ interface Type_Card {
  */
 const Card_EnabledBots = ({metric}:Type_Card) => {
 
-    const title = "Active Bots"
+    const title = "Enabled Bots"
     const message = descriptions.calculations.activeBots
     const key = title.replace(/\s/g, '')
     return (

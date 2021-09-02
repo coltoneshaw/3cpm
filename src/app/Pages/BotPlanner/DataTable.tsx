@@ -4,6 +4,7 @@ import { Delete as DeleteIcon } from '@material-ui/icons';
 import styled from 'styled-components'
 
 import { useGlobalData } from '@/app/Context/DataContext';
+import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 import { parseNumber } from '@/utils/number_formatting';
 import {
@@ -118,7 +119,6 @@ const EditableCell = ({
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
     setSize(e.target.value.length)
-    console.log(e.target.value.length)
 
   }
 
@@ -155,19 +155,21 @@ interface Type_DataTable {
   updateLocalBotData: any
 }
 const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
+  const localStorageSortName = storageItem.tables.BotPlanner.sort;
 
   const state = useGlobalData()
 
   const { data: { metricsData: { totalBankroll } } } = state;
 
 
-  // handling this locally becauase it does not need to be saved yet.
+  // handling this locally because it does not need to be saved yet.
   const handleOnOff = (e: any) => {
     updateLocalBotData((prevState: Type_Query_bots[]) => {
       const newRows = prevState.map((row: Type_Query_bots) => {
-        if (e !== undefined && e.target !== null) {
+
+        if (e != undefined && e.target !== null) {
           if (e.target.name == row.id) {
-            row.is_enabled = !row.is_enabled
+            row.is_enabled = (row.is_enabled == 1) ? 0 : 1;
           }
         }
         return row
@@ -383,6 +385,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
             // autoResetPage={false}
             manualSortBy={true}
             updateLocalBotData={handleEditCellChangeCommitted}
+            localStorageSortName={localStorageSortName}
             //@ts-ignore
             getHeaderProps={column => ({
 

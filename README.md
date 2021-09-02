@@ -8,6 +8,8 @@ The 3C Portfolio Manager is an essential addon to your 3Commas experience. It en
 # Table of Contents
 
 - [Initial Setup](#initial-setup)
+- [Feedback / Bug reports](#feedback-or-bug-submission)
+- [Building the application locally](#building-the-application-locally)
 - [Frequently Asked Questions](#frequently-asked-questions)
     - [Initial Setup](#initial-setup)
     - [Why did we change?](#why-did-we-change)
@@ -29,6 +31,91 @@ The 3C Portfolio Manager is an essential addon to your 3Commas experience. It en
 5. Click Save. This will download the deal data, bots, and account information from 3commas
 8. Start to profit!
 
+## Supported Operating Systems
+
+- Debian:
+    - 10 - Seems to have a bug when attempting to run an Electron application
+    - 11 - Works with the `.Appimage`
+- Chrome OS - Works with the `.Appimage`
+- MacOS - M1 and Intel are fully supported
+- Windows
+    - <10 - Untested, if it works let me know!
+    - 10 - Fully supported
+    - 11 - Untested
+- Linux
+    - Ubuntu - Fully Supported
+    - Other distros are currently untested.
+
+
+
+# Feedback or Bug Submission
+
+We welcome all feedback and bug reports as it helps us improve the project for everyone. You can submit these reports in two ways:
+
+1. (Preferred) If you have a Github account do so on [the issues page](https://github.com/coltoneshaw/3c-portfolio-manager/issues) and select the right type of report.
+2. If you do not have a GitHub account you can use our Google Form [here](https://forms.gle/EZeXuLcR8eosikkAA).
+
+If you have any issues don't hesitate to reach out to me on Discord @the_okayest_human#1680
+
+# Building the application locally
+
+## Setting up a dev build
+
+A dev build will enable you to contribute to the project locally, make changes in real time, and test the code for yourself. Just follow the below steps.
+
+1. Download the project locally
+
+```
+git clone https://github.com/coltoneshaw/3c-portfolio-manager.git
+```
+
+2. Navigate into the folder you downloaded
+
+```bash
+cd 3c-portfolio-manager
+```
+3. Download the project dependencies.
+
+```
+npm i --include=dev
+```
+
+If you experience issues with `node-gyp` when installing the dependencies run `pwd` or equivalent and ensure that you **do not** have any spaces in your path names. 
+
+Invalid path name example - `/Desktop/my folder/3c-portfolio-manager`
+
+Valid path name example - `/Desktop/my_folder/3c-portfolio-manager`
+
+4. Build webpack and sqlite3
+
+```
+npm run webpack
+npm run rebuild
+```
+
+These commands will take a few minutes as they build the webpack config and rebuild sqlite locally.
+
+5. Start the dev server
+
+```
+npm run dev
+```
+
+This will start the development version of 3C portfolio manager in a new window for you to test with. As you make changes to the code the application will refresh. You may see errors for dev tools. This is expected until the full build is complete. Give it about a minute to finish.
+
+Note:
+If you make changes to the Electron main.ts / preload.ts file you may need to cancel the dev server, rebuild with `npm run rebuild`, and start up the dev server again.
+
+## Packaging the application
+
+1. Run steps 1 - 5 of setting the dev server up.
+2. Package the application
+
+```
+npm run build
+```
+
+3. The relevant build files will be located in `./release`
 
 # Frequently Asked Questions
 
@@ -77,7 +164,7 @@ You can search through the code for anything you want to find, it's all availabl
 
 ## Unsafe File Warning
 
-If you are downloading this for the first time you may get an `Unsafe file warning` within Edge / Chrome / Firefox. This is because the file is currently an unsigned download. Code Signing costs money and takes time. Unfortunetly, this project has not reached that point yet.
+If you are downloading this for the first time you may get an `Unsafe file warning` within Edge / Chrome / Firefox. This is because the file is currently an unsigned download. Code Signing costs money and takes time. Unfortunately, this project has not reached that point yet.
 
 How can you help?
 1. Consider buying a coffee to support the project. If we can raise enough we can look into getting a code signing certificate. They run about $300 - $600 / yr. [You can buy a coffee here!](https://www.buymeacoffee.com/ColtonS)

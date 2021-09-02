@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis, LabelList } from 'recharts';
+import { InputLabel, MenuItem, FormControl, Select, FormHelperText } from '@material-ui/core';
+
 
 import { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts'
 import { Type_Bot_Performance_Metrics } from '@/types/3Commas';
@@ -7,7 +9,8 @@ import { parseNumber } from '@/utils/number_formatting';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
 import { dynamicSort } from '@/utils/helperFunctions';
-import { InputLabel, MenuItem, FormControl, Select, FormHelperText } from '@material-ui/core';
+
+import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 
 const colors = ["#cfe1f2", "#b5d4e9", "#93c3df", "#6daed5", "#4b97c9", "#2f7ebc", "#1864aa", "#0a4a90", "#08306b"]
@@ -16,14 +19,24 @@ const colors = ["#cfe1f2", "#b5d4e9", "#93c3df", "#6daed5", "#4b97c9", "#2f7ebc"
  * TODO
  * - Look at combining this chart by "pair-BO" to minimize bubbles on the chart.
  */
+
 const BotPerformanceBubble = ({ title, data }: Type_BotPerformanceCharts) => {
 
     const [filter, setFilter] = React.useState('all');
-    // const [localData, updateLocalData] = useState([]);
+
+    const defaultFilter = 'all';
+    const localStorageFilterName = storageItem.charts.BotPerformanceBubble.filter
+
+    useEffect(() => {
+        const getFilterFromStorage = getStorageItem(localStorageFilterName);
+        setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
+    }, [])
 
 
     const handleChange = (event: any) => {
-        setFilter(event.target.value);
+        const selectedFilter = (event.target.value != undefined) ? event.target.value : defaultFilter;
+        setFilter(selectedFilter);
+        setStorageItem(localStorageFilterName, selectedFilter)
     };
 
     const getPosition = (localData: Type_Bot_Performance_Metrics[]) => {
@@ -181,7 +194,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
         const data: Type_Bot_Performance_Metrics = payload[0].payload
         const { total_profit, bot_name, avg_completed_so, avg_profit, avg_deal_hours, bought_volume, number_of_deals, bot_id } = data
         return (
-            <div className="tooltop">
+            <div className="tooltip">
                 <h4>{bot_name}</h4>
                 <p><strong>Total Profit:</strong> ${parseNumber(total_profit)}</p>
                 <p><strong>Average Deal Hours:</strong> {parseNumber( avg_deal_hours, 2)}</p>

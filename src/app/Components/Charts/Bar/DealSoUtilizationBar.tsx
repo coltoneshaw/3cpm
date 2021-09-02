@@ -72,7 +72,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
 
         const { bought_volume, so_volume_remaining, max_deal_funds, bot_name } = payload[0].payload
         return (
-            <div className="tooltop">
+            <div className="tooltip">
                 <h4>{label}</h4>
                 <p><strong>Bot:</strong> {bot_name}</p>
                 <p><strong>Bought Volume:</strong> ${parseNumber(payload[0].value)} ( {formatPercent(bought_volume, max_deal_funds)} )</p>

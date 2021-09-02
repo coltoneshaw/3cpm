@@ -1,5 +1,5 @@
 
-const mostRecent = '0.2.3'
+const mostRecent = '0.3.0'
 
 
 const versionInformation = [
@@ -184,6 +184,26 @@ const versionInformation = [
             'Bot manager was capping results at 50 bots. Adjusted this to 1000 and will address looping in a future release.'
         ],
         new: []
+    },
+    {
+        version: '0.3.0',
+        enhancements: [
+            'Bot API looping. Now if you have more than 1000 bots it will sync all of them. Also, more than 1000 bots is... nuts. Are you rich?',
+            'Active Bots is renamed to Enabled Bots',
+            'Updated the auto-sync to be more preformat. Now it will update only active deals, then if a new active deal is found it updates all deals.'
+        ],
+        bugs: [
+            'Fixed bug where reserved funds was not properly saving to the config',
+            'Tooltips would crash the UI if an undefined value was found.',
+            'Bot planner did not properly filter/sort based on the enabled status if it was changed on the UI.',
+            'Active Deals were not properly updating if a deal was open longer than your last 1000 closed deals. Rewrote the sync logic',
+            'Fixed bug in the date display that caused dates to show as an invalid Date'
+        ],
+        new: [
+            'Pair performance by Date within Settings > Performance monitor. This allows you to compare profits on up to 8 pairs at a time by date.',
+            'All UI filters / settings now persist upon refresh!',
+            'Unrealized profit KPI on active deals.'
+        ]
     },
 ]
 
