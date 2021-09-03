@@ -10,13 +10,13 @@ import { parseISO, format, differenceInMilliseconds } from 'date-fns'
 function tryParseJSON_( jsonString:string , options?:object ) {
     try {
       var o = JSON.parse(jsonString);
-      console.log(typeof o)
+      // console.log(typeof o)
       if (o && typeof o === "object") {
         return o;
       }
     }
     catch (e) { }
-    console.log('error parsing the json file')
+    // console.log('error parsing the json file')
     return false;
 };
 

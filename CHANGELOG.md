@@ -4,8 +4,9 @@
 - Fixed bug in how the pair by date was calculated. This was using `actual_profit` from 3C which returns the profit if you never sold the coin
 
 ## Enhancement
-- Changed the USD profits from showing 3 decimals to 2. 
 - Changed the ROI metric from ROI on bought volume to ROI from total profit and bankroll.
+- Active Deal pills now are colored based on if that metric is positive, not the deal itself
+- Adjusted quite a few metrics from three decimals to two.
 
 # v0.3.0
 ## Bug
