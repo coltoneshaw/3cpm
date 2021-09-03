@@ -11,7 +11,7 @@ const SpeedometerDiv = ({metrics}: Speedometer_Type ) => {
     const { maxRiskPercent, bankrollAvailable } = metrics
 
     return (
-        <div style={{display: 'flex', justifyContent: 'space-around'}}>
+        <div style={{display: 'flex', justifyContent: 'space-between', paddingBottom: '32px'}}>
             {/* Need to calculate the max width of the element and pass it into each as a variable to make this dymanic.  */}
             <MaxRiskSpeedometer
                 metric={maxRiskPercent}

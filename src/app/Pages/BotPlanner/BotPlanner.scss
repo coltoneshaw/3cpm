@@ -4,6 +4,10 @@
     align-self: flex-end !important;
 }
 
+.updatebutton {
+    width: 40px !important;
+}
+
 
 
 
@@ -11,7 +15,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 0% 0 2% 0;
     flex-wrap: wrap;
     width: 100%;
     gap: 2em

@@ -127,33 +127,33 @@ const BotPlannerPage = () => {
         <>
             {/* <h1 style={{margin: "auto"}}>Bot Planner</h1> */}
 
+            <div className="flex-row headerButtonsAndKPIs">
+                <Risk localBotData={localBotData}/>
 
-            <Risk localBotData={localBotData} />
-            <div className="flex-row" style={{ justifyContent: "flex-end" }}>
-                <UpdateDataButton
-                    style={{
-                        width: '200px',
-                        margin: '5px 5px 10px 5px',
-                        alignSelf: 'flex-end'
+                <div className="flex-row headerButtons" style={{ justifyContent: "flex-end" }}>
+                <UpdateDataButton className="button-botPlanner updatebutton CtaButton" style={{ margin: '5px', height: '38px' }} disabled={true} />
 
-                    }}
-                    className="button-botPlanner secondaryButton-outline"
-                />
-                <SaveButton
-                    className="button-botPlanner secondaryButton-outline"
-                    saveFunction={saveCustomDeals} />
+                    <SaveButton
+                        className="button-botPlanner secondaryButton-outline"
+                        saveFunction={saveCustomDeals} />
 
 
-                <Button
-                    endIcon={<AddIcon />}
-                    onClick={() => { addToTable() }}
-                    className="button-botPlanner CtaButton"
-                    disableElevation
-                >
-                    add row
-                </Button>
+                    <Button
+                        startIcon={<AddIcon />}
+                        onClick={() => { addToTable() }}
+                        className="button-botPlanner CtaButton"
+                        disableElevation
+                    >
+                        add row
+                    </Button>
+
+                </div>
+
 
             </div>
+
+
+
 
             <DataTable
                 localBotData={localBotData}

@@ -196,3 +196,41 @@
 .current-value{
   fill: var(--color-text-lightbackground) !important;
 }
+
+
+.headerButtonsAndKPIs {
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-bottom: .5em;
+  align-items: center;
+
+  .activeDealCards {
+    flex-wrap: nowrap;
+    justify-content: flex-start; 
+  }
+
+  .headerButtons{
+    flex-basis: 20%;
+    align-items: flex-end;
+    display: flex;
+    flex-direction: row;
+    align-self: flex-end;
+  }
+  
+  
+  @media only screen and (max-width: 1550px)  {
+
+    .activeDealCards {
+        justify-content: center; 
+        padding-bottom: .5em;
+    }
+
+    .headerButtons{
+      align-items: center;
+      flex-direction: row;
+  }
+
+  }
+
+}
+

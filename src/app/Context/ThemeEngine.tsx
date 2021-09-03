@@ -55,9 +55,9 @@ const lightMode = {
     '--color-boxshadow-2' : 'rgba(166,173,201,.2)',
 
     // Tailwinds 600
-    '--color-red' : '#DC2626',
-    '--color-green' : '#059669',
-    '--opacity-pill' : '.9'
+    '--color-red' : '#EF4444',
+    '--color-green' : '#10B981',
+    '--opacity-pill' : '.95'
 }
 
 const darkMode = {

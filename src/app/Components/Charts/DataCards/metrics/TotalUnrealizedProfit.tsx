@@ -14,7 +14,7 @@ interface Type_Card {
  */
 const Card_TotalUnrealizedProfit = ({metric }:Type_Card) => {
 
-    const title = "Total Unrealized Profit"
+    const title = "Unrealized Profit"
     const message = descriptions.metrics.totalUnrealizedProfit
     const key = title.replace(/\s/g, '')
 

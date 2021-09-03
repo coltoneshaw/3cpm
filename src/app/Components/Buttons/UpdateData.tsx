@@ -42,11 +42,10 @@ const UpdateDataButton = ({ style, className, disabled }: Type_ButtonProps) => {
                     updateAllData(1000, handleClick)
                 }}
                 disableElevation
-                endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
+                // startIcon={}
                 style={style}
             >
-                Update Data
-            </Button>
+                <SyncIcon className={isSyncing ? "iconSpinning" : ""} />            </Button>
             <ToastNotifcations open={open} handleClose={handleClose} message="Sync finished." />
         </>
     )

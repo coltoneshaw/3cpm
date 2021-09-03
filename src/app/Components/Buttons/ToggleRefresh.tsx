@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
 import { Button } from '@material-ui/core';
-import SyncIcon from '@material-ui/icons/Sync';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import StopIcon from '@material-ui/icons/Stop';
+
 import { useGlobalData } from '@/app/Context/DataContext';
 
 
@@ -32,16 +34,13 @@ const ToggleRefreshButton = ({ style, className }: Type_ButtonProps) => {
                 })
             }}
             disableElevation
-            endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
+            startIcon={ (buttonEnabled) ? <StopIcon /> : <PlayArrowIcon/> }
             style={{
                 ...style, 
-                backgroundColor: (buttonEnabled)? 'var(--color-red)': 'var(--color-green)' 
+                backgroundColor: 'var(--color-primary)',
+                color: 'var(--color-text-lightbackground)'
             }}
-        >
-            {// check the state here and show based on if the interval timer is activated or not.
-                (buttonEnabled) ? 'Turn off auto-refresh' : 'Turn on auto-refresh'
-
-            }
+        > Auto Refresh
         </Button>
     )
 }

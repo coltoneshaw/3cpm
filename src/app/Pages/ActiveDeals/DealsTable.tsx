@@ -31,6 +31,12 @@ function DealsTable({ data }: { data: object[] }) {
                     {
                         Header: 'Bot Name',
                         accessor: 'bot_name', // accessor is the "key" in the data,
+                        style: {
+                            textAlign: 'left', 
+                            paddingLeft: '1em',
+                            width: '150px'
+                        },
+                        
                         Cell: ({ cell }: any) => {
                             return (
                                 <span
@@ -43,14 +49,19 @@ function DealsTable({ data }: { data: object[] }) {
                     },
                     {
                         Header: 'Pair',
-                        accessor: 'pair'
+                        accessor: 'pair',
+                        
+                        style: {textAlign: 'left', width: '120px'},
                     },
                     {
                         Header: 'Duration',
                         id: 'created_at',
                         accessor: 'created_at',
+                        style: {
+                            textAlign: 'left'
+                        },
                         Cell: ({ cell }: any) => {
-                            return <>{getDateString(cell.value)}</>
+                            return  < span style={{fontFamily: 'monospace', fontSize: '1.2em'}}>{getDateString(cell.value)}</span>
                         }
                     }
                 ]
@@ -61,19 +72,19 @@ function DealsTable({ data }: { data: object[] }) {
                     {
                         Header: 'Current',
                         accessor: 'current_price',
-                        className: 'text-center',
+                        style: {textAlign: 'left'},
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
-                            return <>$ {parseNumber( cell.value, 4) }</>
+                            return < span style={{fontFamily: 'monospace', fontSize: '1.2em'}}>$ {parseNumber( cell.value, 4) }</span>
                         }
                     },
                     {
                         Header: 'TP',
                         accessor: 'take_profit_price',
-                        className: 'text-center',
+                        style: {textAlign: 'left'},
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
-                            return <>$ {parseNumber( cell.value, 4) }</>
+                            return < span style={{fontFamily: 'monospace', fontSize: '1.2em'}}>$ {parseNumber( cell.value, 4) }</span>
                         }
                     },
                 ]
@@ -84,17 +95,21 @@ function DealsTable({ data }: { data: object[] }) {
                     {
                         Header: 'Base',
                         accessor: 'bought_volume',
+                        style: {textAlign: 'left'},
                         Cell: ({ cell }: any) => {
-                            className: (cell.column as any).className = 'text-right'
-                            return <>{cell.value}</>
+                            return  < span style={{fontFamily: 'monospace', fontSize: '1.2em'}}>{cell.value}</span>
                         },
                         sortable: false
                     },
                     {
                         Header: 'Pair',
                         accessor: 'bought_amount',
+                        style: {textAlign: 'left'},
                         className: '',
-                        sortable: false
+                        sortable: false,
+                        Cell: ({ cell }: any) => {
+                            return  < span style={{fontFamily: 'monospace', fontSize: '1.2em'}}>{cell.value}</span>
+                        },
                     },
                 ]
             },
@@ -104,12 +119,12 @@ function DealsTable({ data }: { data: object[] }) {
                     {
                         Header: 'Total/Max',
                         accessor: 'safetyOrderString',
-                        className: 'text-center'
+                        style: {textAlign: 'center'},
                     },
                     {
                         Header: 'Active',
                         accessor: 'current_active_safety_orders',
-                        className: 'text-center'
+                        style: {textAlign: 'center'},
                     }
                 ]
             },
@@ -124,8 +139,12 @@ function DealsTable({ data }: { data: object[] }) {
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
 
-                            const in_profit = (cell.value > 0) ? 'green' : 'red'
-                            return <span className={"pill " + in_profit} > $ {parseNumber( cell.value, 2) }</span>
+                            const in_profit = (cell.row.original.actual_profit_percentage > 0) ? 'green' : 'red'
+                            return <span className={"pill pill-left " + in_profit} style={{fontFamily: 'monospace', fontSize: '1.2em'}}> $ {parseNumber( cell.value, 2) }</span>
+                        },
+                        style: {
+                            paddingRight: 0,
+                            maxWidth: '5em'
                         }
                     },
                     {
@@ -134,17 +153,21 @@ function DealsTable({ data }: { data: object[] }) {
                         className: 'text-center',
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
-                            const in_profit = (cell.value > 0) ? 'green' : 'red'
-                            return <span className={"pill " +  in_profit } >{parseNumber( cell.value, 2) } %</span>
+                            const in_profit = (cell.row.original.actual_profit_percentage> 0) ? 'green' : 'red'
+                            return <span className={"pill pill-right " +  in_profit } style={{fontFamily: 'monospace', fontSize: '1.2em'}}>{parseNumber( cell.value, 2) } %</span>
+                        },
+                        style: {
+                            paddingLeft: 0,
+                            maxWidth: '5em'
                         }
                     },
                     {
                         Header: 'Unrealized',
                         accessor: 'unrealized_profit',
-                        className: 'text-center',
+                        style: {textAlign: 'left'},
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
-                            return <span>$ {parseNumber( cell.value, 3) }</span>
+                            return <span style={{fontFamily: 'monospace',  fontSize: '1.2em', paddingLeft: '1em'}}>$ {parseNumber( cell.value, 3) }</span>
                         }
                     }
                 ]
@@ -155,15 +178,18 @@ function DealsTable({ data }: { data: object[] }) {
                     {
                         Header: 'Funds',
                         accessor: 'max_deal_funds',
-                        className: 'text-center',
+                        style: {textAlign: 'left'},
+                        Cell: ({ cell }: any) => {
+                            return  < span style={{fontFamily: 'monospace', fontSize: '1.2em'}}>{cell.value}</span>
+                        },
                     },
                     {
                         Header: 'Deviation',
                         accessor: 'max_deviation',
-                        className: 'text-center',
+                        style: {textAlign: 'left'},
                         Cell: ({ cell }: any) => {
-                            return <>{cell.value} % </>
-                        }
+                            return  < span style={{fontFamily: 'monospace', fontSize: '1.2em'}}>{cell.value}%</span>
+                        },
                     }
                 ]
 
