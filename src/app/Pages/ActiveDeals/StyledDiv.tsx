@@ -73,15 +73,16 @@ export default styled.div`
 
         .pill-left {
             border-radius: 10px 0px 0px 10px;
-            align-text: right;
-            padding-right: 5px;
+            text-align: right;
+            padding-right: 1em;
             border-right: 1px solid white;
         }
 
         .pill-right {
             border-radius: 0px 10px 10px 0px;
-            align-text: left;
-            padding-left: 5px;
+            text-align: left;
+            padding-left: 1em;
+            height: 100%;
         }
     }
 
