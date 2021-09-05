@@ -107,9 +107,7 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
                     <YAxis 
                         dataKey="bot_name"
                         type="category"
-                        // orientation='left' 
                         axisLine={false}
-                        // height={75}
                         width={110}
                         textAnchor="end"
                         

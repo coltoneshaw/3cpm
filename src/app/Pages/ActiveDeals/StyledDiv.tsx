@@ -52,11 +52,12 @@ export default styled.div`
         };
 
         .pill {
-            padding: .1em;
+            padding: .2em;
             display: block;
             border-radius: 10px;
             color: white;
             font-weight: 600;
+            white-space: nowrap;
         }
 
 
@@ -75,7 +76,7 @@ export default styled.div`
             border-radius: 10px 0px 0px 10px;
             text-align: right;
             padding-right: 1em;
-            border-right: 1px solid white;
+            margin-right: 2px;
         }
 
         .pill-right {

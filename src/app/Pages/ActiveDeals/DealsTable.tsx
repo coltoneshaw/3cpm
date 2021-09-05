@@ -61,7 +61,7 @@ function DealsTable({ data }: { data: object[] }) {
                             textAlign: 'left'
                         },
                         Cell: ({ cell }: any) => {
-                            return  < span style={{fontFamily: 'monospace', fontSize: '1.2em'}}>{getDateString(cell.value)}</span>
+                            return  < span className=" monospace-cell">{getDateString(cell.value)}</span>
                         }
                     }
                 ]
@@ -75,7 +75,7 @@ function DealsTable({ data }: { data: object[] }) {
                         style: {textAlign: 'left'},
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
-                            return < span style={{fontFamily: 'monospace', fontSize: '1.2em'}}>$ {parseNumber( cell.value, 4) }</span>
+                            return < span className=" monospace-cell">$ {parseNumber( cell.value, 4) }</span>
                         }
                     },
                     {
@@ -84,7 +84,7 @@ function DealsTable({ data }: { data: object[] }) {
                         style: {textAlign: 'left'},
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
-                            return < span style={{fontFamily: 'monospace', fontSize: '1.2em'}}>$ {parseNumber( cell.value, 4) }</span>
+                            return < span className=" monospace-cell">$ {parseNumber( cell.value, 4) }</span>
                         }
                     },
                 ]
@@ -97,7 +97,7 @@ function DealsTable({ data }: { data: object[] }) {
                         accessor: 'bought_volume',
                         style: {textAlign: 'left'},
                         Cell: ({ cell }: any) => {
-                            return  < span style={{fontFamily: 'monospace', fontSize: '1.2em'}}>{cell.value}</span>
+                            return  < span className=" monospace-cell">{cell.value}</span>
                         },
                         sortable: false
                     },
@@ -108,7 +108,7 @@ function DealsTable({ data }: { data: object[] }) {
                         className: '',
                         sortable: false,
                         Cell: ({ cell }: any) => {
-                            return  < span style={{fontFamily: 'monospace', fontSize: '1.2em'}}>{cell.value}</span>
+                            return  < span className=" monospace-cell">{cell.value}</span>
                         },
                     },
                 ]
@@ -140,11 +140,11 @@ function DealsTable({ data }: { data: object[] }) {
                         Cell: ({ cell }: any) => {
 
                             const in_profit = (cell.row.original.actual_profit_percentage > 0) ? 'green' : 'red'
-                            return <span className={"pill pill-left " + in_profit} style={{fontFamily: 'monospace', fontSize: '1.2em'}}> $ {parseNumber( cell.value, 2) }</span>
+                            return <span className={"pill pill-left monospace-cell " + in_profit} > $ {parseNumber( cell.value, 2) }</span>
                         },
                         style: {
                             paddingRight: 0,
-                            maxWidth: '5em'
+                            maxWidth: '6em'
                         }
                     },
                     {
@@ -154,11 +154,11 @@ function DealsTable({ data }: { data: object[] }) {
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
                             const in_profit = (cell.row.original.actual_profit_percentage> 0) ? 'green' : 'red'
-                            return <span className={"pill pill-right " +  in_profit } style={{fontFamily: 'monospace', fontSize: '1.2em'}}>{parseNumber( cell.value, 2) } %</span>
+                            return <span className={"pill pill-right monospace-cell " +  in_profit }>{parseNumber( cell.value, 2) } %</span>
                         },
                         style: {
                             paddingLeft: 0,
-                            maxWidth: '5em'
+                            maxWidth: '6em'
                         }
                     },
                     {
@@ -167,7 +167,7 @@ function DealsTable({ data }: { data: object[] }) {
                         style: {textAlign: 'left'},
                         sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
                         Cell: ({ cell }: any) => {
-                            return <span style={{fontFamily: 'monospace',  fontSize: '1.2em', paddingLeft: '1em'}}>$ {parseNumber( cell.value, 3) }</span>
+                            return <span className=" monospace-cell" style={{paddingLeft: '1em'}}>$ {parseNumber( cell.value, 3) }</span>
                         }
                     }
                 ]
@@ -180,7 +180,7 @@ function DealsTable({ data }: { data: object[] }) {
                         accessor: 'max_deal_funds',
                         style: {textAlign: 'left'},
                         Cell: ({ cell }: any) => {
-                            return  < span style={{fontFamily: 'monospace', fontSize: '1.2em'}}>{cell.value}</span>
+                            return  < span className=" monospace-cell">{cell.value}</span>
                         },
                     },
                     {
@@ -188,7 +188,7 @@ function DealsTable({ data }: { data: object[] }) {
                         accessor: 'max_deviation',
                         style: {textAlign: 'left'},
                         Cell: ({ cell }: any) => {
-                            return  < span style={{fontFamily: 'monospace', fontSize: '1.2em'}}>{cell.value}%</span>
+                            return  < span  className=" monospace-cell">{cell.value}%</span>
                         },
                     }
                 ]

@@ -21,10 +21,10 @@ const SummaryStatistics = () => {
                 <Grid item xs={6}>
                     <SummaryProfitByDay data={profitData} X="runningSum" />
                 </Grid>
-                <Grid item xs={12} xl={6}>
+                <Grid item xs={6} xl={6}>
                     <PairPerformanceBar title="Pair Performance" data={performanceData.pair}/>
                 </Grid>
-                <Grid item xs={12} xl={6}>
+                <Grid item xs={6} xl={6}>
                     <BotPerformanceBar title="Bot Performance" data={performanceData.bot}/>
                 </Grid>
             </Grid>

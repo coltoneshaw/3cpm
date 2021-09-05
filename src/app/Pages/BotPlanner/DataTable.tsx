@@ -37,7 +37,6 @@ const Styles = styled.div`
     th,
     td {
       margin: 0;
-      padding: 0.3rem .2rem .3rem .2rem;
     };
 
     th {
@@ -46,6 +45,9 @@ const Styles = styled.div`
       z-index: 100;
       height: 44px;
       background-color: var(--color-secondary-light87);
+      font-family: "Open Sans", sans-serif;
+      font-size: .875em;
+      padding: 0 .5em;
 
   }
 
@@ -147,7 +149,7 @@ const EditableCell = ({
     setValue(String(initialValue))
   }, [initialValue])
 
-  return <span style={{ display: 'flex', justifyContent: 'center' }}><input value={value} onChange={onChange} onBlur={onBlur} size={size} style={{ textAlign: 'center' }} />{ending()}</span>
+  return <span style={{ display: 'flex', justifyContent: 'left' }}><input value={value} onChange={onChange} onBlur={onBlur} size={size} style={{ textAlign: 'left' }} />{ending()}</span>
 }
 
 interface Type_DataTable {
@@ -259,11 +261,17 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         Header: 'Name',
         accessor: 'name',
         Cell: EditableCell,
-
+        style: {
+          textAlign: 'left',
+          paddingLeft: '1em'
+        }
       },
       {
         Header: 'Pairs',
         accessor: 'pairs',
+        style: {
+          textAlign: 'left'
+        },
         Cell: ({ cell }: any) => {
 
           if (cell.value.length > 20) {
@@ -276,80 +284,125 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
       {
         Header: 'Currency',
         accessor: 'from_currency',
+        className:"monospace-cell",
+        style: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'BO',
         accessor: 'base_order_volume',
         Cell: EditableCell,
-        // className: 'darkHeader',
+        className:"monospace-cell",
+        style: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'SO',
         accessor: 'safety_order_volume',
         Cell: EditableCell,
-        // className: 'darkHeader',
+        className:"monospace-cell",
+        style: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'Take Profit',
         accessor: 'take_profit',
         Cell: EditableCell,
-        // className: 'darkHeader',
+        className:"monospace-cell",
+        style: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'MSTC',
         accessor: 'max_safety_orders',
         Cell: EditableCell,
-        // className: 'darkHeader',
+        className:"monospace-cell",
+        style: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'SOS',
         accessor: 'safety_order_step_percentage',
         Cell: EditableCell,
-        // className: 'darkHeader',
+        className:"monospace-cell",
+        style: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'OS',
         accessor: 'martingale_volume_coefficient',
         Cell: EditableCell,
-        // className: 'darkHeader',
+        className:"monospace-cell",
+        style: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'SS',
         accessor: 'martingale_step_coefficient',
         Cell: EditableCell,
-        // className: 'darkHeader',
+        className:"monospace-cell",
+        style: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'Deals',
-        accessor: 'max_active_deals'
+        accessor: 'max_active_deals',
+        className:"monospace-cell",
+        style: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'Deviation',
         accessor: 'price_deviation',
-        Cell: ({ cell }: any) => <>{cell.value} %</>
+        Cell: ({ cell }: any) => <span className="monospace-cell">{cell.value} %</span>,
+        style: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'Deal Funds',
         accessor: 'max_funds_per_deal',
-        Cell: ({ cell }: any) => <>{parseNumber(cell.value)}</>
+        Cell: ({ cell }: any) => <span className="monospace-cell">{parseNumber(cell.value)}</span>,
+        style: {
+          textAlign: 'left'
+        }
 
       },
       {
         Header: 'Bot Funds',
         accessor: 'max_funds',
-        Cell: ({ cell }: any) => <>{parseNumber(cell.value)}</>
+        Cell: ({ cell }: any) => <span className="monospace-cell">{parseNumber(cell.value)}</span>,
+        style: {
+          textAlign: 'left'
+        }
       },
 
       {
-        Header: 'Coverage %',
+        Header: 'Coverage',
         accessor: 'maxCoveragePercent',
-        Cell: ({ cell }: any) => <>{cell.value} %</>,
-        // className: 'darkHeader',
+        Cell: ({ cell }: any) => <span className="monospace-cell">{cell.value} %</span>,
+        style: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'Max SO Covered',
         accessor: 'maxSoReached',
-        // className: 'darkHeader',
+        className:"monospace-cell",
+        style: {
+          textAlign: 'left',
+          width: '2em',
+          maxWidth: '5em'
+        }
       },
       {
         Header: () => <DeleteIcon />,
@@ -388,6 +441,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
             localStorageSortName={localStorageSortName}
             //@ts-ignore
             getHeaderProps={column => ({
+              
 
             })}
             //@ts-ignore
