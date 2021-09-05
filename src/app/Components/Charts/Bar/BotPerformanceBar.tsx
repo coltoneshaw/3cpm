@@ -84,80 +84,97 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
             return (<NoData />)
         } else {
             data = filterData(data).sort(dynamicSort(sort))
-            return (<ResponsiveContainer width="100%" height="90%" minHeight="300px">
+            return (<ResponsiveContainer width="100%" height="90%" minHeight="800px">
                 <ComposedChart
 
                     data={data}
                     margin={{
-                        top: 20,
-                        right: 30,
-                        left: 20,
+                        top: 25,
+                        right: 0,
+                        left: 0,
                         bottom: 5,
                     }}
-                    stackOffset="expand"
+                    layout="vertical"
+                    // stackOffset="expand"
                 >
-                    <CartesianGrid opacity={.3} vertical={false} />
+                    <CartesianGrid opacity={.3} vertical={true} horizontal={false}/>
                     <Legend verticalAlign="top" height={36} />
                     <Tooltip
                         // @ts-ignore - tooltip refactoring
                         // todo - improve how tooltips can pass the values.
                         content={<CustomTooltip />}
                     />
-                    <XAxis 
+                    <YAxis 
                         dataKey="bot_name"
                         type="category"
-                        angle={45}
+                        // orientation='left' 
                         axisLine={false}
-                        height={75}
-                        textLength={15}
-                        textAnchor="start"
+                        // height={75}
+                        width={110}
+                        textAnchor="end"
                         
                         tickFormatter={(str) => {
-                            return (str.length > 12 ) ? str.slice(0, 9) + "..." : str
+                            return (str.length > 15 ) ? str.slice(0, 12) + "..." : str
                         }}
-                        dx={0}
-                        // dx={15}
-                        dy={5}
+
                         fontSize=".75em"
-                        minTickGap={-100}
+                        minTickGap={-80}
 
                     />
-                    <YAxis 
-                        yAxisId="total_profit" 
-                        orientation='left' 
+                    <XAxis 
+                        xAxisId="total_profit" 
+                        type="number"
                         hide={hide("-total_profit")} 
                         domain={[0, 'auto']} 
-                        allowDataOverflow={true} offset={20}>
-                        <Label value="Total Profit"
-                                angle={-90}
-                                dy={0}
-                                dx={-20}
-                            />
-                    
-                    </YAxis>
+                        allowDataOverflow={true} 
+                        height={50}
+                        allowDecimals={false}
+                        label={{
+                            value: "Total Profit",
+                            position: "Bottom",
+                            dx: 0,
+                            dy: 20
+                        }}
 
+                        />
+                    <XAxis 
+                        xAxisId="avg_deal_hours"
+                        type="number"
+                        hide={hide("-avg_deal_hours")} 
+                        domain={[0, 'auto']} 
+                        allowDataOverflow={true} 
+                        height={50}
+                        allowDecimals={false}
+                        label={{
+                            value: "Avg. Deal Hours",
+                            position: "Bottom",
+                            dx: 0,
+                            dy: 20
+                        }}
+                        
+                        />
+                    <XAxis 
+                        xAxisId="bought_volume" 
+                        type="number"
+                        hide={hide("-bought_volume")} 
+                        domain={[0, 'auto']} 
+                        allowDataOverflow={true} 
+                        height={50}
+                        allowDecimals={false}
 
-                    <YAxis yAxisId="avg_deal_hours" orientation='left' hide={hide("-avg_deal_hours")} domain={[0, 'auto']} allowDataOverflow={true} offset={20}>
-                        <Label value="Avg. Deal Hours"
-                                angle={-90}
-                                dy={0}
-                                dx={-20}
-                            />
+                        label={{
+                            value: "Bought Volume",
+                            position: "Bottom",
+                            dx: 0,
+                            dy: 20
+                        }}
+                        
+                        />
+                        
                     
-                    </YAxis>
-                    <YAxis yAxisId="bought_volume" orientation='left' hide={hide("-bought_volume") } domain={[0, 'auto']} allowDataOverflow={true} offset={20}>
-                        <Label value="Bought Volume"
-                                angle={-90}
-                                dy={0}
-                                dx={-40}
-                            />
-                    
-                    </YAxis>
-
-                    
-                    <Bar name="Total Profit" dataKey="total_profit" fill="var(--color-CTA-dark25)"  yAxisId="total_profit" fillOpacity={.8} />
-                    <Scatter name="Bought Volume" yAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--color-primary-dark25)"  />
-                    <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours"  fill="var(--color-secondary)" yAxisId="avg_deal_hours"/>
+                    <Bar name="Total Profit" dataKey="total_profit" fill="var(--color-CTA-dark25)"  xAxisId="total_profit" fillOpacity={.8} />
+                    <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--color-primary-dark25)"  />
+                    <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours"  fill="var(--color-secondary)" xAxisId="avg_deal_hours"/>
 
                     {/* <Line name="Total Profit" type="monotone" yAxisId="total_profit" dataKey="total_profit" stroke="#E8AE00" dot={false} strokeWidth={1.75} /> */}
                     {/* <Line name="Avg. Deal Hours" type="monotone" yAxisId="avg_deal_hours" dataKey="avg_deal_hours" dot={false} strokeWidth={1.75} /> */}
@@ -168,7 +185,7 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
     }
 
     return (
-        <div className="boxData stat-chart bubble-chart ">
+        <div className="boxData stat-chart  ">
             <div style={{position: "relative"}}>
                 <h3 className="chartTitle">{title}</h3>
                 <div style={{ position:"absolute", right: 0, top: 0, height: "50px", zIndex: 5}}>

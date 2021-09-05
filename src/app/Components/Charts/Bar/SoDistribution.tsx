@@ -86,7 +86,7 @@ const SoDistribution = ({ title, data, metrics }: Type_SoDistribution) => {
     }
 
     return (
-        <div className="boxData stat-chart bubble-chart" >
+        <div className="boxData stat-chart " >
             <h3 className="chartTitle">{title}</h3>
             {renderChart()}
         </div>
