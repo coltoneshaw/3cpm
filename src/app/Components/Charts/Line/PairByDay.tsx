@@ -198,7 +198,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
             const pairs = { ...payload[0].payload }
             delete pairs.date;
 
-            if (pairs == undefined || pairs == {}) return ''
+            if (pairs == {}) return ''
 
             return Object.keys(pairs).map(pair => {
                 return <p><strong>{pair}</strong> ${pairs[pair].toLocaleString()}</p>

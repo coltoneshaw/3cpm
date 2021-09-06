@@ -27,7 +27,7 @@ const Risk = ({ localBotData }: { localBotData: Type_Query_bots[] }) => {
      * DCA Max risk - sum of the max_bot_usage.
      */
 
-    const enabledDeals = localBotData.filter(bot => bot.is_enabled && bot.hide != true)
+    const enabledDeals = localBotData.filter(bot => bot.is_enabled && !bot.hide)
 
     /**
      * TODO

@@ -1,5 +1,4 @@
 import { sub, getTime } from 'date-fns';
-import dotProp from 'dot-prop';
 
 import { TconfigValues } from '@/types/config';
 

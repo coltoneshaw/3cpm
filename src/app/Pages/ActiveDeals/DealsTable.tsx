@@ -85,7 +85,7 @@ function DealsTable({ data }: { data: object[] }) {
                         Header: 'Base',
                         accessor: 'bought_volume',
                         Cell: ({ cell }: any) => {
-                            className: (cell.column as any).className = 'text-right'
+                            (cell.column as any).className = 'text-right'
                             return <>{cell.value}</>
                         },
                         sortable: false

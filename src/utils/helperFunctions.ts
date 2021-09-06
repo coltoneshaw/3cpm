@@ -9,7 +9,7 @@ import { parseISO, differenceInMilliseconds } from 'date-fns'
  */
 function tryParseJSON_( jsonString:string , options?:object ) {
     try {
-      var o = JSON.parse(jsonString);
+      const o = JSON.parse(jsonString);
       console.log(typeof o)
       if (o && typeof o === "object") {
         return o;

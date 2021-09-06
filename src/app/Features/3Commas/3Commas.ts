@@ -459,9 +459,7 @@ const getSelectPairDataByDate = async (pairs:string[]) => {
         const subDateObject = <any>{date: day};
         pairs.forEach(pair => {
             const filteredForPair = filteredData.find(deal => deal.pair === pair)
-            const profit = (filteredForPair != undefined) ? filteredForPair.profit : 0;
-
-            subDateObject[pair as keyof subDateObject] = profit
+            subDateObject[pair as keyof subDateObject] = (filteredForPair != undefined) ? filteredForPair.profit : 0
         })
 
         return subDateObject;

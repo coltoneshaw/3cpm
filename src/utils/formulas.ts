@@ -170,7 +170,7 @@ const calc_dropMetrics = (bankRoll:number, botData:Type_Query_bots[]) => {
      */
     if(botData == undefined || botData.length === 0) return [];
 
-     const enabledBots = botData.filter(bot => bot.is_enabled && bot.hide != true)
+     const enabledBots = botData.filter(bot => bot.is_enabled && !bot.hide)
      const fundsAvailable = bankRoll / enabledBots.length
     return botData.map(bot => {
          const dropMetrics = calc_dropCoverage(fundsAvailable, bot)
