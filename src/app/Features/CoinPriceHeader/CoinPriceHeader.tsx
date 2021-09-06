@@ -2,18 +2,20 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@material-ui/core";
 import AddCoinModal from "./AddCoinModal";
-// import { parseNumber } from "@/utils/number_formatting";
+import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 import './CoinPriceHeader.scss'
 
 const CoinPriceHeader = () => {
 
-    const [selectedCoins, updateSelectedcoins] = useState(() => ['BTCUSDT', 'ADAUSDT'])
+    const [selectedCoins, updateSelectedcoins] = useState([])
     const [coinData, updateCoinData] = useState([])
     const [coinNames, updateCoinNames] = useState<string[]>([])
 
     const [open, setOpen] = useState(false)
-
+    useEffect(() => {
+        fetchNewCoinData('firstUpdate')
+    }, [])
 
     const fetchNewCoinData = (update?: string) => {
 
@@ -22,29 +24,39 @@ const CoinPriceHeader = () => {
             .then((data: any) => {
                 // console.log(data)
 
-                    const filteredCoins = data.filter((coin: any) => selectedCoins.includes(coin.symbol))
-                    console.info('getting new coin data.')
-                    console.log(selectedCoins)
+                //@ts-ignore
+                const filteredCoins = data.filter((coin: any) => selectedCoins.includes(coin.symbol))
+                console.info('getting new coin data.')
+                console.log(selectedCoins)
 
-                    updateCoinData(filteredCoins)
+                updateCoinData(filteredCoins)
 
-                    if (update === 'firstUpdate') updateCoinNames(data.map((coin: any) => coin.symbol))
+                if (update === 'firstUpdate') updateCoinNames(data.map((coin: any) => coin.symbol))
 
             })
     }
 
+    
+
     useEffect(() => {
+        //@ts-ignore
         const coinRefresh = setInterval(() => { fetchNewCoinData() }, 5000)
         return () => { clearInterval(coinRefresh) }
-    }, [])
+    }, [selectedCoins])
 
     useEffect(() => {
-        fetchNewCoinData('firstUpdate')
+        //@ts-ignore
+        const filteredCoins = coinData.filter((coin: any) => selectedCoins.includes(coin.symbol))
+        updateCoinData(filteredCoins)
+    }, [selectedCoins])
+
+    
+
+    useEffect(() => {
+        const coinPriceArray = getStorageItem(storageItem.settings.coinPriceArray)
+        updateSelectedcoins(prevState => (coinPriceArray != undefined && coinPriceArray.length > 0) ? coinPriceArray : ['BTCUSDT'])
     }, [])
 
-    // useEffect(() => {
-    //     fetchNewCoinData()
-    // }, [selectedCoins])
 
 
     return (

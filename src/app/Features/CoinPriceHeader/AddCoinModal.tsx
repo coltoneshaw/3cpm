@@ -10,6 +10,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 import { useThemeProvidor } from "@/app/Context/ThemeEngine";
 
@@ -39,12 +40,24 @@ const AddCoinModal = ({ open, setOpen, coinNames, currentCoins }: { open: boolea
     // 4. Save the coin to the header and to the localData
 
     const deleteCoin = (coin:string) => {
-        updateSelectedcoins((prevState: string[]) => prevState.filter(c => c !== coin))
+        updateSelectedcoins((prevState: string[]) => {
+
+            const updatedCoins = prevState.filter(c => c !== coin);
+
+            setStorageItem(storageItem.settings.coinPriceArray, updatedCoins)
+            return updatedCoins
+        })
     }
 
     const addCoin = () => {
         changeInputValue(selectedValue => {
-            updateSelectedcoins((prevState: string[]) => [...prevState, selectedValue])
+
+            updateSelectedcoins((prevState: string[]) => {
+                const updatedCoins = [...prevState, selectedValue]
+                setStorageItem(storageItem.settings.coinPriceArray, updatedCoins)
+                return updatedCoins;
+            }
+            )
             return ''
         })
     }
