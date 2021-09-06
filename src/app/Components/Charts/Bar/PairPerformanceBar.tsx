@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Line, Label } from 'recharts';
-import {InputLabel, MenuItem, FormControl, Select} from '@material-ui/core';
+import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Scatter,Legend, ResponsiveContainer, Line, Label } from 'recharts';
+import { InputLabel, MenuItem, FormControl, Select } from '@material-ui/core';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
@@ -34,7 +34,7 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
     }, [])
 
 
-    const handleSortChange = (event:any) => {
+    const handleSortChange = (event: any) => {
         const selectedSort = (event.target.value != undefined) ? event.target.value : defaultSort;
         setSort(selectedSort);
         setStorageItem(localStorageSortName, selectedSort)
@@ -46,35 +46,35 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
         setStorageItem(localStorageFilterName, selectedFilter)
     };
 
-    const hide = (id:string ) => {
+    const hide = (id: string) => {
         return id != sort
     }
 
 
 
-    const filterData = (data: Type_Pair_Performance_Metrics[] ) => {
+    const filterData = (data: Type_Pair_Performance_Metrics[]) => {
         data = data.sort(dynamicSort('-total_profit'));
         const length = data.length;
         const fiftyPercent = length / 2
         const twentyPercent = length / 5
 
-        if (filter === 'top20')  {
+        if (filter === 'top20') {
             data = data.sort(dynamicSort('-total_profit'));
-            return data.filter( (bot, index) => index < twentyPercent)
-        } else if (filter === 'top50')  {
+            return data.filter((bot, index) => index < twentyPercent)
+        } else if (filter === 'top50') {
             data = data.sort(dynamicSort('-total_profit'));
-            return data.filter( (bot, index) => index < fiftyPercent)
-        } else if (filter === 'bottom50')  {
+            return data.filter((bot, index) => index < fiftyPercent)
+        } else if (filter === 'bottom50') {
             data = data.sort(dynamicSort('total_profit'));
-            return data.filter( (bot, index) => index < fiftyPercent)
-        } else if (filter === 'bottom20')  {
+            return data.filter((bot, index) => index < fiftyPercent)
+        } else if (filter === 'bottom20') {
             data = data.sort(dynamicSort('total_profit'));
-            return data.filter( (bot, index) => index < twentyPercent)
+            return data.filter((bot, index) => index < twentyPercent)
         } else {
             return data;
         }
 
-        
+
 
     }
     const renderChart = () => {
@@ -84,76 +84,91 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
             data = filterData(data)
             data = data.sort(dynamicSort(sort))
 
-            return (<ResponsiveContainer width="100%" height="100%" minHeight="300px">
+            return (<ResponsiveContainer width="100%" height="100%" minHeight="800px">
                 <ComposedChart
 
                     data={data}
-
+                    margin={{
+                        top: 25,
+                        right: 0,
+                        left: 0,
+                        bottom: 5,
+                    }}
+                    layout="vertical"
                     stackOffset="expand"
                 >
-                    <CartesianGrid opacity={.3} vertical={false} />
+                    <CartesianGrid opacity={.3} vertical={true} horizontal={false} />
                     <Legend verticalAlign="top" height={36} />
                     <Tooltip
                         // @ts-ignore - tooltip refactoring
                         // todo - improve how tooltips can pass the values.
                         content={<CustomTooltip />}
                     />
-                    <XAxis dataKey="pair"
-                        angle={45}
-                        dx={10}
-                        // dx={15}
-                        dy={10}
+                    <YAxis
+                        dataKey="pair"
+                        type="category"
+                        textAnchor="end"
                         fontSize=".75em"
-                        minTickGap={-200}
+                        minTickGap={-80}
                         axisLine={false}
-                        height={75}
+                        width={110}
 
                     />
-                    <YAxis 
-                        yAxisId="total_profit" 
-                        orientation='left' 
-                        hide={hide("-total_profit")} 
-                        domain={[0, 'auto']} 
-                        allowDataOverflow={true} offset={20}>
-                        <Label value="Total Profit"
-                                angle={-90}
-                                dy={0}
-                                dx={-20}
-                            />
-                    
-                    </YAxis>
+                    <XAxis
+                        xAxisId="total_profit"
+                        type="number"
+                        hide={hide("-total_profit")}
+                        domain={[0, 'auto']}
+                        allowDataOverflow={true}
+                        offset={20}
+                        height={50}
+                        allowDecimals={false}
+                        label={{
+                            value: "Total Profit",
+                            position: "Bottom",
+                            dx: 0,
+                            dy: 20
+                        }}
 
-                    <YAxis 
-                        yAxisId="avg_deal_hours" 
-                        orientation='left' 
-                        hide={hide("-avg_deal_hours")} 
-                        domain={[0, 'auto']} 
-                        allowDataOverflow={true} 
-                        offset={20} >
-                        <Label value="Avg. Deal Hours"
-                                angle={-90}
-                                dy={0}
-                                dx={-20}
-                            />
-                    
-                    </YAxis>
-                    <YAxis 
-                        yAxisId="bought_volume" 
-                        orientation='left' 
-                        hide={hide("-bought_volume") } 
-                        domain={[0, 'auto']} 
-                        allowDataOverflow={true} 
-                        offset={40} >
-                        {/* <Label value="Bought Volume"
-                                angle={-90}
-                                dy={0}
-                                dx={-40}
-                            /> */}
-                    </YAxis>
+                    />
 
-                    <Bar name="Total Profit" type="monotone" yAxisId="total_profit" fillOpacity={.8}  dataKey="total_profit" fill="var(--color-CTA-dark25)" />
-                    <Line  name="Bought Volume" yAxisId="bought_volume" dataKey="bought_volume" stroke="var(--color-primary)" dot={false} strokeWidth={1.75} />
-                    <Line name="Avg. Deal Hours" type="monotone" yAxisId="avg_deal_hours" dataKey="avg_deal_hours" stroke="var(--color-secondary)" dot={false} strokeWidth={1.75} />
+                    <XAxis
+                        xAxisId="avg_deal_hours"
+                        type="number"
+                        hide={hide("-avg_deal_hours")}
+                        domain={[0, 'auto']}
+                        allowDataOverflow={true}
+                        height={50}
+                        allowDecimals={false}
+                        label={{
+                            value: "Avg. Deal Hours",
+                            position: "Bottom",
+                            dx: 0,
+                            dy: 20
+                        }}
+
+                    />
+                    <XAxis
+                        xAxisId="bought_volume"
+                        type="number"
+                        hide={hide("-bought_volume")}
+                        domain={[0, 'auto']}
+                        allowDataOverflow={true}
+                        height={50}
+                        allowDecimals={false}
+
+                        label={{
+                            value: "Bought Volume",
+                            position: "Bottom",
+                            dx: 0,
+                            dy: 20
+                        }}
+
+                    />
+
+                    <Bar name="Total Profit" dataKey="total_profit" fill="var(--color-CTA-dark25)" xAxisId="total_profit" fillOpacity={.8} />
+                    <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--color-primary-dark25)" />
+                    <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours" fill="var(--color-secondary)" xAxisId="avg_deal_hours" />
 
                 </ComposedChart>
             </ResponsiveContainer>)
@@ -161,27 +176,27 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
     }
 
     return (
-        <div className="boxData stat-chart bubble-chart">
-            <div style={{position: "relative"}}>
+        <div className="boxData stat-chart ">
+            <div style={{ position: "relative" }}>
                 <h3 className="chartTitle">{title}</h3>
-                <div style={{ position:"absolute", right: 0, top: 0, height: "50px", zIndex: 5}}>
-                <FormControl  >
-                    <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={sort}
-                        onChange={handleSortChange}
-                        style={{width: "150px"}}
-                    >
-                        <MenuItem value="-total_profit">Profit</MenuItem>
-                        <MenuItem value="-bought_volume">Bought Volume</MenuItem>
-                        <MenuItem value="-avg_deal_hours">Avg. Deal Hours</MenuItem>
-                    </Select>
-                </FormControl>
+                <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>
+                    <FormControl  >
+                        <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={sort}
+                            onChange={handleSortChange}
+                            style={{ width: "150px" }}
+                        >
+                            <MenuItem value="-total_profit">Profit</MenuItem>
+                            <MenuItem value="-bought_volume">Bought Volume</MenuItem>
+                            <MenuItem value="-avg_deal_hours">Avg. Deal Hours</MenuItem>
+                        </Select>
+                    </FormControl>
                 </div>
-                <div style={{ position:"absolute", left: 0, top: 0, height: "50px", zIndex: 5}}>
-                <FormControl  >
+                <div style={{ position: "absolute", left: 0, top: 0, height: "50px", zIndex: 5 }}>
+                    <FormControl  >
                         <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
@@ -198,9 +213,9 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
                         </Select>
                     </FormControl>
                 </div>
-                   
 
-                
+
+
 
             </div>
             {renderChart()}

@@ -10,7 +10,7 @@ const descriptions = {
         activeDeals: ` is the total number of deals that are actually active within 3C. This will not always match active bots if you have specific start conditions.`,
         totalInDeals: ( on_orders:number , totalBoughtVolume:number ) => ` adds together the total amount of funds that you have within a deal. This consists of funds on order of ${parseNumber(on_orders)} and total bought volume of your deals of ${parseNumber(totalBoughtVolume)}.`,
         totalProfit: ` is the sum of all the profit you've made within the filtered time period.`,
-        totalRoi: ( totalProfit_perf:number , boughtVolume:number ) => ` calculates the total return on your investment based on the bought volume of ${parseNumber(boughtVolume)} divided by the total profit of ${parseNumber(totalProfit_perf)}`,
+        totalRoi: ( totalProfit:number , totalBankroll:number ) => ` calculates the total return on your investment based on total bankroll of ${parseNumber(totalBankroll)} and your current profit of ${parseNumber(totalProfit)}. This formula is "Total Profit / ( Bankroll - Total Profit)"`,
         averageDealHours: (totalClosedDeals:number , totalDealHours:number ) => ` is the average amount of time it takes for your deals to close. You have ${parseNumber(totalClosedDeals)} deals and ${parseNumber(totalDealHours)} hours in those deals.`,
 
 

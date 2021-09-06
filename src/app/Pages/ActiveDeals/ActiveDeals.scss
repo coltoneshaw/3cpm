@@ -1,33 +1,5 @@
-.activeDealsStats {
-    flex-wrap: wrap;
-    justify-content: center;
-    padding-bottom: 1em;
-    align-items: center;
-}
 
 
-.activeDealCards {
-    flex-wrap: nowrap;
-    justify-content: flex-start; 
-}
-
-.activeDealButtons{
-    flex-basis: 20%;
-    align-items: flex-end;
-    display: flex;
-    flex-direction: column;
-}
-
-@media only screen and (max-width: 1550px)  {
-    .activeDealCards {
-        justify-content: center; 
-    }
-    .activeDealButtons{
-        align-items: center;
-        flex-direction: row;
-        padding-top: 1em;
-    }
-}
 .dealsTable{
     width: 100%
 }
@@ -84,3 +56,29 @@
     display:block;
   }
 
+  .tableSettings {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding-bottom: 4px;
+
+    .syncToggles{
+        flex: 1;
+        align-self: flex-start;
+        display: flex;
+        justify-content: flex-start;
+        height: 100%;
+        align-items: center;
+    }
+
+
+    .tableButtons{
+        flex-basis: 20%;
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        align-self: flex-start;
+      }
+
+  }

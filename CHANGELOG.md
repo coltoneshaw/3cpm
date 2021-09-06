@@ -1,3 +1,23 @@
+# v0.4.0
+## New Features
+- Added a coin header where you can customize the coins that are tracked on a 5 second refresh.
+
+
+## Enhancements 
+- Redo of the entire layout of active deals, and stats.
+- Changed the ROI metric from ROI on bought volume to ROI from total profit and bankroll.
+- Active Deal pills now are colored based on if that metric is positive, not the deal itself
+- Adjusted KPIs to be relevant to the page active.
+- Adjusted quite a few metrics from three decimals to two.
+- Adjusted the bot / pair charts to be vertical charts.
+- Added the average line value on profit by day.
+
+## Bug
+- Fixed bug in how the pair by date was calculated. This was using `actual_profit` from 3C which returns the profit if you never sold the coin
+- Profit by day chart removed days with 0 profit, added these back.
+
+
+
 # v0.3.0
 ## Bug
 - Fixed bug in the date display that caused dates to show as an invalid Date

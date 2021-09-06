@@ -61,7 +61,7 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
 
 
         return (
-            <div className="boxData stat-chart bubble-chart">
+            <div className="boxData stat-chart ">
                 <h3 className="chartTitle">{title}</h3>
                 {renderChart()}
 

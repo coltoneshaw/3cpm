@@ -20,7 +20,7 @@ const PerformanceMonitor = () => {
         <>
 
 
-            <Grid container spacing={8}>
+            <Grid container spacing={4}>
                 <Grid item xs={12}>
                     <DealAllocationBar title="Deal Allocation" data={performanceData.pair_bot} key="dealAllocationBar"/>
                 </Grid>

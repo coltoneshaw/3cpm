@@ -13,6 +13,7 @@ import NoData from '@/app/Pages/Stats/Components/NoData';
 
 import { Type_ProfitChart, Type_Tooltip } from '@/types/Charts';
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+import { parseNumber } from '@/utils/number_formatting';
 
 
 interface Type_NewDateProfit {
@@ -114,13 +115,13 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
             const filteredData = (data.length > 0) ? convertToNewDates(data, filterString, dateType) : [];
             const calculateAverage = () => {
                 const totalProfit = (filteredData.length > 0) ? filteredData.map(deal => deal.profit).reduce((sum, profit) => sum + profit) : 0
-                return totalProfit / filteredData.length
+                return Math.round( totalProfit / filteredData.length )
             }
             return (
                 <ResponsiveContainer width="100%" height="100%" minHeight="300px">
                     <BarChart
-                        width={500}
-                        height={300}
+                        // width={500}
+                        // height={300}
                         data={filteredData}
                         margin={{
                             top: 5,
@@ -147,7 +148,7 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
                             }}
                         />
 
-                        <ReferenceLine y={calculateAverage()} stroke="var(--color-primary)" strokeWidth={2} />
+                        <ReferenceLine y={calculateAverage()} stroke="var(--color-primary)" strokeWidth={2} isFront={true} label={{value: calculateAverage(), position: 'right'}} />
                         <YAxis
                             dataKey={X}
                             tickLine={false}
@@ -190,7 +191,7 @@ function CustomTooltip({ active, payload}: Type_Tooltip) {
         return (
             <div className="tooltip">
                 <h4>{date}</h4>
-                <p>$ {profit.toLocaleString()}</p>
+                <p>$ {parseNumber(profit, 2)}</p>
             </div>
         )
     } else {

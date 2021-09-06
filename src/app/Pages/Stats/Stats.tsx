@@ -10,11 +10,11 @@ import { UpdateDataButton } from '@/app/Components/Buttons/Index'
 import { useGlobalState } from '@/app/Context/Config';
 import { useGlobalData } from '@/app/Context/DataContext';
 
-import { 
-    Card_ActiveDeals, Card_totalInDeals, Card_MaxDca, 
-    Card_TotalBankRoll, Card_TotalProfit, Card_MaxRiskPercent, 
-    Card_TotalBoughtVolume, Card_TotalDeals, Card_TotalRoi, 
-    Card_AverageDailyProfit, Card_AverageDealHours 
+import {
+    Card_ActiveDeals, Card_totalInDeals, Card_MaxDca,
+    Card_TotalBankRoll, Card_TotalProfit, Card_MaxRiskPercent,
+    Card_TotalBoughtVolume, Card_TotalDeals, Card_TotalRoi,
+    Card_AverageDailyProfit, Card_AverageDealHours
 } from '@/app/Components/Charts/DataCards';
 
 import { getLang } from '@/utils/helperFunctions';
@@ -97,28 +97,59 @@ const StatsPage = () => {
     }
 
     const additionalMetrics = () => {
+
+        // <Card_ActiveDeals metric={activeDealCount} />
+        // <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
+        // <Card_MaxDca metric={maxRisk} />
+        // <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{totalBankroll, maxDCA: maxRisk}} />
+        // <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
+        // <Card_TotalProfit metric={totalProfit} />
         if (currentView === 'performance-monitor') {
             return (
-            <>
-                <Card_TotalBoughtVolume metric={boughtVolume} />
-                <Card_TotalDeals metric={totalDeals} />
-                <Card_TotalRoi additionalData={{ totalProfit_perf, boughtVolume }} />
-                <Card_AverageDailyProfit metric={averageDailyProfit} />
-                <Card_AverageDealHours metric={averageDealHours} additionalData={{totalClosedDeals, totalDealHours}}/>
-            </>)
+                <>
+                    {/* <Card_TotalBoughtVolume metric={boughtVolume} /> */}
+                    <Card_MaxDca metric={maxRisk} />
+                    <Card_TotalDeals metric={totalDeals} />
+                    <Card_TotalRoi additionalData={{ totalProfit, totalBankroll }} />
+                    <Card_AverageDailyProfit metric={averageDailyProfit} />
+                    <Card_AverageDealHours metric={averageDealHours} additionalData={{ totalClosedDeals, totalDealHours }} />
+                    <Card_TotalProfit metric={totalProfit} />
+                </>)
+        } else if (currentView === 'risk-monitor') {
+            return (
+                <>
+                    {/* <Card_TotalBoughtVolume metric={boughtVolume} /> */}
+                    <Card_ActiveDeals metric={activeDealCount} />
+                    <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
+                    <Card_MaxDca metric={maxRisk} />
+                    <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{ totalBankroll, maxDCA: maxRisk }} />
+                    <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
+                </>)
+        } else {
+            return (
+                <>
+                    <Card_ActiveDeals metric={activeDealCount} />
+                    <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
+                    <Card_MaxDca metric={maxRisk} />
+                    {/* <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{ totalBankroll, maxDCA: maxRisk }} /> */}
+                    <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
+                    <Card_TotalProfit metric={totalProfit} />
+                    <Card_TotalRoi additionalData={{ totalProfit, totalBankroll }} />
+                </>)
+
         }
     }
 
     const dateString = (date: undefined | number) => {
 
-        if(date != undefined){
-            const adjustedTime = date + ( (new Date()).getTimezoneOffset() * 60000 )
+        if (date != undefined) {
+            const adjustedTime = date + ((new Date()).getTimezoneOffset() * 60000)
             const dateString = new Date(adjustedTime).toUTCString()
             return new Date(dateString).toLocaleString(lang, { month: '2-digit', day: '2-digit', year: 'numeric' })
         }
 
         return ""
-        
+
     }
 
 
@@ -138,14 +169,14 @@ const StatsPage = () => {
                             }
                         </ButtonGroup>
                         <UpdateDataButton key="updateDataButton" className="CtaButton" style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }} />
-                        
+
                     </div>
                 </div>
 
                 <div className="flex-row filters" >
-                    <p><strong>Account: </strong><br/>{returnAccountNames()}</p>
-                    <p><strong>Start Date: </strong><br/>{dateString(date)} </p>
-                    <p><strong>Default Currency: </strong><br/>{returnCurrencyValues()}</p>
+                    <p><strong>Account: </strong><br />{returnAccountNames()}</p>
+                    <p><strong>Start Date: </strong><br />{dateString(date)} </p>
+                    <p><strong>Default Currency: </strong><br />{returnCurrencyValues()}</p>
                 </div>
 
             </div>
@@ -155,13 +186,8 @@ const StatsPage = () => {
 
             <div className="flex-column" style={{ alignItems: 'center' }}>
 
-                <div className="riskDiv">
-                    <Card_ActiveDeals metric={activeDealCount} />
-                    <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
-                    <Card_MaxDca metric={maxRisk} />
-                    <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{totalBankroll, maxDCA: maxRisk}} />
-                    <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
-                    <Card_TotalProfit metric={totalProfit} />
+                <div className="riskDiv" style={{ paddingBottom: '32px' }}>
+
                     {additionalMetrics()}
                 </div>
 
@@ -170,7 +196,7 @@ const StatsPage = () => {
 
             {/* // Returning the current view rendered in the function above. */}
             {currentViewRender()}
-            
+
 
         </>
 

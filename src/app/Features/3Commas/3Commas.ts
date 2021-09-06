@@ -40,9 +40,9 @@ const getFiltersQueryString = async () => {
  * @params - type 'autoSync'
  * @params {options} - option string
  */
-const updateThreeCData = async (type: string, options: Type_UpdateFunction  ) => {
+const updateThreeCData = async (type: string, options: Type_UpdateFunction) => {
 
-    console.info({options})
+    console.info({ options })
 
     // @ts-ignore
     await electron.api.update(type, options);
@@ -89,30 +89,59 @@ const fetchDealDataFunction = async () => {
         }
     }
 
+
+    const { days } = getDatesBetweenTwoDates((new Date(startString)).toISOString().split('T')[0], (new Date()).toISOString().split('T')[0])
+    const profitArray: Type_Profit[] = [];
     let totalDealHours = dataArray.map((deal: Type_Query_DealData) => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours)
 
-    const profitArray: Type_Profit[] = [];
 
-    dataArray.forEach((day: any, index: number) => {
+days.forEach((day: string, index: number) => {
 
-
+        // there should never be more than one date in the array.
+        const filteredData = dataArray.find((deal: any) => deal.closed_at_str === day)
         // adding the existing value to the previous value's running sum.
-        let runningSum = (index == 0) ? day.final_profit : profitArray[index - 1].runningSum + day.final_profit
 
-        profitArray.push({
-            utc_date: day.closed_at_str,
-            profit: day.final_profit,
-            runningSum: runningSum,
-            total_deals: day.total_deals
-        })
+        if (filteredData == undefined) {
+            profitArray.push({
+                utc_date: day,
+                profit: 0,
+                runningSum: (index == 0) ? 0 : profitArray[index - 1].runningSum,
+                total_deals: 0
+            })
+        } else {
+            let runningSum = (index == 0) ? filteredData.final_profit : profitArray[index - 1].runningSum + filteredData.final_profit
+            profitArray.push({
+                utc_date: day,
+                profit: filteredData.final_profit,
+                runningSum: runningSum,
+                total_deals: filteredData.total_deals
+            })
+        }
+
+
+
+
+
     })
+    // dataArray = dataArray.forEach(( day: any, index:number ) => {
+
+
+    //     // adding the existing value to the previous value's running sum.
+    //     let runningSum = (index == 0) ? day.final_profit  : profitArray[index - 1].runningSum + day.final_profit
+
+    //     profitArray.push({
+    //         utc_date: day.closed_at_str,
+    //         profit: day.final_profit,
+    //         runningSum: runningSum,
+    //         total_deals: day.total_deals
+    //     })
+    // })
 
 
     const totalProfit = (profitArray.length > 0) ? +profitArray[profitArray.length - 1].runningSum : 0
-    const averageDailyProfit = (profitArray.length > 0) ? totalProfit / (profitArray.length ) : 0;
-    const totalClosedDeals = (profitArray.length > 0) ? profitArray.map(day => day.total_deals).reduce( (sum:number, total_deals: number) => sum + total_deals) : 0;
+    const averageDailyProfit = (profitArray.length > 0) ? totalProfit / (profitArray.length) : 0;
+    const totalClosedDeals = (profitArray.length > 0) ? profitArray.map(day => day.total_deals).reduce((sum: number, total_deals: number) => sum + total_deals) : 0;
     const averageDealHours = (profitArray.length > 0) ? totalDealHours / totalClosedDeals : 0;
-    console.log({totalDealHours, profitArray, totalClosedDeals})
 
     return {
         profitData: profitArray,
@@ -377,8 +406,8 @@ const getAccountDataFunction = async () => {
     // @ts-ignore
     let accountData: Array<Type_Query_Accounts> = await electron.database.query(query)
 
-        // removed this since it seems redundant to the above query
-        // .then((data: Type_Query_Accounts[]) => data.filter(row => defaultCurrency.includes(row.currency_code)))
+    // removed this since it seems redundant to the above query
+    // .then((data: Type_Query_Accounts[]) => data.filter(row => defaultCurrency.includes(row.currency_code)))
 
     if (accountData == null || accountData.length > 0) {
         let on_ordersTotal = 0;
@@ -417,9 +446,9 @@ const getAccountDataFunction = async () => {
  * 
  * @param pairs An array of the pairs to return from the database.
  * 
- * @description This is used to see pairs on a per date bases in charts. This is not used in the DataContext state.
+ * @description This is used to see pairs on a per date bases in charts. This is not used in the DataContext state. This reports based on the usd_final_profit only
  */
-const getSelectPairDataByDate = async (pairs:string[]) => {
+const getSelectPairDataByDate = async (pairs: string[]) => {
     const filtersQueryString = await getFiltersQueryString()
     const { currencyString, accountIdString, startString } = filtersQueryString
 
@@ -430,7 +459,7 @@ const getSelectPairDataByDate = async (pairs:string[]) => {
         SELECT 
             substr(closed_at, 0, 11) as date,
             pair,
-            sum(actual_profit) as profit
+            sum(usd_final_profit) as profit
         FROM
             deals
         WHERE
@@ -446,7 +475,7 @@ const getSelectPairDataByDate = async (pairs:string[]) => {
     // @ts-ignore
     let pairData: Array<Type_Pair_By_Date> = await electron.database.query(query);
 
-    const {days} =  getDatesBetweenTwoDates((new Date(startString)).toISOString().split('T')[0], (new Date()).toISOString().split('T')[0])
+    const { days } = getDatesBetweenTwoDates((new Date(startString)).toISOString().split('T')[0], (new Date()).toISOString().split('T')[0])
 
 
     return days.map(day => {
@@ -456,7 +485,7 @@ const getSelectPairDataByDate = async (pairs:string[]) => {
             pair: number
         }
 
-        const subDateObject = <any>{date: day};
+        const subDateObject = <any>{ date: day };
         pairs.forEach(pair => {
             const filteredForPair = filteredData.find(deal => deal.pair === pair)
             subDateObject[pair as keyof subDateObject] = (filteredForPair != undefined) ? filteredForPair.profit : 0
@@ -464,7 +493,7 @@ const getSelectPairDataByDate = async (pairs:string[]) => {
 
         return subDateObject;
     })
- 
+
 }
 
 export {

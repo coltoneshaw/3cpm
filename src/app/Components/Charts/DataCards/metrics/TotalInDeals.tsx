@@ -16,7 +16,7 @@ interface Type_Card {
  */
 const Card_totalInDeals = ({metric, additionalData: { on_orders, totalBoughtVolume }}:Type_Card) => {
 
-    const title = "Total in deals"
+    const title = "In deals"
     const message = descriptions.calculations.totalInDeals(on_orders, totalBoughtVolume)
     const key = title.replace(/\s/g, '')
 

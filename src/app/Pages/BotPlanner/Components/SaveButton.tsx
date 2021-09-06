@@ -24,7 +24,7 @@ const SaveButton = ({saveFunction, className} : Type_SaveButton ) => {
     return (
         <>
         <Button
-            endIcon={<SaveIcon />}
+            startIcon={<SaveIcon />}
             onClick={() => {
                 saveFunction()
                 setOpen(true)

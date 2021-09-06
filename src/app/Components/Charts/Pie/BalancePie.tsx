@@ -37,7 +37,6 @@ const BalancePie = ({ title, metrics }:Type_PieMetrics) => {
     return (
         <div className="boxData" style={{
             height: '250px',
-            margin: '25px',
             minWidth: '300px',
             maxWidth: '300px'
         }}>

@@ -65,7 +65,7 @@ const PairPerformanceByDate = () => {
 
     return (
 
-        <div className="boxData stat-chart bubble-chart">
+        <div className="boxData stat-chart ">
             <div style={{ position: "relative" }}>
                 <h3 className="chartTitle">Pair by Date</h3>
 

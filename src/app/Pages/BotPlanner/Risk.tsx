@@ -44,7 +44,7 @@ const Risk = ({ localBotData }: { localBotData: Type_Query_bots[] }) => {
 
 
     return (
-        <div className="riskDiv">
+        <div className="riskDiv activeDealCards" style={{ flex: 1 }}>
             <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
             <Card_MaxRiskPercent metric={risk} additionalData={{ totalBankroll, maxDCA }}/>
             <Card_EnabledBots metric={botCount} />

@@ -8,6 +8,8 @@ import {
     ActiveDealsPage
 } from '@/app/Pages/Index'
 
+import CoinPriceHeader from '@/app/Features/CoinPriceHeader/CoinPriceHeader';
+
 import { ConfigProvider, useGlobalState } from '@/app/Context/Config';
 import { DataProvider } from '@/app/Context/DataContext';
 import { ChangelogModal } from '@/app/Features/Index';
@@ -63,6 +65,7 @@ const MainWindow = () => {
     return (
         <ConfigProvider>
             <div className="mainWindow" >
+                <CoinPriceHeader />
                 <ChangelogModal open={openChangelog} setOpen={setOpenChangelog} />
 
                 <Route path='/'>

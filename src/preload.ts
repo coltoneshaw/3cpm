@@ -71,6 +71,11 @@ async function setupContextBridge() {
       openLink(link: string){
         ipcRenderer.invoke('open-external-link', link);
       }
+    },
+    binance: {
+      async coinData(){
+        return await ipcRenderer.invoke('binance-getCoins');
+      }
     }
   })
 }

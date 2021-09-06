@@ -22,7 +22,6 @@ const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
             return (<ResponsiveContainer width="100%" height="100%" minHeight="300px" >
                 <AreaChart
                     width={500}
-                    height={300}
                     data={data}
                     margin={{
                         top: 5,
@@ -53,7 +52,7 @@ const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
                         // TODO - Need to look at passing in a tick array that contains the values rounded to 100s.
                         type="number" 
                         allowDecimals={false}
-                        domain={[(dataMin: number) => Math.floor(dataMin / 100 ) * 100, (dataMax: number) =>  Math.ceil(dataMax / 100 ) * 100]}
+                        domain={[0, (dataMax: number) =>  Math.ceil(dataMax / 100 ) * 100]}
                     />
 
                     <Tooltip 
@@ -85,17 +84,17 @@ const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
 }
 
 const CustomTooltip = ({ active , payload , label }:Type_Tooltip) => {
-    if (active) {
+    if (active && payload != undefined && payload[0] != undefined) {
         label = new Date(label).toLocaleString(getLang(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 
         return (
             <div className="tooltip">
                 <h4>{label}</h4>
-                <p>$ {payload[0].value.toLocaleString()}</p>
+                <p>$ {parseNumber( payload[0].value, 2) }</p>
             </div>
         )
     } else {
-        return null
+        return <></>
     }
 }
 

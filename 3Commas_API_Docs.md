@@ -90,3 +90,81 @@ Response:
 ]
 ```
 
+# Deals Endpoint
+
+```javascript
+{
+id: 1                                     
+type: Deal::ShortDeal                     
+bot_id: 111                               
+max_safety_orders: 2                      
+deal_has_error: true                      
+from_currency_id: 5                      DEPRECATED 
+to_currency_id: 10                       DEPRECATED 
+account_id: 121                           
+active_safety_orders_count: 1             
+created_at: 2018-08-08 08:08:08           
+updated_at: 2018-09-09 09:09:09           
+closed_at: 2018-10-10 10:10:10            
+finished?:                                
+current_active_safety_orders_count: 1     
+current_active_safety_orders: 1          DEPRECATED 
+completed_safety_orders_count: 2         completed safeties (not including manual) 
+completed_manual_safety_orders_count: 2  completed manual safeties 
+cancellable?:                             
+panic_sellable?:                          
+trailing_enabled: true                    
+tsl_enabled: true                         
+stop_loss_timeout_enabled: true           
+stop_loss_timeout_in_seconds: 2           
+active_manual_safety_orders: 2            
+pair: 'BTC_ADA'                          Format: QUOTE_BASE 
+status: 'failed'                         Values: created, base_order_placed, bought, cancelled, completed, failed, panic_sell_pending, panic_sell_order_placed, panic_sold, cancel_pending, stop_loss_pending, stop_loss_finished, stop_loss_order_placed, switched, switched_take_profit, ttp_activated, ttp_order_placed, liquidated, bought_safety_pending, bought_take_profit_pending, settled 
+localized_status:                         
+take_profit: '1.23'                      Percentage 
+base_order_volume: '0.001'                
+safety_order_volume: '0.0015'             
+safety_order_step_percentage: '1.11'      
+leverage_type: 'isolated'                 
+leverage_custom_value: '20.1'             
+bought_amount: '1.5'                      
+bought_volume: '150'                      
+bought_average_price: '100'               
+base_order_average_price: '100'           
+sold_amount: '1.5'                        
+sold_volume: '150'                        
+sold_average_price: '100'                 
+take_profit_type: 'base'                 Values: base, total 
+final_profit: '-0.00051'                  
+martingale_coefficient: '1.2'            Percentage 
+martingale_volume_coefficient: '1.0'     Percentage 
+martingale_step_coefficient: '1.0'       Percentage 
+stop_loss_percentage: '3.6'               
+error_message: 'Error placing base order' 
+profit_currency: 'quote_currency'        Values: quote_currency, base_currency 
+stop_loss_type: 'stop_loss'              Values: stop_loss, stop_loss_and_disable_bot 
+safety_order_volume_type: 'quote_currency'Values: quote_currency, base_currency, percent, xbt 
+base_order_volume_type: 'base_currency,' Values: quote_currency, base_currency, percent, xbt 
+from_currency: 'BTC'                      
+to_currency: 'ADA'                        
+current_price: '102'                      
+take_profit_price: '105'                  
+stop_loss_price: '95.3'                   
+final_profit_percentage: '4.2'            
+actual_profit_percentage: '3.4'           
+bot_name: My bot                          
+account_name: My Account                  
+usd_final_profit: '3.3523452' // Use this metric for calculating stats.           
+actual_profit: '0.0023'                   
+actual_usd_profit: '0.0023' // This value will show a value, even if the deal is cancelled / failed. Do not use this field for metric calculations. This may be tied to the coin somehow...
+failed_message: Failed                    
+reserved_base_coin: 1.3423523             
+reserved_second_coin: 0.1412454           
+trailing_deviation: 0.14                  
+trailing_max_price: 0.1412454            Highest price met in case of long deal, lowest price otherwise 
+tsl_max_price: 0.1412454                 Highest price met in TSL in case of long deal, lowest price otherwise 
+strategy: 'short'                        short or long 
+reserved_quote_funds:                    Sum of reserved in active deals funds in QUOTE 
+reserved_base_funds:                     Sum of reserved in active deals funds in BASE 
+} 
+```
