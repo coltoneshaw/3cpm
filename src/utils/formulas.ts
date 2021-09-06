@@ -1,4 +1,4 @@
-import { Type_Deals, Type_Query_bots, Type_API_bots, Type_MarketOrders } from '@/types/3Commas'
+import {Type_MarketOrders, Type_Query_bots} from '@/types/3Commas'
 
 
 /**
@@ -195,15 +195,13 @@ const calc_dropMetrics = (bankRoll:number, botData:Type_Query_bots[]) => {
 
      const enabledBots = botData.filter(bot => bot.is_enabled && bot.hide != true)
      const fundsAvailable = bankRoll / enabledBots.length
-     const calculated= botData.map(bot => {
+    return botData.map(bot => {
          const dropMetrics = calc_dropCoverage(fundsAvailable, bot)
          return {
              ...bot,
              ...dropMetrics
          }
-     })
-
-     return calculated;
+     });
 }
 
 export {

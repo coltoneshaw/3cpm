@@ -1,16 +1,16 @@
 import {
-    Type_Query_PerfArray,
-    Type_Query_DealData,
-    Type_Profit,
     Type_ActiveDeals,
+    Type_Pair_By_Date,
+    Type_Profit,
     Type_Query_Accounts,
-    Type_UpdateFunction,
-    Type_Pair_By_Date
+    Type_Query_DealData,
+    Type_Query_PerfArray,
+    Type_UpdateFunction
 } from '@/types/3Commas'
 
-import { Type_ReservedFunds } from '@/types/config'
+import {Type_ReservedFunds} from '@/types/config'
 
-import { getDatesBetweenTwoDates } from '@/utils/helperFunctions'
+import {getDatesBetweenTwoDates} from '@/utils/helperFunctions'
 
 
 interface Type_ProfitArray extends Array<Type_Profit> { }
@@ -177,16 +177,14 @@ const fetchPerformanceDataFunction = async () => {
             .map((deal: Type_Query_PerfArray) => deal.bought_volume)
             .reduce((sum: number, item: number) => sum + item)
 
-        const performanceData = databaseQuery.map((perfData: Type_Query_PerfArray) => {
-            const { bought_volume, total_profit } = perfData
+        return databaseQuery.map((perfData: Type_Query_PerfArray) => {
+            const {bought_volume, total_profit} = perfData
             return {
                 ...perfData,
                 percentTotalVolume: (bought_volume / boughtVolumeSummary) * 100,
                 percentTotalProfit: (total_profit / totalProfitSummary) * 100,
             }
         })
-
-        return performanceData
     } else {
         return []
     }
@@ -466,15 +464,16 @@ const getSelectPairDataByDate = async (pairs:string[]) => {
     const {days} =  getDatesBetweenTwoDates((new Date(startString)).toISOString().split('T')[0], (new Date()).toISOString().split('T')[0])
 
 
-    const dateObject = days.map( day => {
+    return days.map(day => {
         const filteredData = pairData.filter(deal => deal.date === day)
 
         interface subDateObject {
             pair: number
         }
+
         const subDateObject = <any>{date: day};
         pairs.forEach(pair => {
-            const filteredForPair = filteredData.find( deal => deal.pair === pair)
+            const filteredForPair = filteredData.find(deal => deal.pair === pair)
             const profit = (filteredForPair != undefined) ? filteredForPair.profit : 0;
 
             subDateObject[pair as keyof subDateObject] = profit
@@ -482,9 +481,6 @@ const getSelectPairDataByDate = async (pairs:string[]) => {
 
         return subDateObject;
     })
-
-
-    return dateObject
  
 }
 

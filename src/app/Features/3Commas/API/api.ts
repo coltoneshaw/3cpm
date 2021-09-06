@@ -1,18 +1,16 @@
 const threeCommasAPI = require('3commas-api-node')
-import {  Type_Deals_API, Type_Query_Accounts, Type_API_bots } from '@/types/3Commas'
-import {  TconfigValues } from '@/types/config'
+import {Type_API_bots, Type_Deals_API} from '@/types/3Commas'
 
-import { config } from '@/utils/config';
+import {config} from '@/utils/config';
 
 
 import {
-  calc_deviation, 
-  calc_DealMaxFunds_bot, 
-  calc_maxInactiveFunds, 
-  calc_maxDealFunds_Deals, 
-  calc_dealHours, 
-  getBotName,
-  calc_maxBotFunds
+  calc_dealHours,
+  calc_DealMaxFunds_bot,
+  calc_deviation,
+  calc_maxBotFunds,
+  calc_maxDealFunds_Deals,
+  calc_maxInactiveFunds
 } from '@/utils/formulas';
 
 /**
@@ -32,12 +30,10 @@ const threeCapi = ( config:any, key?:string, secret?:string ) => {
     return false
   }
 
-  const api = new threeCommasAPI({
+  return new threeCommasAPI({
     apiKey: key,
     apiSecret: secret
   })
-
-  return api
 }
 
 /**

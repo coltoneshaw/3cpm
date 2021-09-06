@@ -1,4 +1,5 @@
-import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import {app, BrowserWindow, ipcMain, shell} from 'electron';
+import {config} from './utils/config';
 // import isDev from 'electron-is-dev'; // New Import
 
 const path = require("path");
@@ -77,8 +78,6 @@ ipcMain.handle('open-external-link', (event, link) => {
   shell.openExternal(link)
 });
 
-import { config } from './utils/config';
-
 ipcMain.handle('allConfig', (event, value) => {
   if (value != null) return config.get(value)
   return config.store
@@ -90,8 +89,7 @@ ipcMain.handle('setStoreValue', (event, key, value) => {
 });
 
 ipcMain.handle('setBulkValues', (event, values) => {
-  const newThings = config.set(values)
-  return newThings
+    return config.set(values)
 });
 
 ipcMain.handle('config-clear', (event) => {
