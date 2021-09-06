@@ -34,9 +34,9 @@ const calcDealTime = (created_at:string , closed_at:string ) => {
     const dateObj = convertMiliseconds(closedAtMiliseconds - createdAtMiliseconds)
 
     const { d, h, m, s } = dateObj
-    let timeString;
+    let timeString = s
     let type = 'second'
-    
+
     if ( d > 0) {
         const hours = (h > 0) ?  h / 24 : 0
         timeString = d + hours
@@ -49,19 +49,15 @@ const calcDealTime = (created_at:string , closed_at:string ) => {
         const seconds = (s > 0) ?  s / 60 : 0
         timeString = m + seconds
         type = 'minute'
-    } else {
-        type = 'second'
-        timeString = s
     }
 
-    if (timeString != undefined || timeString != 0){
-        timeString = Math.round(timeString)
-        return (timeString > 1 ) ? `about ${timeString} ${type}s.` : `about ${timeString} ${type}.`
-    } else {
+
+    if (timeString == 0) {
         return ''
-    }
-    
 
+    }
+
+    return `about ${timeString} ${type}${Math.round(timeString) > 1 ? 's' : ''}.`
 
 }
 

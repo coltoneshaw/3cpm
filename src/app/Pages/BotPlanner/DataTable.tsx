@@ -191,7 +191,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
   }
 
 
-  const handleEditCellChangeCommitted = (id: number, column: string, value: string | boolean, original: Type_Query_bots) => {
+  const handleEditCellChangeCommitted = (id: number, column: string, value: string | boolean) => {
     updateLocalBotData((prevState: Type_Query_bots[]) => {
       const newRows = prevState.map(row => {
         if (id == row.id) {
@@ -247,7 +247,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         Cell: ({ cell }: any) => {
           return <Checkbox
             checked={cell.value === 1 || cell.value === true}
-            onChange={() => handleEditCellChangeCommitted(cell.row.original.id, 'hide', !cell.value, cell.row.original)}
+            onChange={() => handleEditCellChangeCommitted(cell.row.original.id, 'hide', !cell.value)}
             name="summary"
             style={{ color: 'var(--color-secondary)' }}
 
@@ -379,7 +379,6 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
           <CustomTable
             columns={columns}
             data={localBotData}
-            disableMultiSort={true}
             autoResetSortBy={false}
             // autoResetPage={false}
             manualSortBy={true}

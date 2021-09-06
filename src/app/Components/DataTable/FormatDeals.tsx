@@ -5,13 +5,13 @@ import { parseNumber } from '@/utils/number_formatting';
 
 const formatDeals = (activeDeals: Type_ActiveDeals[]) => {
     return activeDeals.map(deal => {
-        const { active_safety_orders_count, max_safety_orders,
+        const { max_safety_orders,
             active_manual_safety_orders, max_deal_funds, actual_usd_profit,
             actual_profit_percentage, pair, currency,
             safety_order_step_percentage, martingale_step_coefficient,
             current_price, take_profit_price,
             take_profit, base_order_volume, safety_order_volume, martingale_volume_coefficient,
-            bought_volume, bought_amount, created_at, completed_safety_orders_count, completed_manual_safety_orders_count
+            bought_volume, bought_amount, completed_safety_orders_count, completed_manual_safety_orders_count
 
         } = deal
 

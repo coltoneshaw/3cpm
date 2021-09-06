@@ -88,29 +88,7 @@ const defaultConfig:TconfigValues = {
         "reservedFunds": []
     }
 }
-
-// finding the data that exists based on the dotprop.
-const findConfigData = ( config:object , path:string ) => {
- 
-    if (dotProp.has(config, path)) return dotProp.get(config, path)
-    return ""
-}
-
-export const findAccounts = ( config:object , path:string ) => {
-    if (dotProp.has(config, path)){
-        const definedAccounts: [] | undefined = dotProp.get(config, path)
-        if(definedAccounts == null || definedAccounts.length == 0 ){
-            return []
-        } else {
-            return definedAccounts
-        }
-    } 
-    return ""
-}
-
-
 export {
     defaultConfig,
     configSchema,
-    findConfigData
 }

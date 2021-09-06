@@ -69,7 +69,7 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
         )
 }
 
-function CustomTooltip({ active, payload, label }:Type_Tooltip) {
+function CustomTooltip({ active, payload}:Type_Tooltip) {
     if (active) {
 
         const { total_profit, bot_name, pair, percentTotalVolume, percentTotalProfit, bought_volume } = payload[0].payload

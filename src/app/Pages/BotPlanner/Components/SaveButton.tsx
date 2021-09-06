@@ -11,9 +11,7 @@ interface Type_SaveButton {
 const SaveButton = ({saveFunction, className} : Type_SaveButton ) => {
 
     const [open, setOpen] = React.useState(false);
-    const handleClick = () => {
-        setOpen(true);
-    };
+
     const handleClose = (event: any, reason: string) => {
         if (reason === 'clickaway') {
             return;

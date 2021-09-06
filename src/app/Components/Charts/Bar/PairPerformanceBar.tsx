@@ -209,10 +209,10 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
 }
 
 
-function CustomTooltip({ active, payload, label }: Type_Tooltip) {
+function CustomTooltip({ active, payload}: Type_Tooltip) {
     if (active) {
         const data: Type_Pair_Performance_Metrics = payload[0].payload
-        const { total_profit, avg_completed_so, avg_profit, pair, avg_deal_hours, bought_volume, number_of_deals } = data
+        const { total_profit, pair, avg_deal_hours, bought_volume, number_of_deals } = data
         return (
             <div className="tooltip">
                 <h4>{pair}</h4>

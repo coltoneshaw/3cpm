@@ -68,7 +68,7 @@ const CurrencySelector = () => {
 
     const state = useGlobalState()
 
-    const { config, state: { currency, updateCurrency } } = state
+    const { state: { currency, updateCurrency } } = state
 
     const onChange = (e: any) => {
         updateCurrency([...e.target.value])

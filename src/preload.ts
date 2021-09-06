@@ -21,11 +21,6 @@ async function setupContextBridge() {
         // console.log('updating the database.')
         return await ipcRenderer.invoke('api-getAccountData', key , secret);
       },
-      async getDealsUpdate( limit:number ) {
-        console.log('updating threeC deals.')
-        return await ipcRenderer.invoke('api-getDealsUpdate', limit);
-      }
-
     },
     config: {
       async get( value:string ) {

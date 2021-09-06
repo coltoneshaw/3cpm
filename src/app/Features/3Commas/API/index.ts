@@ -1,5 +1,5 @@
 import { update, run, query } from '@/app/Features/Database/database';
-const { bots, getAccountDetail, deals, getDealsBulk, getDealsUpdate, getAccountSummary } = require('./api');
+const { bots, getAccountDetail, deals, getDealsBulk, getAccountSummary } = require('./api');
 
 import { findAndNotifyNewDeals } from '@/app/Features/Notifications/notifications'
 
@@ -85,7 +85,6 @@ export {
   getAccountDetail,
   deals,
   getDealsBulk,
-  getDealsUpdate,
   getAccountData,
   getAccountSummary
 }

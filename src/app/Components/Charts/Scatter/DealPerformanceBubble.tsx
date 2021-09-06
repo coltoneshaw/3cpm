@@ -156,7 +156,7 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
 }
 
 
-function CustomTooltip({ active, payload, label }: Type_Tooltip) {
+function CustomTooltip({ active, payload}: Type_Tooltip) {
     if (active) {
 
         const { total_profit, bot_name, pair, averageHourlyProfitPercent, averageDealHours, number_of_deals, bought_volume } = payload[0].payload

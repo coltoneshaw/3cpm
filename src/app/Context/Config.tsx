@@ -8,11 +8,6 @@ import { removeDuplicatesInArray } from '@/utils/helperFunctions';
 // @ts-ignore
 const ConfigContext = createContext<Type_ConfigContext>();
 
-interface Type_currency {
-    name: string
-    value: string
-}
-
 
 // pulling in the default config from the config store for use once it's been reset.
 import { defaultConfig } from '@/utils/defaultConfig'
@@ -41,7 +36,7 @@ interface Type_ConfigContext {
     }
 }
 
-const defaultReserved = [{ id: 0, account_name: '', reserved_funds: 0, is_enabled: false }]
+
 
 
 const ConfigProvider = ({ children }: any) => {

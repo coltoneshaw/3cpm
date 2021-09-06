@@ -119,7 +119,7 @@ function CustomTable({
                 ))}
             </thead>
             <tbody {...getTableBodyProps()}>
-                {rows.map((row, i) => {
+                {rows.map((row) => {
                     prepareRow(row)
                     return (
                         // Merge user row props in

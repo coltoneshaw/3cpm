@@ -13,8 +13,6 @@ import {Type_ReservedFunds} from '@/types/config'
 import {getDatesBetweenTwoDates} from '@/utils/helperFunctions'
 
 
-interface Type_ProfitArray extends Array<Type_Profit> { }
-
 const getFiltersQueryString = async () => {
 
     // @ts-ignore
@@ -35,12 +33,6 @@ const getFiltersQueryString = async () => {
 
 }
 
-
-interface Type_Update{
-    offset: number
-    lastSyncTime?:number
-    summary?: boolean
-}
 
 /**
  * @description This kicks off the update process that updates all 3Commas data within the database.
@@ -101,11 +93,11 @@ const fetchDealDataFunction = async () => {
 
     const profitArray: Type_Profit[] = [];
 
-    dataArray = dataArray.forEach(( day: any, index:number ) => {
+    dataArray.forEach((day: any, index: number) => {
 
-        
+
         // adding the existing value to the previous value's running sum.
-        let runningSum = (index == 0) ? day.final_profit  : profitArray[index - 1].runningSum + day.final_profit 
+        let runningSum = (index == 0) ? day.final_profit : profitArray[index - 1].runningSum + day.final_profit
 
         profitArray.push({
             utc_date: day.closed_at_str,
@@ -243,7 +235,7 @@ const fetchBotPerformanceMetrics = async () => {
 
 const botQuery = async () => {
     const filtersQueryString = await getFiltersQueryString()
-    const { currencyString, accountIdString, startString } = filtersQueryString;
+    const { accountIdString} = filtersQueryString;
 
 
     const queryString = `
@@ -420,13 +412,6 @@ const getAccountDataFunction = async () => {
 
 }
 
-const accountDataAll = async () => {
-
-    // @ts-ignore
-    return await electron.database.query("select * from accountData")
-
-}
-
 
 /**
  * 
@@ -490,7 +475,6 @@ export {
     getActiveDealsFunction,
     updateThreeCData,
     getAccountDataFunction,
-    accountDataAll,
     fetchBotPerformanceMetrics,
     fetchPairPerformanceMetrics,
     botQuery,

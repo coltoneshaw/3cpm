@@ -15,7 +15,7 @@ import { useGlobalState } from '@/app/Context/Config';
 
 export default function StartDatePicker() {
   const state = useGlobalState()
-  const { state: { date, updateDate }, config } = state
+  const { state: { date, updateDate }} = state
 
   const [localDate, setLocalDate] = useState<string>();
 

@@ -10,19 +10,7 @@ const { update, query, checkOrMakeTables, run, deleteAllData, upsert } = require
 
 let win;
 
-const installExtensions = async () => {
-  const installer = require('electron-devtools-installer')
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS
-  const extensions = [
-    'REACT_DEVELOPER_TOOLS',
-    'REDUX_DEVTOOLS',
-    'DEVTRON'
-  ]
 
-  return Promise
-    .all(extensions.map(name => installer.default(installer[name], forceDownload)))
-    .catch(console.log)
-}
 
 const createWindow = (): void => {
   win = new BrowserWindow({
@@ -92,7 +80,7 @@ ipcMain.handle('setBulkValues', (event, values) => {
     return config.set(values)
 });
 
-ipcMain.handle('config-clear', (event) => {
+ipcMain.handle('config-clear', () => {
   return config.clear()
 });
 
@@ -123,11 +111,11 @@ ipcMain.handle('run-database', (event, queryString) => {
   return run(queryString)
 });
 
-ipcMain.handle('database-deleteAll', (event) => {
+ipcMain.handle('database-deleteAll', () => {
   deleteAllData()
 });
 
-ipcMain.handle('database-checkOrMakeTables', (event) => {
+ipcMain.handle('database-checkOrMakeTables', () => {
   console.log('attempting to check if tables exist yet.')
   checkOrMakeTables()
 });
@@ -139,15 +127,11 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
  * 
  */
 
- const { updateAPI, bots, getDealsBulk, getDealsUpdate, getAndStoreBotData, getAccountSummary } = require('@/app/Features/3Commas/API/index');
+ const { updateAPI, getDealsBulk, getAndStoreBotData, getAccountSummary } = require('@/app/Features/3Commas/API/index');
 
 
  ipcMain.handle('api-getDealsBulk', (event, limit) => {
    return getDealsBulk(limit)
- });
- 
- ipcMain.handle('api-getDealsUpdate', (event, limit) => {
-   return getDealsUpdate(limit)
  });
  
  ipcMain.handle('api-updateData', async (event, type, options) => {
@@ -158,7 +142,7 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
   return await getAccountSummary(key, secret)
 });
  
- ipcMain.handle('api-getBots', async (event) => {
+ ipcMain.handle('api-getBots', async () => {
    await getAndStoreBotData()
  });
 

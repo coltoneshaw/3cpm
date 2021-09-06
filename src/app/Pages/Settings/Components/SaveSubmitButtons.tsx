@@ -15,7 +15,7 @@ const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
 
     const dataState = useGlobalData()
     const {actions: { updateAllData  }, data: { isSyncing}} = dataState
-    const [ loader, setLoaderIcon ] = useState(false)
+    const [ , setLoaderIcon ] = useState(false)
 
     const callback = () => setOpen(true)
 

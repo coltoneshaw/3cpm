@@ -44,7 +44,7 @@ const StatsPage = () => {
     const configState = useGlobalState()
     const { config, state: { reservedFunds } } = configState
     const state = useGlobalData()
-    const { data: { metricsData, isSyncing }, actions: { updateAllData } } = state
+    const { data: { metricsData}} = state
     const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent, totalDeals, boughtVolume, totalProfit_perf, averageDailyProfit, averageDealHours, totalClosedDeals, totalDealHours } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')

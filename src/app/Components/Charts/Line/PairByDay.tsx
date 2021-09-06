@@ -134,7 +134,7 @@ const PairPerformanceByDate = () => {
                             })
                         }}
 
-                        onMouseLeave={(e) => {
+                        onMouseLeave={() => {
                             updatePairs(prevState => {
                                 return prevState.map(p => ({
                                     ...p,

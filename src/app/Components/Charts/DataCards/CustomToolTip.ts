@@ -4,7 +4,7 @@ import { withStyles} from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 // import Typography from '@material-ui/core/Typography';
 
-const CardTooltip = withStyles((theme) => ({
+const CardTooltip = withStyles(() => ({
     tooltip: {
       backgroundColor: '#f5f5f9',
       color: 'rgba(0, 0, 0, 0.87)',
