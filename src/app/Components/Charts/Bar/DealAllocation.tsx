@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { parseNumber, formatPercent } from '@/utils/number_formatting';
+import { parseNumber} from '@/utils/number_formatting';
 import { Type_Tooltip, Type_DealPerformanceCharts } from '@/types/Charts'
 import { dynamicSort } from '@/utils/helperFunctions';
 

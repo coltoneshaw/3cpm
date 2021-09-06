@@ -1,7 +1,7 @@
 import React from 'react';
 
 // material UI components
-import { Grid, GridSize } from '@material-ui/core';
+import { Grid} from '@material-ui/core';
 
 // custom charts
 import { SummaryProfitByDay } from '@/app/Components/Charts/Area'

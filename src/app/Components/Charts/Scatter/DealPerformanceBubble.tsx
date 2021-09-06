@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis } from 'recharts';
-import { InputLabel, MenuItem, FormControl, Select, FormHelperText } from '@material-ui/core';
+import { InputLabel, MenuItem, FormControl, Select} from '@material-ui/core';
 
 import { Type_Tooltip, Type_DealPerformanceCharts } from '@/types/Charts'
 import { Type_Query_PerfArray } from '@/types/3Commas';

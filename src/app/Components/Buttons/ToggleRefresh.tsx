@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import { Button } from '@material-ui/core';
 import SyncIcon from '@material-ui/icons/Sync';

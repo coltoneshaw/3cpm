@@ -1,9 +1,9 @@
 // import { dynamicSort } from "@/utils/helperFunctions";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 // import formatDeal from './FormatDeals';
 
 import { useTable, useSortBy } from 'react-table'
-import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+import { setStorageItem, getStorageItem} from '@/app/Features/LocalStorage/LocalStorage';
 
 // const initialSortBy = [{ id: "created_at", desc: false }]
 const defaultPropGetter = () => ({})

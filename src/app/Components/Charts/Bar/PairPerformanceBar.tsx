@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Line, Label } from 'recharts';
-import {InputLabel, MenuItem, FormControl, Select, FormHelperText} from '@material-ui/core';
+import {InputLabel, MenuItem, FormControl, Select} from '@material-ui/core';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
@@ -8,7 +8,7 @@ import { Type_Pair_Performance_Metrics } from '@/types/3Commas';
 import { Type_Tooltip, Type_Pair_Performance } from '@/types/Charts';
 
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
-import { parseNumber, formatPercent } from '@/utils/number_formatting';
+import { parseNumber} from '@/utils/number_formatting';
 import { dynamicSort } from '@/utils/helperFunctions';
 
 const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {

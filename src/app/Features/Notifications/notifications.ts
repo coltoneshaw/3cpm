@@ -1,7 +1,7 @@
 import { Notification } from 'electron';
 import { Type_Deals_API } from '@/types/3Commas'
 
-import { formatPercent, parseNumber } from '@/utils/number_formatting'
+import { parseNumber } from '@/utils/number_formatting'
 import { config } from '@/utils/config'
 
 import { convertMiliseconds } from '@/utils/helperFunctions'

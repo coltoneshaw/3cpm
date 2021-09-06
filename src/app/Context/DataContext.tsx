@@ -1,5 +1,4 @@
-import React, { createContext, useState, useEffect, createRef, SetStateAction } from 'react';
-import dotProp from 'dot-prop';
+import React, { createContext, useState, useEffect} from 'react';
 
 // Context Providers
 import { useGlobalState } from './Config';
@@ -15,11 +14,9 @@ import {
     Type_Bot_Performance_Metrics,
     Type_Performance_Metrics,
     Type_Pair_Performance_Metrics,
-    Type_UpdateFunction,
     Type_SyncOptions
 
 } from '@/types/3Commas'
-import { TconfigValues } from '@/types/config'
 
 // TODO - see about setting this to something other than null for the default Value
 // @ts-ignore
@@ -34,8 +31,7 @@ import {
     getAccountDataFunction,
     fetchBotPerformanceMetrics,
     fetchPairPerformanceMetrics,
-    botQuery,
-    getSelectPairDataByDate
+    botQuery
 } from '@/app/Features/3Commas/3Commas';
 
 

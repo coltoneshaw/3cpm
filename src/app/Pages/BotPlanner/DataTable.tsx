@@ -12,7 +12,6 @@ import {
   calc_DealMaxFunds_bot,
   calc_maxInactiveFunds,
   calc_maxBotFunds,
-  calc_dropCoverage,
   calc_dropMetrics
 } from '@/utils/formulas';
 

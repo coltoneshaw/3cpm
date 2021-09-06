@@ -1,5 +1,5 @@
 import { Type_ActiveDeals } from "@/types/3Commas"
-import { calc_dropMetrics, calc_deviation } from '@/utils/formulas'
+import { calc_deviation } from '@/utils/formulas'
 import { parseNumber } from '@/utils/number_formatting';
 
 

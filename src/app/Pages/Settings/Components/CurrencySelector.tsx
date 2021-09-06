@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React from 'react';
 
-import { ConfigContext, useGlobalState } from '@/app/Context/Config';
+import { useGlobalState } from '@/app/Context/Config';
 
 import {
     FormControl,

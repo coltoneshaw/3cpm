@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis, LabelList } from 'recharts';
-import { InputLabel, MenuItem, FormControl, Select, FormHelperText } from '@material-ui/core';
+import React, { useEffect} from 'react';
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis} from 'recharts';
+import { InputLabel, MenuItem, FormControl, Select} from '@material-ui/core';
 
 
 import { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts'
@@ -71,7 +71,7 @@ const BotPerformanceBubble = ({ title, data }: Type_BotPerformanceCharts) => {
             return data;
         }
 
-        
+
 
     }
 
@@ -97,12 +97,12 @@ const BotPerformanceBubble = ({ title, data }: Type_BotPerformanceCharts) => {
                 >
                     <CartesianGrid opacity={.3} />
 
-                    {/* 
+                    {/*
                         X - Average Deal Hours
                         Y - Average Hourly Profit
                         Z - Number of deals completed
                         Cell Color - Base Order Start
-                    
+
                      */}
                     <XAxis
                         type="number"

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Area, Scatter } from 'recharts';
+import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Scatter } from 'recharts';
 
 
-import {InputLabel, MenuItem, FormControl, Select, FormHelperText} from '@material-ui/core';
+import {InputLabel, MenuItem, FormControl, Select} from '@material-ui/core';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
-import { parseNumber, formatPercent } from '@/utils/number_formatting';
+import { parseNumber} from '@/utils/number_formatting';
 import { dynamicSort } from '@/utils/helperFunctions';
 
 import { Type_Bot_Performance_Metrics } from '@/types/3Commas';

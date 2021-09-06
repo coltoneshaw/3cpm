@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { parseNumber, formatPercent } from '@/utils/number_formatting';
 import { Type_Tooltip, Type_ActiveDealCharts } from '@/types/Charts';
 import { dynamicSort } from '@/utils/helperFunctions';
