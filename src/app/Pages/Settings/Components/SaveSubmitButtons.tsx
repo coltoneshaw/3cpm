@@ -49,7 +49,7 @@ const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
                             await updateAllData(1000, callback)
                         }
                     } catch (error) {
-                        console.log(error)
+                        console.error(error)
                     }
                     setLoaderIcon(false)
                 }}

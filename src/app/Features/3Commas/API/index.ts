@@ -72,8 +72,7 @@ async function getAndStoreBotData() {
 
       })
   } catch (error) {
-    console.log(error)
-    console.log('error getting bot data')
+    console.error('error getting bot data', error)
   }
 
 }

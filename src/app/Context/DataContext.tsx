@@ -147,7 +147,7 @@ const DataProvider = ({ children }: any) => {
                     }
                 })
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
 
     }

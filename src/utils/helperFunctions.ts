@@ -16,7 +16,7 @@ function tryParseJSON_( jsonString:string , options?:object ) {
       }
     }
     catch (e) { }
-    console.log('error parsing the json file')
+    console.error('error parsing the json file')
     return false;
 };
 
