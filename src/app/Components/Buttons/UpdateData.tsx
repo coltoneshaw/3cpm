@@ -36,7 +36,7 @@ const UpdateDataButton = ({ style, className, disabled }: Type_ButtonProps) => {
             <Button
                 // variant="contained"
                 // color="primary"
-                disabled={isSyncing? true : false}
+                disabled={isSyncing}
                 className={className}
                 onClick={() => {
                     updateAllData(1000, handleClick)

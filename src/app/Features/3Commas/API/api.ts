@@ -292,7 +292,7 @@ async function deals( offset:number, type:string ) {
       current_price, actual_profit, bot_name,
       final_profit
     } = deal
-    const activeDeal = (closed_at === null) ? true : false;
+    const activeDeal = closed_at === null;
     const deal_hours = calc_dealHours(created_at, closed_at)
 
     let tempObject = {

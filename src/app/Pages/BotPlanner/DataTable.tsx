@@ -234,7 +234,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         accessor: 'is_enabled',
         Cell: ({ cell }: any) => {
           return <Switch
-            checked={(cell.value === 1 || cell.value === true) ? true : false}
+            checked={cell.value === 1 || cell.value === true}
             color="primary"
             onClick={handleOnOff}
             name={cell.row.original.id}
@@ -247,7 +247,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         accessor: 'hide',
         Cell: ({ cell }: any) => {
           return <Checkbox
-            checked={(cell.value === 1 || cell.value === true) ? true : false}
+            checked={cell.value === 1 || cell.value === true}
             onChange={() => handleEditCellChangeCommitted(cell.row.original.id, 'hide', !cell.value, cell.row.original)}
             name="summary"
             style={{ color: 'var(--color-secondary)' }}

@@ -50,7 +50,7 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
 
 
     const hide = (id:string ) => {
-        return (id == sort) ? false : true  
+        return id != sort
     }
 
     const filterData = (data: Type_Bot_Performance_Metrics[] ) => {

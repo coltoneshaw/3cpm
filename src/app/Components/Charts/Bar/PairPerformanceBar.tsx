@@ -47,7 +47,7 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
     };
 
     const hide = (id:string ) => {
-        return (id == sort) ? false : true  
+        return id != sort
     }
 
 
