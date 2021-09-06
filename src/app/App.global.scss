@@ -27,6 +27,7 @@
 .rootDiv {
    display: flex;  /* enables flex content for its children */
    box-sizing: border-box;
+   flex-direction: row;
  }
 
 
@@ -43,10 +44,8 @@
  }
 
  #sidebar {
-     flex-basis: 5%;
+     width: 60px;
      background-color: var(--color-primary);
-     min-width: 50px;
-     max-width: 75px;
      height: 100%;
      min-height: 100vh;
      flex-shrink: 0;
@@ -232,5 +231,12 @@
 
   }
 
+}
+
+.monospace-cell,
+.monospace-cell input {
+  font-family: monospace;
+  font-size: 1.3em;
+  letter-spacing: 0;
 }
 

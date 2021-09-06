@@ -168,7 +168,13 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
  /************************************************************************
   * 
   * 
-  *                     Push Notification Settings
+  *                     Binance API
   * 
   * 
   *************************************************************************/
+
+ import { fetchCoinPricesBinance } from '@/app/Features/CoinPriceHeader/BinanceApi';
+
+ipcMain.handle('binance-getCoins', async (event) => {
+    return await fetchCoinPricesBinance()
+});
