@@ -2,11 +2,11 @@ import { Notification } from 'electron';
 import { Type_Deals_API } from '@/types/3Commas'
 
 import { formatPercent, parseNumber } from '@/utils/number_formatting'
-var path = require('path');
-
 import { config } from '@/utils/config'
 
 import { convertMiliseconds } from '@/utils/helperFunctions'
+
+import path from "path";
 
 const accountFilters = () => {
 
