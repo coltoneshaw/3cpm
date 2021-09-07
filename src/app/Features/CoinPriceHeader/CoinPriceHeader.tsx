@@ -60,7 +60,7 @@ const CoinPriceHeader = () => {
 
 
     return (
-        <div className="BtcPriceSpan monospace-cell">
+        <div className="BtcPriceSpan monospace-cell" style={{color: 'var(--color-text-lightbackground)'}}>
             <AddCoinModal open={open} setOpen={setOpen} coinNames={coinNames} currentCoins={{ selectedCoins, updateSelectedcoins }} />
             <div className="coinDiv">
                 {coinData.map((coin: { symbol: string, price: string }, index) => {
@@ -83,7 +83,8 @@ const CoinPriceHeader = () => {
 
                     }}
                     style={{
-                        fontSize: '.95em !important'
+                        fontSize: '.95em !important',
+                        color: 'var(--color-text-lightbackground)'
                     }}
                 >
                     Add
