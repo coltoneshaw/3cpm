@@ -15,6 +15,7 @@
 ## Bug
 - Fixed bug in how the pair by date was calculated. This was using `actual_profit` from 3C which returns the profit if you never sold the coin
 - Profit by day chart removed days with 0 profit, added these back.
+- Fixed bug where the TA chart would not load on the first click, additionally fixed the theme of the charts.
 
 
 

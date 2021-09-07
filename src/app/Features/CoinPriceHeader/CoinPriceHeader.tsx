@@ -65,7 +65,9 @@ const CoinPriceHeader = () => {
             <div className="coinDiv">
                 {coinData.map((coin: { symbol: string, price: string }, index) => {
                     return <span
-                        key={coin.symbol}>
+                        key={coin.symbol}
+                        style={{paddingLeft: '1em'}}
+                        >
                         {coin.symbol}: {Number(coin.price).toLocaleString('fullwide', { useGrouping: true, maximumSignificantDigits: 5 })}{(coinData.length > 1 && index != (coinData.length - 1)) ? ' - ' : ''}
                     </span>
                 })}

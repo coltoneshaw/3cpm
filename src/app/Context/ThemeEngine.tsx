@@ -11,6 +11,7 @@ const ThemeContext = createContext<Type_ThemeContext>();
 interface Type_ThemeContext {
     styles: MyCustomCSS
     changeTheme: any
+    theme: string
 }
 
 
@@ -93,7 +94,7 @@ const darkMode = {
 }
 
 const ThemeEngine = ({ children }: any) => {
-    const [, updateTheme] = useState('lightMode')
+    const [theme, updateTheme] = useState('lightMode')
 
     const [ styles, setStyles  ] = useState<MyCustomCSS>(() => lightMode)
 
@@ -131,7 +132,7 @@ const ThemeEngine = ({ children }: any) => {
 
 
     return (
-        <ThemeContext.Provider value={{styles, changeTheme}}>
+        <ThemeContext.Provider value={{styles, changeTheme, theme}}>
             {children}
         </ThemeContext.Provider>
     )
