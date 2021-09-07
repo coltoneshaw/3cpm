@@ -167,7 +167,7 @@ const StatsPage = () => {
                 <div className="flex-row filters" >
                     <p><strong>Account: </strong><br />{returnAccountNames()}</p>
                     <p><strong>Start Date: </strong><br />{dateString(date)} </p>
-                    <p><strong>Default Currency: </strong><br />{returnCurrencyValues()}</p>
+                    <p><strong>Filtered Currency: </strong><br />{returnCurrencyValues()}</p>
                 </div>
 
             </div>

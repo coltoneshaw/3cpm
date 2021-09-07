@@ -29,17 +29,16 @@ const UpdateBanner = () => {
         electron.pm.versions()
             .then((versionData:any) => {
 
-                const {currentVersion} = versionData
-                const modifiedStringVersion = currentVersion.replaceAll('_', '.')
-                updateLatestVersion(modifiedStringVersion)
+                if(versionData == undefined || versionData[0] == undefined){
+                    return
+                }
 
-
-                if(versionData[currentVersion].link) latestLink = versionData[currentVersion].link
+                const currentVersion = versionData[0]
+                updateLatestVersion(currentVersion.tag_name)
+                latestLink = currentVersion.html_url
                 console.log(latestLink)
 
-                if(version != modifiedStringVersion) changeShow(true)
-
-
+                if(version != currentVersion.tag_name) changeShow(true)
 
             })
     }, []) 
@@ -54,7 +53,7 @@ const UpdateBanner = () => {
                 <div className="update-mainDiv">
 
                     {/* @ts-ignore */}
-                <p> There is a new update available! Click <a  onClick={() => openVersionLink()} >here</a> to download v{latestVersion}.</p>
+                <p> There is a new update available! Click <a  onClick={() => openVersionLink()} >here</a> to download {latestVersion}.</p>
                 <Close className="closeIcon" onClick={ () => hideBanner()}/>
                 </div>
             )

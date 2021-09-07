@@ -6,7 +6,7 @@ const fetchVersions = async () => {
 
 
         try {
-          let response = await fetch('https://portfolio-manager-3c-default-rtdb.firebaseio.com/version.json',
+          let response = await fetch('https://api.github.com/repos/coltoneshaw/3c-portfolio-manager/releases?per_page=5',
             {
               method: 'GET',
               timeout: 30000,
