@@ -187,7 +187,7 @@ const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
 
 
                 <Bar name="Total Profit" dataKey="total_profit" fill="var(--color-CTA-dark25)"  xAxisId="total_profit" fillOpacity={.8} />
-                <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--color-primary-light25)"  />
+                <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--color-primary-light25-light25)"  />
                 <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours"  fill="var(--color-secondary)" xAxisId="avg_deal_hours"/>
                 <Scatter name="Avg. Profit" dataKey="avg_profit"  fill="#F87171" xAxisId="avg_profit"/>
 

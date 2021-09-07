@@ -40,7 +40,7 @@
 
 div.addCoinModal {
     background-color: var(--color-background);
-    height: 40vh;
+    height: 350px;
     width: 300px;
     padding: 1em;
     position: relative;
@@ -68,4 +68,8 @@ div.addCoinModal {
         width: 100%;
     }
 
+
+    .MuiAutocomplete-input {
+        color: var(--color-text-lightbackground)
+    }
 }

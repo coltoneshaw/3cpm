@@ -6,7 +6,7 @@ import { Type_Tooltip} from '@/types/Charts'
 import { Type_MetricData } from '@/types/3Commas';
 
 
-const COLORS = ['var(--color-primary)', 'var(--color-secondary-light25)', 'var(--color-CTA)', '#FF8042'];
+const COLORS = ['var(--color-primary-light25)', 'var(--color-secondary-light25)', 'var(--color-CTA)', '#FF8042'];
 
 interface Type_PieMetrics {
     title: string

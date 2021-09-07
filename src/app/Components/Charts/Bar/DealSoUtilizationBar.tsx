@@ -53,7 +53,7 @@ const DealSoUtilizationBar = ({ title, data = [] }: Type_ActiveDealCharts) => {
 
                     <Bar dataKey="bought_volume" stackId="a" fill="var(--color-secondary-light25)"
                          name="% Bought Volume"/>
-                    <Bar dataKey="so_volume_remaining" stackId="a" fill="var(--color-primary)" opacity={.6}
+                    <Bar dataKey="so_volume_remaining" stackId="a" fill="var(--color-primary-light25)" opacity={.6}
                          name="% SO Volume Remaining"/>
                 </BarChart>
             </ResponsiveContainer>)

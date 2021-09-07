@@ -51,7 +51,7 @@ const DealAllocationBar = ( {title, data = []}: Type_DealPerformanceCharts) => {
 
 
                         <Bar dataKey="percentTotalVolume" fill="var(--color-secondary-light25)" name="% Total Volume" />
-                        <Bar dataKey="percentTotalProfit" fill="var(--color-primary)" name="% Total Profit" />
+                        <Bar dataKey="percentTotalProfit" fill="var(--color-primary-light25)" name="% Total Profit" />
                     </BarChart>
                 </ResponsiveContainer>)
         }

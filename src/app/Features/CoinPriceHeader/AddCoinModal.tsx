@@ -70,7 +70,7 @@ const AddCoinModal = ({ open, setOpen, coinNames, currentCoins }: { open: boolea
                 <Autocomplete
                     options={['', ...coinNames]}
                     // getOptionLabel={(option) => option.title}
-                    style={{ flexBasis: '90%', paddingRight: '2em' }}
+                    style={{ flexBasis: '90%', paddingRight: '2em', color: 'var(--color-text-lightbackground)' }}
                     value={inputValue}
                     //@ts-ignore
                     onChange={(e) => changeInputValue(e.target.innerText)}

@@ -77,7 +77,7 @@ const SoDistribution = ({ title, data = [], metrics }: Type_SoDistribution) => {
                     />
 
 
-                    <Bar dataKey="percentOfDeals" fill="var(--color-primary)" name='% of deals'/>
+                    <Bar dataKey="percentOfDeals" fill="var(--color-primary-light25)" name='% of deals'/>
                     <Bar dataKey="percentOfVolume" fill="var(--color-secondary-light25)" name='% of volume'/>
 
                 </BarChart>
