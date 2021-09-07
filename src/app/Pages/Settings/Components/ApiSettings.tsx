@@ -66,6 +66,7 @@ const ApiSettings = () => {
                     label="Secret"
                     value={apiData.secret}
                     onChange={handleSecretChange}
+                    type="password"
                     style={{
                         marginLeft: "15px",
                         flexBasis: "50%"
