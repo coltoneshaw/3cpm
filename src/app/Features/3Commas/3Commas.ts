@@ -8,9 +8,9 @@ import {
     Type_UpdateFunction
 } from '@/types/3Commas'
 
-import {Type_ReservedFunds} from '@/types/config'
+import { Type_ReservedFunds } from '@/types/config'
 
-import {getDatesBetweenTwoDates} from '@/utils/helperFunctions'
+import { getDatesBetweenTwoDates } from '@/utils/helperFunctions'
 
 
 const getFiltersQueryString = async () => {
@@ -95,7 +95,7 @@ const fetchDealDataFunction = async () => {
     let totalDealHours = dataArray.map((deal: Type_Query_DealData) => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours)
 
 
-days.forEach((day: string, index: number) => {
+    days.forEach((day: string, index: number) => {
 
         // there should never be more than one date in the array.
         const filteredData = dataArray.find((deal: any) => deal.closed_at_str === day)
@@ -123,20 +123,6 @@ days.forEach((day: string, index: number) => {
 
 
     })
-    // dataArray = dataArray.forEach(( day: any, index:number ) => {
-
-
-    //     // adding the existing value to the previous value's running sum.
-    //     let runningSum = (index == 0) ? day.final_profit  : profitArray[index - 1].runningSum + day.final_profit
-
-    //     profitArray.push({
-    //         utc_date: day.closed_at_str,
-    //         profit: day.final_profit,
-    //         runningSum: runningSum,
-    //         total_deals: day.total_deals
-    //     })
-    // })
-
 
     const totalProfit = (profitArray.length > 0) ? +profitArray[profitArray.length - 1].runningSum : 0
     const averageDailyProfit = (profitArray.length > 0) ? totalProfit / (profitArray.length) : 0;
@@ -199,7 +185,7 @@ const fetchPerformanceDataFunction = async () => {
             .reduce((sum: number, item: number) => sum + item)
 
         return databaseQuery.map((perfData: Type_Query_PerfArray) => {
-            const {bought_volume, total_profit} = perfData
+            const { bought_volume, total_profit } = perfData
             return {
                 ...perfData,
                 percentTotalVolume: (bought_volume / boughtVolumeSummary) * 100,
@@ -264,7 +250,7 @@ const fetchBotPerformanceMetrics = async () => {
 
 const botQuery = async () => {
     const filtersQueryString = await getFiltersQueryString()
-    const { accountIdString} = filtersQueryString;
+    const { accountIdString } = filtersQueryString;
 
 
     const queryString = `

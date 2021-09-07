@@ -9,7 +9,7 @@ import NoData from '@/app/Pages/Stats/Components/NoData';
 
 
 
-const DealSoUtilizationBar = ({ title, data }: Type_ActiveDealCharts) => {
+const DealSoUtilizationBar = ({ title, data = [] }: Type_ActiveDealCharts) => {
 
 
     const renderChart = () => {

@@ -15,7 +15,7 @@ interface Type_SoDistributionArray {
     numberOfDeals: number
 }
 
-const SoDistribution = ({ title, data, metrics }: Type_SoDistribution) => {
+const SoDistribution = ({ title, data = [], metrics }: Type_SoDistribution) => {
 
     let dataArray: Type_SoDistributionArray[] = []
 

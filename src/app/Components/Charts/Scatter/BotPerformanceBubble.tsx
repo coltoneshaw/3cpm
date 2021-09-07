@@ -20,7 +20,7 @@ const colors = ["#cfe1f2", "#b5d4e9", "#93c3df", "#6daed5", "#4b97c9", "#2f7ebc"
  * - Look at combining this chart by "pair-BO" to minimize bubbles on the chart.
  */
 
-const BotPerformanceBubble = ({ title, data }: Type_BotPerformanceCharts) => {
+const BotPerformanceBubble = ({ title, data = [] }: Type_BotPerformanceCharts) => {
 
     const [filter, setFilter] = React.useState('all');
 
@@ -76,7 +76,7 @@ const BotPerformanceBubble = ({ title, data }: Type_BotPerformanceCharts) => {
     }
 
     const renderChart = () => {
-        if (data == undefined || data.length === 0) {
+        if (data.length === 0) {
             return (<NoData />)
         } else {
 

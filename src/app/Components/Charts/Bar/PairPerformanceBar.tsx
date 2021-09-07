@@ -11,7 +11,7 @@ import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/Loca
 import { parseNumber} from '@/utils/number_formatting';
 import { dynamicSort } from '@/utils/helperFunctions';
 
-const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
+const PairPerformanceBar = ({ title, data = []}: Type_Pair_Performance) => {
 
     const defaultFilter = 'all';
     const defaultSort = '-total_profit';
@@ -78,7 +78,7 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
 
     }
     const renderChart = () => {
-        if (data == undefined || data.length === 0) {
+        if (data.length === 0) {
             return (<NoData />)
         } else {
             data = filterData(data)

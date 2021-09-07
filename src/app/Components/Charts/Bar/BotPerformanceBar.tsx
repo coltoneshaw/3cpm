@@ -16,7 +16,7 @@ import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/Loca
 
 
 
-const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
+const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
 
     const defaultFilter = 'all';
     const defaultSort = '-total_profit';
@@ -80,11 +80,12 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
     }
 
     const renderChart = () => {
-        if (data == undefined || data.length === 0) {
+        if (data.length === 0) {
             return (<NoData />)
         } else {
             data = filterData(data).sort(dynamicSort(sort))
-            return (<ResponsiveContainer width="100%" height="90%" minHeight="800px">
+            return (
+            <ResponsiveContainer width="100%" height="90%" minHeight="800px">
                 <ComposedChart
 
                     data={data}

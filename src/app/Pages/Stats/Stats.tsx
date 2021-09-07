@@ -98,12 +98,6 @@ const StatsPage = () => {
 
     const additionalMetrics = () => {
 
-        // <Card_ActiveDeals metric={activeDealCount} />
-        // <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
-        // <Card_MaxDca metric={maxRisk} />
-        // <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{totalBankroll, maxDCA: maxRisk}} />
-        // <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
-        // <Card_TotalProfit metric={totalProfit} />
         if (currentView === 'performance-monitor') {
             return (
                 <>

@@ -17,7 +17,7 @@ const colors = ["#cfe1f2", "#b5d4e9", "#93c3df", "#6daed5", "#4b97c9", "#2f7ebc"
  * TODO
  * - Look at combining this chart by "pair-BO" to minimize bubbles on the chart.
  */
-const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
+const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts) => {
 
     const defaultSort = 'percentTotalProfit';
     const localStorageSortName = storageItem.charts.DealPerformanceBubble.sort
@@ -52,13 +52,14 @@ const DealPerformanceBubble = ({ title, data }: Type_DealPerformanceCharts) => {
 
 
     const renderChart = () => {
-        if (data == undefined || data.length === 0) {
+        if (data.length === 0) {
             return (<NoData />)
         } else {
             const newData = data
                 .filter(row => row.percentTotalVolume > 1.5)
 
-            return (<ResponsiveContainer width="100%" height="100%" minHeight="400px">
+            return (
+            <ResponsiveContainer width="100%" height="100%" minHeight="400px">
                 <ScatterChart
                     width={400}
                     height={400}

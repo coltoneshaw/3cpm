@@ -187,7 +187,7 @@ const ReservedBankroll = () => {
                         manualSortBy={true}
                         updateReservedFunds={handleEditCellChangeCommitted}
                         // skipPageReset={skipPageReset}
-                        //@ts-ignore
+                        
                         getHeaderProps={() => ({
                             // onClick: () => setSort(column.id),
                             style: {
@@ -196,11 +196,11 @@ const ReservedBankroll = () => {
                             },
 
                         })}
-                        //@ts-ignore
+                        
                         getColumnProps={() => ({
 
                         })}
-                        //@ts-ignore
+                        
                         getRowProps={() => ({
 
                         })}

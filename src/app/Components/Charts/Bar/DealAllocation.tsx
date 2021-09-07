@@ -8,11 +8,11 @@ import { dynamicSort } from '@/utils/helperFunctions';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
 
-const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
+const DealAllocationBar = ( {title, data = []}: Type_DealPerformanceCharts) => {
 
         const renderChart = () => {
 
-            if (data == undefined || data.length === 0) {
+            if (data.length === 0) {
                 return (<NoData />)
             } else {
 

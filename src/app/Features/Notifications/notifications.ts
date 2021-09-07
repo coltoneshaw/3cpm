@@ -57,7 +57,7 @@ const calcDealTime = (created_at:string , closed_at:string ) => {
 
     }
 
-    return `about ${timeString} ${type}${Math.round(timeString) > 1 ? 's' : ''}.`
+    return `about ${Math.round(timeString)} ${type}${timeString > 1 ? 's' : ''}.`
 
 }
 
