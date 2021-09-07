@@ -18,12 +18,13 @@ const TradingViewPage = () => {
         const script = document.createElement("script");
         script.type = "text/javascript"
         script.src = "https://s3.tradingview.com/tv.js"
-        script.async = true
 
-        const script2 = document.createElement("script");
-        script2.type = "text/javascript"
-        script2.async = true
-        script2.text = `new TradingView.widget(
+
+        script.addEventListener('load', () => {
+            const widget = document.createElement("script");
+            widget.type = "text/javascript"
+            widget.async = true
+            widget.text = `new TradingView.widget(
                     {
                         "autosize": true,
                         "symbol": "COINBASE:BTCUSD",
@@ -39,12 +40,17 @@ const TradingViewPage = () => {
                         "details": true,
                     }
                 );`
+            // @ts-ignore
+            tvContainer.current.appendChild(widget)
+        });
+
+
 
         // In test
         if (tvContainer !== null && tvContainer.current !== null) {
             // Handle the case where header isn't set yet
             tvContainer.current.appendChild(script)
-            tvContainer.current.appendChild(script2)
+
         }
     }
 
