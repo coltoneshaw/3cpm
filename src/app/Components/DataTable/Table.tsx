@@ -1,9 +1,9 @@
 // import { dynamicSort } from "@/utils/helperFunctions";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 // import formatDeal from './FormatDeals';
 
 import { useTable, useSortBy } from 'react-table'
-import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+import { setStorageItem, getStorageItem} from '@/app/Features/LocalStorage/LocalStorage';
 
 // const initialSortBy = [{ id: "created_at", desc: false }]
 const defaultPropGetter = () => ({})
@@ -119,7 +119,7 @@ function CustomTable({
                 ))}
             </thead>
             <tbody {...getTableBodyProps()}>
-                {rows.map((row, i) => {
+                {rows.map((row) => {
                     prepareRow(row)
                     return (
                         // Merge user row props in

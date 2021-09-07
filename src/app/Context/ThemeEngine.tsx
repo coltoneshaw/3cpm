@@ -93,7 +93,7 @@ const darkMode = {
 }
 
 const ThemeEngine = ({ children }: any) => {
-    const [theme, updateTheme] = useState('lightMode')
+    const [, updateTheme] = useState('lightMode')
 
     const [ styles, setStyles  ] = useState<MyCustomCSS>(() => lightMode)
 

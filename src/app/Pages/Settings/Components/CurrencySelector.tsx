@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React from 'react';
 
-import { ConfigContext, useGlobalState } from '@/app/Context/Config';
+import { useGlobalState } from '@/app/Context/Config';
 
 import {
     FormControl,
@@ -68,7 +68,7 @@ const CurrencySelector = () => {
 
     const state = useGlobalState()
 
-    const { config, state: { currency, updateCurrency } } = state
+    const { state: { currency, updateCurrency } } = state
 
     const onChange = (e: any) => {
         updateCurrency([...e.target.value])

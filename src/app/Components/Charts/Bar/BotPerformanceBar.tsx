@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Area, Scatter } from 'recharts';
+import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Scatter } from 'recharts';
 
 
-import {InputLabel, MenuItem, FormControl, Select, FormHelperText} from '@material-ui/core';
+import {InputLabel, MenuItem, FormControl, Select} from '@material-ui/core';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
-import { parseNumber, formatPercent } from '@/utils/number_formatting';
+import { parseNumber} from '@/utils/number_formatting';
 import { dynamicSort } from '@/utils/helperFunctions';
 
 import { Type_Bot_Performance_Metrics } from '@/types/3Commas';
@@ -16,7 +16,7 @@ import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/Loca
 
 
 
-const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
+const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
 
     const defaultFilter = 'all';
     const defaultSort = '-total_profit';
@@ -50,7 +50,7 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
 
 
     const hide = (id:string ) => {
-        return (id == sort) ? false : true  
+        return id != sort
     }
 
     const filterData = (data: Type_Bot_Performance_Metrics[] ) => {
@@ -80,11 +80,12 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
     }
 
     const renderChart = () => {
-        if (data == undefined || data.length === 0) {
+        if (data.length === 0) {
             return (<NoData />)
         } else {
             data = filterData(data).sort(dynamicSort(sort))
-            return (<ResponsiveContainer width="100%" height="90%" minHeight="800px">
+            return (
+            <ResponsiveContainer width="100%" height="90%" minHeight="800px">
                 <ComposedChart
 
                     data={data}
@@ -232,10 +233,10 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
 }
 
 
-function CustomTooltip({ active, payload, label }: Type_Tooltip) {
+function CustomTooltip({ active, payload}: Type_Tooltip) {
     if (active) {
         const data: Type_Bot_Performance_Metrics = payload[0].payload
-        const { total_profit, avg_completed_so, avg_profit, avg_deal_hours, bought_volume, number_of_deals, bot_name, type } = data
+        const { total_profit, avg_deal_hours, bought_volume, number_of_deals, bot_name, type } = data
         return (
             <div className="tooltip">
                 <h4>{bot_name}</h4>

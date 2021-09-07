@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import dotProp from 'dot-prop';
 
 import {
@@ -8,8 +8,6 @@ import {
 
 import { useGlobalState } from '@/app/Context/Config';
 import { TconfigValues, Type_ApiKeys } from '@/types/config'
-
-import { useGlobalData } from '@/app/Context/DataContext';
 
 
 const ApiSettings = () => {

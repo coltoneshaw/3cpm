@@ -12,7 +12,6 @@ import {
   calc_DealMaxFunds_bot,
   calc_maxInactiveFunds,
   calc_maxBotFunds,
-  calc_dropCoverage,
   calc_dropMetrics
 } from '@/utils/formulas';
 
@@ -194,7 +193,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
   }
 
 
-  const handleEditCellChangeCommitted = (id: number, column: string, value: string | boolean, original: Type_Query_bots) => {
+  const handleEditCellChangeCommitted = (id: number, column: string, value: string | boolean) => {
     updateLocalBotData((prevState: Type_Query_bots[]) => {
       const newRows = prevState.map(row => {
         if (id == row.id) {
@@ -236,7 +235,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         accessor: 'is_enabled',
         Cell: ({ cell }: any) => {
           return <Switch
-            checked={(cell.value === 1 || cell.value === true) ? true : false}
+            checked={cell.value === 1 || cell.value === true}
             color="primary"
             onClick={handleOnOff}
             name={cell.row.original.id}
@@ -249,8 +248,8 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         accessor: 'hide',
         Cell: ({ cell }: any) => {
           return <Checkbox
-            checked={(cell.value === 1 || cell.value === true) ? true : false}
-            onChange={() => handleEditCellChangeCommitted(cell.row.original.id, 'hide', !cell.value, cell.row.original)}
+            checked={cell.value === 1 || cell.value === true}
+            onChange={() => handleEditCellChangeCommitted(cell.row.original.id, 'hide', !cell.value)}
             name="summary"
             style={{ color: 'var(--color-secondary)' }}
 
@@ -433,7 +432,6 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
           <CustomTable
             columns={columns}
             data={localBotData}
-            disableMultiSort={true}
             autoResetSortBy={false}
             // autoResetPage={false}
             manualSortBy={true}

@@ -13,7 +13,7 @@ import { useGlobalData } from '@/app/Context/DataContext';
 const RiskMonitor = () => {
 
     const state = useGlobalData();
-    const { data: { activeDeals, metricsData, balanceData } } = state;
+    const { data: { activeDeals, metricsData} } = state;
     return (
         <>
             <SpeedometerDiv

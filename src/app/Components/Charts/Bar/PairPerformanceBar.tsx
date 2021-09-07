@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Scatter,Legend, ResponsiveContainer, Line, Label } from 'recharts';
-import { InputLabel, MenuItem, FormControl, Select, FormHelperText } from '@material-ui/core';
+import { InputLabel, MenuItem, FormControl, Select } from '@material-ui/core';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
@@ -8,10 +8,10 @@ import { Type_Pair_Performance_Metrics } from '@/types/3Commas';
 import { Type_Tooltip, Type_Pair_Performance } from '@/types/Charts';
 
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
-import { parseNumber, formatPercent } from '@/utils/number_formatting';
+import { parseNumber} from '@/utils/number_formatting';
 import { dynamicSort } from '@/utils/helperFunctions';
 
-const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
+const PairPerformanceBar = ({ title, data = []}: Type_Pair_Performance) => {
 
     const defaultFilter = 'all';
     const defaultSort = '-total_profit';
@@ -47,7 +47,7 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
     };
 
     const hide = (id: string) => {
-        return (id == sort) ? false : true
+        return id != sort
     }
 
 
@@ -78,7 +78,7 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
 
     }
     const renderChart = () => {
-        if (data == undefined || data.length === 0) {
+        if (data.length === 0) {
             return (<NoData />)
         } else {
             data = filterData(data)
@@ -224,10 +224,10 @@ const PairPerformanceBar = ({ title, data }: Type_Pair_Performance) => {
 }
 
 
-function CustomTooltip({ active, payload, label }: Type_Tooltip) {
+function CustomTooltip({ active, payload}: Type_Tooltip) {
     if (active) {
         const data: Type_Pair_Performance_Metrics = payload[0].payload
-        const { total_profit, avg_completed_so, avg_profit, pair, avg_deal_hours, bought_volume, number_of_deals } = data
+        const { total_profit, pair, avg_deal_hours, bought_volume, number_of_deals } = data
         return (
             <div className="tooltip">
                 <h4>{pair}</h4>

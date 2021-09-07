@@ -1,19 +1,17 @@
 import {
-    Type_Query_PerfArray,
-    Type_Query_DealData,
-    Type_Profit,
     Type_ActiveDeals,
+    Type_Pair_By_Date,
+    Type_Profit,
     Type_Query_Accounts,
-    Type_UpdateFunction,
-    Type_Pair_By_Date
+    Type_Query_DealData,
+    Type_Query_PerfArray,
+    Type_UpdateFunction
 } from '@/types/3Commas'
 
 import { Type_ReservedFunds } from '@/types/config'
 
 import { getDatesBetweenTwoDates } from '@/utils/helperFunctions'
 
-
-interface Type_ProfitArray extends Array<Type_Profit> { }
 
 const getFiltersQueryString = async () => {
 
@@ -35,12 +33,6 @@ const getFiltersQueryString = async () => {
 
 }
 
-
-interface Type_Update {
-    offset: number
-    lastSyncTime?: number
-    summary?: boolean
-}
 
 /**
  * @description This kicks off the update process that updates all 3Commas data within the database.
@@ -107,7 +99,6 @@ const fetchDealDataFunction = async () => {
 
         // there should never be more than one date in the array.
         const filteredData = dataArray.find((deal: any) => deal.closed_at_str === day)
-
         // adding the existing value to the previous value's running sum.
 
         if (filteredData == undefined) {
@@ -132,20 +123,6 @@ const fetchDealDataFunction = async () => {
 
 
     })
-    // dataArray = dataArray.forEach(( day: any, index:number ) => {
-
-
-    //     // adding the existing value to the previous value's running sum.
-    //     let runningSum = (index == 0) ? day.final_profit  : profitArray[index - 1].runningSum + day.final_profit 
-
-    //     profitArray.push({
-    //         utc_date: day.closed_at_str,
-    //         profit: day.final_profit,
-    //         runningSum: runningSum,
-    //         total_deals: day.total_deals
-    //     })
-    // })
-
 
     const totalProfit = (profitArray.length > 0) ? +profitArray[profitArray.length - 1].runningSum : 0
     const averageDailyProfit = (profitArray.length > 0) ? totalProfit / (profitArray.length) : 0;
@@ -207,7 +184,7 @@ const fetchPerformanceDataFunction = async () => {
             .map((deal: Type_Query_PerfArray) => deal.bought_volume)
             .reduce((sum: number, item: number) => sum + item)
 
-        const performanceData = databaseQuery.map((perfData: Type_Query_PerfArray) => {
+        return databaseQuery.map((perfData: Type_Query_PerfArray) => {
             const { bought_volume, total_profit } = perfData
             return {
                 ...perfData,
@@ -215,8 +192,6 @@ const fetchPerformanceDataFunction = async () => {
                 percentTotalProfit: (total_profit / totalProfitSummary) * 100,
             }
         })
-
-        return performanceData
     } else {
         return []
     }
@@ -275,7 +250,7 @@ const fetchBotPerformanceMetrics = async () => {
 
 const botQuery = async () => {
     const filtersQueryString = await getFiltersQueryString()
-    const { currencyString, accountIdString, startString } = filtersQueryString;
+    const { accountIdString } = filtersQueryString;
 
 
     const queryString = `
@@ -452,13 +427,6 @@ const getAccountDataFunction = async () => {
 
 }
 
-const accountDataAll = async () => {
-
-    // @ts-ignore
-    return await electron.database.query("select * from accountData")
-
-}
-
 
 /**
  * 
@@ -496,25 +464,21 @@ const getSelectPairDataByDate = async (pairs: string[]) => {
     const { days } = getDatesBetweenTwoDates((new Date(startString)).toISOString().split('T')[0], (new Date()).toISOString().split('T')[0])
 
 
-    const dateObject = days.map(day => {
+    return days.map(day => {
         const filteredData = pairData.filter(deal => deal.date === day)
 
         interface subDateObject {
             pair: number
         }
+
         const subDateObject = <any>{ date: day };
         pairs.forEach(pair => {
             const filteredForPair = filteredData.find(deal => deal.pair === pair)
-            const profit = (filteredForPair != undefined) ? filteredForPair.profit : 0;
-
-            subDateObject[pair as keyof subDateObject] = profit
+            subDateObject[pair as keyof subDateObject] = (filteredForPair != undefined) ? filteredForPair.profit : 0
         })
 
         return subDateObject;
     })
-
-
-    return dateObject
 
 }
 
@@ -524,7 +488,6 @@ export {
     getActiveDealsFunction,
     updateThreeCData,
     getAccountDataFunction,
-    accountDataAll,
     fetchBotPerformanceMetrics,
     fetchPairPerformanceMetrics,
     botQuery,
