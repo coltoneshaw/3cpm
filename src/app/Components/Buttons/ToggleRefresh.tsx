@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import { Button } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
@@ -19,7 +19,7 @@ interface Type_ButtonProps {
  */
 const ToggleRefreshButton = ({ style, className }: Type_ButtonProps) => {
     const state = useGlobalData()
-    const { data: { isSyncing }, actions: { updateAllData }, autoSync: { buttonEnabled, setButtonEnabled } } = state
+    const { data: { isSyncing }, autoSync: { buttonEnabled, setButtonEnabled } } = state
 
     return (
         <Button

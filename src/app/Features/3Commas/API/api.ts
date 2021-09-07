@@ -1,18 +1,16 @@
 const threeCommasAPI = require('3commas-api-node')
-import {  Type_Deals_API, Type_Query_Accounts, Type_API_bots } from '@/types/3Commas'
-import {  TconfigValues } from '@/types/config'
+import {Type_API_bots, Type_Deals_API} from '@/types/3Commas'
 
-import { config } from '@/utils/config';
+import {config} from '@/utils/config';
 
 
 import {
-  calc_deviation, 
-  calc_DealMaxFunds_bot, 
-  calc_maxInactiveFunds, 
-  calc_maxDealFunds_Deals, 
-  calc_dealHours, 
-  getBotName,
-  calc_maxBotFunds
+  calc_dealHours,
+  calc_DealMaxFunds_bot,
+  calc_deviation,
+  calc_maxBotFunds,
+  calc_maxDealFunds_Deals,
+  calc_maxInactiveFunds
 } from '@/utils/formulas';
 
 /**
@@ -32,12 +30,10 @@ const threeCapi = ( config:any, key?:string, secret?:string ) => {
     return false
   }
 
-  const api = new threeCommasAPI({
+  return new threeCommasAPI({
     apiKey: key,
     apiSecret: secret
   })
-
-  return api
 }
 
 /**
@@ -96,8 +92,7 @@ async function bots() {
       profit_currency, finished_deals_profit_usd,
       finished_deals_count, pairs, trailing_deviation,
       active_deals_usd_profit, stop_loss_percentage,
-      enabled_active_funds, from_currency,
-      enabled_inactive_funds, strategy, 
+      strategy,
     } = bot
 
     let maxDealFunds = calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
@@ -289,11 +284,10 @@ async function deals( offset:number, type:string ) {
       base_order_volume, safety_order_volume, max_safety_orders,
       completed_safety_orders_count, martingale_volume_coefficient,
       final_profit_percentage, pair, id, actual_usd_profit,
-      bot_id, active_manual_safety_orders, bought_average_price,
-      current_price, actual_profit, bot_name,
-      final_profit
+      active_manual_safety_orders, bought_average_price,
+      current_price, actual_profit, final_profit
     } = deal
-    const activeDeal = (closed_at === null) ? true : false;
+    const activeDeal = closed_at === null;
     const deal_hours = calc_dealHours(created_at, closed_at)
 
     let tempObject = {
@@ -340,7 +334,7 @@ async function getAccountDetail() {
   for (let account of accountData) {
 
     // this loads the account balances from the exchange to 3C ensuring the numbers are updated
-    const accountBalances = await api.accountLoadBalances(account.id)
+    await api.accountLoadBalances(account.id);
 
     // this is where we get the coins and position per account.
     let data = await api.accountTableData(account.id)
@@ -349,7 +343,7 @@ async function getAccountDetail() {
     // Load data into new array with only the columns we want and format them
     for (let row of data) {
 
-      const { account_id, currency_code, percentage, position, btc_value, usd_value, on_orders, currency_slug, equity } = row
+      const { account_id, currency_code, percentage, position, btc_value, usd_value, on_orders, currency_slug} = row
       let tempObject = {
         id: account_id + "-" + currency_slug,
         account_id,

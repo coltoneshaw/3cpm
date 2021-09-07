@@ -1,7 +1,7 @@
 const Store = require('electron-store');
 const { run } = require('@/app/Features/Database/database')
 
-import { defaultConfig, configSchema } from '@/utils/defaultConfig';
+import { defaultConfig} from '@/utils/defaultConfig';
 
 
 const migrateCurrencyToArray = (store:any ) => {
@@ -32,12 +32,12 @@ const config = new Store({
         '0.1.1': ( store: any )=>{
             store.set('general.updated', true)
         },
-        '0.2.0': ( store: any ) => {
+        '0.2.0': ( ) => {
 
             // removing the bots that have been synced so they can be resynced and a new column added
             run('ALTER TABLE bots ADD COLUMN hide boolean;')
         },
-        '0.3.1': ( store: any ) => {
+        '0.3.1': ( ) => {
 
             // deleting all cancelled and failed deals from the database due to a bug in how they report from 3C
             run("delete from deals where status in ('failed', 'cancelled') ")

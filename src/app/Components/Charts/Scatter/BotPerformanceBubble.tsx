@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis, LabelList } from 'recharts';
-import { InputLabel, MenuItem, FormControl, Select, FormHelperText } from '@material-ui/core';
+import React, { useEffect} from 'react';
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis} from 'recharts';
+import { InputLabel, MenuItem, FormControl, Select} from '@material-ui/core';
 
 
 import { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts'
@@ -20,7 +20,7 @@ const colors = ["#cfe1f2", "#b5d4e9", "#93c3df", "#6daed5", "#4b97c9", "#2f7ebc"
  * - Look at combining this chart by "pair-BO" to minimize bubbles on the chart.
  */
 
-const BotPerformanceBubble = ({ title, data }: Type_BotPerformanceCharts) => {
+const BotPerformanceBubble = ({ title, data = [] }: Type_BotPerformanceCharts) => {
 
     const [filter, setFilter] = React.useState('all');
 
@@ -71,12 +71,12 @@ const BotPerformanceBubble = ({ title, data }: Type_BotPerformanceCharts) => {
             return data;
         }
 
-        
+
 
     }
 
     const renderChart = () => {
-        if (data == undefined || data.length === 0) {
+        if (data.length === 0) {
             return (<NoData />)
         } else {
 
@@ -97,12 +97,12 @@ const BotPerformanceBubble = ({ title, data }: Type_BotPerformanceCharts) => {
                 >
                     <CartesianGrid opacity={.3} />
 
-                    {/* 
+                    {/*
                         X - Average Deal Hours
                         Y - Average Hourly Profit
                         Z - Number of deals completed
                         Cell Color - Base Order Start
-                    
+
                      */}
                     <XAxis
                         type="number"
@@ -188,11 +188,11 @@ const BotPerformanceBubble = ({ title, data }: Type_BotPerformanceCharts) => {
 }
 
 
-function CustomTooltip({ active, payload, label }: Type_Tooltip) {
+function CustomTooltip({ active, payload}: Type_Tooltip) {
     if (active) {
 
         const data: Type_Bot_Performance_Metrics = payload[0].payload
-        const { total_profit, bot_name, avg_completed_so, avg_profit, avg_deal_hours, bought_volume, number_of_deals, bot_id } = data
+        const { total_profit, bot_name, avg_deal_hours, bought_volume, number_of_deals} = data
         return (
             <div className="tooltip">
                 <h4>{bot_name}</h4>

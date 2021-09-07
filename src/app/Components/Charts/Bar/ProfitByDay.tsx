@@ -53,7 +53,7 @@ const convertToNewDates = (data: Type_Profit[], langString: any, type: string) =
 }
 
 
-const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
+const ProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
 
     const defaultSort = 'day';
 
@@ -112,7 +112,7 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
         if (data.length === 0) {
             return (<NoData />)
         } else {
-            const filteredData = (data != undefined && data.length > 0) ? convertToNewDates(data, filterString, dateType) : [];
+            const filteredData = convertToNewDates(data, filterString, dateType);
             const calculateAverage = () => {
                 const totalProfit = (filteredData.length > 0) ? filteredData.map(deal => deal.profit).reduce((sum, profit) => sum + profit) : 0
                 return Math.round( totalProfit / filteredData.length )
@@ -177,7 +177,7 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
 }
 
 
-function CustomTooltip({ active, payload, label }: Type_Tooltip) {
+function CustomTooltip({ active, payload}: Type_Tooltip) {
     if (active) {
         const data: Type_NewDateProfit = payload[0].payload
         let { date, profit, type, utc_date } = data

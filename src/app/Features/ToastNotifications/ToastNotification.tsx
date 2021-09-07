@@ -1,5 +1,5 @@
-import React, { ReactInstance, SetStateAction } from 'react';
-import {Button, Snackbar, IconButton} from '@material-ui/core';
+import React from 'react';
+import {Snackbar, IconButton} from '@material-ui/core';
 
 import CloseIcon from '@material-ui/icons/Close';
 

@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React from 'react';
 
 import './App.global.scss';
 import Sidebar from './Components/Sidebar/Sidebar';

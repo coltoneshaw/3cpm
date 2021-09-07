@@ -1,4 +1,4 @@
-import { Type_Deals, Type_Query_bots, Type_API_bots, Type_MarketOrders } from '@/types/3Commas'
+import {Type_MarketOrders, Type_Query_bots} from '@/types/3Commas'
 
 
 /**
@@ -41,9 +41,7 @@ function calc_maxBotFunds(maxDealFunds:number , max_active_deals:number ) {
     return maxDealFunds * max_active_deals
 }
 
-const calc_availableFundsPerBot = (bankroll:number , enabledBotsCount:number ) => {
-    return bankroll / enabledBotsCount
-}
+
 
 function calc_maxSOReached(moneyAvailable:number, max_safety_orders:number, base_order_volume:number, safety_order_volume:number, martingale_volume_coefficient:number) {
     let maxTotal = base_order_volume + safety_order_volume
@@ -135,7 +133,7 @@ function calc_maxDealFunds_Deals(bought_volume:number , base_order_volume:number
     if (!(typeof market_order_data === 'undefined')) {
         for (let order of market_order_data) {
             let {
-                deal_order_type, status_string, quantity, quantity_remaining, total, rate, average_price
+                status_string, quantity_remaining, rate
             } = order
 
             if (status_string == "Active") {
@@ -166,44 +164,21 @@ const calc_dealHours = (created_at:any, closed_at:string ) => {
     const hours = milliseconds / 36e5;
     return +hours.toFixed(2)
 }
-
-/**
- * 
- * @param {array} botData array of bot objects
- * @param {string} pair the pair this bot uses
- * @param {number} bot_id ID of the bot to search
- * @param {string} bot_name name of the bot.
- * @returns the bot name based on single / multi bot.
- */
-const getBotName = (botData:Type_Query_bots[], pair:string , bot_id:number , bot_name:string) => {
-
-    let botFilter = botData.find(bot => bot.id === bot_id)
-    let bot_type;
-    if (botFilter != undefined) {
-        bot_type = botFilter.type.split('::')[1]
-    } else {
-        bot_type = "deleted"
-    }
-    return (bot_type === 'SingleBot') ? bot_name : `${bot_name} - ${pair}`
-}
-
 const calc_dropMetrics = (bankRoll:number, botData:Type_Query_bots[]) => {
     /**
      * This function is responsible for taking the bot data, bankroll and outputting the new bot array with the metrics added.
      */
     if(botData == undefined || botData.length === 0) return [];
 
-     const enabledBots = botData.filter(bot => bot.is_enabled && bot.hide != true)
+     const enabledBots = botData.filter(bot => bot.is_enabled && !bot.hide)
      const fundsAvailable = bankRoll / enabledBots.length
-     const calculated= botData.map(bot => {
+    return botData.map(bot => {
          const dropMetrics = calc_dropCoverage(fundsAvailable, bot)
          return {
              ...bot,
              ...dropMetrics
          }
-     })
-
-     return calculated;
+     });
 }
 
 export {
@@ -214,6 +189,5 @@ export {
     calc_dealHours,
     calc_maxBotFunds,
     calc_dropCoverage,
-    calc_dropMetrics,
-    getBotName
+    calc_dropMetrics
 }

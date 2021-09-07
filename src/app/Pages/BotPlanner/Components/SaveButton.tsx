@@ -1,4 +1,4 @@
-import React, { FunctionComponentFactory, ReactEventHandler } from "react";
+import React from "react";
 import { ToastNotifcations } from '@/app/Features/Index'
 import { Button } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
@@ -11,9 +11,7 @@ interface Type_SaveButton {
 const SaveButton = ({saveFunction, className} : Type_SaveButton ) => {
 
     const [open, setOpen] = React.useState(false);
-    const handleClick = () => {
-        setOpen(true);
-    };
+
     const handleClose = (event: any, reason: string) => {
         if (reason === 'clickaway') {
             return;

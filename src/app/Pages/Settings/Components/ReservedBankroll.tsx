@@ -6,7 +6,6 @@ import { CustomTable } from '@/app/Components/DataTable/Index'
 import styled from 'styled-components'
 
 
-import { MuiClassObject } from '@/app/Context/MuiClassObject'
 import { Type_ReservedFunds } from '@/types/config';
 
 import { useGlobalState } from '@/app/Context/Config';
@@ -159,7 +158,7 @@ const ReservedBankroll = () => {
         })
     }
 
-    const handleEditCellChangeCommitted = (id:number, column:string, value:string, original:Type_ReservedFunds) => {
+    const handleEditCellChangeCommitted = (id:number, column:string, value:string) => {
 
         updateReservedFunds((prevState: Type_ReservedFunds[]) => {
             return prevState.map(row => {
@@ -183,14 +182,13 @@ const ReservedBankroll = () => {
                     <CustomTable
                         columns={columns}
                         data={reservedFunds}
-                        disableMultiSort={true}
                         autoResetSortBy={false}
                         // autoResetPage={false}
                         manualSortBy={true}
                         updateReservedFunds={handleEditCellChangeCommitted}
                         // skipPageReset={skipPageReset}
-                        //@ts-ignore
-                        getHeaderProps={column => ({
+                        
+                        getHeaderProps={() => ({
                             // onClick: () => setSort(column.id),
                             style: {
                                 height: '44px',
@@ -198,12 +196,12 @@ const ReservedBankroll = () => {
                             },
 
                         })}
-                        //@ts-ignore
-                        getColumnProps={column => ({
+                        
+                        getColumnProps={() => ({
 
                         })}
-                        //@ts-ignore
-                        getRowProps={row => ({
+                        
+                        getRowProps={() => ({
 
                         })}
                         //@ts-ignore

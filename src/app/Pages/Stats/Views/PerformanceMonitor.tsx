@@ -13,7 +13,7 @@ import { useGlobalData } from '@/app/Context/DataContext';
 const PerformanceMonitor = () => {
 
     const state = useGlobalData();
-    const { data: { performanceData, metricsData } } = state;
+    const { data: { performanceData} } = state;
     // console.log(performanceData)
 
     return (

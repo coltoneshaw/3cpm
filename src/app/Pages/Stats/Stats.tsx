@@ -44,7 +44,7 @@ const StatsPage = () => {
     const configState = useGlobalState()
     const { config, state: { reservedFunds } } = configState
     const state = useGlobalData()
-    const { data: { metricsData, isSyncing }, actions: { updateAllData } } = state
+    const { data: { metricsData}} = state
     const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent, totalDeals, boughtVolume, totalProfit_perf, averageDailyProfit, averageDealHours, totalClosedDeals, totalDealHours } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')
@@ -98,12 +98,6 @@ const StatsPage = () => {
 
     const additionalMetrics = () => {
 
-        // <Card_ActiveDeals metric={activeDealCount} />
-        // <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
-        // <Card_MaxDca metric={maxRisk} />
-        // <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{totalBankroll, maxDCA: maxRisk}} />
-        // <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
-        // <Card_TotalProfit metric={totalProfit} />
         if (currentView === 'performance-monitor') {
             return (
                 <>

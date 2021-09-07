@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -13,13 +13,14 @@ import { Type_ProfitChart, Type_Tooltip } from '@/types/Charts';
 
 
 
-const SummaryProfitByDay = ({ data, X }: Type_ProfitChart) => {
+const SummaryProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
 
     const renderChart = () => {
         if (data.length === 0) {
             return (<NoData />)
         } else {
-            return (<ResponsiveContainer width="100%" height="100%" minHeight="300px" >
+            return (
+            <ResponsiveContainer width="100%" height="100%" minHeight="300px" >
                 <AreaChart
                     width={500}
                     data={data}

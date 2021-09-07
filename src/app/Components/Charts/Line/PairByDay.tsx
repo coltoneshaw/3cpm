@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
 
-import { Select, InputLabel, FormControl, MenuItem, Checkbox, ListItemText, Input, Menu } from '@material-ui/core';
-import { ComposedChart, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line, Area, AreaChart } from 'recharts';
+import { Select, InputLabel, FormControl, MenuItem, Checkbox, ListItemText, Input} from '@material-ui/core';
+import { ComposedChart, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line} from 'recharts';
 
-import { getLang, removeDuplicatesInArray } from '@/utils/helperFunctions';
+import { getLang} from '@/utils/helperFunctions';
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 const lang = getLang()
 
-import { Type_ProfitChart, Type_Tooltip } from '@/types/Charts';
+import { Type_Tooltip } from '@/types/Charts';
 import { getSelectPairDataByDate } from '@/app/Features/3Commas/3Commas';
 
 const colors = ["#374151", "#B91C1C", "#B45309", "#047857", "#1D4ED8", "#4338CA", "#6D28D9", "#BE185D"]
@@ -134,7 +134,7 @@ const PairPerformanceByDate = () => {
                             })
                         }}
 
-                        onMouseLeave={(e) => {
+                        onMouseLeave={() => {
                             updatePairs(prevState => {
                                 return prevState.map(p => ({
                                     ...p,
@@ -198,7 +198,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
             const pairs = { ...payload[0].payload }
             delete pairs.date;
 
-            if (pairs == undefined || pairs == {}) return ''
+            if (pairs == {}) return ''
 
             return Object.keys(pairs).map(pair => {
                 return <p><strong>{pair}</strong> ${pairs[pair].toLocaleString()}</p>

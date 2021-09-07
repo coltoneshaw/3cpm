@@ -1,9 +1,9 @@
 
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { PieChart, Pie, Legend, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { parseNumber } from '@/utils/number_formatting';
-import { Type_Tooltip, Type_DealPerformanceCharts } from '@/types/Charts'
-import { Type_MetricData, Type_BalanceData } from '@/types/3Commas';
+import { Type_Tooltip} from '@/types/Charts'
+import { Type_MetricData } from '@/types/3Commas';
 
 
 const COLORS = ['var(--color-primary)', 'var(--color-secondary-light25)', 'var(--color-CTA)', '#FF8042'];
@@ -15,7 +15,7 @@ interface Type_PieMetrics {
 const BalancePie = ({ title, metrics }:Type_PieMetrics) => {
 
 
-    const { availableBankroll, position, totalBoughtVolume, on_orders } = metrics
+    const { availableBankroll, totalBoughtVolume, on_orders } = metrics
     const chartData = [{
         name: 'Available',
         metric: availableBankroll,

@@ -52,7 +52,7 @@ function initializeBotsTable() {
             hide BOOLEAN
             )`);
 
-    const info = stmt.run();
+    stmt.run();
 
 }
 
@@ -144,7 +144,7 @@ function initializeDealTable() {
             impactFactor NUMBER
             )`);
 
-    const info = stmt.run();
+    stmt.run();
 
 }
 

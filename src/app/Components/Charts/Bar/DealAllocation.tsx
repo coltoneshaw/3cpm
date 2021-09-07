@@ -1,18 +1,18 @@
 import React from 'react';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { parseNumber, formatPercent } from '@/utils/number_formatting';
+import { parseNumber} from '@/utils/number_formatting';
 import { Type_Tooltip, Type_DealPerformanceCharts } from '@/types/Charts'
 import { dynamicSort } from '@/utils/helperFunctions';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
 
-const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
+const DealAllocationBar = ( {title, data = []}: Type_DealPerformanceCharts) => {
 
         const renderChart = () => {
 
-            if (data == undefined || data.length === 0) {
+            if (data.length === 0) {
                 return (<NoData />)
             } else {
 
@@ -69,7 +69,7 @@ const DealAllocationBar = ( {title, data}: Type_DealPerformanceCharts) => {
         )
 }
 
-function CustomTooltip({ active, payload, label }:Type_Tooltip) {
+function CustomTooltip({ active, payload}:Type_Tooltip) {
     if (active) {
 
         const { total_profit, bot_name, pair, percentTotalVolume, percentTotalProfit, bought_volume } = payload[0].payload

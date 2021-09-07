@@ -1,5 +1,5 @@
 import { getTime, parseISO, formatISO, isValid } from 'date-fns'
-import React, { useContext, useState, useEffect, forwardRef } from 'react';
+import React, { useState, useEffect} from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 
 
@@ -15,7 +15,7 @@ import { useGlobalState } from '@/app/Context/Config';
 
 export default function StartDatePicker() {
   const state = useGlobalState()
-  const { state: { date, updateDate }, config } = state
+  const { state: { date, updateDate }} = state
 
   const [localDate, setLocalDate] = useState<string>();
 

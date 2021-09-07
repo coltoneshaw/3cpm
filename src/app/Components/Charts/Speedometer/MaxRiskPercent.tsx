@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import ReactSpeedometer from "react-d3-speedometer"
 
 interface Type_Speedometer {
