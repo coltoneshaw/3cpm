@@ -26,7 +26,6 @@ const CoinPriceHeader = () => {
 
                 //@ts-ignore
                 const filteredCoins = data.filter((coin: any) => selectedCoins.includes(coin.symbol))
-                console.info('getting new coin data.')
                 updateCoinData(filteredCoins)
 
                 if (update === 'firstUpdate') updateCoinNames(data.map((coin: any) => coin.symbol))

@@ -167,11 +167,30 @@ const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
                     }}
 
                     />
+                <XAxis
+                    xAxisId="avg_profit"
+                    type="number"
+                    hide={hide("-avg_profit")}
+                    domain={[0, 'auto']}
+                    allowDataOverflow={true}
+                    height={50}
+                    allowDecimals={false}
+
+                    label={{
+                        value: "Avg profit per deal",
+                        position: "Bottom",
+                        dx: 0,
+                        dy: 20
+                    }}
+
+                    />
 
 
                 <Bar name="Total Profit" dataKey="total_profit" fill="var(--color-CTA-dark25)"  xAxisId="total_profit" fillOpacity={.8} />
-                <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--color-primary-dark25)"  />
+                <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--color-primary-light25)"  />
                 <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours"  fill="var(--color-secondary)" xAxisId="avg_deal_hours"/>
+                <Scatter name="Avg. Profit" dataKey="avg_profit"  fill="#F87171" xAxisId="avg_profit"/>
+
 
                 {/* <Line name="Total Profit" type="monotone" yAxisId="total_profit" dataKey="total_profit" stroke="#E8AE00" dot={false} strokeWidth={1.75} /> */}
                 {/* <Line name="Avg. Deal Hours" type="monotone" yAxisId="avg_deal_hours" dataKey="avg_deal_hours" dot={false} strokeWidth={1.75} /> */}
@@ -197,6 +216,7 @@ const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
                         <MenuItem value="-total_profit">Profit</MenuItem>
                         <MenuItem value="-bought_volume">Bought Volume</MenuItem>
                         <MenuItem value="-avg_deal_hours">Avg. Deal Hours</MenuItem>
+                        <MenuItem value="-avg_profit">Avg. Profit</MenuItem>
                     </Select>
                 </FormControl>
                 </div>
@@ -236,15 +256,16 @@ function CustomTooltip({ active, payload}: Type_Tooltip) {
     }
 
     const data: Type_Bot_Performance_Metrics = payload[0].payload
-    const { total_profit, avg_deal_hours, bought_volume, number_of_deals, bot_name, type } = data
+    const { total_profit, avg_deal_hours, bought_volume, number_of_deals, bot_name, type, avg_profit } = data
     return (
         <div className="tooltip">
             <h4>{bot_name}</h4>
             <p>{type}</p>
-            <p><strong>Bought Volume:</strong> ${parseNumber(bought_volume)} </p>
-            <p><strong>Deal Count:</strong> {number_of_deals} </p>
-            <p><strong>Total Profit:</strong> ${parseNumber(total_profit)} </p>
-            <p><strong>Avg Deal Hours:</strong> {parseNumber(avg_deal_hours)} </p>
+            <p><strong>Bought volume:</strong> ${parseNumber(bought_volume, 2)} </p>
+            <p><strong>Deal count:</strong> {number_of_deals} </p>
+            <p><strong>Avg profit per deal:</strong> ${parseNumber(avg_profit, 2)} </p>
+            <p><strong>Total Profit:</strong> ${parseNumber(total_profit, 2)} </p>
+            <p><strong>Avg deal hours:</strong> {parseNumber(avg_deal_hours, 2)} </p>
         </div>
     )
 
