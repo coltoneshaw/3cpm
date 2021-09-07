@@ -60,22 +60,18 @@ const StatsPage = () => {
 
 
     const returnAccountNames = () => {
-        if (reservedFunds.length > 0) {
-            // @ts-ignore
-            return reservedFunds.filter(account => account.is_enabled).map(account => account.account_name).join(', ')
-        } else {
-            return "n/a"
-        }
+        return reservedFunds.length > 0 ?
+            reservedFunds.filter(account => account.is_enabled).map(account => account.account_name).join(', ')
+            :
+            "n/a";
     }
 
     const returnCurrencyValues = () => {
         const currencyValues: string[] | undefined = dotProp.get(config, 'general.defaultCurrency')
-        if (currencyValues != undefined && currencyValues.length > 0) {
-            // @ts-ignore
-            return currencyValues.join(', ')
-        } else {
-            return "n/a"
-        }
+        return currencyValues != undefined && currencyValues.length > 0 ?
+            currencyValues.join(', ')
+            :
+            "n/a";
     }
 
     // this needs to stay on this page
@@ -113,25 +109,26 @@ const StatsPage = () => {
             return (
                 <>
                     {/* <Card_TotalBoughtVolume metric={boughtVolume} /> */}
-                    <Card_ActiveDeals metric={activeDealCount} />
-                    <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
-                    <Card_MaxDca metric={maxRisk} />
-                    <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{ totalBankroll, maxDCA: maxRisk }} />
-                    <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
+                    <Card_ActiveDeals metric={activeDealCount}/>
+                    <Card_totalInDeals metric={totalInDeals} additionalData={{on_orders, totalBoughtVolume}}/>
+                    <Card_MaxDca metric={maxRisk}/>
+                    <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{totalBankroll, maxDCA: maxRisk}}/>
+                    <Card_TotalBankRoll metric={totalBankroll}
+                                        additionalData={{position, totalBoughtVolume, reservedFundsTotal}}/>
                 </>)
-        } else {
-            return (
-                <>
-                    <Card_ActiveDeals metric={activeDealCount} />
-                    <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
-                    <Card_MaxDca metric={maxRisk} />
-                    {/* <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{ totalBankroll, maxDCA: maxRisk }} /> */}
-                    <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
-                    <Card_TotalProfit metric={totalProfit} />
-                    <Card_TotalRoi additionalData={{ totalProfit, totalBankroll }} />
-                </>)
-
         }
+
+        return (
+            <>
+                <Card_ActiveDeals metric={activeDealCount}/>
+                <Card_totalInDeals metric={totalInDeals} additionalData={{on_orders, totalBoughtVolume}}/>
+                <Card_MaxDca metric={maxRisk}/>
+                {/* <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{ totalBankroll, maxDCA: maxRisk }} /> */}
+                <Card_TotalBankRoll metric={totalBankroll}
+                                    additionalData={{position, totalBoughtVolume, reservedFundsTotal}}/>
+                <Card_TotalProfit metric={totalProfit}/>
+                <Card_TotalRoi additionalData={{totalProfit, totalBankroll}}/>
+            </>)
     }
 
     const dateString = (date: undefined | number) => {

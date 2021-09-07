@@ -66,7 +66,7 @@ const darkMode = {
     '--color-primary-light25' : '#475C7E',
     '--color-primary': '#212B3B',
     '--color-primary-dark25': '#19202C',
-    
+
     // this is not the right color below~1
     '--color-secondary-light87': '#313945',
 
@@ -104,13 +104,13 @@ const ThemeEngine = ({ children }: any) => {
         console.log(localDisplay)
         let displayString = (localDisplay != undefined) ? localDisplay : 'lightMode';
 
+        let mode = lightMode
         if(displayString === 'darkMode') {
-            setStyles(darkMode)
-            updateTheme('darkMode')
-        } else {
-            setStyles(lightMode)
-            updateTheme('lightMode')
+            mode = darkMode
         }
+
+        setStyles(mode)
+        updateTheme(displayString)
 
     },[])
 
@@ -118,15 +118,16 @@ const ThemeEngine = ({ children }: any) => {
 
     const changeTheme = () => {
         updateTheme( prevTheme => {
-            if(prevTheme === 'lightMode') {
-                setStyles(darkMode)
-                setStorageItem('displayMode','darkMode')
-                return 'darkMode'
-            } else {
-                setStyles(lightMode)
-                setStorageItem('displayMode','lightMode')
-                return 'lightMode'
+            let mode = darkMode
+            let displayString = 'darkMode'
+            if(prevTheme === 'darkMode') {
+                mode = lightMode
+                displayString = 'lightMode'
             }
+
+            setStyles(mode)
+            setStorageItem('displayMode',displayString)
+            return displayString
         })
     }
 

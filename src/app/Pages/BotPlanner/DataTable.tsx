@@ -275,9 +275,9 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
 
           if (cell.value.length > 20) {
             return 'Many'
-          } else {
-            return cell.value
           }
+
+          return cell.value
         }
       },
       {

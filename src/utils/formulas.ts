@@ -153,13 +153,8 @@ function calc_maxDealFunds_Deals(bought_volume:number , base_order_volume:number
 const calc_dealHours = (created_at:any, closed_at:string ) => {
 
     created_at = Date.parse(created_at)
-    let endDate;
 
-    if (closed_at === null) {
-        endDate = Date.now()
-    } else {
-        endDate = Date.parse(closed_at)
-    }
+    let endDate = closed_at === null ? Date.now() : Date.parse(closed_at);
     let milliseconds = Math.abs(created_at - endDate);
     const hours = milliseconds / 36e5;
     return +hours.toFixed(2)

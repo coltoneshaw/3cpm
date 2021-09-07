@@ -79,17 +79,16 @@ const BalancePie = ({ title, metrics }:Type_PieMetrics) => {
 
 
 function CustomTooltip({ active, payload }: Type_Tooltip) {
-    if (active) {
-        const { name, value } = payload[0]
-        return (
-            <div className="tooltip">
-                <h4>{name}</h4>
-                <p>${parseNumber(value)}</p>
-            </div>
-        )
-    } else {
+    if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
+    const {name, value} = payload[0]
+    return (
+        <div className="tooltip">
+            <h4>{name}</h4>
+            <p>${parseNumber(value)}</p>
+        </div>
+    )
 }
 
 export default BalancePie;

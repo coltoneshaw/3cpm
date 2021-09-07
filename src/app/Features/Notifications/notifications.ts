@@ -88,42 +88,41 @@ function findAndNotifyNewDeals(data: Type_Deals_API[], lastSyncTime: number, sum
         // @ts-ignore
         const totalProfit = data.map(deal => deal.final_profit).reduce((sum, profit) => sum + profit);
         const pairs = data.map(deal => deal.pair)
-        const moneyBags = ( "💰".repeat(data.length))
+        const moneyBags = ("💰".repeat(data.length))
         try {
 
             showNotification(`${data.length} Deals Closed, you're rich`, `Profit: ${parseNumber(totalProfit, 5)} - Pairs: ${pairs.join(', ')}. ${moneyBags} `);
 
             // add the deal IDs to the notified deal array
-            dealsNotified.push( ...data.map(deal => deal.id) )
-        } catch (error){
+            dealsNotified.push(...data.map(deal => deal.id))
+        } catch (error) {
             console.error('error showing notification - ' + error)
         }
-
-    } else {
-        for (let deal of data) {
-            const notificationTitle = 'Deal Closed, profit was had.';
-
-            const { bot_name, pair, final_profit, final_profit_percentage, from_currency, id, created_at, closed_at } = deal;
-
-            // deal length:
-
-            // calculate difference in miliseconds between created_at and closed_at
-            // decide if it's days / hours / minutes / seconds
-            // add to end of string
-            const moneyBags = (final_profit_percentage > 0) ? "💰".repeat(Math.abs(Math.round(final_profit_percentage))) : '';
-            const notificationString = `(${id}) ${bot_name} - ${pair} closed a deal. Profit: ${parseNumber(final_profit, 5)} ${from_currency} ( ${final_profit_percentage} % ) ${calcDealTime(created_at, closed_at)}${moneyBags}`;
-
-            try {
-                showNotification(notificationTitle, notificationString);
-
-                // add the single deal ID to the notified array.
-                dealsNotified.push( id )
-            }  catch (error){
-                console.error('error showing notification - ' + error)
-            }
-        }
+        return
     }
 
+    for (let deal of data) {
+        const notificationTitle = 'Deal Closed, profit was had.';
+
+        const {bot_name, pair, final_profit, final_profit_percentage, from_currency, id, created_at, closed_at} = deal;
+
+        // deal length:
+
+        // calculate difference in miliseconds between created_at and closed_at
+        // decide if it's days / hours / minutes / seconds
+        // add to end of string
+        const moneyBags = (final_profit_percentage > 0) ? "💰".repeat(Math.abs(Math.round(final_profit_percentage))) : '';
+        const notificationString = `(${id}) ${bot_name} - ${pair} closed a deal. Profit: ${parseNumber(final_profit, 5)} ${from_currency} ( ${final_profit_percentage} % ) ${calcDealTime(created_at, closed_at)}${moneyBags}`;
+
+        try {
+            showNotification(notificationTitle, notificationString);
+
+            // add the single deal ID to the notified array.
+            dealsNotified.push(id)
+        } catch (error) {
+            console.error('error showing notification - ' + error)
+        }
+    }
 }
 
 

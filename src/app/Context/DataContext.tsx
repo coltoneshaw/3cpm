@@ -139,12 +139,7 @@ const DataProvider = ({ children }: any) => {
             // @ts-ignore
             botQuery()
                 .then((result: Type_Query_bots[]) => {
-                    // alert('Bot data is updated')
-                    if (result != null && result.length > 0) {
-                        updateBotData(result)
-                    } else {
-                        updateBotData([])
-                    }
+                    updateBotData(result ?? [])
                 })
         } catch (error) {
             console.error(error)

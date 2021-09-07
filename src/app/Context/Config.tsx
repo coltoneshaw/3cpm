@@ -127,12 +127,7 @@ const ConfigProvider = ({ children }: any) => {
     
                 updateAccountID(() => {
                     // const accountIDs = reservedFunds.filter(account => account.is_enabled).map(account => account.id)
-                    if(accountIDs.length > 0){
-    
-                        return accountIDs
-                    } else {
-                        return []
-                    }
+                    return accountIDs.length > 0 ? accountIDs : [];
                 })
     
                 prevConfig.apis.threeC = {

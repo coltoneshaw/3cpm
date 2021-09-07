@@ -53,12 +53,12 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
 
     const renderChart = () => {
         if (data.length === 0) {
-            return (<NoData />)
-        } else {
-            const newData = data
-                .filter(row => row.percentTotalVolume > 1.5)
+            return (<NoData/>)
+        }
+        const newData = data
+            .filter(row => row.percentTotalVolume > 1.5)
 
-            return (
+        return (
             <ResponsiveContainer width="100%" height="100%" minHeight="400px">
                 <ScatterChart
                     width={400}
@@ -80,7 +80,7 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
 
                         allowDataOverflow={true}
                     >
-                        <Label value="Average Deal Hours" offset={0} position="insideBottom" />
+                        <Label value="Average Deal Hours" offset={0} position="insideBottom"/>
                     </XAxis>
 
                     <YAxis
@@ -91,28 +91,28 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
                         allowDataOverflow={true}
                     >
                         <Label value="Avg. Hourly Profit %" angle={-90}
-                            dy={0}
-                            dx={-30}
+                               dy={0}
+                               dx={-30}
                         />
 
                     </YAxis>
                     {/* Range is lowest number and highest number. */}
-                    <ZAxis 
-                        type="number" 
-                        dataKey="total_profit" 
+                    <ZAxis
+                        type="number"
+                        dataKey="total_profit"
                         range={[
-                            Math.min(...newData.map(deal => deal.total_profit)) * 4 , 
+                            Math.min(...newData.map(deal => deal.total_profit)) * 4,
                             Math.max(...newData.map(deal => deal.total_profit)) * 4
-                        ]} 
-                        name="Bought Volume" />
+                        ]}
+                        name="Bought Volume"/>
 
 
                     <Tooltip
-                        cursor={{ strokeDasharray: '3 3' }}
+                        cursor={{strokeDasharray: '3 3'}}
                         // @ts-ignore
-                         
+
                         // TODOD - pass props properly to the custom tool tip
-                        content={<CustomTooltip />}
+                        content={<CustomTooltip/>}
                     />
                     <Scatter name="Deal Performance" data={newData} isAnimationActive={false}>
                         {/* <LabelList dataKey="pair" /> */}
@@ -123,7 +123,6 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
                     </Scatter>
                 </ScatterChart>
             </ResponsiveContainer>)
-        }
     }
 
     return (
@@ -158,24 +157,31 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
 
 
 function CustomTooltip({ active, payload}: Type_Tooltip) {
-    if (active) {
-
-        const { total_profit, bot_name, pair, averageHourlyProfitPercent, averageDealHours, number_of_deals, bought_volume } = payload[0].payload
-        return (
-            <div className="tooltip">
-                <h4>{pair}</h4>
-                <p><strong>Bot:</strong> {bot_name}</p>
-                <p><strong>Total Profit:</strong> ${parseNumber(total_profit)}</p>
-                <p><strong>Average Deal Hours:</strong> {parseNumber( averageDealHours, 2) }</p>
-                <p><strong>Average Hourly Profit Percent:</strong> { parseNumber( averageHourlyProfitPercent, 8) }%</p>
-                <p><strong># of Deals:</strong>{number_of_deals}</p>
-                <p><strong>Bought Volume:</strong>{parseNumber(bought_volume)}</p>
-
-            </div>
-        )
-    } else {
+    if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
+
+    const {
+        total_profit,
+        bot_name,
+        pair,
+        averageHourlyProfitPercent,
+        averageDealHours,
+        number_of_deals,
+        bought_volume
+    } = payload[0].payload
+    return (
+        <div className="tooltip">
+            <h4>{pair}</h4>
+            <p><strong>Bot:</strong> {bot_name}</p>
+            <p><strong>Total Profit:</strong> ${parseNumber(total_profit)}</p>
+            <p><strong>Average Deal Hours:</strong> {parseNumber(averageDealHours, 2)}</p>
+            <p><strong>Average Hourly Profit Percent:</strong> {parseNumber(averageHourlyProfitPercent, 8)}%</p>
+            <p><strong># of Deals:</strong>{number_of_deals}</p>
+            <p><strong>Bought Volume:</strong>{parseNumber(bought_volume)}</p>
+
+        </div>
+    )
 }
 
 

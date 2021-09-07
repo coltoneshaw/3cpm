@@ -198,19 +198,19 @@ async function getDealsUpdate( perSyncOffset: number, type:string) {
   const api = threeCapi(config)
   if(!api) return []
 
-  if(type === 'autoSync'){
+  if (type === 'autoSync') {
     const activeDeals = await getActiveDeals()
-    const newActiveDealIds = activeDeals.map( deal => deal.id )
+    const newActiveDealIds = activeDeals.map(deal => deal.id)
 
-    if ( activeDealIDs === newActiveDealIds ){
+    if (activeDealIDs === newActiveDealIds) {
       return activeDeals
-    } else {
-      const updatedDeals = await getDealsThatAreUpdated(perSyncOffset)
-      return [...activeDeals, ...updatedDeals]
     }
-  } else {
-    return await getDealsThatAreUpdated(perSyncOffset)
+
+    const updatedDeals = await getDealsThatAreUpdated(perSyncOffset)
+    return [...activeDeals, ...updatedDeals]
   }
+
+  return await getDealsThatAreUpdated(perSyncOffset)
 }
 
 async function getDealsThatAreUpdated(perSyncOffset: number){
@@ -365,13 +365,10 @@ async function getAccountDetail() {
 }
 
 async function getAccountSummary(key:string , secret:string) {
-  let api;
+  let api = threeCapi(config)
   if(key && secret) {
     api = threeCapi(config, key, secret)
-
-  } else {
-    api = threeCapi(config)
-  }
+  } 
   if(!api) return false
   let accountData = await api.accounts()
 
