@@ -20,8 +20,6 @@ const fetchCoinPricesBinance = async () => {
 
 }
 
-// fetchCoinPricesBinance()
-// .then(data => console.log(data))
 
 export {
     fetchCoinPricesBinance

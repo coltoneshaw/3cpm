@@ -27,8 +27,6 @@ const CoinPriceHeader = () => {
                 //@ts-ignore
                 const filteredCoins = data.filter((coin: any) => selectedCoins.includes(coin.symbol))
                 console.info('getting new coin data.')
-                console.log(selectedCoins)
-
                 updateCoinData(filteredCoins)
 
                 if (update === 'firstUpdate') updateCoinNames(data.map((coin: any) => coin.symbol))
@@ -80,7 +78,6 @@ const CoinPriceHeader = () => {
                 <Button
                     className="coinHeaderButton"
                     onClick={() => {
-                        console.log('you clicked the button, jimmy!')
                         setOpen(prevState => !prevState)
 
                     }}

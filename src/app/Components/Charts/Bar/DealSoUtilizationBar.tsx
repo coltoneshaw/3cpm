@@ -2,7 +2,8 @@ import React from 'react';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { parseNumber, formatPercent } from '@/utils/number_formatting';
-import { Type_Tooltip, Type_ActiveDealCharts } from '@/types/Charts';
+import { Type_Tooltip, Type_ActiveDealCharts} from '@/types/Charts';
+import { Type_ActiveDeals } from '@/types/3Commas';
 import { dynamicSort } from '@/utils/helperFunctions';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
@@ -73,11 +74,14 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
         return null
     }
 
-    const {bought_volume, so_volume_remaining, max_deal_funds, bot_name} = payload[0].payload
+    const deal:Type_ActiveDeals = payload[0].payload
+
+    const {bought_volume, so_volume_remaining, max_deal_funds, bot_name, completed_safety_orders_count, completed_manual_safety_orders_count, max_safety_orders } = deal
     return (
         <div className="tooltip">
             <h4>{label}</h4>
             <p><strong>Bot:</strong> {bot_name}</p>
+            <p><strong>SO:</strong> {completed_safety_orders_count + completed_manual_safety_orders_count } / {max_safety_orders}</p>
             <p><strong>Bought
                 Volume:</strong> ${parseNumber(payload[0].value)} ( {formatPercent(bought_volume, max_deal_funds)} )
             </p>
