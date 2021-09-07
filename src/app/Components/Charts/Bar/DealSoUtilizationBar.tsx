@@ -69,7 +69,7 @@ const DealSoUtilizationBar = ({ title, data = [] }: Type_ActiveDealCharts) => {
 
 
 function CustomTooltip({ active, payload, label }: Type_Tooltip) {
-    if (!active) {
+    if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
 

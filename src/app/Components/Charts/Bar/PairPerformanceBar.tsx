@@ -225,7 +225,7 @@ const PairPerformanceBar = ({ title, data = []}: Type_Pair_Performance) => {
 
 
 function CustomTooltip({ active, payload}: Type_Tooltip) {
-    if (!active) {
+    if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
     const data: Type_Pair_Performance_Metrics = payload[0].payload

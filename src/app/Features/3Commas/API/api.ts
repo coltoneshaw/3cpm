@@ -365,12 +365,10 @@ async function getAccountDetail() {
 }
 
 async function getAccountSummary(key:string , secret:string) {
-  let api;
+  let api = threeCapi(config)
   if(key && secret) {
     api = threeCapi(config, key, secret)
-  } else {
-    api = threeCapi(config)
-  }
+  } 
   if(!api) return false
   let accountData = await api.accounts()
 

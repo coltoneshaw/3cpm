@@ -86,7 +86,7 @@ const SummaryProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
 
 const CustomTooltip = ({ active , payload = [], label }:Type_Tooltip) => {
 
-    if (!active || payload.length == 0) {
+    if (!active || payload.length == 0 || payload[0] == undefined) {
         return <></>
     }
 

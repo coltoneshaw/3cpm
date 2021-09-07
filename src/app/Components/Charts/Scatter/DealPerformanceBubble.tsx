@@ -157,7 +157,7 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
 
 
 function CustomTooltip({ active, payload}: Type_Tooltip) {
-    if (!active) {
+    if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
 

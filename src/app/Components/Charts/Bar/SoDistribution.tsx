@@ -94,7 +94,7 @@ const SoDistribution = ({ title, data = [], metrics }: Type_SoDistribution) => {
 
 
 function CustomTooltip({ active, payload, label }: Type_Tooltip) {
-    if (!active) {
+    if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
 

@@ -79,7 +79,7 @@ const BalancePie = ({ title, metrics }:Type_PieMetrics) => {
 
 
 function CustomTooltip({ active, payload }: Type_Tooltip) {
-    if (!active) {
+    if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
     const {name, value} = payload[0]
