@@ -160,3 +160,9 @@ ipcMain.handle('database-checkOrMakeTables', () => {
 ipcMain.handle('binance-getCoins', async (event) => {
     return await fetchCoinPricesBinance()
 });
+
+import { fetchVersions } from './app/Features/UpdateBanner/UpdateApiFetch';
+
+ipcMain.handle('pm-versions', async (event) => {
+  return await fetchVersions()
+});

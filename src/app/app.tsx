@@ -9,6 +9,8 @@ import { MainWindow } from "@/app/Pages/Index"
 import { ConfigProvider } from './Context/Config';
 import { useThemeProvidor } from './Context/ThemeEngine';
 
+import UpdateBanner from './Features/UpdateBanner/UpdateBanner';
+
 const App = () => {
   // const classes = useStyles();
 
@@ -18,7 +20,9 @@ const App = () => {
   return (
     <HashRouter>
       <div style={styles} className="rootDiv">
+        <UpdateBanner/>
         <ConfigProvider>
+            
 
             <Sidebar />
             <MainWindow />

@@ -76,6 +76,11 @@ async function setupContextBridge() {
       async coinData(){
         return await ipcRenderer.invoke('binance-getCoins');
       }
+    },
+    pm: {
+      async versions(){
+        return await ipcRenderer.invoke('pm-versions');
+      }
     }
   })
 }
