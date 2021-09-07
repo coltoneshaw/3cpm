@@ -83,7 +83,7 @@ const SettingsPage = () => {
                 <Button 
                     variant="text" color="primary" 
                     aria-label="text primary button" 
-                    className="versionNumber" onClick={handleOpenChangelog} style={{ width: '250px' }}>v{version}</Button>
+                    className="versionNumber" onClick={handleOpenChangelog} style={{ width: '250px' }}>{version}</Button>
             </div>
             <ChangelogModal open={openChangelog} setOpen={setOpenChangelog}/>
             <ToastNotifcations open={open} handleClose={handleClose} message="Config has been saved" />

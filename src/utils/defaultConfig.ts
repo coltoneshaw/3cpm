@@ -2,6 +2,10 @@ import { sub, getTime } from 'date-fns';
 
 import { TconfigValues } from '@/types/config';
 
+//@ts-ignore
+import { version } from '#/package.json';
+
+
 const configSchema = {
     apis: {
         type: "object",
@@ -75,6 +79,7 @@ const defaultConfig:TconfigValues = {
         "defaultCurrency": [],
         "globalLimit": 250000,
         "updated" : false,
+        "version" : version
     },
     "syncStatus": {
         "deals": {

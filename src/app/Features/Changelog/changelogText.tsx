@@ -1,10 +1,10 @@
 
-const mostRecent = '0.4.0'
+const mostRecent = 'v0.4.0-rc2'
 
 
 const versionInformation = [
     {
-        version: '0.0.1',
+        version: 'v0.0.1',
         enhancements: [
             'Spinner to show the app is updating',
             'Description of what permissions are required for API keys',
@@ -19,7 +19,7 @@ const versionInformation = [
         ]
     },
     {
-        version: '0.0.2',
+        version: 'v0.0.2',
         enhancements: [
             'Alerts to tell the user to refresh the Stats page for updated info',
             'Alternating colors on the bot planner table',
@@ -33,7 +33,7 @@ const versionInformation = [
         new: []
     },
     {
-        version: '0.0.3',
+        version: 'v0.0.3',
         enhancements: [
             'Change "Bot Manager" to "Bot Planner"',
             'Improved the overall structure of the code.'
@@ -49,7 +49,7 @@ const versionInformation = [
         ]
     },
     {
-        version: '0.0.4',
+        version: 'v0.0.4',
         enhancements: [
             'Auto updating data when you save the settings. This fixes the issue where you have to refresh the stats data for the filters to take effect',
             'Added GBP as a currency option.',
@@ -71,7 +71,7 @@ const versionInformation = [
         ]
     },
     {
-        version: '0.0.5',
+        version: 'v0.0.5',
         enhancements: [
             'Improved the styling of the deal allocation chart',
             'Added a UI alert if no currency / account is enabled',
@@ -91,7 +91,7 @@ const versionInformation = [
         ]
     },
     {
-        version: '0.1.0',
+        version: 'v0.1.0',
         enhancements: [
             'Risk % is now a KPI within Stats',
             'App Version and the changelog can be found at the bottom of Settings',
@@ -116,7 +116,7 @@ const versionInformation = [
         ]
     },
     {
-        version: '0.1.1',
+        version: 'v0.1.1',
         enhancements: [
             'Added average line to the profit by day chart',
             'Fixed KPI display on smaller screens.',
@@ -131,7 +131,7 @@ const versionInformation = [
         ]
     },
     {
-        version: '0.2.0',
+        version: 'v0.2.0',
         enhancements: [
             'Improved the autosync to bring account data every 5 minutes to keep the bankroll metric correct',
             'Improved the overall responsiveness and scrollbars on the Bot Planner',
@@ -156,7 +156,7 @@ const versionInformation = [
         ]
     },
     {
-        version: '0.2.1',
+        version: 'v0.2.1',
         enhancements: [
             'Added a calculated tooltip to avg deal hours',
         ],
@@ -167,7 +167,7 @@ const versionInformation = [
         new: []
     },
     {
-        version: '0.2.2',
+        version: 'v0.2.2',
         enhancements: [
         ],
         bugs: [
@@ -176,7 +176,7 @@ const versionInformation = [
         new: []
     },
     {
-        version: '0.2.3',
+        version: 'v0.2.3',
         enhancements: [
         ],
         bugs: [
@@ -186,7 +186,7 @@ const versionInformation = [
         new: []
     },
     {
-        version: '0.3.0',
+        version: 'v0.3.0',
         enhancements: [
             'Bot API looping. Now if you have more than 1000 bots it will sync all of them. Also, more than 1000 bots is... nuts. Are you rich?',
             'Active Bots is renamed to Enabled Bots',
@@ -206,7 +206,7 @@ const versionInformation = [
         ]
     },
     {
-        version: '0.4.0',
+        version: 'v0.4.0-rc2',
         enhancements: [
         
         'Redo of the entire layout of active deals, and stats.',

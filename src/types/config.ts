@@ -9,6 +9,7 @@ export interface TconfigValues {
         defaultCurrency: string[],
         globalLimit: number
         updated: boolean
+        version: string
     },
     "syncStatus": {
         "deals": {

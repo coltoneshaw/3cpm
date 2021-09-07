@@ -75,6 +75,8 @@ const versions = versionInformation.reverse().map(v => v.version)
 
 const ChangelogModal = ({ open, setOpen }: { open: boolean, setOpen: any }) => {
 
+    
+
     // make this version handler use the version that the user is using.
     const [versionView, changeVersion] = useState(() => mostRecent)
 
@@ -109,7 +111,7 @@ const ChangelogModal = ({ open, setOpen }: { open: boolean, setOpen: any }) => {
                         {
                             versions.map(version => {
                                 const primary = (version == versionView) ? 'active' : '';
-                                return <span className={`version ${primary}`} onClick={() => changeVersion(version)} key={version}>v{version}</span>
+                                return <span className={`version ${primary}`} onClick={() => changeVersion(version)} key={version}>{version}</span>
                             })
                         }
 

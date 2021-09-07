@@ -8,6 +8,9 @@ import {
     ActiveDealsPage
 } from '@/app/Pages/Index'
 
+// @ts-ignore
+import { version } from '#/package.json';
+
 import CoinPriceHeader from '@/app/Features/CoinPriceHeader/CoinPriceHeader';
 
 import { ConfigProvider, useGlobalState } from '@/app/Context/Config';
@@ -42,14 +45,20 @@ const MainWindow = () => {
     };
 
     useEffect(() => {
-        if (config.general.updated) {
-            handleOpenChangelog()
 
-            // setting to false so this does not open again
-            //@ts-ignore
-            electron.config.set('general.updated', false)
-        }
-    }, [config.general.updated])
+        // @ts-ignore
+        electron.config.get('general.version')
+            .then( (versionData:string) => {
+                if (versionData == undefined || versionData != version) {
+                    handleOpenChangelog()
+        
+                    // setting to false so this does not open again
+                    //@ts-ignore
+                    electron.config.set('general.version', version)
+                }
+            })
+        
+    }, [])
 
 
 
