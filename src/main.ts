@@ -30,16 +30,12 @@ const createWindow = (): void => {
   });
 
 
+  let loadURL = `file://${__dirname}/index.html`
   if (isDev) {
-		win.webContents.openDevTools();
-    win.loadURL('http://localhost:9000');
-
-	} else {
-    win.loadURL(`file://${__dirname}/index.html`);
-
+    win.webContents.openDevTools();
+    loadURL = 'http://localhost:9000';
   }
-
-
+  win.loadURL(loadURL);
 }
 
 app.on('ready', createWindow);

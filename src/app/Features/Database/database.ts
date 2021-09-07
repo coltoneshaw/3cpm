@@ -180,16 +180,15 @@ async function checkOrMakeTables(){
     // checking if the tables exist.
     const existingTables = await query("SELECT name FROM sqlite_master WHERE type='table';")
 
-    if(existingTables.length > 0 ){
-        const tableNames = existingTables.map(table => table.name)
-        if(!tableNames.includes('deals')) initializeDealTable()
-        if(!tableNames.includes('accountData')) initializeAccountTable()
-        if(!tableNames.includes('bots')) initializeBotsTable()
-
-    } else {
+    if (existingTables.length == 0) {
         initialDatabaseSetup()
+        return
     }
 
+    const tableNames = existingTables.map(table => table.name)
+    if (!tableNames.includes('deals')) initializeDealTable()
+    if (!tableNames.includes('accountData')) initializeAccountTable()
+    if (!tableNames.includes('bots')) initializeBotsTable()
 }
 
 

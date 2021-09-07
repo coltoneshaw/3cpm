@@ -64,95 +64,93 @@ const BotPerformanceBubble = ({ title, data = [] }: Type_BotPerformanceCharts) =
         } else if (filter === 'bottom50')  {
             data = data.sort(dynamicSort('total_profit'));
             return data.filter( (bot, index) => index < fiftyPercent)
-        } else if (filter === 'bottom20')  {
+        } else if (filter === 'bottom20') {
             data = data.sort(dynamicSort('total_profit'));
-            return data.filter( (bot, index) => index < twentyPercent)
-        } else {
-            return data;
+            return data.filter((bot, index) => index < twentyPercent)
         }
-
+        return data;
 
 
     }
 
     const renderChart = () => {
         if (data.length === 0) {
-            return (<NoData />)
-        } else {
+            return (<NoData/>)
+        }
 
-            // sort this by the index
-            const localData = filterData(data);
+        // sort this by the index
+        const localData = filterData(data);
 
-            return (<ResponsiveContainer width="100%" height="100%" minHeight="400px">
+        return (<ResponsiveContainer width="100%" height="100%" minHeight="400px">
 
-                <ScatterChart
-                    width={400}
-                    height={400}
-                    margin={{
-                        top: 20,
-                        right: 20,
-                        bottom: 20,
-                        left: 20,
-                    }}
-                >
-                    <CartesianGrid opacity={.3} />
+            <ScatterChart
+                width={400}
+                height={400}
+                margin={{
+                    top: 20,
+                    right: 20,
+                    bottom: 20,
+                    left: 20,
+                }}
+            >
+                <CartesianGrid opacity={.3}/>
 
-                    {/*
+                {/*
                         X - Average Deal Hours
                         Y - Average Hourly Profit
                         Z - Number of deals completed
                         Cell Color - Base Order Start
 
                      */}
-                    <XAxis
-                        type="number"
-                        dataKey="avg_deal_hours"
-                        height={50}
-                        name="Avg Deal Hours"
-                        tickCount={9}
-                        allowDataOverflow={false}
-                        allowDecimals={false}
+                <XAxis
+                    type="number"
+                    dataKey="avg_deal_hours"
+                    height={50}
+                    name="Avg Deal Hours"
+                    tickCount={9}
+                    allowDataOverflow={false}
+                    allowDecimals={false}
 
 
-                    >
-                        <Label value="Avg. Deal Hours" offset={0} position="insideBottom" />
-                    </XAxis>
+                >
+                    <Label value="Avg. Deal Hours" offset={0} position="insideBottom"/>
+                </XAxis>
 
-                    <YAxis
-                        type="number"
-                        dataKey="total_profit"
-                        name="Total Profit"
-                        allowDataOverflow={false}
-                        allowDecimals={true}
+                <YAxis
+                    type="number"
+                    dataKey="total_profit"
+                    name="Total Profit"
+                    allowDataOverflow={false}
+                    allowDecimals={true}
 
-                    >
-                        <Label value="Total Profit"
-                            angle={-90}
-                            dy={0}
-                            dx={-20}
-                        />
-                    </YAxis>
-                    {/* Range is lowest number and highest number. */}
-                    <ZAxis type="number" dataKey="number_of_deals" range={[Math.min(...localData.map(deal => deal.number_of_deals)) + 200, Math.max(...localData.map(deal => deal.number_of_deals)) + 200]} name="# of Deals Completed" />
-
-
-
-                    <Tooltip
-                        cursor={{ strokeDasharray: '3 3' }}
-                        // @ts-ignore
-                        // TODOD - pass props properly to the custom tool tip
-                        content={<CustomTooltip />}
+                >
+                    <Label value="Total Profit"
+                           angle={-90}
+                           dy={0}
+                           dx={-20}
                     />
-                    <Scatter name="Deal Performance" data={localData} >
-                        {/* <LabelList dataKey="pair" /> */}
+                </YAxis>
+                {/* Range is lowest number and highest number. */}
+                <ZAxis type="number" dataKey="number_of_deals"
+                       range={[Math.min(...localData.map(deal => deal.number_of_deals)) + 200, Math.max(...localData.map(deal => deal.number_of_deals)) + 200]}
+                       name="# of Deals Completed"/>
 
-                        {
-                            getPosition(localData)
-                        }
-                    </Scatter>
-                </ScatterChart>
-            </ResponsiveContainer>)
-        }
+
+                <Tooltip
+                    cursor={{strokeDasharray: '3 3'}}
+                    // @ts-ignore
+                    // TODOD - pass props properly to the custom tool tip
+                    content={<CustomTooltip/>}
+                />
+                <Scatter name="Deal Performance" data={localData}>
+                    {/* <LabelList dataKey="pair" /> */}
+
+                    {
+                        getPosition(localData)
+                    }
+                </Scatter>
+            </ScatterChart>
+        </ResponsiveContainer>)
     }
 
     return (
@@ -189,23 +187,22 @@ const BotPerformanceBubble = ({ title, data = [] }: Type_BotPerformanceCharts) =
 
 
 function CustomTooltip({ active, payload}: Type_Tooltip) {
-    if (active) {
-
-        const data: Type_Bot_Performance_Metrics = payload[0].payload
-        const { total_profit, bot_name, avg_deal_hours, bought_volume, number_of_deals} = data
-        return (
-            <div className="tooltip">
-                <h4>{bot_name}</h4>
-                <p><strong>Total Profit:</strong> ${parseNumber(total_profit)}</p>
-                <p><strong>Average Deal Hours:</strong> {parseNumber( avg_deal_hours, 2)}</p>
-                <p><strong># of Deals:</strong> {number_of_deals}</p>
-                <p><strong>Bought Volume:</strong>{parseNumber(bought_volume)}</p>
-
-            </div>
-        )
-    } else {
+    if (!active) {
         return null
     }
+
+    const data: Type_Bot_Performance_Metrics = payload[0].payload
+    const {total_profit, bot_name, avg_deal_hours, bought_volume, number_of_deals} = data
+    return (
+        <div className="tooltip">
+            <h4>{bot_name}</h4>
+            <p><strong>Total Profit:</strong> ${parseNumber(total_profit)}</p>
+            <p><strong>Average Deal Hours:</strong> {parseNumber(avg_deal_hours, 2)}</p>
+            <p><strong># of Deals:</strong> {number_of_deals}</p>
+            <p><strong>Bought Volume:</strong>{parseNumber(bought_volume)}</p>
+
+        </div>
+    )
 }
 
 

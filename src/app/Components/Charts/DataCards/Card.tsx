@@ -16,19 +16,18 @@ const Card = ({ title, metric, message, SubMetric }: { title: string, metric: nu
         </div>
     )
 
-    if (message) {
-        return (<CardTooltip
-            title={
-                <>
-                    <strong>{title} </strong>{message}
-                </>
-            }
-        >
-            {content()}
-        </CardTooltip>)
-    } else {
+    if (!message) {
         return content()
     }
+    return (<CardTooltip
+        title={
+            <>
+                <strong>{title} </strong>{message}
+            </>
+        }
+    >
+        {content()}
+    </CardTooltip>)
 
 }
 

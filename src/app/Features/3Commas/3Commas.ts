@@ -101,27 +101,16 @@ const fetchDealDataFunction = async () => {
         const filteredData = dataArray.find((deal: any) => deal.closed_at_str === day)
         // adding the existing value to the previous value's running sum.
 
-        if (filteredData == undefined) {
-            profitArray.push({
-                utc_date: day,
-                profit: 0,
-                runningSum: (index == 0) ? 0 : profitArray[index - 1].runningSum,
-                total_deals: 0
-            })
-        } else {
-            let runningSum = (index == 0) ? filteredData.final_profit : profitArray[index - 1].runningSum + filteredData.final_profit
-            profitArray.push({
+        let profit = {utc_date: day,profit: 0,runningSum: (index == 0) ? 0 : profitArray[index - 1].runningSum,total_deals: 0};
+        if (filteredData) {
+            profit = {
                 utc_date: day,
                 profit: filteredData.final_profit,
-                runningSum: runningSum,
+                runningSum: (index == 0) ? filteredData.final_profit : profitArray[index - 1].runningSum + filteredData.final_profit,
                 total_deals: filteredData.total_deals
-            })
+            }
         }
-
-
-
-
-
+        profitArray.push(profit)
     })
 
     const totalProfit = (profitArray.length > 0) ? +profitArray[profitArray.length - 1].runningSum : 0
@@ -185,16 +174,16 @@ const fetchPerformanceDataFunction = async () => {
             .reduce((sum: number, item: number) => sum + item)
 
         return databaseQuery.map((perfData: Type_Query_PerfArray) => {
-            const { bought_volume, total_profit } = perfData
+            const {bought_volume, total_profit} = perfData
             return {
                 ...perfData,
                 percentTotalVolume: (bought_volume / boughtVolumeSummary) * 100,
                 percentTotalProfit: (total_profit / totalProfitSummary) * 100,
             }
         })
-    } else {
-        return []
     }
+
+    return []
 
 
 }
@@ -241,9 +230,8 @@ const fetchBotPerformanceMetrics = async () => {
 
     if (databaseQuery == null || databaseQuery.length > 0) {
         return databaseQuery
-    } else {
-        return []
     }
+    return []
 
 
 }
@@ -269,9 +257,8 @@ const botQuery = async () => {
 
     if (databaseQuery == null || databaseQuery.length > 0) {
         return databaseQuery
-    } else {
-        return []
     }
+    return []
 
 }
 
@@ -310,9 +297,8 @@ const fetchPairPerformanceMetrics = async () => {
 
     if (databaseQuery == null || databaseQuery.length > 0) {
         return databaseQuery
-    } else {
-        return []
     }
+    return []
 
 
 }
@@ -355,15 +341,14 @@ const getActiveDealsFunction = async () => {
 
         }
 
-    } else {
-        return {
-            activeDeals: [],
-            metrics: {
-                totalBoughtVolume: 0,
-                maxRisk: 0
-            }
-
+    }
+    return {
+        activeDeals: [],
+        metrics: {
+            totalBoughtVolume: 0,
+            maxRisk: 0
         }
+
     }
 }
 

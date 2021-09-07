@@ -25,21 +25,12 @@ const MainWindow = () => {
     const [homePage, updateHomePage] = useState<string>('/activeDeals')
 
     useEffect(() => {
-
         if (apiData.key !== "" && apiData.secret !== "") {
-            const home = getStorageItem(storageItem.navigation.homePage)
-
-            if (home) {
-                updateHomePage(home)
-            } else {
-                updateHomePage('/activeDeals')
-            }
-        } else {
-            updateHomePage('/settings')
+            updateHomePage(getStorageItem(storageItem.navigation.homePage) ?? '/activeDeals')
+            return
         }
 
-
-
+        updateHomePage('/settings')
     }, [apiData])
 
 
