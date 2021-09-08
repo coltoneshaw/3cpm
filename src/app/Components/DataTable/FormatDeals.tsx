@@ -15,7 +15,8 @@ const formatDeals = (activeDeals: Type_ActiveDeals[]) => {
 
         } = deal
 
-        const safetyOrderString = (completed_manual_safety_orders_count > 0 || active_manual_safety_orders > 0) ? `${completed_safety_orders_count} + ${completed_manual_safety_orders_count} / ${max_safety_orders} + ${active_manual_safety_orders}` : `${completed_safety_orders_count} / ${max_safety_orders}`
+
+        const safetyOrderString = (completed_manual_safety_orders_count > 0 || active_manual_safety_orders > 0) ? `${completed_safety_orders_count} + ${completed_manual_safety_orders_count} / ${max_safety_orders}` : `${completed_safety_orders_count} / ${max_safety_orders}`
 
 
 
