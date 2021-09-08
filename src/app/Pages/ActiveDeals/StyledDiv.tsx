@@ -25,16 +25,9 @@ export default styled.div`
         position: sticky;
         top: 0;
         z-index: 100;
-        background-color: orange;
         padding: 0;
+        text-align: center !important;
     }
-
-    thead tr:nth-child(2) th {
-        position: sticky;
-        top: 44px;
-        z-index: 100;
-    }
-
 
     
     tbody{
