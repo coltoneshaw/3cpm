@@ -94,7 +94,7 @@ const getDateString = (created_at: string) => {
   const minute = (m > 0) ? padZero(m) + 'm ' : ''
   const seconds = (s > 0) ? padZero(s) + 's' : ''
 
-  if(d > 0) return day + hour + minute
+  if(d > 0) return day + (padZero(h) + 'h ') + minute
 
   return day + hour + minute + seconds
 }
