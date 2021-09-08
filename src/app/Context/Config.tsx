@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, SetStateAction } from 'react';
+import React, { createContext, useState, useEffect} from 'react';
 import dotProp from 'dot-prop';
 import { sub, getTime } from 'date-fns'
 import { removeDuplicatesInArray } from '@/utils/helperFunctions';
@@ -7,11 +7,6 @@ import { removeDuplicatesInArray } from '@/utils/helperFunctions';
 // TODO - see about setting this to something other than null for the default Value
 // @ts-ignore
 const ConfigContext = createContext<Type_ConfigContext>();
-
-interface Type_currency {
-    name: string
-    value: string
-}
 
 
 // pulling in the default config from the config store for use once it's been reset.
@@ -41,7 +36,7 @@ interface Type_ConfigContext {
     }
 }
 
-const defaultReserved = [{ id: 0, account_name: '', reserved_funds: 0, is_enabled: false }]
+
 
 
 const ConfigProvider = ({ children }: any) => {
@@ -132,12 +127,7 @@ const ConfigProvider = ({ children }: any) => {
     
                 updateAccountID(() => {
                     // const accountIDs = reservedFunds.filter(account => account.is_enabled).map(account => account.id)
-                    if(accountIDs.length > 0){
-    
-                        return accountIDs
-                    } else {
-                        return []
-                    }
+                    return accountIDs.length > 0 ? accountIDs : [];
                 })
     
                 prevConfig.apis.threeC = {

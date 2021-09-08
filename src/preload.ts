@@ -21,11 +21,6 @@ async function setupContextBridge() {
         // console.log('updating the database.')
         return await ipcRenderer.invoke('api-getAccountData', key , secret);
       },
-      async getDealsUpdate( limit:number ) {
-        console.log('updating threeC deals.')
-        return await ipcRenderer.invoke('api-getDealsUpdate', limit);
-      }
-
     },
     config: {
       async get( value:string ) {
@@ -75,6 +70,16 @@ async function setupContextBridge() {
     general: {
       openLink(link: string){
         ipcRenderer.invoke('open-external-link', link);
+      }
+    },
+    binance: {
+      async coinData(){
+        return await ipcRenderer.invoke('binance-getCoins');
+      }
+    },
+    pm: {
+      async versions(){
+        return await ipcRenderer.invoke('pm-versions');
       }
     }
   })

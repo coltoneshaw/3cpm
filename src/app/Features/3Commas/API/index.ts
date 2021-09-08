@@ -1,5 +1,5 @@
 import { update, run, query } from '@/app/Features/Database/database';
-const { bots, getAccountDetail, deals, getDealsBulk, getDealsUpdate, getAccountSummary } = require('./api');
+const { bots, getAccountDetail, deals, getDealsBulk, getAccountSummary } = require('./api');
 
 import { findAndNotifyNewDeals } from '@/app/Features/Notifications/notifications'
 
@@ -72,8 +72,7 @@ async function getAndStoreBotData() {
 
       })
   } catch (error) {
-    console.log(error)
-    console.log('error getting bot data')
+    console.error('error getting bot data', error)
   }
 
 }
@@ -85,7 +84,6 @@ export {
   getAccountDetail,
   deals,
   getDealsBulk,
-  getDealsUpdate,
   getAccountData,
   getAccountSummary
 }

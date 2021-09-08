@@ -13,6 +13,7 @@ import NoData from '@/app/Pages/Stats/Components/NoData';
 
 import { Type_ProfitChart, Type_Tooltip } from '@/types/Charts';
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+import { parseNumber } from '@/utils/number_formatting';
 
 
 interface Type_NewDateProfit {
@@ -52,7 +53,7 @@ const convertToNewDates = (data: Type_Profit[], langString: any, type: string) =
 }
 
 
-const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
+const ProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
 
     const defaultSort = 'day';
 
@@ -69,7 +70,6 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
         } else {
             setFilterString({ month: '2-digit', day: '2-digit', year: '2-digit' })
         }
-
     }, [dateType])
 
 
@@ -109,61 +109,61 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
 
     const renderChart = () => {
         if (data.length === 0) {
-            return (<NoData />)
-        } else {
-            const filteredData = (data != undefined && data.length > 0) ? convertToNewDates(data, filterString, dateType) : [];
-            const calculateAverage = () => {
-                const totalProfit = (filteredData.length > 0) ? filteredData.map(deal => deal.profit).reduce((sum, profit) => sum + profit) : 0
-                return totalProfit / filteredData.length
-            }
-            return (
-                <ResponsiveContainer width="100%" height="100%" minHeight="300px">
-                    <BarChart
-                        width={500}
-                        height={300}
-                        data={filteredData}
-                        margin={{
-                            top: 5,
-                            right: 30,
-                            left: 20,
-                            bottom: 5,
-                        }}
-
-                    >
-
-                        <CartesianGrid opacity={.3} vertical={false} />
-                        <XAxis
-                            dataKey="converted_date"
-                            axisLine={false}
-                            tickLine={false}
-                            minTickGap={( filteredData.length > 6) ? 40 : 0}
-                            tickFormatter={(str) => {
-                                if (str == 'auto' || str == undefined) return ""
-                                if(dateType === 'day' || dateType ==='year' || dateType === 'month'){
-                                    return str
-                                } else {
-                                    return ''
-                                }
-                            }}
-                        />
-
-                        <ReferenceLine y={calculateAverage()} stroke="var(--color-primary)" strokeWidth={2} />
-                        <YAxis
-                            dataKey={X}
-                            tickLine={false}
-                            axisLine={false}
-                            tickCount={6}
-                            type="number"
-                        />
-
-                        {/* TODO - pass the custom props down properly here.  */}
-                        {/* @ts-ignore */}
-                        <Tooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3' }} />
-                        <Bar type="monotone" dataKey={X} fill="var(--color-secondary-light25)" />
-                    </BarChart>
-
-                </ResponsiveContainer>)
+            return (<NoData/>)
         }
+        const filteredData = convertToNewDates(data, filterString, dateType);
+        const calculateAverage = () => {
+            const totalProfit = (filteredData.length > 0) ? filteredData.map(deal => deal.profit).reduce((sum, profit) => sum + profit) : 0
+            return Math.round(totalProfit / filteredData.length)
+        }
+        return (
+            <ResponsiveContainer width="100%" height="100%" minHeight="300px">
+                <BarChart
+                    // width={500}
+                    // height={300}
+                    data={filteredData}
+                    margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                    }}
+
+                >
+
+                    <CartesianGrid opacity={.3} vertical={false}/>
+                    <XAxis
+                        dataKey="converted_date"
+                        axisLine={false}
+                        tickLine={false}
+                        minTickGap={(filteredData.length > 6) ? 40 : 0}
+                        tickFormatter={(str) => {
+                            if (str == 'auto' || str == undefined) return ""
+                            if (dateType === 'day' || dateType === 'year' || dateType === 'month') {
+                                return str
+                            } else {
+                                return ''
+                            }
+                        }}
+                    />
+
+                    <ReferenceLine y={calculateAverage()} stroke="var(--color-primary-light25)" strokeWidth={2} isFront={true}
+                                   label={{value: calculateAverage(), position: 'right'}}/>
+                    <YAxis
+                        dataKey={X}
+                        tickLine={false}
+                        axisLine={false}
+                        tickCount={6}
+                        type="number"
+                    />
+
+                    {/* TODO - pass the custom props down properly here.  */}
+                    {/* @ts-ignore */}
+                    <Tooltip content={<CustomTooltip/>} cursor={{strokeDasharray: '3 3'}}/>
+                    <Bar type="monotone" dataKey={X} fill="var(--color-secondary-light25)"/>
+                </BarChart>
+
+            </ResponsiveContainer>)
     }
     return (
         <div className="boxData stat-chart" >
@@ -176,25 +176,29 @@ const ProfitByDay = ({ data, X }: Type_ProfitChart) => {
 }
 
 
-function CustomTooltip({ active, payload, label }: Type_Tooltip) {
-    if (active) {
-        const data: Type_NewDateProfit = payload[0].payload
-        let { date, profit, type, utc_date } = data
-
-        if (type === 'day') {
-            date = new Date(utc_date).toLocaleString(getLang(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-
-        }
-
-        // format the date
-        return (
-            <div className="tooltip">
-                <h4>{date}</h4>
-                <p>$ {profit.toLocaleString()}</p>
-            </div>
-        )
-    } else {
+function CustomTooltip({ active, payload}: Type_Tooltip) {
+    if (!active || payload.length == 0 || payload[0] == undefined) {
         return <></>
     }
+    const data: Type_NewDateProfit = payload[0].payload
+    let {date, profit, type, utc_date} = data
+
+    if (type === 'day') {
+        date = new Date(utc_date).toLocaleString(getLang(), {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        })
+
+    }
+
+    // format the date
+    return (
+        <div className="tooltip">
+            <h4>{date}</h4>
+            <p>$ {parseNumber(profit, 2)}</p>
+        </div>
+    )
 }
 export default ProfitByDay;

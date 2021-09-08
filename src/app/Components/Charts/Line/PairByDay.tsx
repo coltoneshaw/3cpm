@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
 
-import { Select, InputLabel, FormControl, MenuItem, Checkbox, ListItemText, Input, Menu } from '@material-ui/core';
-import { ComposedChart, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line, Area, AreaChart } from 'recharts';
+import { Select, InputLabel, FormControl, MenuItem, Checkbox, ListItemText, Input} from '@material-ui/core';
+import { ComposedChart, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line} from 'recharts';
 
-import { getLang, removeDuplicatesInArray } from '@/utils/helperFunctions';
+import { getLang} from '@/utils/helperFunctions';
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 const lang = getLang()
 
-import { Type_ProfitChart, Type_Tooltip } from '@/types/Charts';
+import { Type_Tooltip } from '@/types/Charts';
 import { getSelectPairDataByDate } from '@/app/Features/3Commas/3Commas';
 
 const colors = ["#374151", "#B91C1C", "#B45309", "#047857", "#1D4ED8", "#4338CA", "#6D28D9", "#BE185D"]
@@ -45,15 +45,12 @@ const PairPerformanceByDate = () => {
             .then((result: { pair: string }[]) => {
                 updatePairs(result.map(pair => ({ pair: pair.pair, opacity: 1 })))
 
-                const storedPairs = getStorageItem(storageItem.charts.pairByDateFilter)
+                let storedPairs = getStorageItem(storageItem.charts.pairByDateFilter)
 
-                if (storedPairs != undefined) {
-                    updatePairFilters(storedPairs)
-                } else {
-                    // adds the top 5 pairs by profit to the chart by default
-                    updatePairFilters(result.map(pair => pair.pair).filter((pair, index) => index < 2))
+                if (!storedPairs) {
+                    storedPairs = result.map(pair => pair.pair).filter((pair, index) => index < 2)
                 }
-
+                updatePairFilters(storedPairs)
             })
 
     }, [])
@@ -65,7 +62,7 @@ const PairPerformanceByDate = () => {
 
     return (
 
-        <div className="boxData stat-chart bubble-chart">
+        <div className="boxData stat-chart ">
             <div style={{ position: "relative" }}>
                 <h3 className="chartTitle">Pair by Date</h3>
 
@@ -134,7 +131,7 @@ const PairPerformanceByDate = () => {
                             })
                         }}
 
-                        onMouseLeave={(e) => {
+                        onMouseLeave={() => {
                             updatePairs(prevState => {
                                 return prevState.map(p => ({
                                     ...p,
@@ -190,34 +187,37 @@ const PairPerformanceByDate = () => {
 }
 
 
-function CustomTooltip({ active, payload, label }: Type_Tooltip) {
-    if (active && payload != null && payload[0] != undefined) {
-
-
-        const returnPairData = () => {
-            const pairs = { ...payload[0].payload }
-            delete pairs.date;
-
-            if (pairs == undefined || pairs == {}) return ''
-
-            return Object.keys(pairs).map(pair => {
-                return <p><strong>{pair}</strong> ${pairs[pair].toLocaleString()}</p>
-            })
-        }
-
-        let date = new Date(label).toLocaleString(getLang(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-
-        return (
-            <div className="tooltip">
-                <h4>{date}</h4>
-                {
-                    returnPairData()
-                }
-            </div>
-        )
-
-    } else {
+function CustomTooltip({ active, payload = [], label }: Type_Tooltip) {
+    if (!active || payload.length == 0 || payload[0] == undefined) {
         return <></>
     }
+
+
+    const returnPairData = () => {
+        const pairs = {...payload[0].payload}
+        delete pairs.date;
+
+        if (pairs == {}) return ''
+
+        return Object.keys(pairs).map(pair => {
+            return <p><strong>{pair}</strong> ${pairs[pair].toLocaleString()}</p>
+        })
+    }
+
+    let date = new Date(label).toLocaleString(getLang(), {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    })
+
+    return (
+        <div className="tooltip">
+            <h4>{date}</h4>
+            {
+                returnPairData()
+            }
+        </div>
+    )
 }
 export default PairPerformanceByDate;

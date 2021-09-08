@@ -2,21 +2,26 @@
 /**
  * 
  * @param number Accepts a number or string, parses and returns
- * @param digits number of trailing divits to return.
+ * @param digits number of trailing digits to return.
  * @returns returns a number to 0 decimals and comma seperated
  */
-const parseNumber = (number: number | string, digits:number = 0) => {
-
-    if(number != undefined){
-        if (typeof number === "string") {
+const parseNumber = (number: number | string, digits:number = 0, maxSize?: boolean) => {
+    switch (typeof number) {
+        case "number": // do nothing
+            break
+        case "string":
             number = parseInt(number)
-        }
-    } else {
-        number = 0
+            break
+        default:
+            number = 0
     }
 
-    return number.toLocaleString(undefined, { 'minimumFractionDigits': digits, 'maximumFractionDigits': digits })
+    let numberFormatter:any = { 'minimumFractionDigits': digits, 'maximumFractionDigits': digits }
+    if(maxSize && number >= 1) numberFormatter = { 'minimumSignificantDigits': digits , 'maximumSignificantDigits': digits, "useGrouping": false}
+    if(maxSize && number < 1) numberFormatter = { 'minimumFractionDigits': digits -1 , 'maximumFractionDigits': digits -1, "useGrouping": false}
+    // if(maxSize && number < 1) numberFormatter = { 'minimumSignificantDigits': maxSize , 'maximumSignificantDigits': maxSize}
 
+    return number.toLocaleString(undefined, numberFormatter)
 }
 
 /**

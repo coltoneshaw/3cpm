@@ -1,14 +1,15 @@
-import React, { CSSProperties } from 'react';
+import React from 'react';
 
 import './App.global.scss';
 import Sidebar from './Components/Sidebar/Sidebar';
-
 import { HashRouter } from 'react-router-dom'
 
 import { MainWindow } from "@/app/Pages/Index"
 
 import { ConfigProvider } from './Context/Config';
 import { useThemeProvidor } from './Context/ThemeEngine';
+
+import UpdateBanner from './Features/UpdateBanner/UpdateBanner';
 
 const App = () => {
   // const classes = useStyles();
@@ -18,13 +19,17 @@ const App = () => {
 
   return (
     <HashRouter>
-        <div style={styles} className="rootDiv">
-          <ConfigProvider>
+      <div style={styles} className="rootDiv">
+        <UpdateBanner/>
+        <ConfigProvider>
+            
+
             <Sidebar />
             <MainWindow />
-          </ConfigProvider>
 
-        </div>
+        </ConfigProvider>
+
+      </div>
 
 
 

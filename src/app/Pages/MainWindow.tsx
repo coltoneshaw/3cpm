@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, FC, ReactElement } from 'react';
+import React, { useEffect, useState} from 'react';
 import { Route, Redirect } from 'react-router-dom'
 import {
     BotPlannerPage,
@@ -7,6 +7,11 @@ import {
     StatsPage,
     ActiveDealsPage
 } from '@/app/Pages/Index'
+
+// @ts-ignore
+import { version } from '#/package.json';
+
+import CoinPriceHeader from '@/app/Features/CoinPriceHeader/CoinPriceHeader';
 
 import { ConfigProvider, useGlobalState } from '@/app/Context/Config';
 import { DataProvider } from '@/app/Context/DataContext';
@@ -23,21 +28,12 @@ const MainWindow = () => {
     const [homePage, updateHomePage] = useState<string>('/activeDeals')
 
     useEffect(() => {
-
         if (apiData.key !== "" && apiData.secret !== "") {
-            const home = getStorageItem(storageItem.navigation.homePage)
-
-            if (home) {
-                updateHomePage(home)
-            } else {
-                updateHomePage('/activeDeals')
-            }
-        } else {
-            updateHomePage('/settings')
+            updateHomePage(getStorageItem(storageItem.navigation.homePage) ?? '/activeDeals')
+            return
         }
 
-
-
+        updateHomePage('/settings')
     }, [apiData])
 
 
@@ -49,20 +45,27 @@ const MainWindow = () => {
     };
 
     useEffect(() => {
-        if (config.general.updated) {
-            handleOpenChangelog()
 
-            // setting to false so this does not open again
-            //@ts-ignore
-            electron.config.set('general.updated', false)
-        }
-    }, [config.general.updated])
+        // @ts-ignore
+        electron.config.get('general.version')
+            .then( (versionData:string) => {
+                if (versionData == undefined || versionData != version) {
+                    handleOpenChangelog()
+        
+                    // setting to false so this does not open again
+                    //@ts-ignore
+                    electron.config.set('general.version', version)
+                }
+            })
+        
+    }, [])
 
 
 
     return (
         <ConfigProvider>
             <div className="mainWindow" >
+                <CoinPriceHeader />
                 <ChangelogModal open={openChangelog} setOpen={setOpenChangelog} />
 
                 <Route path='/'>

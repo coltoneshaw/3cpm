@@ -5,7 +5,7 @@ import descriptions from "@/descriptions";
 import { parseNumber } from '@/utils/number_formatting'
 
 interface Type_Card {
-    additionalData: { totalProfit_perf: number, boughtVolume: number}
+    additionalData: { totalProfit: number, totalBankroll: number}
 }
 
 /**
@@ -15,14 +15,14 @@ interface Type_Card {
  */
 const Card_TotalRoi = ({additionalData}:Type_Card) => {
 
-    const { totalProfit_perf, boughtVolume } = additionalData
+    const { totalProfit, totalBankroll } = additionalData
 
     // 
 
     const title = "Total ROI"
-    const message = descriptions.calculations.totalRoi(totalProfit_perf, boughtVolume)
+    const message = descriptions.calculations.totalRoi(totalProfit, totalBankroll)
     const key = title.replace(/\s/g, '')
-    const metric = parseNumber( ( (totalProfit_perf / boughtVolume) * 100 ), 2) + "%"
+    const metric = parseNumber( ( ( totalProfit / ( totalBankroll - totalProfit)) * 100 ), 2) + "%"
 
     return (
         <Card title={title} message={message} key={key} metric={metric} />

@@ -1,4 +1,5 @@
-import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import {app, BrowserWindow, ipcMain, shell} from 'electron';
+import {config} from './utils/config';
 // import isDev from 'electron-is-dev'; // New Import
 
 const path = require("path");
@@ -9,19 +10,7 @@ const { update, query, checkOrMakeTables, run, deleteAllData, upsert } = require
 
 let win;
 
-const installExtensions = async () => {
-  const installer = require('electron-devtools-installer')
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS
-  const extensions = [
-    'REACT_DEVELOPER_TOOLS',
-    'REDUX_DEVTOOLS',
-    'DEVTRON'
-  ]
 
-  return Promise
-    .all(extensions.map(name => installer.default(installer[name], forceDownload)))
-    .catch(console.log)
-}
 
 const createWindow = (): void => {
   win = new BrowserWindow({
@@ -41,16 +30,12 @@ const createWindow = (): void => {
   });
 
 
+  let loadURL = `file://${__dirname}/index.html`
   if (isDev) {
-		win.webContents.openDevTools();
-    win.loadURL('http://localhost:9000');
-
-	} else {
-    win.loadURL(`file://${__dirname}/index.html`);
-
+    win.webContents.openDevTools();
+    loadURL = 'http://localhost:9000';
   }
-
-
+  win.loadURL(loadURL);
 }
 
 app.on('ready', createWindow);
@@ -77,8 +62,6 @@ ipcMain.handle('open-external-link', (event, link) => {
   shell.openExternal(link)
 });
 
-import { config } from './utils/config';
-
 ipcMain.handle('allConfig', (event, value) => {
   if (value != null) return config.get(value)
   return config.store
@@ -90,11 +73,10 @@ ipcMain.handle('setStoreValue', (event, key, value) => {
 });
 
 ipcMain.handle('setBulkValues', (event, values) => {
-  const newThings = config.set(values)
-  return newThings
+    return config.set(values)
 });
 
-ipcMain.handle('config-clear', (event) => {
+ipcMain.handle('config-clear', () => {
   return config.clear()
 });
 
@@ -125,11 +107,11 @@ ipcMain.handle('run-database', (event, queryString) => {
   return run(queryString)
 });
 
-ipcMain.handle('database-deleteAll', (event) => {
+ipcMain.handle('database-deleteAll', () => {
   deleteAllData()
 });
 
-ipcMain.handle('database-checkOrMakeTables', (event) => {
+ipcMain.handle('database-checkOrMakeTables', () => {
   console.log('attempting to check if tables exist yet.')
   checkOrMakeTables()
 });
@@ -141,15 +123,11 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
  * 
  */
 
- const { updateAPI, bots, getDealsBulk, getDealsUpdate, getAndStoreBotData, getAccountSummary } = require('@/app/Features/3Commas/API/index');
+ const { updateAPI, getDealsBulk, getAndStoreBotData, getAccountSummary } = require('@/app/Features/3Commas/API/index');
 
 
  ipcMain.handle('api-getDealsBulk', (event, limit) => {
    return getDealsBulk(limit)
- });
- 
- ipcMain.handle('api-getDealsUpdate', (event, limit) => {
-   return getDealsUpdate(limit)
  });
  
  ipcMain.handle('api-updateData', async (event, type, options) => {
@@ -160,7 +138,7 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
   return await getAccountSummary(key, secret)
 });
  
- ipcMain.handle('api-getBots', async (event) => {
+ ipcMain.handle('api-getBots', async () => {
    await getAndStoreBotData()
  });
 
@@ -168,7 +146,19 @@ ipcMain.handle('database-checkOrMakeTables', (event) => {
  /************************************************************************
   * 
   * 
-  *                     Push Notification Settings
+  *                     Binance API
   * 
   * 
   *************************************************************************/
+
+ import { fetchCoinPricesBinance } from '@/app/Features/CoinPriceHeader/BinanceApi';
+
+ipcMain.handle('binance-getCoins', async (event) => {
+    return await fetchCoinPricesBinance()
+});
+
+import { fetchVersions } from './app/Features/UpdateBanner/UpdateApiFetch';
+
+ipcMain.handle('pm-versions', async (event) => {
+  return await fetchVersions()
+});

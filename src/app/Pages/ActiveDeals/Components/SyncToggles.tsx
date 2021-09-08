@@ -40,7 +40,7 @@ const SyncToggles = () => {
     }, [syncOptions.notifications])
 
     return (
-        <div style={{alignSelf: 'flex-start'}}>
+        <div className="syncToggles">
         <FormControlLabel
             control={
                 <Checkbox

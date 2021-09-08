@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CustomTable } from '@/app/Components/DataTable/Index'
 import { getDateString } from '@/utils/helperFunctions';
 import { parseNumber } from '@/utils/number_formatting';
@@ -19,7 +19,7 @@ function DealsTable({ data }: { data: object[] }) {
         updateLocalData(data)
     }, [data])
 
-    const sortMe = (rowA: any, rowB: any, columnId: string, desc: boolean) => {
+    const sortMe = (rowA: any, rowB: any, columnId: string) => {
         return (rowA.original[columnId] > rowB.original[columnId]) ? -1 : 1
     }
 
@@ -31,6 +31,12 @@ function DealsTable({ data }: { data: object[] }) {
                     {
                         Header: 'Bot Name',
                         accessor: 'bot_name', // accessor is the "key" in the data,
+                        style: {
+                            textAlign: 'left',
+                            paddingLeft: '1em',
+                            width: '150px'
+                        },
+
                         Cell: ({ cell }: any) => {
                             return (
                                 <span
@@ -43,14 +49,19 @@ function DealsTable({ data }: { data: object[] }) {
                     },
                     {
                         Header: 'Pair',
-                        accessor: 'pair'
+                        accessor: 'pair',
+
+                        style: {textAlign: 'left', width: '120px'},
                     },
                     {
                         Header: 'Duration',
                         id: 'created_at',
                         accessor: 'created_at',
+                        style: {
+                            textAlign: 'left'
+                        },
                         Cell: ({ cell }: any) => {
-                            return <>{getDateString(cell.value)}</>
+                            return  < span className=" monospace-cell">{getDateString(cell.value)}</span>
                         }
                     }
                 ]
@@ -61,19 +72,23 @@ function DealsTable({ data }: { data: object[] }) {
                     {
                         Header: 'Current',
                         accessor: 'current_price',
-                        className: 'text-center',
-                        sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
+                        style: {textAlign: 'left'},
+                        sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                         Cell: ({ cell }: any) => {
-                            return <>$ {parseNumber( cell.value, 4) }</>
+                            // let digits = 5;
+                            // if(cell.value < 1) digits = 4
+                            return < span className=" monospace-cell">{parseNumber( cell.value, 5, true) }</span>
                         }
                     },
                     {
                         Header: 'TP',
                         accessor: 'take_profit_price',
-                        className: 'text-center',
-                        sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
+                        style: {textAlign: 'left'},
+                        sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                         Cell: ({ cell }: any) => {
-                            return <>$ {parseNumber( cell.value, 4) }</>
+                            // let digits = 5;
+                            // if(cell.value < 1) digits = 4
+                            return < span className=" monospace-cell">{parseNumber( cell.value, 5, true) }</span>
                         }
                     },
                 ]
@@ -84,17 +99,21 @@ function DealsTable({ data }: { data: object[] }) {
                     {
                         Header: 'Base',
                         accessor: 'bought_volume',
+                        style: {textAlign: 'left'},
                         Cell: ({ cell }: any) => {
-                            className: (cell.column as any).className = 'text-right'
-                            return <>{cell.value}</>
-                        },
-                        sortable: false
+                            // let digits = 5;
+                            return < span className=" monospace-cell">{parseNumber( cell.value, 5, true) }</span>
+                        }
                     },
                     {
                         Header: 'Pair',
                         accessor: 'bought_amount',
+                        style: {textAlign: 'left'},
                         className: '',
-                        sortable: false
+                        sortable: false,
+                        Cell: ({ cell }: any) => {
+                            return  < span className=" monospace-cell">{cell.value}</span>
+                        },
                     },
                 ]
             },
@@ -104,12 +123,12 @@ function DealsTable({ data }: { data: object[] }) {
                     {
                         Header: 'Total/Max',
                         accessor: 'safetyOrderString',
-                        className: 'text-center'
+                        style: {textAlign: 'center'},
                     },
                     {
                         Header: 'Active',
                         accessor: 'current_active_safety_orders',
-                        className: 'text-center'
+                        style: {textAlign: 'center'},
                     }
                 ]
             },
@@ -121,30 +140,38 @@ function DealsTable({ data }: { data: object[] }) {
                         id: 'actual_usd_profit',
                         accessor: 'actual_usd_profit',
                         className: 'text-center',
-                        sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
+                        sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                         Cell: ({ cell }: any) => {
 
-                            const in_profit = (cell.row.original.in_profit) ? 'green' : 'red'
-                            return <span className={"pill " + in_profit} > $ {parseNumber( cell.value, 2) }</span>
+                            const in_profit = (cell.row.original.actual_profit_percentage > 0) ? 'green' : 'red'
+                            return <span className={"pill pill-left monospace-cell " + in_profit} >{parseNumber( cell.value, 2) }</span>
+                        },
+                        style: {
+                            paddingRight: 0,
+                            maxWidth: '6em'
                         }
                     },
                     {
                         Header: '%',
                         accessor: 'actual_profit_percentage',
                         className: 'text-center',
-                        sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
+                        sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                         Cell: ({ cell }: any) => {
-                            const in_profit = (cell.row.original.in_profit) ? 'green' : 'red'
-                            return <span className={"pill " + in_profit} >{+cell.value} %</span>
+                            const in_profit = (cell.row.original.actual_profit_percentage> 0) ? 'green' : 'red'
+                            return <span className={"pill pill-right monospace-cell " +  in_profit }>{parseNumber( cell.value, 2) } %</span>
+                        },
+                        style: {
+                            paddingLeft: 0,
+                            maxWidth: '6em'
                         }
                     },
                     {
                         Header: 'Unrealized',
                         accessor: 'unrealized_profit',
-                        className: 'text-center',
-                        sortType: (rowA: any, rowB: any, columnId: string, desc: boolean) => sortMe(rowA, rowB, columnId, desc),
+                        style: {textAlign: 'left'},
+                        sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                         Cell: ({ cell }: any) => {
-                            return <span>$ {parseNumber( cell.value, 3) }</span>
+                            return <span className=" monospace-cell" style={{paddingLeft: '1em'}}>{parseNumber( cell.value, 4, true) }</span>
                         }
                     }
                 ]
@@ -155,15 +182,18 @@ function DealsTable({ data }: { data: object[] }) {
                     {
                         Header: 'Funds',
                         accessor: 'max_deal_funds',
-                        className: 'text-center',
+                        style: {textAlign: 'left'},
+                        Cell: ({ cell }: any) => {
+                            return  < span className=" monospace-cell">{cell.value}</span>
+                        },
                     },
                     {
                         Header: 'Deviation',
                         accessor: 'max_deviation',
-                        className: 'text-center',
+                        style: {textAlign: 'left'},
                         Cell: ({ cell }: any) => {
-                            return <>{cell.value} % </>
-                        }
+                            return  < span  className=" monospace-cell">{cell.value}%</span>
+                        },
                     }
                 ]
 
@@ -181,12 +211,11 @@ function DealsTable({ data }: { data: object[] }) {
             <CustomTable
                 columns={columns}
                 data={localData}
-                disableMultiSort={true}
                 autoResetSortBy={false}
                 autoResetPage={false}
                 localStorageSortName={localStorageSortName}
                 //@ts-ignore
-                getHeaderProps={column => ({
+                getHeaderProps={() => ({
                     // onClick: () => setSort(column.id),
                     style: {
                         height: '44px',

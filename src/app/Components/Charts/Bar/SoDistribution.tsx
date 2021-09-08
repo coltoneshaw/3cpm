@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
-import { parseNumber, formatPercent } from '@/utils/number_formatting';
+import { parseNumber} from '@/utils/number_formatting';
 
 import { Type_Tooltip, Type_SoDistribution } from '@/types/Charts';
 
@@ -15,7 +15,7 @@ interface Type_SoDistributionArray {
     numberOfDeals: number
 }
 
-const SoDistribution = ({ title, data, metrics }: Type_SoDistribution) => {
+const SoDistribution = ({ title, data = [], metrics }: Type_SoDistribution) => {
 
     let dataArray: Type_SoDistributionArray[] = []
 
@@ -43,10 +43,10 @@ const SoDistribution = ({ title, data, metrics }: Type_SoDistribution) => {
     }
     const renderChart = () => {
         if (data.length === 0) {
-            return (<NoData />)
-        } else {
-            return (
-            <ResponsiveContainer width="100%"  height="90%" minHeight="300px" >
+            return (<NoData/>)
+        }
+        return (
+            <ResponsiveContainer width="100%" height="90%" minHeight="300px">
                 <BarChart
                     width={500}
                     height={200}
@@ -60,13 +60,13 @@ const SoDistribution = ({ title, data, metrics }: Type_SoDistribution) => {
                     stackOffset="expand"
                 >
                     <Legend/>
-                    <CartesianGrid opacity={.3} vertical={false} />
+                    <CartesianGrid opacity={.3} vertical={false}/>
                     <Tooltip
                         // @ts-ignore - tooltip refactoring
                         // todo - improve how tooltips can pass the values.
-                        content={<CustomTooltip />}
+                        content={<CustomTooltip/>}
                     />
-                    <XAxis 
+                    <XAxis
                         dataKey="SO"
                         minTickGap={-200}
                         axisLine={false}
@@ -77,16 +77,15 @@ const SoDistribution = ({ title, data, metrics }: Type_SoDistribution) => {
                     />
 
 
-                    <Bar dataKey="percentOfDeals" fill="var(--color-primary)" name='% of deals'/>
-                    <Bar dataKey="percentOfVolume" fill="var(--color-secondary-light25)" name='% of volume' />
+                    <Bar dataKey="percentOfDeals" fill="var(--color-primary-light25)" name='% of deals'/>
+                    <Bar dataKey="percentOfVolume" fill="var(--color-secondary-light25)" name='% of volume'/>
 
                 </BarChart>
             </ResponsiveContainer>)
-        }
     }
 
     return (
-        <div className="boxData stat-chart bubble-chart" >
+        <div className="boxData stat-chart " >
             <h3 className="chartTitle">{title}</h3>
             {renderChart()}
         </div>
@@ -95,19 +94,19 @@ const SoDistribution = ({ title, data, metrics }: Type_SoDistribution) => {
 
 
 function CustomTooltip({ active, payload, label }: Type_Tooltip) {
-    if (active) {
-
-        const { percentOfDeals, percentOfVolume, volume, numberOfDeals } = payload[0].payload
-        return (
-            <div className="tooltip">
-                <h4>SO # {label}</h4>
-                <p><strong>Bought Volume:</strong> ${parseNumber(volume)} ( { parseNumber( (percentOfVolume * 100), 2) } %)</p>
-                <p><strong>Deal Count:</strong> {numberOfDeals} ( { parseNumber( (percentOfDeals * 100), 2) } %)</p>
-            </div>
-        )
-    } else {
+    if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
+
+    const {percentOfDeals, percentOfVolume, volume, numberOfDeals} = payload[0].payload
+    return (
+        <div className="tooltip">
+            <h4>SO # {label}</h4>
+            <p><strong>Bought Volume:</strong> ${parseNumber(volume)} ( {parseNumber((percentOfVolume * 100), 2)} %)
+            </p>
+            <p><strong>Deal Count:</strong> {numberOfDeals} ( {parseNumber((percentOfDeals * 100), 2)} %)</p>
+        </div>
+    )
 }
 
 export default SoDistribution;

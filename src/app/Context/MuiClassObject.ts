@@ -2,7 +2,7 @@ import {  makeStyles } from '@material-ui/core/styles';
 
 
 const MuiClassObject = makeStyles(
-    (theme) => ({
+    () => ({
       root: {
         border: 0,
         padding: 0,

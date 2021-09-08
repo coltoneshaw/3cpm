@@ -1,3 +1,31 @@
+# v0.4.0
+## New Features
+- Added a coin header where you can customize the coins that are tracked on a 5 second refresh.
+- Update notifications that prompt you to download when you're not on the latest release!
+- Added SO number to the Deal SO Utilization chart.
+
+## Enhancements 
+- Redo of the entire layout of active deals, and stats.
+- Changed the ROI metric from ROI on bought volume to ROI from total profit and bankroll.
+- Active Deal pills now are colored based on if that metric is positive, not the deal itself.
+- New Table fonts for easier viewing of financial data.
+- Adjusted KPIs to be relevant to the page active.
+- Adjusted quite a few metrics from three decimals to two.
+- Adjusted the bot / pair charts to be vertical charts.
+- Added the average line value on profit by day.
+- API key is not a secret instead of text field.
+- Massive backend code enhancements thanks to @TontonAo!
+- Added Average profit per deal to the bot performance chart.
+- Adjusted number length on the active deals table
+
+
+## Bug
+- Fixed bug in how the pair by date was calculated. This was using `actual_profit` from 3C which returns the profit if you never sold the coin
+- Profit by day chart removed days with 0 profit, added these back.
+- Fixed bug where the TA chart would not load on the first click, additionally fixed the theme of the charts.
+
+
+
 # v0.3.0
 ## Bug
 - Fixed bug in the date display that caused dates to show as an invalid Date

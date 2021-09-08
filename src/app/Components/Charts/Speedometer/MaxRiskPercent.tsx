@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import ReactSpeedometer from "react-d3-speedometer"
 
 interface Type_Speedometer {
@@ -15,7 +15,6 @@ const MaxRiskSpeedometer = ({ metric, min, max, colorArray, labelArray, title }:
     return (
         <div className="boxData" style={{
             height: '250px',
-            margin: '25px',
             minWidth: '300px',
             maxWidth: '300px'
         }}>

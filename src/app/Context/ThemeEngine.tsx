@@ -11,6 +11,7 @@ const ThemeContext = createContext<Type_ThemeContext>();
 interface Type_ThemeContext {
     styles: MyCustomCSS
     changeTheme: any
+    theme: string
 }
 
 
@@ -57,7 +58,7 @@ const lightMode = {
     // Tailwinds 600
     '--color-red' : '#DC2626',
     '--color-green' : '#059669',
-    '--opacity-pill' : '.9'
+    '--opacity-pill' : '.95'
 }
 
 const darkMode = {
@@ -65,7 +66,7 @@ const darkMode = {
     '--color-primary-light25' : '#475C7E',
     '--color-primary': '#212B3B',
     '--color-primary-dark25': '#19202C',
-    
+
     // this is not the right color below~1
     '--color-secondary-light87': '#313945',
 
@@ -78,8 +79,8 @@ const darkMode = {
     '--color-CTA': '#FFC20A',
     '--color-CTA-light25': '#FFD147',
     '--color-CTA-dark25': '#C79500',
-    '--color-background': '#181D22',
-    '--color-background-light' : '#495667',
+    '--color-background': '#000',
+    '--color-background-light' : '#242526',
     '--color-light': '#000',
     '--color-text-darkbackground': 'black',
     '--color-text-lightbackground': '#BFBFBF',
@@ -88,7 +89,7 @@ const darkMode = {
 
     // Tailwinds 600
     '--color-red' : '#EF4444',
-    '--color-green' : '#10B981',
+    '--color-green' : '#059669',
     '--opacity-pill' : '.8'
 }
 
@@ -103,13 +104,13 @@ const ThemeEngine = ({ children }: any) => {
         console.log(localDisplay)
         let displayString = (localDisplay != undefined) ? localDisplay : 'lightMode';
 
+        let mode = lightMode
         if(displayString === 'darkMode') {
-            setStyles(darkMode)
-            updateTheme('darkMode')
-        } else {
-            setStyles(lightMode)
-            updateTheme('lightMode')
+            mode = darkMode
         }
+
+        setStyles(mode)
+        updateTheme(displayString)
 
     },[])
 
@@ -117,21 +118,22 @@ const ThemeEngine = ({ children }: any) => {
 
     const changeTheme = () => {
         updateTheme( prevTheme => {
-            if(prevTheme === 'lightMode') {
-                setStyles(darkMode)
-                setStorageItem('displayMode','darkMode')
-                return 'darkMode'
-            } else {
-                setStyles(lightMode)
-                setStorageItem('displayMode','lightMode')
-                return 'lightMode'
+            let mode = darkMode
+            let displayString = 'darkMode'
+            if(prevTheme === 'darkMode') {
+                mode = lightMode
+                displayString = 'lightMode'
             }
+
+            setStyles(mode)
+            setStorageItem('displayMode',displayString)
+            return displayString
         })
     }
 
 
     return (
-        <ThemeContext.Provider value={{styles, changeTheme}}>
+        <ThemeContext.Provider value={{styles, changeTheme, theme}}>
             {children}
         </ThemeContext.Provider>
     )

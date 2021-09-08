@@ -7,7 +7,8 @@ const storageItem = {
         statsPage: 'nav-statsPage'
     },
     settings: {
-        displayMode: 'displayMode' // the dark mode switcher. Values are 'lightMode' and 'darkMode'
+        displayMode: 'displayMode', // the dark mode switcher. Values are 'lightMode' and 'darkMode',
+        coinPriceArray: 'coinPriceArray'
     },
     charts:{
         pairByDateFilter: 'pairByDateFilter',

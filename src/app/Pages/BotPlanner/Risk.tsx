@@ -27,7 +27,7 @@ const Risk = ({ localBotData }: { localBotData: Type_Query_bots[] }) => {
      * DCA Max risk - sum of the max_bot_usage.
      */
 
-    const enabledDeals = localBotData.filter(bot => bot.is_enabled && bot.hide != true)
+    const enabledDeals = localBotData.filter(bot => bot.is_enabled && !bot.hide)
 
     /**
      * TODO
@@ -44,7 +44,7 @@ const Risk = ({ localBotData }: { localBotData: Type_Query_bots[] }) => {
 
 
     return (
-        <div className="riskDiv">
+        <div className="riskDiv activeDealCards" style={{ flex: 1 }}>
             <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
             <Card_MaxRiskPercent metric={risk} additionalData={{ totalBankroll, maxDCA }}/>
             <Card_EnabledBots metric={botCount} />

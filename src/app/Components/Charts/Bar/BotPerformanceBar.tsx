@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Area, Scatter } from 'recharts';
+import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Scatter } from 'recharts';
 
 
-import {InputLabel, MenuItem, FormControl, Select, FormHelperText} from '@material-ui/core';
+import {InputLabel, MenuItem, FormControl, Select} from '@material-ui/core';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
-import { parseNumber, formatPercent } from '@/utils/number_formatting';
+import { parseNumber} from '@/utils/number_formatting';
 import { dynamicSort } from '@/utils/helperFunctions';
 
 import { Type_Bot_Performance_Metrics } from '@/types/3Commas';
@@ -16,7 +16,7 @@ import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/Loca
 
 
 
-const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
+const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
 
     const defaultFilter = 'all';
     const defaultSort = '-total_profit';
@@ -50,7 +50,7 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
 
 
     const hide = (id:string ) => {
-        return (id == sort) ? false : true  
+        return id != sort
     }
 
     const filterData = (data: Type_Bot_Performance_Metrics[] ) => {
@@ -71,104 +71,136 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
         } else if (filter === 'bottom20')  {
             data = data.sort(dynamicSort('total_profit'));
             return data.filter( (bot, index) => index < twentyPercent)
-        } else {
-            return data;
         }
 
-        
-
+        return data;
     }
 
     const renderChart = () => {
-        if (data == undefined || data.length === 0) {
+        if (data.length === 0) {
             return (<NoData />)
-        } else {
-            data = filterData(data).sort(dynamicSort(sort))
-            return (<ResponsiveContainer width="100%" height="90%" minHeight="300px">
-                <ComposedChart
-
-                    data={data}
-                    margin={{
-                        top: 20,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                    }}
-                    stackOffset="expand"
-                >
-                    <CartesianGrid opacity={.3} vertical={false} />
-                    <Legend verticalAlign="top" height={36} />
-                    <Tooltip
-                        // @ts-ignore - tooltip refactoring
-                        // todo - improve how tooltips can pass the values.
-                        content={<CustomTooltip />}
-                    />
-                    <XAxis 
-                        dataKey="bot_name"
-                        type="category"
-                        angle={45}
-                        axisLine={false}
-                        height={75}
-                        textLength={15}
-                        textAnchor="start"
-                        
-                        tickFormatter={(str) => {
-                            return (str.length > 12 ) ? str.slice(0, 9) + "..." : str
-                        }}
-                        dx={0}
-                        // dx={15}
-                        dy={5}
-                        fontSize=".75em"
-                        minTickGap={-100}
-
-                    />
-                    <YAxis 
-                        yAxisId="total_profit" 
-                        orientation='left' 
-                        hide={hide("-total_profit")} 
-                        domain={[0, 'auto']} 
-                        allowDataOverflow={true} offset={20}>
-                        <Label value="Total Profit"
-                                angle={-90}
-                                dy={0}
-                                dx={-20}
-                            />
-                    
-                    </YAxis>
-
-
-                    <YAxis yAxisId="avg_deal_hours" orientation='left' hide={hide("-avg_deal_hours")} domain={[0, 'auto']} allowDataOverflow={true} offset={20}>
-                        <Label value="Avg. Deal Hours"
-                                angle={-90}
-                                dy={0}
-                                dx={-20}
-                            />
-                    
-                    </YAxis>
-                    <YAxis yAxisId="bought_volume" orientation='left' hide={hide("-bought_volume") } domain={[0, 'auto']} allowDataOverflow={true} offset={20}>
-                        <Label value="Bought Volume"
-                                angle={-90}
-                                dy={0}
-                                dx={-40}
-                            />
-                    
-                    </YAxis>
-
-                    
-                    <Bar name="Total Profit" dataKey="total_profit" fill="var(--color-CTA-dark25)"  yAxisId="total_profit" fillOpacity={.8} />
-                    <Scatter name="Bought Volume" yAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--color-primary-dark25)"  />
-                    <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours"  fill="var(--color-secondary)" yAxisId="avg_deal_hours"/>
-
-                    {/* <Line name="Total Profit" type="monotone" yAxisId="total_profit" dataKey="total_profit" stroke="#E8AE00" dot={false} strokeWidth={1.75} /> */}
-                    {/* <Line name="Avg. Deal Hours" type="monotone" yAxisId="avg_deal_hours" dataKey="avg_deal_hours" dot={false} strokeWidth={1.75} /> */}
-
-                </ComposedChart>
-            </ResponsiveContainer>)
         }
+
+        data = filterData(data).sort(dynamicSort(sort))
+        return (
+        <ResponsiveContainer width="100%" height="90%" minHeight="800px">
+            <ComposedChart
+
+                data={data}
+                margin={{
+                    top: 25,
+                    right: 0,
+                    left: 0,
+                    bottom: 5,
+                }}
+                layout="vertical"
+                // stackOffset="expand"
+            >
+                <CartesianGrid opacity={.3} vertical={true} horizontal={false}/>
+                <Legend verticalAlign="top" height={36} />
+                <Tooltip
+                    // @ts-ignore - tooltip refactoring
+                    // todo - improve how tooltips can pass the values.
+                    content={<CustomTooltip />}
+                />
+                <YAxis
+                    dataKey="bot_name"
+                    type="category"
+                    axisLine={false}
+                    width={110}
+                    textAnchor="end"
+
+                    tickFormatter={(str) => {
+                        return (str.length > 15 ) ? str.slice(0, 12) + "..." : str
+                    }}
+
+                    fontSize=".75em"
+                    minTickGap={-80}
+
+                />
+                <XAxis
+                    xAxisId="total_profit"
+                    type="number"
+                    hide={hide("-total_profit")}
+                    domain={[0, 'auto']}
+                    allowDataOverflow={true}
+                    height={50}
+                    allowDecimals={false}
+                    label={{
+                        value: "Total Profit",
+                        position: "Bottom",
+                        dx: 0,
+                        dy: 20
+                    }}
+
+                    />
+                <XAxis
+                    xAxisId="avg_deal_hours"
+                    type="number"
+                    hide={hide("-avg_deal_hours")}
+                    domain={[0, 'auto']}
+                    allowDataOverflow={true}
+                    height={50}
+                    allowDecimals={false}
+                    label={{
+                        value: "Avg. Deal Hours",
+                        position: "Bottom",
+                        dx: 0,
+                        dy: 20
+                    }}
+
+                    />
+                <XAxis
+                    xAxisId="bought_volume"
+                    type="number"
+                    hide={hide("-bought_volume")}
+                    domain={[0, 'auto']}
+                    allowDataOverflow={true}
+                    height={50}
+                    allowDecimals={false}
+
+                    label={{
+                        value: "Bought Volume",
+                        position: "Bottom",
+                        dx: 0,
+                        dy: 20
+                    }}
+
+                    />
+                <XAxis
+                    xAxisId="avg_profit"
+                    type="number"
+                    hide={hide("-avg_profit")}
+                    domain={[0, 'auto']}
+                    allowDataOverflow={true}
+                    height={50}
+                    allowDecimals={false}
+
+                    label={{
+                        value: "Avg profit per deal",
+                        position: "Bottom",
+                        dx: 0,
+                        dy: 20
+                    }}
+
+                    />
+
+
+                <Bar name="Total Profit" dataKey="total_profit" fill="var(--color-CTA-dark25)"  xAxisId="total_profit" fillOpacity={.8} />
+                <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--color-primary-light25-light25)"  />
+                <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours"  fill="var(--color-secondary)" xAxisId="avg_deal_hours"/>
+                <Scatter name="Avg. Profit" dataKey="avg_profit"  fill="#F87171" xAxisId="avg_profit"/>
+
+
+                {/* <Line name="Total Profit" type="monotone" yAxisId="total_profit" dataKey="total_profit" stroke="#E8AE00" dot={false} strokeWidth={1.75} /> */}
+                {/* <Line name="Avg. Deal Hours" type="monotone" yAxisId="avg_deal_hours" dataKey="avg_deal_hours" dot={false} strokeWidth={1.75} /> */}
+
+            </ComposedChart>
+        </ResponsiveContainer>)
     }
 
     return (
-        <div className="boxData stat-chart bubble-chart ">
+        <div className="boxData stat-chart  ">
             <div style={{position: "relative"}}>
                 <h3 className="chartTitle">{title}</h3>
                 <div style={{ position:"absolute", right: 0, top: 0, height: "50px", zIndex: 5}}>
@@ -184,6 +216,7 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
                         <MenuItem value="-total_profit">Profit</MenuItem>
                         <MenuItem value="-bought_volume">Bought Volume</MenuItem>
                         <MenuItem value="-avg_deal_hours">Avg. Deal Hours</MenuItem>
+                        <MenuItem value="-avg_profit">Avg. Profit</MenuItem>
                     </Select>
                 </FormControl>
                 </div>
@@ -217,23 +250,25 @@ const BotPerformanceBar = ({ title, data }: Type_BotPerformanceCharts) => {
 }
 
 
-function CustomTooltip({ active, payload, label }: Type_Tooltip) {
-    if (active) {
-        const data: Type_Bot_Performance_Metrics = payload[0].payload
-        const { total_profit, avg_completed_so, avg_profit, avg_deal_hours, bought_volume, number_of_deals, bot_name, type } = data
-        return (
-            <div className="tooltip">
-                <h4>{bot_name}</h4>
-                <p>{type}</p>
-                <p><strong>Bought Volume:</strong> ${parseNumber(bought_volume)} </p>
-                <p><strong>Deal Count:</strong> {number_of_deals} </p>
-                <p><strong>Total Profit:</strong> ${parseNumber(total_profit)} </p>
-                <p><strong>Avg Deal Hours:</strong> {parseNumber(avg_deal_hours)} </p>
-            </div>
-        )
-    } else {
+function CustomTooltip({ active, payload}: Type_Tooltip) {
+    if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
+
+    const data: Type_Bot_Performance_Metrics = payload[0].payload
+    const { total_profit, avg_deal_hours, bought_volume, number_of_deals, bot_name, type, avg_profit } = data
+    return (
+        <div className="tooltip">
+            <h4>{bot_name}</h4>
+            <p>{type}</p>
+            <p><strong>Bought volume:</strong> ${parseNumber(bought_volume, 2)} </p>
+            <p><strong>Deal count:</strong> {number_of_deals} </p>
+            <p><strong>Avg profit per deal:</strong> ${parseNumber(avg_profit, 2)} </p>
+            <p><strong>Total Profit:</strong> ${parseNumber(total_profit, 2)} </p>
+            <p><strong>Avg deal hours:</strong> {parseNumber(avg_deal_hours, 2)} </p>
+        </div>
+    )
+
 }
 
 export default BotPerformanceBar;

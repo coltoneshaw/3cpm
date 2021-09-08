@@ -11,10 +11,10 @@ interface Type_ButtonProps {
     className?: string
     disabled?: boolean
 }
-const UpdateDataButton = ({ style, className, disabled }: Type_ButtonProps) => {
+const UpdateDataButton = ({ style, className}: Type_ButtonProps) => {
 
     const state = useGlobalData()
-    const { data: { metricsData, isSyncing }, actions: { updateAllData } } = state
+    const { data: { isSyncing }, actions: { updateAllData } } = state
 
     const [open, setOpen] = React.useState(false);
 
@@ -36,17 +36,16 @@ const UpdateDataButton = ({ style, className, disabled }: Type_ButtonProps) => {
             <Button
                 // variant="contained"
                 // color="primary"
-                disabled={isSyncing? true : false}
+                disabled={isSyncing}
                 className={className}
                 onClick={() => {
                     updateAllData(1000, handleClick)
                 }}
                 disableElevation
-                endIcon={<SyncIcon className={isSyncing ? "iconSpinning" : ""} />}
+                // startIcon={}
                 style={style}
             >
-                Update Data
-            </Button>
+                <SyncIcon className={isSyncing ? "iconSpinning" : ""} />            </Button>
             <ToastNotifcations open={open} handleClose={handleClose} message="Sync finished." />
         </>
     )

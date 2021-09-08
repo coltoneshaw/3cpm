@@ -1,7 +1,10 @@
 import { sub, getTime } from 'date-fns';
-import dotProp from 'dot-prop';
 
 import { TconfigValues } from '@/types/config';
+
+//@ts-ignore
+import { version } from '#/package.json';
+
 
 const configSchema = {
     apis: {
@@ -76,6 +79,7 @@ const defaultConfig:TconfigValues = {
         "defaultCurrency": [],
         "globalLimit": 250000,
         "updated" : false,
+        "version" : version
     },
     "syncStatus": {
         "deals": {
@@ -88,29 +92,7 @@ const defaultConfig:TconfigValues = {
         "reservedFunds": []
     }
 }
-
-// finding the data that exists based on the dotprop.
-const findConfigData = ( config:object , path:string ) => {
- 
-    if (dotProp.has(config, path)) return dotProp.get(config, path)
-    return ""
-}
-
-export const findAccounts = ( config:object , path:string ) => {
-    if (dotProp.has(config, path)){
-        const definedAccounts: [] | undefined = dotProp.get(config, path)
-        if(definedAccounts == null || definedAccounts.length == 0 ){
-            return []
-        } else {
-            return definedAccounts
-        }
-    } 
-    return ""
-}
-
-
 export {
     defaultConfig,
     configSchema,
-    findConfigData
 }

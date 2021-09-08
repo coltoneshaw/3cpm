@@ -254,13 +254,6 @@ export interface Type_MarketOrders {
     rate: number;
     average_price: number;
 }
-
-export interface Type_BalanceData {
-    on_orders: number
-    position: number
-}
-
-
 export interface Type_UpdateFunction{
     offset: number
     time:number

@@ -13,14 +13,14 @@ import { useGlobalData } from '@/app/Context/DataContext';
 const PerformanceMonitor = () => {
 
     const state = useGlobalData();
-    const { data: { performanceData, metricsData } } = state;
+    const { data: { performanceData} } = state;
     // console.log(performanceData)
 
     return (
         <>
 
 
-            <Grid container spacing={8}>
+            <Grid container spacing={4}>
                 <Grid item xs={12}>
                     <DealAllocationBar title="Deal Allocation" data={performanceData.pair_bot} key="dealAllocationBar"/>
                 </Grid>
