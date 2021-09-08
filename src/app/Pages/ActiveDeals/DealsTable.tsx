@@ -75,7 +75,9 @@ function DealsTable({ data }: { data: object[] }) {
                         style: {textAlign: 'left'},
                         sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                         Cell: ({ cell }: any) => {
-                            return < span className=" monospace-cell">$ {parseNumber( cell.value, 4) }</span>
+                            // let digits = 5;
+                            // if(cell.value < 1) digits = 4
+                            return < span className=" monospace-cell">{parseNumber( cell.value, 5, true) }</span>
                         }
                     },
                     {
@@ -84,7 +86,9 @@ function DealsTable({ data }: { data: object[] }) {
                         style: {textAlign: 'left'},
                         sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                         Cell: ({ cell }: any) => {
-                            return < span className=" monospace-cell">$ {parseNumber( cell.value, 4) }</span>
+                            // let digits = 5;
+                            // if(cell.value < 1) digits = 4
+                            return < span className=" monospace-cell">{parseNumber( cell.value, 5, true) }</span>
                         }
                     },
                 ]
@@ -97,9 +101,9 @@ function DealsTable({ data }: { data: object[] }) {
                         accessor: 'bought_volume',
                         style: {textAlign: 'left'},
                         Cell: ({ cell }: any) => {
-                            return  < span className=" monospace-cell">{cell.value}</span>
-                        },
-                        sortable: false
+                            // let digits = 5;
+                            return < span className=" monospace-cell">{parseNumber( cell.value, 5, true) }</span>
+                        }
                     },
                     {
                         Header: 'Pair',
@@ -140,7 +144,7 @@ function DealsTable({ data }: { data: object[] }) {
                         Cell: ({ cell }: any) => {
 
                             const in_profit = (cell.row.original.actual_profit_percentage > 0) ? 'green' : 'red'
-                            return <span className={"pill pill-left monospace-cell " + in_profit} > $ {parseNumber( cell.value, 2) }</span>
+                            return <span className={"pill pill-left monospace-cell " + in_profit} >{parseNumber( cell.value, 2) }</span>
                         },
                         style: {
                             paddingRight: 0,
@@ -167,7 +171,7 @@ function DealsTable({ data }: { data: object[] }) {
                         style: {textAlign: 'left'},
                         sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                         Cell: ({ cell }: any) => {
-                            return <span className=" monospace-cell" style={{paddingLeft: '1em'}}>$ {parseNumber( cell.value, 3) }</span>
+                            return <span className=" monospace-cell" style={{paddingLeft: '1em'}}>{parseNumber( cell.value, 4, true) }</span>
                         }
                     }
                 ]
