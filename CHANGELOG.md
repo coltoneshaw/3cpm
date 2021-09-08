@@ -16,6 +16,7 @@
 - API key is not a secret instead of text field.
 - Massive backend code enhancements thanks to @TontonAo!
 - Added Average profit per deal to the bot performance chart.
+- Adjusted number length on the active deals table
 
 
 ## Bug

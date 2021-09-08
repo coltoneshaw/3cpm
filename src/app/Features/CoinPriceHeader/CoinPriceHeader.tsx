@@ -23,6 +23,8 @@ const CoinPriceHeader = () => {
         electron.binance.coinData()
             .then((data: any) => {
                 // console.log(data)
+                
+                if(data == undefined || data.length == 0) return
 
                 //@ts-ignore
                 const filteredCoins = data.filter((coin: any) => selectedCoins.includes(coin.symbol))

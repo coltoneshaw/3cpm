@@ -1,5 +1,5 @@
 
-const mostRecent = 'v0.4.0-rc2'
+const mostRecent = 'v0.4.0'
 
 
 const versionInformation = [
@@ -206,7 +206,7 @@ const versionInformation = [
         ]
     },
     {
-        version: 'v0.4.0-rc2',
+        version: 'v0.4.0',
         enhancements: [
         
         'Redo of the entire layout of active deals, and stats.',
@@ -220,6 +220,7 @@ const versionInformation = [
         'API key is not a secret instead of text field.',
         'Massive backend code enhancements thanks to @TontonAo!',
         'Added Average profit per deal to the bot performance chart.',
+        'Adjusted number length on the active deals table'
         ],
         bugs: [
         
