@@ -101,9 +101,13 @@ const calc_dropCoverage = (totalFundsAvailable:number, bot:Type_Query_bots ) => 
  * @param {number} max_active_deals total number of active deals a bot is allowed
  * @param {number} active_deals_count how many deals are currently active
  * @returns the total max funds of bots that have inactive deals.
+ * 
  */
 function calc_maxInactiveFunds(maxDealFunds:number , max_active_deals:number , active_deals_count:number ) {
-    return maxDealFunds * (max_active_deals - active_deals_count)
+
+    // using this metric as a max because max_active_deals is a bot config setting and can be lower than the current active deals.
+    // this causes a negative to be introduced and skews max_inactive_funds to a negative value.
+    return maxDealFunds * (Math.max(max_active_deals, active_deals_count) - active_deals_count)
 }
 
 /**

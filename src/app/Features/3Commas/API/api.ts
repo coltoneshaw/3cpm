@@ -4,6 +4,8 @@ import { Type_API_bots, Type_Deals_API, Type_MarketOrders} from '@/types/3Commas
 import { config } from '@/utils/config';
 
 
+
+
 import {
   calc_dealHours,
   calc_DealMaxFunds_bot,
@@ -74,8 +76,8 @@ async function bots() {
       strategy,
     } = bot
 
-    let maxDealFunds = calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
-    let max_inactive_funds = calc_maxInactiveFunds(maxDealFunds, max_active_deals, active_deals_count)
+    let maxDealFunds = calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient);
+    let max_inactive_funds = calc_maxInactiveFunds(maxDealFunds , max_active_deals , active_deals_count);
 
 
 
