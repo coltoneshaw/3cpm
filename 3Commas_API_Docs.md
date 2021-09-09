@@ -168,3 +168,41 @@ reserved_quote_funds:                    Sum of reserved in active deals funds i
 reserved_base_funds:                     Sum of reserved in active deals funds in BASE 
 } 
 ```
+
+## Market orders
+
+Endpoint: `GET /ver1/deals/{deal_id}/market_orders`
+
+
+
+```javascript
+[
+    {
+        "order_id": "MATICUSD_166773403",
+        "order_type": "BUY",
+        "deal_order_type": "Manual Safety",
+        "cancellable": false,
+        "status_string": "Filled",
+        "created_at": "2021-09-08T23:08:13.796Z",
+        "updated_at": "2021-09-08T23:08:13.830Z",
+        "quantity": "2490.0",
+        "quantity_remaining": "0.0",
+        "total": "3376.4804625",
+        "rate": "1.357",
+        "average_price": "1.355"
+    },
+    {
+        "order_id": "MATICUSD_166772169",
+        "order_type": "BUY",
+        "deal_order_type": "Manual Safety",
+        "cancellable": false,
+        "status_string": "Cancelled",
+        "created_at": "2021-09-08T23:06:52.548Z",
+        "updated_at": "2021-09-08T23:07:48.685Z",
+        "quantity": "2506.7",
+        "quantity_remaining": "2506.7",
+        "total": "0.0",
+        "rate": "1.348",
+        "average_price": "0.0"
+    },
+    ```

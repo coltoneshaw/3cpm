@@ -134,13 +134,8 @@ function calc_maxDealFunds_Deals(bought_volume:number , base_order_volume:number
     // TODO - Add typedef for market Orders
     if (!(typeof market_order_data === 'undefined')) {
         for (let order of market_order_data) {
-            let {
-                status_string, quantity_remaining, rate
-            } = order
-
-            if (status_string == "Active") {
+            let {quantity_remaining, rate} = order
                 maxTotal += quantity_remaining * +rate
-            }
         }
     }
     return maxTotal
