@@ -118,7 +118,7 @@ return (
 
                     {
                         selectedCoins.map(coin => (
-                            <div className="flex-row selectedCoinDiv" >
+                            <div className="flex-row selectedCoinDiv" key={coin}>
                                 <p style={{ flexBasis: '90%' }}>{coin}</p>
                                 <Delete
                                     style={{
