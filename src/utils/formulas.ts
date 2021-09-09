@@ -119,6 +119,8 @@ function calc_maxInactiveFunds(maxDealFunds:number , max_active_deals:number , a
  */
 function calc_maxDealFunds_Deals(bought_volume:number , base_order_volume:number , safety_order_volume:number , max_safety_orders:number , completed_safety_orders:number , martingale_volume_coefficient:number , market_order_data:Type_MarketOrders[] | undefined ) {
     let maxTotal;
+
+    
     if (+bought_volume > 0)
         maxTotal = +bought_volume;
     else

@@ -281,16 +281,25 @@ async function deals( offset:number, type:string ) {
   for (let deal of deals) {
     const {
       created_at, closed_at, bought_volume,
-      base_order_volume, safety_order_volume, max_safety_orders,
+      base_order_volume, safety_order_volume,
       completed_safety_orders_count, martingale_volume_coefficient,
       final_profit_percentage, pair, id, actual_usd_profit,
       active_manual_safety_orders, bought_average_price,
-      current_price, actual_profit, final_profit
+      current_price, actual_profit, final_profit, active_safety_orders_count,
+      completed_manual_safety_orders_count, current_active_safety_orders
     } = deal
+
+    let {max_safety_orders} = deal
     const activeDeal = closed_at === null;
     const deal_hours = calc_dealHours(created_at, closed_at)
 
+    // this fix is for a bug in 3C where the active SO can be greater than 0 with max safety orders being lower which causes a mis calculation and ignoring all the SOs.
+    max_safety_orders = Math.max(completed_safety_orders_count + current_active_safety_orders, max_safety_orders)
+
     let tempObject = {
+
+      // this is recalculated based on the active and completed SOs
+      max_safety_orders,
       realized_actual_profit_usd: (activeDeal) ? null : +actual_usd_profit,
       deal_hours,
       pair: pair.split("_")[1],
