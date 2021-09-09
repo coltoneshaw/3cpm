@@ -1,3 +1,20 @@
+# v0.4.1
+
+## New Features
+- MacOS application is now signed and does not require additional permissions to download!
+
+## Enhancements
+- Updates the overall style of active deals (removed top header, normalized number width)
+
+## Bug Fixes
+- Discovered issue in how the bots calculated funds when MSTC was 0. Resolved this by properly calculating the MSTC with active + completed SOs.
+- Fixed bug in the Manual SO count metric showing cancelled deals counted.
+- Fixed hovering on the darkmode icon.
+- Fixed the labels incorrectly wrapping on the bot performance charts
+
+
+
+
 # v0.4.0
 ## New Features
 - Added a coin header where you can customize the coins that are tracked on a 5 second refresh.

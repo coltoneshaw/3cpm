@@ -102,15 +102,15 @@ deal_has_error: true
 from_currency_id: 5                      DEPRECATED 
 to_currency_id: 10                       DEPRECATED 
 account_id: 121                           
-active_safety_orders_count: 1         // do not use this endpoint, it's not reliable    
+active_safety_orders_count: 1         // This will return the current bot settings
 created_at: 2018-08-08 08:08:08           
 updated_at: 2018-09-09 09:09:09           
 closed_at: 2018-10-10 10:10:10            
 finished?:                                
-current_active_safety_orders_count: 1     // this will not always match active_safety_orders_count
+current_active_safety_orders_count: 1     // Actual current active SOs
 current_active_safety_orders: 1          DEPRECATED 
 completed_safety_orders_count: 2         completed safeties (not including manual) 
-completed_manual_safety_orders_count: 2  completed manual safeties 
+completed_manual_safety_orders_count: 2  // This value includes any manual SOs placed, regardless of the status.
 cancellable?:                             
 panic_sellable?:                          
 trailing_enabled: true                    
