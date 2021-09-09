@@ -171,10 +171,8 @@ const ConfigProvider = ({ children }: any) => {
     }
 
     const fetchAccountsForRequiredFunds = async (key:string, secret:string, mode:string) => {
-        console.log(key, secret, mode)
         // @ts-ignore
         const accountSummary = await electron.api.getAccountData(key, secret, mode)
-        console.log("accountSummary", accountSummary)
 
         if (accountSummary !== undefined || accountSummary.length > 0) {
             updateReservedFunds( ( prevState: Type_ReservedFunds[]) => {
