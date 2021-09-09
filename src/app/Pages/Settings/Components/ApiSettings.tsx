@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react';
 import dotProp from 'dot-prop';
 
-import {
-    TextField,
-    Button
-} from '@material-ui/core';
+import {TextField, Button, InputLabel, FormControl, MenuItem, Select} from '@material-ui/core';
 
 import { useGlobalState } from '@/app/Context/Config';
 import { TconfigValues, Type_ApiKeys } from '@/types/config'
@@ -17,7 +14,7 @@ const ApiSettings = () => {
 
     const updateKeys = (config: TconfigValues) => {
         if (dotProp.has(config, 'apis.threeC')) return config.apis.threeC
-        return { key: '', secret: '' }
+        return { key: '', secret: '', mode: 'real' }
     }
 
 
@@ -25,6 +22,15 @@ const ApiSettings = () => {
     useEffect(() => {
         updateApiData(updateKeys(config));
     }, [config]);
+
+    const handleModeChange = (e: any) => {
+        updateApiData((prevState: Type_ApiKeys) => {
+            return {
+                ...prevState,
+                mode: e.target.value
+            }
+        })
+    }
 
     const handleKeyChange = (e: any) => {
         updateApiData((prevState: Type_ApiKeys) => {
@@ -74,7 +80,22 @@ const ApiSettings = () => {
                 />
             </div>
 
-            <Button 
+            <div className=" flex-row" style={{paddingBottom: "25px"}} >
+                <FormControl   style={{marginRight: "15px",flexBasis: "50%"}}>
+                    <InputLabel id="mode-label">Mode</InputLabel>
+                    <Select
+                        labelId="mode-label"
+                        id="mode"
+                        value={apiData.mode}
+                        onChange={handleModeChange}
+                    >
+                        <MenuItem value={"real"}>Real</MenuItem>
+                        <MenuItem value={"paper"}>Paper</MenuItem>
+                    </Select>
+                </FormControl>
+            </div>
+
+            <Button
                 className="CtaButton"
                 disableElevation
                 onClick={
@@ -83,8 +104,9 @@ const ApiSettings = () => {
                         // await electron.api.getAccountData()
                         let key = apiData.key
                         let secret = apiData.secret
+                        let mode = apiData.mode
                         try {
-                            await fetchAccountsForRequiredFunds(key, secret)
+                            await fetchAccountsForRequiredFunds(key, secret, mode)
                         } catch (error) {
                             alert('there was an error testing the API keys. Check the console for more information.')
                         }
@@ -94,11 +116,11 @@ const ApiSettings = () => {
                     // update the accountData property & the reserved funds.
                     // update the table on the page.
                 }
-                style={{ 
+                style={{
                     margin: "auto",
                     borderRight: 'none',
                     width: '150px'
-                    }} 
+                    }}
                 >
                 Test API Keys
             </Button>

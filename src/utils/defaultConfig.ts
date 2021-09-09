@@ -20,6 +20,10 @@ const configSchema = {
                     secret: {
                         type: ["string", "null"],
                         default: ""
+                    },
+                    mode: {
+                        type: ["string"],
+                        default: "real"
                     }
                 }
             }
@@ -72,7 +76,8 @@ const defaultConfig:TconfigValues = {
     "apis": {
         "threeC": {
             "key": "",
-            "secret": ""
+            "secret": "",
+            "mode": "real",
         }
     },
     "general": {
