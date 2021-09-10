@@ -1,8 +1,7 @@
-const threeCommasAPI = require('3commas-api-node')
+const threeCommasAPI = require('./3commaslib')
 import { Type_API_bots, Type_Deals_API, Type_MarketOrders} from '@/types/3Commas'
 
 import { config } from '@/utils/config';
-
 
 
 
@@ -22,10 +21,11 @@ import {
  * 
  * @description - required at the moment so when you make a config change on the frontend you're not using old data.
  */
-const threeCapi = (config: any, key?: string, secret?: string) => {
+const threeCapi = (config: any, key?: string, secret?: string, mode?: string) => {
 
   key = (key) ? key : config.get('apis.threeC.key')
   secret = (secret) ? secret : config.get('apis.threeC.secret')
+  mode = (mode) ? mode : config.get('apis.threeC.mode')
 
   if (key == null || secret == null) {
     console.error('missing API keys')
@@ -34,7 +34,8 @@ const threeCapi = (config: any, key?: string, secret?: string) => {
 
   return new threeCommasAPI({
     apiKey: key,
-    apiSecret: secret
+    apiSecret: secret,
+    mode: mode,
   })
 }
 
@@ -76,8 +77,8 @@ async function bots() {
       strategy,
     } = bot
 
-    let maxDealFunds = calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient);
-    let max_inactive_funds = calc_maxInactiveFunds(maxDealFunds , max_active_deals , active_deals_count);
+    let maxDealFunds = calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
+    let max_inactive_funds = calc_maxInactiveFunds(maxDealFunds, max_active_deals, active_deals_count)
 
 
 
@@ -372,10 +373,10 @@ async function getAccountDetail() {
   return array
 }
 
-async function getAccountSummary(key: string, secret: string) {
+async function getAccountSummary(key: string, secret: string, mode: string) {
   let api = threeCapi(config)
   if (key && secret) {
-    api = threeCapi(config, key, secret)
+    api = threeCapi(config, key, secret, mode)
   }
   if (!api) return false
   let accountData = await api.accounts()
