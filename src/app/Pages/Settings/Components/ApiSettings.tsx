@@ -23,31 +23,23 @@ const ApiSettings = () => {
         updateApiData(updateKeys(config));
     }, [config]);
 
-    const handleModeChange = (e: any) => {
-        updateApiData((prevState: Type_ApiKeys) => {
-            return {
-                ...prevState,
-                mode: e.target.value
-            }
-        })
-    }
+    const handleChange = (e: any) => {
+        if(!e.target.name) {
+            console.debug('Failed to change API setting due to blank name')
+            console.debug(e)
+            return
+        }
 
-    const handleKeyChange = (e: any) => {
+        const validKeys = ['key', 'secret', 'mode']
         updateApiData((prevState: Type_ApiKeys) => {
-            return {
-                ...prevState,
-                key: e.target.value
-            }
-        })
-    }
+            let newState = {...prevState}
 
-    const handleSecretChange = (e: any) => {
-        updateApiData((prevState: Type_ApiKeys) => {
-            return {
-                ...prevState,
-                secret: e.target.value
-            }
+            if(!validKeys.includes(e.target.name)) return prevState
+
+            newState[e.target.name as keyof Type_ApiKeys] = e.target.value
+            return newState
         })
+
     }
 
 
@@ -59,8 +51,9 @@ const ApiSettings = () => {
                 <TextField
                     id="key"
                     label="Key"
+                    name="key"
                     value={apiData.key}
-                    onChange={handleKeyChange}
+                    onChange={handleChange}
                     className="settings-left"
                     style={{
                         marginRight: "15px",
@@ -70,8 +63,9 @@ const ApiSettings = () => {
                 <TextField
                     id="secret"
                     label="Secret"
+                    name="secret"
                     value={apiData.secret}
-                    onChange={handleSecretChange}
+                    onChange={handleChange}
                     type="password"
                     style={{
                         marginLeft: "15px",
@@ -86,8 +80,9 @@ const ApiSettings = () => {
                     <Select
                         labelId="mode-label"
                         id="mode"
+                        name="mode"
                         value={apiData.mode}
-                        onChange={handleModeChange}
+                        onChange={handleChange}
                     >
                         <MenuItem value={"real"}>Real</MenuItem>
                         <MenuItem value={"paper"}>Paper</MenuItem>
