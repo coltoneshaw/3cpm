@@ -175,7 +175,7 @@ const PairPerformanceByDate = ({datePair}: {datePair: DateRange}) => {
                         minTickGap={(localData.length > 6) ? 40 : 0}
                         tickFormatter={(str) => {
                             if (str == 'auto' || str == undefined) return ""
-                            return new Date(str).toLocaleString(lang, { month: '2-digit', day: '2-digit' })
+                            return new Date(str).toLocaleString(lang, { month: '2-digit', day: '2-digit', timeZone: 'UTC' })
                         }}
                     />
 
