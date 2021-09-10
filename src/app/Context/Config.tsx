@@ -27,7 +27,7 @@ interface Type_ConfigContext {
         currency: string[]
         updateCurrency: any
         updateApiData: any
-        apiData: {key: string, secret: string}
+        apiData: {key: string, secret: string, mode: string}
         reservedFunds: Type_ReservedFunds[],
         updateReservedFunds: any
     },
@@ -44,7 +44,7 @@ const ConfigProvider = ({ children }: any) => {
 
     // setting the default state to be 90 days in the past.
     const [date, updateDate] = useState(() => getTime(sub(new Date(), { days: 90 })))
-    const [apiData, updateApiData] = useState({ key: '', secret: '' })
+    const [apiData, updateApiData] = useState({ key: '', secret: '', mode: 'real' })
     const [currency, updateCurrency] = useState<string[]>([])
     const [accountID, updateAccountID] = useState<number[]>([]);
     const [reservedFunds, updateReservedFunds] = useState<Type_ReservedFunds[]>([])
@@ -67,9 +67,11 @@ const ConfigProvider = ({ children }: any) => {
         updateApiData(() => {
             const keyValue: string | undefined = dotProp.get(config, 'apis.threeC.key');
             const secretValue: string | undefined = dotProp.get(config, 'apis.threeC.secret')
+            const modeValue: string | undefined = dotProp.get(config, 'apis.threeC.mode')
             return {
                 key: (keyValue) ? keyValue : "",
-                secret: (secretValue) ? secretValue : ""
+                secret: (secretValue) ? secretValue : "",
+                mode: (modeValue) ? modeValue : "real"
             }
         });
     }
@@ -133,6 +135,7 @@ const ConfigProvider = ({ children }: any) => {
                 prevConfig.apis.threeC = {
                     key: apiData.key,
                     secret: apiData.secret,
+                    mode: apiData.mode,
                 }
     
                 // @ts-ignore
@@ -167,9 +170,9 @@ const ConfigProvider = ({ children }: any) => {
         })
     }
 
-    const fetchAccountsForRequiredFunds = async (key:string, secret:string) => {
+    const fetchAccountsForRequiredFunds = async (key:string, secret:string, mode:string) => {
         // @ts-ignore
-        const accountSummary = await electron.api.getAccountData(key, secret)
+        const accountSummary = await electron.api.getAccountData(key, secret, mode)
 
         if (accountSummary !== undefined || accountSummary.length > 0) {
             updateReservedFunds( ( prevState: Type_ReservedFunds[]) => {
@@ -231,30 +234,18 @@ const ConfigProvider = ({ children }: any) => {
 
     useEffect(() => {
 
-        if (config && dotProp.has(config, 'general.defaultCurrency')) {
-            // console.log('ran this')
-            setNewCurrency(config)
-        }
-
-        if (config && dotProp.has(config, 'apis.threeC')) {
-            console.log('Updated threeC')
-            setNewApiKeys(config)
-        }
-
-        if (config && dotProp.has(config, 'statSettings.account_id')) {
-            console.log('Updated threeC')
-            setNewAccountIdArray(config)
-        }
-
-        if (config && dotProp.has(config, 'statSettings.startDate')) {
-            console.log('Updated start Date')
-            setNewStatDate(config)
-        }
-
-        if (config && dotProp.has(config, 'statSettings.reservedFunds')) {
-            console.log('Updated reserved funds.')
-            setNewReservedFunds(config)
-        }
+        [
+            {path: 'general.defaultCurrency', func: setNewCurrency},
+            {path: 'apis.threeC', func: setNewApiKeys},
+            {path: 'statSettings.account_id', func: setNewAccountIdArray},
+            {path: 'statSettings.startDate', func: setNewStatDate},
+            {path: 'statSettings.reservedFunds', func: setNewReservedFunds},
+        ].map(function (line) {
+            if (config && dotProp.has(config, line.path)) {
+                console.log(line.func.name)
+                line.func(config)
+            }
+        })
     }, [config])
 
 

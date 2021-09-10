@@ -2,7 +2,8 @@ export interface TconfigValues {
     "apis": {
         "threeC": {
             key: string,
-            secret: string
+            secret: string,
+            mode: string,
         }
     },
     "general": {
