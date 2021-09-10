@@ -2,6 +2,7 @@
 
 ## New Features
 - MacOS application is now signed and does not require additional permissions to download!
+- Menu bar under help includes relevant links to github, discord, and more.
 
 ## Enhancements
 - Updates the overall style of active deals (removed top header, normalized number width)

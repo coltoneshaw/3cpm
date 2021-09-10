@@ -4,6 +4,7 @@ import { Type_API_bots, Type_Deals_API, Type_MarketOrders} from '@/types/3Commas
 import { config } from '@/utils/config';
 
 
+
 import {
   calc_dealHours,
   calc_DealMaxFunds_bot,
