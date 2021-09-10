@@ -140,34 +140,9 @@ const fetchPerformanceDataFunction = async (oDate?: DateRange) => {
     const filtersQueryString = await getFiltersQueryString()
     const {currencyString, accountIdString, startString} = filtersQueryString;
 
-    let date = new DateRange()
-    if (oDate) {
-        date = {...oDate}
-    }
-
-    if (date.from == null) {
-        date.from = new Date(startString)
-
-    }
-
-    if (date.to == null) {
-        date.to = new Date()
-    }
-
-
-    let fromDateStr = moment.utc(date.from)
-        .subtract(date.from.getTimezoneOffset(), "minutes")
-        .startOf("day")
-        .toISOString()
-
+    let date = initDate(startString, oDate);
+    const [fromDateStr, toDateStr] = DateRangeToSQLString(date)
     const fromSQL = `and closed_at >= '${fromDateStr}'`
-
-    let toDateStr = moment.utc(date.to)
-        .subtract(date.to.getTimezoneOffset(), "minutes")
-        .add(1, "days")
-        .startOf("day")
-        .toISOString()
-
     const toSQL = `and closed_at < '${toDateStr}'`
 
 
@@ -230,34 +205,9 @@ const fetchBotPerformanceMetrics = async (oDate?: DateRange) => {
     const {currencyString, accountIdString, startString} = filtersQueryString;
 
 
-    let date = new DateRange()
-    if (oDate) {
-        date = {...oDate}
-    }
-
-    if (date.from == null) {
-        date.from = new Date(startString)
-
-    }
-
-    if (date.to == null) {
-        date.to = new Date()
-    }
-
-
-    let fromDateStr = moment.utc(date.from)
-        .subtract(date.from.getTimezoneOffset(), "minutes")
-        .startOf("day")
-        .toISOString()
-
+    let date = initDate(startString, oDate);
+    const [fromDateStr, toDateStr] = DateRangeToSQLString(date)
     const fromSQL = `and closed_at >= '${fromDateStr}'`
-
-    let toDateStr = moment.utc(date.to)
-        .subtract(date.to.getTimezoneOffset(), "minutes")
-        .add(1, "days")
-        .startOf("day")
-        .toISOString()
-
     const toSQL = `and closed_at < '${toDateStr}'`
 
     const queryString = `
@@ -324,34 +274,9 @@ const fetchPairPerformanceMetrics = async (oDate?: DateRange) => {
     const filtersQueryString = await getFiltersQueryString()
     const {currencyString, accountIdString, startString} = filtersQueryString;
 
-    let date = new DateRange()
-    if (oDate) {
-        date = {...oDate}
-    }
-
-    if (date.from == null) {
-        date.from = new Date(startString)
-
-    }
-
-    if (date.to == null) {
-        date.to = new Date()
-    }
-
-
-    let fromDateStr = moment.utc(date.from)
-        .subtract(date.from.getTimezoneOffset(), "minutes")
-        .startOf("day")
-        .toISOString()
-
+    let date = initDate(startString, oDate);
+    const [fromDateStr, toDateStr] = DateRangeToSQLString(date)
     const fromSQL = `and closed_at >= '${fromDateStr}'`
-
-    let toDateStr = moment.utc(date.to)
-        .subtract(date.to.getTimezoneOffset(), "minutes")
-        .add(1, "days")
-        .startOf("day")
-        .toISOString()
-
     const toSQL = `and closed_at < '${toDateStr}'`
 
     const queryString = `
@@ -487,19 +412,7 @@ const getAccountDataFunction = async () => {
 }
 
 
-/**
- *
- * @param pairs An array of the pairs to return from the database.
- *
- * @description This is used to see pairs on a per date bases in charts. This is not used in the DataContext state. This reports based on the usd_final_profit only
- */
-const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange) => {
-    const filtersQueryString = await getFiltersQueryString()
-    const {currencyString, accountIdString, startString} = filtersQueryString
-
-    const pairString = (pairs) ? pairs.map((b: string) => "'" + b + "'") : ""
-
-
+function initDate(startString: string, oDate?: DateRange) {
     let date = new DateRange()
     if (oDate) {
         date = {...oDate}
@@ -513,21 +426,25 @@ const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange) => {
     if (date.to == null) {
         date.to = moment().endOf("day").toDate()
     }
+    return date;
+}
+
+/**
+ *
+ * @param pairs An array of the pairs to return from the database.
+ *
+ * @description This is used to see pairs on a per date bases in charts. This is not used in the DataContext state. This reports based on the usd_final_profit only
+ */
+const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange) => {
+    const filtersQueryString = await getFiltersQueryString()
+    const {currencyString, accountIdString, startString} = filtersQueryString
+
+    const pairString = (pairs) ? pairs.map((b: string) => "'" + b + "'") : ""
 
 
-    let fromDateStr = moment.utc(date.from)
-        .subtract(date.from.getTimezoneOffset(), "minutes")
-        .startOf("day")
-        .toISOString()
-
+    let date = initDate(startString, oDate);
+    const [fromDateStr, toDateStr] = DateRangeToSQLString(date)
     const fromSQL = `and closed_at >= '${fromDateStr}'`
-
-    let toDateStr = moment.utc(date.to)
-        .subtract(date.to.getTimezoneOffset(), "minutes")
-        .add(1, "days")
-        .startOf("day")
-        .toISOString()
-
     const toSQL = `and closed_at < '${toDateStr}'`
 
     const query = `
@@ -573,6 +490,22 @@ const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange) => {
     console.log(result)
     return result
 
+}
+
+const DateRangeToSQLString = (d: DateRange) => {
+    let fromDateStr = moment.utc(d.from)
+        .subtract(d.from?.getTimezoneOffset(), "minutes")
+        .startOf("day")
+        .toISOString()
+
+
+    let toDateStr = moment.utc(d.to)
+        .subtract(d.to?.getTimezoneOffset(), "minutes")
+        .add(1, "days")
+        .startOf("day")
+        .toISOString()
+
+    return [fromDateStr, toDateStr]
 }
 
 export {
