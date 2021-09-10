@@ -72,6 +72,12 @@ function convertMiliseconds(miliseconds: number) {
   return { d: days, h: hours, m: minutes, s: seconds };
 };
 
+const padZero = (number:number) => {
+    if(number >= 10) return number;
+
+    return '0' + number
+}
+
 /**
  * 
  * @param created_at ISO formatted string for the start of the deal
@@ -83,10 +89,12 @@ const getDateString = (created_at: string) => {
 
   const { d, h, m, s } = timeObject
 
-  const day = (d > 0) ? d + 'd ' : ''
-  const hour = (h > 0) ? h + 'h ' : ''
-  const minute = (m > 0) ? m + 'm ' : ''
-  const seconds = (s > 0) ? s + 's' : ''
+  const day = (d > 0) ? padZero(d) + 'd ' : ''
+  const hour = (h > 0) ? padZero(h) + 'h ' : ''
+  const minute = (m > 0) ? padZero(m) + 'm ' : ''
+  const seconds = (s > 0) ? padZero(s) + 's' : ''
+
+  if(d > 0) return day + (padZero(h) + 'h ') + minute
 
   return day + hour + minute + seconds
 }

@@ -3,7 +3,7 @@ import React from 'react'
 const Sun = () => {
 
     return (
-        <svg  version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="45.16px" height="45.16px" viewBox="0 0 45.16 45.16">
+        <svg  version="1.1"  xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="45.16px" height="45.16px" viewBox="0 0 45.16 45.16">
             <g>
                 <g>
                     <path d="M22.58,11.269c-6.237,0-11.311,5.075-11.311,11.312s5.074,11.312,11.311,11.312c6.236,0,11.311-5.074,11.311-11.312

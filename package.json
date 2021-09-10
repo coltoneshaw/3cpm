@@ -1,13 +1,15 @@
 {
   "name": "3c-portfolio-manager",
   "productName": "3C Portfolio Manager",
-  "version": "v0.4.0",
+  "version": "v0.4.1",
   "description": "An application to manage your 3Commas portfolio.",
   "private": true,
   "main": "./dist/main.js",
   "scripts": {
-    "pack": " electron-builder --dir ",
-    "dist": " electron-builder --mac --win --linux",
+    "pack": "electron-builder --dir ",
+    "build:mac": "webpack && electron-builder --dir && electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux",
     "build": "webpack && electron-builder --dir && electron-builder --mac --win --linux",
     "react:dev": "webpack serve --mode=development",
     "electron:dev": "nodemon",
@@ -80,27 +82,32 @@
     "date-fns": "^2.22.1",
     "dot-prop": "^6.0.1",
     "electron-fetch": "^1.7.4",
+    "electron-notarize": "^1.1.1",
     "electron-store": "^8.0.0",
     "node-fetch": "^2.6.1",
     "query-string": "^7.0.1"
   },
   "build": {
-    "appId": "3CPortfolioManager",
+    "appId": "com.savvytoolbelt.3cportfoliomanager",
     "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
+    "afterSign": "scripts/notarize.js",
     "directories": {
       "output": "release"
     },
     "mac": {
+      "category": "public.app-category.finance",
       "target": [
-        "dmg"
+        "dmg",
+        "zip"
       ],
       "type": "distribution",
       "darkModeSupport": true,
       "hardenedRuntime": true,
-      "entitlements": "assets/entitlements.mac.plist",
-      "entitlementsInherit": "assets/entitlements.mac.plist",
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
       "gatekeeperAssess": false,
-      "icon": "assets/icons/icon.icns"
+      "icon": "assets/icons/icon.icns",
+      "provisioningProfile" : "build/embedded.provisionprofile"
     },
     "dmg": {
       "contents": [

@@ -1,10 +1,11 @@
-import {app, BrowserWindow, ipcMain, shell} from 'electron';
+import {app, BrowserWindow, ipcMain, shell, Menu} from 'electron';
 import {config} from './utils/config';
 // import isDev from 'electron-is-dev'; // New Import
 
 const path = require("path");
 const isDev = !app.isPackaged;
 
+import { menu } from './electron/menu';
 
 const { update, query, checkOrMakeTables, run, deleteAllData, upsert } = require( '@/app/Features/Database/database');
 
@@ -29,6 +30,7 @@ const createWindow = (): void => {
 
   });
 
+  Menu.setApplicationMenu(menu)
 
   let loadURL = `file://${__dirname}/index.html`
   if (isDev) {

@@ -16,7 +16,8 @@
 
 
 .sidebarOption .active svg,
-.sidebarOption:hover svg {
+.sidebarOption:hover svg,
+#displaySwitcher:hover svg {
     fill: var(--color-secondary);
   }
 

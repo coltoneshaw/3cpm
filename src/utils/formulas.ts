@@ -101,9 +101,13 @@ const calc_dropCoverage = (totalFundsAvailable:number, bot:Type_Query_bots ) => 
  * @param {number} max_active_deals total number of active deals a bot is allowed
  * @param {number} active_deals_count how many deals are currently active
  * @returns the total max funds of bots that have inactive deals.
+ * 
  */
 function calc_maxInactiveFunds(maxDealFunds:number , max_active_deals:number , active_deals_count:number ) {
-    return maxDealFunds * (max_active_deals - active_deals_count)
+
+    // using this metric as a max because max_active_deals is a bot config setting and can be lower than the current active deals.
+    // this causes a negative to be introduced and skews max_inactive_funds to a negative value.
+    return maxDealFunds * (Math.max(max_active_deals, active_deals_count) - active_deals_count)
 }
 
 /**
@@ -119,6 +123,8 @@ function calc_maxInactiveFunds(maxDealFunds:number , max_active_deals:number , a
  */
 function calc_maxDealFunds_Deals(bought_volume:number , base_order_volume:number , safety_order_volume:number , max_safety_orders:number , completed_safety_orders:number , martingale_volume_coefficient:number , market_order_data:Type_MarketOrders[] | undefined ) {
     let maxTotal;
+
+    
     if (+bought_volume > 0)
         maxTotal = +bought_volume;
     else
@@ -132,13 +138,8 @@ function calc_maxDealFunds_Deals(bought_volume:number , base_order_volume:number
     // TODO - Add typedef for market Orders
     if (!(typeof market_order_data === 'undefined')) {
         for (let order of market_order_data) {
-            let {
-                status_string, quantity_remaining, rate
-            } = order
-
-            if (status_string == "Active") {
+            let {quantity_remaining, rate} = order
                 maxTotal += quantity_remaining * +rate
-            }
         }
     }
     return maxTotal

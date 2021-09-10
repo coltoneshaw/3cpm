@@ -1,5 +1,5 @@
 
-const mostRecent = 'v0.4.0'
+const mostRecent = 'v0.4.1'
 
 
 const versionInformation = [
@@ -208,31 +208,47 @@ const versionInformation = [
     {
         version: 'v0.4.0',
         enhancements: [
-        
-        'Redo of the entire layout of active deals, and stats.',
-        'Changed the ROI metric from ROI on bought volume to ROI from total profit and bankroll.',
-        'Active Deal pills now are colored based on if that metric is positive, not the deal itself.',
-        'New Table fonts for easier viewing of financial data.',
-        'Adjusted KPIs to be relevant to the page active.',
-        'Adjusted quite a few metrics from three decimals to two.',
-        'Adjusted the bot / pair charts to be vertical charts.',
-        'Added the average line value on profit by day.',
-        'API key is not a secret instead of text field.',
-        'Massive backend code enhancements thanks to @TontonAo!',
-        'Added Average profit per deal to the bot performance chart.',
-        'Adjusted number length on the active deals table'
+
+            'Redo of the entire layout of active deals, and stats.',
+            'Changed the ROI metric from ROI on bought volume to ROI from total profit and bankroll.',
+            'Active Deal pills now are colored based on if that metric is positive, not the deal itself.',
+            'New Table fonts for easier viewing of financial data.',
+            'Adjusted KPIs to be relevant to the page active.',
+            'Adjusted quite a few metrics from three decimals to two.',
+            'Adjusted the bot / pair charts to be vertical charts.',
+            'Added the average line value on profit by day.',
+            'API key is not a secret instead of text field.',
+            'Massive backend code enhancements thanks to @TontonAo!',
+            'Added Average profit per deal to the bot performance chart.',
+            'Adjusted number length on the active deals table'
         ],
         bugs: [
-        
-        'Fixed bug in how the pair by date was calculated. This was using `actual_profit` from 3C which returns the profit if you never sold the coin.',
-        'Profit by day chart removed days with 0 profit, added these back.',
-        'Fixed bug where the TA chart would not load on the first click, additionally fixed the theme of the charts.',
+
+            'Fixed bug in how the pair by date was calculated. This was using `actual_profit` from 3C which returns the profit if you never sold the coin.',
+            'Profit by day chart removed days with 0 profit, added these back.',
+            'Fixed bug where the TA chart would not load on the first click, additionally fixed the theme of the charts.',
         ],
         new: [
-        
-        'Added a coin header where you can customize the coins that are tracked on a 5 second refresh.',
-        'Update notifications that prompt you to download when you are not on the latest release!',
-        'Added SO number to the Deal SO Utilization chart.'
+
+            'Added a coin header where you can customize the coins that are tracked on a 5 second refresh.',
+            'Update notifications that prompt you to download when you are not on the latest release!',
+            'Added SO number to the Deal SO Utilization chart.'
+        ]
+    },
+    {
+        version: 'v0.4.1',
+        enhancements: [
+            'Updates the overall style of active deals (removed top header, normalized number width)'
+        ],
+        bugs: [
+            'Discovered issue in how the bots calculated funds when MSTC was 0. Resolved this by properly calculating the MSTC with active + completed SOs.',
+            'Fixed bug in the Manual SO count metric showing cancelled deals counted.',
+            'Fixed hovering on the darkmode icon.',
+            'Fixed the labels incorrectly wrapping on the bot performance charts'
+        ],
+        new: [
+            'MacOS application is now signed and does not require additional permissions to download!',
+            'Menu bar under help includes relevant links to github, discord, and more.'
         ]
     },
 ]

@@ -102,15 +102,15 @@ deal_has_error: true
 from_currency_id: 5                      DEPRECATED 
 to_currency_id: 10                       DEPRECATED 
 account_id: 121                           
-active_safety_orders_count: 1             
+active_safety_orders_count: 1         // This will return the current bot settings
 created_at: 2018-08-08 08:08:08           
 updated_at: 2018-09-09 09:09:09           
 closed_at: 2018-10-10 10:10:10            
 finished?:                                
-current_active_safety_orders_count: 1     
+current_active_safety_orders_count: 1     // Actual current active SOs
 current_active_safety_orders: 1          DEPRECATED 
 completed_safety_orders_count: 2         completed safeties (not including manual) 
-completed_manual_safety_orders_count: 2  completed manual safeties 
+completed_manual_safety_orders_count: 2  // This value includes any manual SOs placed, regardless of the status.
 cancellable?:                             
 panic_sellable?:                          
 trailing_enabled: true                    
@@ -168,3 +168,41 @@ reserved_quote_funds:                    Sum of reserved in active deals funds i
 reserved_base_funds:                     Sum of reserved in active deals funds in BASE 
 } 
 ```
+
+## Market orders
+
+Endpoint: `GET /ver1/deals/{deal_id}/market_orders`
+
+
+
+```javascript
+[
+    {
+        "order_id": "MATICUSD_166773403",
+        "order_type": "BUY",
+        "deal_order_type": "Manual Safety",
+        "cancellable": false,
+        "status_string": "Filled",
+        "created_at": "2021-09-08T23:08:13.796Z",
+        "updated_at": "2021-09-08T23:08:13.830Z",
+        "quantity": "2490.0",
+        "quantity_remaining": "0.0",
+        "total": "3376.4804625",
+        "rate": "1.357",
+        "average_price": "1.355"
+    },
+    {
+        "order_id": "MATICUSD_166772169",
+        "order_type": "BUY",
+        "deal_order_type": "Manual Safety",
+        "cancellable": false,
+        "status_string": "Cancelled",
+        "created_at": "2021-09-08T23:06:52.548Z",
+        "updated_at": "2021-09-08T23:07:48.685Z",
+        "quantity": "2506.7",
+        "quantity_remaining": "2506.7",
+        "total": "0.0",
+        "rate": "1.348",
+        "average_price": "0.0"
+    },
+    ```

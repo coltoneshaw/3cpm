@@ -11,10 +11,6 @@ The 3C Portfolio Manager is an essential addon to your 3Commas experience. It en
 - [Feedback / Bug reports](#feedback-or-bug-submission)
 - [Building the application locally](#building-the-application-locally)
 - [Frequently Asked Questions](#frequently-asked-questions)
-    - [Initial Setup](#initial-setup)
-    - [Why did we change?](#why-did-we-change)
-    - [Why did we go with a downloadable application?](#why-did-we-go-with-a-downloadable-application)
-    - [Why should I trust this?](#why-should-i-trust-this)
 - [Change Log](https://github.com/coltoneshaw/3c-portfolio-manager/blob/main/CHANGELOG.md)
 - [Screenshots](#screenshots)
 
@@ -118,6 +114,18 @@ npm run build
 3. The relevant build files will be located in `./release`
 
 # Frequently Asked Questions
+
+Questions
+    - [Why do my active SOs not match 3C?](#why-do-my-active-sos-not-match-3C)
+    - [Why did we change?](#why-did-we-change)
+    - [Why did we go with a downloadable application?](#why-did-we-go-with-a-downloadable-application)
+    - [Why should I trust this?](#why-should-i-trust-this)
+
+## Why do my active SOs not match 3C?
+
+This is a fun one. It seems that how 3Commas handles Max Safety Trades is not how you'd expect. You can fill 5 SOs, have 1 active SO but manually set your MSTC to 0. This means that when attempting to calculate the max deal funds within the application it stops at the MSTC value, causing a mismatch in max deal funds on 3cpm and on 3commas. To mitigate this we manually update this value in the app to be the max of either MSTC or filled SOs + active SOs.
+
+TLDR; Numbers were wrong, fixed and the app is _more right_.
 
 ## Why did we change?
 

@@ -111,7 +111,7 @@ const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
                     textAnchor="end"
 
                     tickFormatter={(str) => {
-                        return (str.length > 15 ) ? str.slice(0, 12) + "..." : str
+                        return (str.length > 14 ) ? str.slice(0, 11) + "..." : str
                     }}
 
                     fontSize=".75em"
