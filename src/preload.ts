@@ -49,6 +49,9 @@ async function setupContextBridge() {
         return await ipcRenderer.invoke('setStoreValue', 'profiles.'+profile+'.' + key, value);
       },
       async bulk(changes:object) {
+        // @ts-ignore
+        // @FIXME for some reason now internal is loaded
+        delete changes['__internal__']
         console.log('writing Config bulk', changes)
         return await ipcRenderer.invoke('setStoreValue', null, changes);
       }
