@@ -1,8 +1,9 @@
-
-import { app } from "electron";
-const appDataPath = app.getPath('userData');
+import {app} from "electron";
+import {config} from "@/utils/config";
 import path from "path";
 import Database from 'better-sqlite3';
+
+const appDataPath = app.getPath('userData');
 const db = new Database(path.join(appDataPath, 'db.sqlite3'));
 
 function initializeBotsTable() {
@@ -49,7 +50,8 @@ function initializeBotsTable() {
             drawdown NUMBER,
             maxCoveragePercent NUMBER,
             maxSoReached NUMBER,
-            hide BOOLEAN
+            hide BOOLEAN,
+            profile_id VARCHAR(36)
             )`);
 
     stmt.run();
@@ -141,7 +143,8 @@ function initializeDealTable() {
             currency TEXT,
             max_deal_funds NUMBER,
             profitPercent NUMBER,
-            impactFactor NUMBER
+            impactFactor NUMBER,
+            profile_id VARCHAR(36)
             )`);
 
     stmt.run();
@@ -161,7 +164,8 @@ function initializeAccountTable() {
             on_orders NUMBER,
             btc_value NUMBER,
             usd_value NUMBER,
-            market_code TEXT
+            market_code TEXT,
+            profile_id VARCHAR(36)
             )`);
 
     stmt.run();
@@ -231,6 +235,7 @@ async function update(table:string, data:any[] ) {
         Object.keys(row).forEach(item => {
             newRow[normalizeData(item)] = normalizeData(row[item])
         })
+        newRow["profile_id"] = config.get('current')
         return newRow
     })
 
@@ -238,7 +243,7 @@ async function update(table:string, data:any[] ) {
     const KEYS = Object.keys(normalizedData[0]).map(e => normalizeData(e)).join()
     const valueKey = Object.keys(normalizedData[0]).map(key => '@' + key).map(e => normalizeData(e)).join()
 
-    
+
 
     const statement = db.prepare(`INSERT OR REPLACE INTO ${table} (${KEYS}) VALUES (${valueKey})`)
 
@@ -273,7 +278,7 @@ async function upsert( table:string, data:any[], id:string, updateColumn:string 
     
     const insertMany = db.transaction((dataArray) => {
         for (const row of dataArray) {
-            const statement = db.prepare(`UPDATE ${table} SET ${updateColumn} = ${row[updateColumn]} where ${id} = ${row[id]};`)
+            const statement = db.prepare(`UPDATE ${table} SET ${updateColumn} = ${row[updateColumn]} where ${id} = ${row[id]} AND profile_id = '${config.get('current')}';`)
             statement.run(row)
         }
     });
@@ -301,12 +306,18 @@ async function run(query:string) {
     await stmt.run()
 }
 
-async function deleteAllData () {
-        console.info('deleting all database info.')
-       await run('drop table bots')
-       await run('drop table accountData')
-       await run('drop table deals')
-       initialDatabaseSetup()
+async function deleteAllData(profileID: string) {
+    console.info('deleting all database info.')
+    await run(`DELETE
+               FROM bots
+               WHERE profile_id = '${profileID}'`)
+    await run(`DELETE
+               FROM accountData
+               WHERE profile_id = '${profileID}'`)
+    await run(`DELETE
+               FROM deals
+               WHERE profile_id = '${profileID}'`)
+    console.info('database info deleted.')
 
 }
 

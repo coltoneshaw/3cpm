@@ -11,7 +11,7 @@ interface SubmitButtons {
 }
 const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
     const configState = useGlobalState()
-    const { reset, setConfigBulk }  = configState
+    const { config, reset, setConfigBulk }  = configState
 
     const dataState = useGlobalData()
     const {actions: { updateAllData  }, data: { isSyncing}} = dataState
@@ -27,10 +27,10 @@ const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
                 onClick={() => {
                     const accept = confirm("Confirm that you want to delete all the data. This will require resyncing from 3Commas");
                     if(accept){
-                    // @ts-ignore
-                    electron.database.deleteAllData()
-                    reset()
-                    setOpen(true)
+                        // @ts-ignore
+                        electron.database.deleteAllData(config.current)
+                        reset()
+                        setOpen(true)
                     }
                 }}
                 disableElevation
@@ -44,8 +44,8 @@ const SaveSubmitButtons = ({setOpen}: SubmitButtons) => {
                 onClick={ async () => {
                     setLoaderIcon(true)
                     try{
-                        const config = await setConfigBulk() 
-                        if(config){
+                        const cfg = await setConfigBulk()
+                        if(cfg){
                             await updateAllData(1000, callback)
                         }
                     } catch (error) {

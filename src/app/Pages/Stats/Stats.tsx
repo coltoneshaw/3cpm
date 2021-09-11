@@ -42,13 +42,13 @@ const buttonElements = [
 
 const StatsPage = () => {
     const configState = useGlobalState()
-    const { config, state: { reservedFunds } } = configState
+    const { currentProfile, state: { reservedFunds } } = configState
     const state = useGlobalData()
     const { data: { metricsData}} = state
     const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent, totalDeals, boughtVolume, totalProfit_perf, averageDailyProfit, averageDealHours, totalClosedDeals, totalDealHours } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')
-    const date: undefined | number = dotProp.get(config, 'statSettings.startDate')
+    const date: undefined | number = dotProp.get(currentProfile, 'statSettings.startDate')
 
     // const account_id = findAccounts(config, 'statSettings.account_id')
 
@@ -67,7 +67,7 @@ const StatsPage = () => {
     }
 
     const returnCurrencyValues = () => {
-        const currencyValues: string[] | undefined = dotProp.get(config, 'general.defaultCurrency')
+        const currencyValues: string[] | undefined = dotProp.get(currentProfile, 'general.defaultCurrency')
         return currencyValues != undefined && currencyValues.length > 0 ?
             currencyValues.join(', ')
             :

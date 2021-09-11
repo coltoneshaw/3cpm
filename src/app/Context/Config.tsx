@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect} from 'react';
 import dotProp from 'dot-prop';
 import { sub, getTime } from 'date-fns'
+import { v4 as uuidv4 } from 'uuid'
 import { removeDuplicatesInArray } from '@/utils/helperFunctions';
 
 
@@ -10,12 +11,13 @@ const ConfigContext = createContext<Type_ConfigContext>();
 
 
 // pulling in the default config from the config store for use once it's been reset.
-import { defaultConfig } from '@/utils/defaultConfig'
-import { TconfigValues, Type_ReservedFunds } from '@/types/config'
+import {defaultConfig, defaultProfile} from '@/utils/defaultConfig'
+import { TconfigValues, Type_Profile, Type_ReservedFunds } from '@/types/config'
 
 
 interface Type_ConfigContext {
     config: TconfigValues
+    currentProfile: Type_Profile
     updateConfig: any
     setConfigBulk: any
     reset: any
@@ -38,9 +40,10 @@ interface Type_ConfigContext {
 
 
 
-
 const ConfigProvider = ({ children }: any) => {
-    const [config, updateConfig] = useState<TconfigValues>(() => defaultConfig)
+    const [config, updateConfig] = useState<TconfigValues>(defaultConfig)
+    const [currentProfile, updateCurrentProfile] = useState<Type_Profile>(defaultProfile)
+    const [initialConfigLoaded, updateInitialConfigLoaded] = useState<boolean>(false)
 
     // setting the default state to be 90 days in the past.
     const [date, updateDate] = useState(() => getTime(sub(new Date(), { days: 90 })))
@@ -49,25 +52,25 @@ const ConfigProvider = ({ children }: any) => {
     const [accountID, updateAccountID] = useState<number[]>([]);
     const [reservedFunds, updateReservedFunds] = useState<Type_ReservedFunds[]>([])
 
-    const setNewCurrency = (config: TconfigValues) => {
+    const setNewCurrency = (profile: Type_Profile) => {
         updateCurrency(() => {
-            const newCurrency: string[] | undefined = dotProp.get(config, 'general.defaultCurrency')
+            const newCurrency: string[] | undefined = dotProp.get(profile, 'general.defaultCurrency')
             return (newCurrency) ? [...newCurrency] : ["USD"]
         })
     }
 
-    const setNewReservedFunds = (config: TconfigValues) => {
+    const setNewReservedFunds = (profile: Type_Profile) => {
         updateReservedFunds( () => {
-            const reservedFundsArray: Type_ReservedFunds[] | undefined = dotProp.get(config, 'statSettings.reservedFunds')
+            const reservedFundsArray: Type_ReservedFunds[] | undefined = dotProp.get(profile, 'statSettings.reservedFunds')
             return (reservedFundsArray) ? reservedFundsArray : [];
         })
     }
 
-    const setNewApiKeys = (config: TconfigValues) => {
+    const setNewApiKeys = (profile: Type_Profile) => {
         updateApiData(() => {
-            const keyValue: string | undefined = dotProp.get(config, 'apis.threeC.key');
-            const secretValue: string | undefined = dotProp.get(config, 'apis.threeC.secret')
-            const modeValue: string | undefined = dotProp.get(config, 'apis.threeC.mode')
+            const keyValue: string | undefined = dotProp.get(profile, 'apis.threeC.key');
+            const secretValue: string | undefined = dotProp.get(profile, 'apis.threeC.secret')
+            const modeValue: string | undefined = dotProp.get(profile, 'apis.threeC.mode')
             return {
                 key: (keyValue) ? keyValue : "",
                 secret: (secretValue) ? secretValue : "",
@@ -76,16 +79,16 @@ const ConfigProvider = ({ children }: any) => {
         });
     }
 
-    const setNewAccountIdArray = (config: TconfigValues) => {
+    const setNewAccountIdArray = (profile: Type_Profile) => {
         updateAccountID(() => {
-            const accountIdValue: number[] | undefined = dotProp.get(config, 'statSettings.account_id')
+            const accountIdValue: number[] | undefined = dotProp.get(profile, 'statSettings.account_id')
             return (accountIdValue) ? accountIdValue : [];
         })
     }
 
-    const setNewStatDate = (config: TconfigValues) => {
+    const setNewStatDate = (profile: Type_Profile) => {
         updateDate(() => {
-            const startDate: number | undefined = dotProp.get(config, 'statSettings.startDate')
+            const startDate: number | undefined = dotProp.get(profile, 'statSettings.startDate')
             return (startDate) ? startDate : getTime(sub(new Date(), { days: 90 })) ;
         })
     }
@@ -97,17 +100,27 @@ const ConfigProvider = ({ children }: any) => {
         // @ts-ignore
         electron.config.get()
             .then((config: TconfigValues) => {
+                if (Object.keys(config.profiles).length == 0) {
+                    const id = uuidv4()
+                    config.current = id
+                    config.profiles[id] = {...defaultProfile}
+                }
+
+                const profile = config.profiles[config.current]
+
                 updateConfig(config)
-                setNewCurrency(config)
-                setNewApiKeys(config)
-                setNewAccountIdArray(config)
-                setNewStatDate(config)
-                setNewReservedFunds(config)
+                updateInitialConfigLoaded(true)
+
+                setNewCurrency(profile)
+                setNewApiKeys(profile)
+                setNewAccountIdArray(profile)
+                setNewStatDate(profile)
+                setNewReservedFunds(profile)
             })
     }
 
-    const setConfigBulk = async () => {
-        console.log('Setting the config')
+    const setProfileBulk = async () => {
+        console.log('Setting the profile')
 
         const accountIDs = reservedFunds.filter(account => account.is_enabled).map(account => account.id)
 
@@ -118,25 +131,31 @@ const ConfigProvider = ({ children }: any) => {
 
         try {
             await updateConfig((prevConfig: TconfigValues) => {
+                if (Object.keys(prevConfig.profiles).length == 0) {
+                    const id = uuidv4()
+                    prevConfig.current = id
+                    prevConfig.profiles[id] = {...defaultProfile}
+                }
 
 
-                prevConfig.general.defaultCurrency = currency;
-                prevConfig.statSettings.account_id = (accountID) ? accountID : [];
-                prevConfig.statSettings.startDate = (date) ? date : 0;
-                prevConfig.statSettings.reservedFunds = (reservedFunds) ? reservedFunds : [];
-    
+                let profile = prevConfig.profiles[prevConfig.current]
+
+                dotProp.set(profile, 'general.defaultCurrency',  currency);
+                dotProp.set(profile, 'statSettings.account_id',  (accountID) ? accountID : []);
+                dotProp.set(profile, 'statSettings.startDate',  (date) ? date : 0);
+                dotProp.set(profile, 'statSettings.reservedFunds',  (reservedFunds) ? reservedFunds : []);
+                dotProp.set(profile, 'apis.threeC', {key: apiData.key,secret: apiData.secret,mode: apiData.mode})
                 // console.log(reservedFunds.filter(account => account.is_enabled).map(account => account.id))
     
                 updateAccountID(() => {
                     // const accountIDs = reservedFunds.filter(account => account.is_enabled).map(account => account.id)
                     return accountIDs.length > 0 ? accountIDs : [];
                 })
-    
-                prevConfig.apis.threeC = {
-                    key: apiData.key,
-                    secret: apiData.secret,
-                    mode: apiData.mode,
-                }
+
+
+
+
+                prevConfig.profiles[prevConfig.current] = profile
     
                 // @ts-ignore
                 // sending the config over to Electron and returning the response
@@ -154,18 +173,19 @@ const ConfigProvider = ({ children }: any) => {
     // reset button is confirmed working at the moment.
     const reset = () => {
 
-        updateConfig(() => {
-            const newConfig = { ...defaultConfig }
-            console.log('reset the config!!')
+        updateConfig((prevConfig: TconfigValues) => {
+            const newConfig = {...prevConfig}
+            newConfig.current = prevConfig.current
+            newConfig.profiles[prevConfig.current] =  {...defaultProfile}
+            console.log('reset the config!!', newConfig.profiles[prevConfig.current])
+
+            setNewCurrency(newConfig.profiles[newConfig.current])
+            setNewApiKeys(newConfig.profiles[newConfig.current])
+            setNewAccountIdArray(newConfig.profiles[newConfig.current])
+            setNewReservedFunds(newConfig.profiles[newConfig.current])
 
             // @ts-ignore
-            electron.config.reset()
-
-            setNewCurrency(newConfig)
-            setNewApiKeys(newConfig)
-            setNewAccountIdArray(newConfig)
-            setNewReservedFunds(newConfig)
-
+            electron.config.bulk(newConfig)
             return newConfig
         })
     }
@@ -230,9 +250,19 @@ const ConfigProvider = ({ children }: any) => {
     useEffect(() => {
         getConfig()
     }, [])
+
+
+    useEffect(() => {
+        if (initialConfigLoaded) {
+            updateCurrentProfile(config.profiles[config.current])
+        }
+    }, [config, initialConfigLoaded])
     
 
     useEffect(() => {
+
+        if (!initialConfigLoaded) return
+
 
         [
             {path: 'general.defaultCurrency', func: setNewCurrency},
@@ -241,12 +271,12 @@ const ConfigProvider = ({ children }: any) => {
             {path: 'statSettings.startDate', func: setNewStatDate},
             {path: 'statSettings.reservedFunds', func: setNewReservedFunds},
         ].map(function (line) {
-            if (config && dotProp.has(config, line.path)) {
+            if (dotProp.has(config.profiles[config.current], line.path)) {
                 console.log(line.func.name)
-                line.func(config)
+                line.func(config.profiles[config.current])
             }
         })
-    }, [config])
+    }, [config, initialConfigLoaded])
 
 
     return (
@@ -256,8 +286,9 @@ const ConfigProvider = ({ children }: any) => {
             // TODO - Come back to this one!!
             value={{
                 config,
+                currentProfile,
                 updateConfig,
-                setConfigBulk,
+                setConfigBulk: setProfileBulk,
                 reset,
                 state: {
                     accountID,

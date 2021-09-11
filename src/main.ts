@@ -109,8 +109,8 @@ ipcMain.handle('run-database', (event, queryString) => {
   return run(queryString)
 });
 
-ipcMain.handle('database-deleteAll', () => {
-  deleteAllData()
+ipcMain.handle('database-deleteAll', (e, profileID: string) => {
+  deleteAllData(profileID)
 });
 
 ipcMain.handle('database-checkOrMakeTables', () => {

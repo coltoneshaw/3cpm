@@ -11,6 +11,7 @@ const lang = getLang()
 
 import { Type_Tooltip } from '@/types/Charts';
 import { getSelectPairDataByDate } from '@/app/Features/3Commas/3Commas';
+import {useGlobalState} from "@/app/Context/Config";
 
 const colors = ["#374151", "#B91C1C", "#B45309", "#047857", "#1D4ED8", "#4338CA", "#6D28D9", "#BE185D"]
 
@@ -22,6 +23,7 @@ interface pairByDate {
 
 const PairPerformanceByDate = () => {
 
+    const { config } = useGlobalState()
     const [localData, updateLocalData] = useState<pairByDate[]>([]);
     const [pairs, updatePairs] = useState<{ pair: string, opacity: number }[]>([])
     const [pairFilters, updatePairFilters] = useState<string[]>([]);
@@ -41,7 +43,7 @@ const PairPerformanceByDate = () => {
 
         // selecting the pair data and sorting by profit for easier viewing.
         //@ts-ignore
-        electron.database.query('select pair, sum(actual_profit) as total_profit from deals group by pair order by total_profit desc;')
+        electron.database.query(`select pair, sum(actual_profit) as total_profit from deals WHERE profile_id = '${config.current}' group by pair order by total_profit desc;`)
             .then((result: { pair: string }[]) => {
                 updatePairs(result.map(pair => ({ pair: pair.pair, opacity: 1 })))
 

@@ -16,9 +16,11 @@ import { getDatesBetweenTwoDates } from '@/utils/helperFunctions'
 const getFiltersQueryString = async () => {
 
     // @ts-ignore
-    const config = await electron.config.get()
+    const profile = await electron.config.getProfile()
+    // @ts-ignore
+    const currentProfileID = await electron.config.get('current')
 
-    const { statSettings: { startDate, reservedFunds }, general: { defaultCurrency } } = config
+    const { statSettings: { startDate, reservedFunds }, general: { defaultCurrency } } = profile
 
     const currencyString = (defaultCurrency) ? defaultCurrency.map((b: string) => "'" + b + "'") : ""
     const startString = startDate
@@ -28,7 +30,8 @@ const getFiltersQueryString = async () => {
     return {
         currencyString,
         accountIdString,
-        startString
+        startString,
+        currentProfileID
     }
 
 }
@@ -67,7 +70,8 @@ const fetchDealDataFunction = async () => {
                 or finished = 1 
                 and account_id in (${accountIdString} )
                 and currency in (${currencyString} )
-                and closed_at_iso_string > ${startString} 
+                and closed_at_iso_string > ${startString}
+                and profile_id = '${filtersQueryString.currentProfileID}'
             GROUP BY
                  closed_at_str
             ORDER BY
@@ -155,7 +159,8 @@ const fetchPerformanceDataFunction = async () => {
                     profitPercent is not null
                     and account_id in (${accountIdString} )
                     and currency in (${currencyString} )
-                    and closed_at_iso_string > ${startString} 
+                    and closed_at_iso_string > ${startString}
+                    and profile_id = '${filtersQueryString.currentProfileID}'
                 GROUP BY 
                     performance_id;`
 
@@ -214,12 +219,13 @@ const fetchBotPerformanceMetrics = async () => {
                 FROM 
                     deals
                 JOIN 
-                    bots on deals.bot_id = bots.id
+                    bots on deals.bot_id = bots.id and deals.profile_id = bots.profile_id
                 WHERE
                     closed_at is not null
                     and deals.account_id in (${accountIdString}) 
                     and deals.currency in (${currencyString}) 
-                    and deals.closed_at_iso_string > ${startString} 
+                    and deals.closed_at_iso_string > ${startString}
+                    and deals.profile_id = '${filtersQueryString.currentProfileID}'
                 GROUP BY 
                     bot_id;`
 
@@ -247,8 +253,9 @@ const botQuery = async () => {
                 FROM 
                     bots
                 WHERE
-                    account_id in (${accountIdString})
-                    OR origin = 'custom'`
+                    profile_id = '${filtersQueryString.currentProfileID}'
+                    and (account_id in (${accountIdString})  OR origin = 'custom')`
+
 
     // console.log(queryString)
 
@@ -287,6 +294,7 @@ const fetchPairPerformanceMetrics = async () => {
                     and account_id in (${accountIdString}) 
                     and currency in (${currencyString}) 
                     and closed_at_iso_string > ${startString} 
+                    and profile_id = '${filtersQueryString.currentProfileID}'
                 GROUP BY 
                     pair;`
 
@@ -317,6 +325,7 @@ const getActiveDealsFunction = async () => {
                     finished = 0 
                     and account_id in (${accountIdString} )
                     and currency in (${currencyString} )
+                    and profile_id = '${filtersQueryString.currentProfileID}'
                     `
     // console.log(query)
     // @ts-ignore
@@ -370,7 +379,8 @@ const getAccountDataFunction = async () => {
                     accountData
                 WHERE
                     account_id IN ( ${accountIdString} )
-                    and currency_code IN ( ${currencyString} );
+                    and currency_code IN ( ${currencyString} )
+                    and profile_id = '${filtersQueryString.currentProfileID}';
     `
     console.log(query)
 
@@ -438,7 +448,8 @@ const getSelectPairDataByDate = async (pairs: string[]) => {
             and account_id IN ( ${accountIdString} )
             and from_currency IN ( ${currencyString} )
             and pair in (${pairString})
-            and closed_at_iso_string > ${startString} 
+            and closed_at_iso_string > ${startString}
+            and profile_id = '${filtersQueryString.currentProfileID}'
         GROUP BY
         date, pair;
     `

@@ -25,7 +25,11 @@ async function setupContextBridge() {
     config: {
       async get( value:string ) {
         console.log('fetching Config')
-        return await ipcRenderer.invoke('allConfig', value);;
+        return await ipcRenderer.invoke('allConfig', value);
+      },
+      async getProfile( value:string ) {
+          const profile = await ipcRenderer.invoke('allConfig', 'current');
+          return await ipcRenderer.invoke('allConfig',  'profiles.'+profile+ (value ?'.' + value : ''));
       },
       async reset() {
         /**
@@ -40,8 +44,12 @@ async function setupContextBridge() {
         return await ipcRenderer.invoke('setStoreValue', key, value);
 
       },
+      async setProfile( key:string, value:any ) {
+        const profile = await ipcRenderer.invoke('allConfig', 'current');
+        return await ipcRenderer.invoke('setStoreValue', 'profiles.'+profile+'.' + key, value);
+      },
       async bulk(changes:object) {
-        console.log('writing Config bulk')
+        console.log('writing Config bulk', changes)
         return await ipcRenderer.invoke('setStoreValue', null, changes);
       }
     },
@@ -62,9 +70,9 @@ async function setupContextBridge() {
         console.log('running query' + query)
         return await ipcRenderer.invoke('run-database', query);
       },
-      async deleteAllData() {
+      async deleteAllData(profileID: string) {
         console.log('deleting all data!')
-        return await ipcRenderer.invoke('database-deleteAll');
+        return await ipcRenderer.invoke('database-deleteAll', profileID);
       }
     },
     general: {

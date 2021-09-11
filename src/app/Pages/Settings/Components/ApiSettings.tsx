@@ -4,24 +4,24 @@ import dotProp from 'dot-prop';
 import {TextField, Button, InputLabel, FormControl, MenuItem, Select} from '@material-ui/core';
 
 import { useGlobalState } from '@/app/Context/Config';
-import { TconfigValues, Type_ApiKeys } from '@/types/config'
+import {Type_ApiKeys, Type_Profile} from '@/types/config'
 
 
 const ApiSettings = () => {
-    const state = useGlobalState();
-    const { state: { updateApiData, apiData }, config, actions: { fetchAccountsForRequiredFunds } } = state
+    const { state: { updateApiData, apiData }, currentProfile, actions: { fetchAccountsForRequiredFunds } } = useGlobalState();
 
 
-    const updateKeys = (config: TconfigValues) => {
-        if (dotProp.has(config, 'apis.threeC')) return config.apis.threeC
+    const updateKeys = (profile: Type_Profile) => {
+        if (dotProp.has(profile, 'apis.threeC'))
+            return profile.apis.threeC
         return { key: '', secret: '', mode: 'real' }
     }
 
 
 
     useEffect(() => {
-        updateApiData(updateKeys(config));
-    }, [config]);
+        updateApiData(updateKeys(currentProfile));
+    }, [currentProfile]);
 
     const handleChange = (e: any) => {
         if(!e.target.name) {

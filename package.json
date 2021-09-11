@@ -1,7 +1,7 @@
 {
   "name": "3c-portfolio-manager",
   "productName": "3C Portfolio Manager",
-  "version": "v0.4.1",
+  "version": "v0.5.0",
   "description": "An application to manage your 3Commas portfolio.",
   "private": true,
   "main": "./dist/main.js",
@@ -15,6 +15,7 @@
     "electron:dev": "nodemon",
     "webpack": "webpack",
     "dev": "concurrently --kill-others \"npm run react:dev\" \"npm run electron:dev\"",
+    "wpanddev": "webpack && concurrently --kill-others \"npm run react:dev\" \"npm run electron:dev\"",
     "start": "npm run build && electron dist/main.js",
     "rebuild": "./node_modules/.bin/electron-rebuild -f -w better-sqlite3"
   },
@@ -45,6 +46,7 @@
     "@types/react-router-dom": "^5.1.8",
     "@types/react-table": "^7.7.2",
     "@types/styled-components": "^5.1.12",
+    "@types/uuid": "^8.3.1",
     "babel-loader": "^8.2.2",
     "concurrently": "^6.2.0",
     "css-loader": "^6.2.0",
@@ -75,9 +77,9 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "3commas-api-node": "^1.0.9",
     "@date-io/date-fns": "^1.3.13",
     "@material-ui/lab": "^4.0.0-alpha.60",
-    "3commas-api-node": "^1.0.9",
     "better-sqlite3": "^7.4.1",
     "date-fns": "^2.22.1",
     "dot-prop": "^6.0.1",
@@ -85,7 +87,8 @@
     "electron-notarize": "^1.1.1",
     "electron-store": "^8.0.0",
     "node-fetch": "^2.6.1",
-    "query-string": "^7.0.1"
+    "query-string": "^7.0.1",
+    "uuid": "^8.3.2"
   },
   "build": {
     "appId": "com.savvytoolbelt.3cportfoliomanager",
@@ -107,7 +110,7 @@
       "entitlementsInherit": "build/entitlements.mac.plist",
       "gatekeeperAssess": false,
       "icon": "assets/icons/icon.icns",
-      "provisioningProfile" : "build/embedded.provisionprofile"
+      "provisioningProfile": "build/embedded.provisionprofile"
     },
     "dmg": {
       "contents": [

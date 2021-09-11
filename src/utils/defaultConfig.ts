@@ -1,6 +1,6 @@
 import { sub, getTime } from 'date-fns';
-
-import { TconfigValues } from '@/types/config';
+import { v4 as uuidv4 } from 'uuid';
+import {TconfigValues, Type_Profile} from '@/types/config';
 
 //@ts-ignore
 import { version } from '#/package.json';
@@ -72,32 +72,43 @@ const configSchema = {
 
 
 
-const defaultConfig:TconfigValues = {
-    "apis": {
-        "threeC": {
-            "key": "",
-            "secret": "",
-            "mode": "real",
+const defaultProfile:Type_Profile = {
+    name: "New profile",
+    apis: {
+        threeC: {
+            key: "",
+            secret: "",
+            mode: "real",
         }
     },
-    "general": {
-        "defaultCurrency": [],
-        "globalLimit": 250000,
-        "updated" : false,
-        "version" : version
+    general: {
+        defaultCurrency: [],
+        globalLimit: 250000,
+        updated : false,
     },
-    "syncStatus": {
-        "deals": {
-            "lastSyncTime": null,
+    syncStatus: {
+        deals: {
+            lastSyncTime: null,
         }
     },
-    "statSettings": {
-        "startDate": getTime(sub(new Date(), { days: 90 })),
-        "account_id": [],
-        "reservedFunds": []
+    statSettings: {
+        startDate: getTime(sub(new Date(), { days: 90 })),
+        account_id: [],
+        reservedFunds: []
     }
 }
+
+
+const defaultConfig:TconfigValues = {
+    profiles: {},
+    current: "",
+    general: {
+        version : version
+    },
+}
+
 export {
+    defaultProfile,
     defaultConfig,
     configSchema,
 }

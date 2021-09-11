@@ -1,19 +1,27 @@
 export interface TconfigValues {
-    "apis": {
-        "threeC": {
+    profiles: Record<string, Type_Profile>,
+    current: string,
+    general: {
+        version: string
+    },
+}
+
+export interface Type_Profile {
+    name: string,
+    apis: {
+        threeC: {
             key: string,
             secret: string,
             mode: string,
         }
     },
-    "general": {
+    general: {
         defaultCurrency: string[],
         globalLimit: number
         updated: boolean
-        version: string
     },
-    "syncStatus": {
-        "deals": {
+    syncStatus: {
+        deals: {
             lastSyncTime: number | null
         }
     },
@@ -22,6 +30,7 @@ export interface TconfigValues {
         account_id: number[],
         reservedFunds: Type_ReservedFunds[]
     }
+
 }
 
 export interface Type_ReservedFunds {

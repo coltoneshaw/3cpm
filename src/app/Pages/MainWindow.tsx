@@ -23,7 +23,7 @@ import { getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalSt
 const MainWindow = () => {
 
     const configState = useGlobalState()
-    const { state: { apiData }, config } = configState;
+    const { state: { apiData }} = configState;
 
     const [homePage, updateHomePage] = useState<string>('/activeDeals')
 

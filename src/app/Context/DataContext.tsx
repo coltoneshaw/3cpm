@@ -92,7 +92,7 @@ interface Type_Data_Context {
 const DataProvider = ({ children }: any) => {
 
     const configState = useGlobalState()
-    const { config, state: { reservedFunds } } = configState
+    const { currentProfile, state: { reservedFunds } } = configState
 
     const [botData, updateBotData] = useState<Type_Query_bots[]>([])
     const [profitData, updateProfitData] = useState<Type_Profit[]>([])
@@ -120,14 +120,14 @@ const DataProvider = ({ children }: any) => {
             console.error(error)
             updateIsSyncing(false)
         }
-    }, [config])
+    }, [currentProfile])
 
     /**
      * checking if any of the numbers needed have changed, if so then we pull the data.
      */
     useEffect(() => {
         calculateMetrics()
-    }, [metricsData.position, metricsData.totalBoughtVolume, metricsData.maxRisk, config])
+    }, [metricsData.position, metricsData.totalBoughtVolume, metricsData.maxRisk, currentProfile])
 
 
     const fetchBotData = async () => {
@@ -261,7 +261,7 @@ const DataProvider = ({ children }: any) => {
                 }
 
                 // filtering the accounts based on what is included in the config settings.
-                const filteredAccount = accountData.filter(account => config.statSettings.account_id.includes(account.account_id))
+                const filteredAccount = accountData.filter(account => currentProfile.statSettings.account_id.includes(account.account_id))
 
                 /** TODO
                  * - Add error handling here to properly know what to return if there is no matching accounts
