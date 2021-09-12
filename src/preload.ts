@@ -27,6 +27,8 @@ async function setupContextBridge() {
         console.log('fetching Config')
         return await ipcRenderer.invoke('allConfig', value);
       },
+
+      // gets the value for the current profile
       async getProfile( value:string ) {
           const profile = await ipcRenderer.invoke('allConfig', 'current');
           return await ipcRenderer.invoke('allConfig',  'profiles.'+profile+ (value ?'.' + value : ''));

@@ -32,6 +32,8 @@ interface Type_ConfigContext {
         apiData: {key: string, secret: string, mode: string}
         reservedFunds: Type_ReservedFunds[],
         updateReservedFunds: any
+        currentProfileId: string
+        updateCurrentProfileId: any
     },
     actions: {
         fetchAccountsForRequiredFunds: any
@@ -41,16 +43,21 @@ interface Type_ConfigContext {
 
 
 const ConfigProvider = ({ children }: any) => {
-    const [config, updateConfig] = useState<TconfigValues>(defaultConfig)
-    const [currentProfile, updateCurrentProfile] = useState<Type_Profile>(defaultProfile)
+    const [config, updateConfig] = useState<TconfigValues>(defaultConfig);
+
+    // current profile config values.
+    const [currentProfile, updateCurrentProfile] = useState<Type_Profile>(defaultProfile);
     const [initialConfigLoaded, updateInitialConfigLoaded] = useState<boolean>(false)
 
+    // string ID that represents the uuid of the current profile.
+    const [currentProfileId, updateCurrentProfileId ] = useState('')
+    
     // setting the default state to be 90 days in the past.
     const [date, updateDate] = useState(() => getTime(sub(new Date(), { days: 90 })))
     const [apiData, updateApiData] = useState({ key: '', secret: '', mode: 'real' })
     const [currency, updateCurrency] = useState<string[]>([])
     const [accountID, updateAccountID] = useState<number[]>([]);
-    const [reservedFunds, updateReservedFunds] = useState<Type_ReservedFunds[]>([])
+    const [reservedFunds, updateReservedFunds] = useState<Type_ReservedFunds[]>([]);
 
     const setNewCurrency = (profile: Type_Profile) => {
         updateCurrency(() => {
@@ -107,6 +114,7 @@ const ConfigProvider = ({ children }: any) => {
                 }
 
                 const profile = config.profiles[config.current]
+                updateCurrentProfileId(config.current)
 
                 updateConfig(config)
                 updateInitialConfigLoaded(true)
@@ -251,6 +259,14 @@ const ConfigProvider = ({ children }: any) => {
             updateCurrentProfile(config.profiles[config.current])
         }
     }, [config, initialConfigLoaded])
+
+    // responsible for updating the config.json if the current profile ID changes.
+    useEffect(() => {
+
+        // @ts-ignore
+        updateConfig(prevState => ({...prevState, current: currentProfileId}))
+
+    }, [currentProfileId])
     
 
     useEffect(() => {
@@ -294,7 +310,9 @@ const ConfigProvider = ({ children }: any) => {
                     updateApiData,
                     apiData,
                     reservedFunds,
-                    updateReservedFunds
+                    updateReservedFunds,
+                    currentProfileId,
+                    updateCurrentProfileId
                 },
                 actions: {
                     fetchAccountsForRequiredFunds
