@@ -138,25 +138,19 @@ const ConfigProvider = ({ children }: any) => {
                 }
 
 
-                let profile = prevConfig.profiles[prevConfig.current]
+                let profile = prevConfig.profiles[prevConfig.current];
 
-                dotProp.set(profile, 'general.defaultCurrency',  currency);
-                dotProp.set(profile, 'statSettings.account_id',  (accountID) ? accountID : []);
-                dotProp.set(profile, 'statSettings.startDate',  (date) ? date : 0);
-                dotProp.set(profile, 'statSettings.reservedFunds',  (reservedFunds) ? reservedFunds : []);
-                dotProp.set(profile, 'apis.threeC', {key: apiData.key,secret: apiData.secret,mode: apiData.mode})
-                // console.log(reservedFunds.filter(account => account.is_enabled).map(account => account.id))
-    
+                profile.general.defaultCurrency = currency;
+                profile.statSettings.account_id = (accountID) ? accountID : [];
+                profile.statSettings.startDate = (date) ? date : 0;
+                profile.statSettings.reservedFunds = (reservedFunds) ? reservedFunds : [];
+                profile.apis.threeC = { key: apiData.key, secret: apiData.secret, mode: apiData.mode }
                 updateAccountID(() => {
-                    // const accountIDs = reservedFunds.filter(account => account.is_enabled).map(account => account.id)
                     return accountIDs.length > 0 ? accountIDs : [];
                 })
 
-
-
-
                 prevConfig.profiles[prevConfig.current] = profile
-    
+
                 // @ts-ignore
                 // sending the config over to Electron and returning the response
                 electron.config.bulk(prevConfig)

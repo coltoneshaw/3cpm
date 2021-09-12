@@ -208,7 +208,8 @@ async function getDealsThatAreUpdated(perSyncOffset: number) {
   let response: Type_Deals_API[];
   let offsetMax = 250000;
   let perOffset = (perSyncOffset) ? perSyncOffset : 1000;
-  let oldestDate, newLastSyncTime;
+  let oldestDate;
+  let newLastSyncTime;
 
 
   // converting the incoming dateUTC to the right format in case it's not done properly.
