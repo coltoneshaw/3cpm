@@ -1,5 +1,3 @@
-// const queryString = require('query-string');
-
 import fetch from 'electron-fetch'
 
 const fetchCoinPricesBinance = async () => {

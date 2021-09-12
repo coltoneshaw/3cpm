@@ -11,6 +11,8 @@ const lang = getLang()
 
 import { Type_Tooltip } from '@/types/Charts';
 import { getSelectPairDataByDate } from '@/app/Features/3Commas/3Commas';
+import {DateRange} from "@/types/Date";
+import moment from "moment";
 
 const colors = ["#374151", "#B91C1C", "#B45309", "#047857", "#1D4ED8", "#4338CA", "#6D28D9", "#BE185D"]
 
@@ -20,7 +22,7 @@ interface pairByDate {
 }
 
 
-const PairPerformanceByDate = () => {
+const PairPerformanceByDate = ({datePair}: {datePair: DateRange}) => {
 
     const [localData, updateLocalData] = useState<pairByDate[]>([]);
     const [pairs, updatePairs] = useState<{ pair: string, opacity: number }[]>([])
@@ -39,9 +41,33 @@ const PairPerformanceByDate = () => {
 
     useEffect(() => {
 
+        let from = ``
+        let to = ``
+
+        if (datePair.from !== null) {
+            let fromDate = moment.utc(datePair.from)
+                .subtract(datePair.from.getTimezoneOffset(), "minutes")
+                .startOf("day")
+                .toISOString()
+
+            from = `closed_at >= '${fromDate}'`
+        }
+
+        if (datePair.to !== null) {
+            let toDate = moment.utc(datePair.to)
+                .subtract(datePair.to.getTimezoneOffset(), "minutes")
+                .add(1, "days")
+                .startOf("day")
+                .toISOString()
+
+            to = `closed_at < '${toDate}'`
+        }
+
+        const wheres = ["1=1", from, to].filter(value => value.length>0).join(' and ')
+
         // selecting the pair data and sorting by profit for easier viewing.
         //@ts-ignore
-        electron.database.query('select pair, sum(actual_profit) as total_profit from deals group by pair order by total_profit desc;')
+        electron.database.query(`select pair, sum(actual_profit) as total_profit from deals WHERE ${wheres} group by pair order by total_profit desc;`)
             .then((result: { pair: string }[]) => {
                 updatePairs(result.map(pair => ({ pair: pair.pair, opacity: 1 })))
 
@@ -53,12 +79,12 @@ const PairPerformanceByDate = () => {
                 updatePairFilters(storedPairs)
             })
 
-    }, [])
+    }, [datePair])
 
     useEffect(() => {
-        getSelectPairDataByDate(pairFilters)
+        getSelectPairDataByDate(pairFilters, datePair)
             .then(data => updateLocalData(data))
-    }, [pairFilters])
+    }, [pairFilters, datePair])
 
     return (
 
@@ -149,7 +175,7 @@ const PairPerformanceByDate = () => {
                         minTickGap={(localData.length > 6) ? 40 : 0}
                         tickFormatter={(str) => {
                             if (str == 'auto' || str == undefined) return ""
-                            return new Date(str).toLocaleString(lang, { month: '2-digit', day: '2-digit' })
+                            return new Date(str).toLocaleString(lang, { month: '2-digit', day: '2-digit', timeZone: 'UTC' })
                         }}
                     />
 

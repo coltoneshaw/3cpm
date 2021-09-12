@@ -36,11 +36,11 @@
     "@material-ui/core": "^4.12.3",
     "@material-ui/data-grid": "^4.0.0-alpha.35",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/pickers": "^3.3.10",
     "@types/better-sqlite3": "^5.4.3",
     "@types/d3-scale-chromatic": "^3.0.0",
-    "@types/node-fetch": "^3.0.3",
-    "@types/react": "^17.0.20",
+    "@types/react": "^17.0.15",
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.1.8",
     "@types/react-table": "^7.7.2",
@@ -60,7 +60,7 @@
     "react": "^17.0.2",
     "react-d3-speedometer": "^1.0.1",
     "react-dom": "^17.0.2",
-    "react-gauge-chart": "^0.3.0",
+    "react-gauge-chart": "^0.4.0",
     "react-router-dom": "^5.2.0",
     "react-table": "^7.7.0",
     "recharts": "^2.0.10",
@@ -76,14 +76,13 @@
   },
   "dependencies": {
     "@date-io/date-fns": "^1.3.13",
-    "@material-ui/lab": "^4.0.0-alpha.60",
     "better-sqlite3": "^7.4.1",
     "date-fns": "^2.22.1",
     "dot-prop": "^6.0.1",
     "electron-fetch": "^1.7.4",
     "electron-notarize": "^1.1.1",
     "electron-store": "^8.0.0",
-    "iconutil": "^1.0.2"
+    "moment": "^2.29.1"
   },
   "build": {
     "appId": "com.savvytoolbelt.3cportfoliomanager",
@@ -105,18 +104,8 @@
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
       "gatekeeperAssess": false,
-      "icon": "assets/icons/icons.icns",
-      "provisioningProfile": "build/MacAppStore.provisionprofile",
-      "extraFiles": [
-        "build/MacAppStore.provisionprofile"
-      ]
-    },
-    "mas": {
-      "entitlements": "build/entitlements.mas.plist",
-      "entitlementsInherit": "build/entitlements.mas.inherit.plist",
-      "provisioningProfile": "build/MacAppStore.provisionprofile",
-      "hardenedRuntime": false,
-      "icon": "assets/icons/icons.icns"
+      "icon": "assets/icons/icon.icns",
+      "provisioningProfile": "build/embedded.provisionprofile"
     },
     "dmg": {
       "contents": [
