@@ -48,17 +48,31 @@ const config = new Store({
 
 
             const id = uuidv4()
-            store.set('profiles.' + id, store.store)
-            store.set('current', id);
-            store.set('profiles.' + id + '.name', 'default')
 
+            let profileObject = {}
+            store.delete('general.version')
 
-            store.delete('profiles.' + id + '.__internal__')
-            store.delete('profiles.' + id + '.general.version')
+            Object.assign(profileObject, { [id]: {
+                "name" : "default",
+                "apis" : store.get('apis'),
+                "general" : store.get('general'),
+                "syncStatus": store.get('syncStatus'),
+                "statSettings" : store.get('statSettings')
+            }
+            });
+
             store.delete('apis')
-            store.delete('general')
             store.delete('syncStatus')
             store.delete('statSettings')
+
+            const newConfig = {
+                profiles: profileObject,
+                general: {"version": "v0.5.0"},
+                current: id
+            }
+
+            store.set(newConfig)
+
 
             Promise.all([
                 run(`ALTER TABLE accountData ADD profile_id VARCHAR(36)`),
