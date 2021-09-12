@@ -48,16 +48,16 @@ const config = new Store({
 
 
             const id = uuidv4()
-
             let profileObject = {}
             store.delete('general.version')
+            const {apis, general, syncSettings, statSettings} = store.store
 
             Object.assign(profileObject, { [id]: {
                 "name" : "default",
-                "apis" : store.get('apis'),
-                "general" : store.get('general'),
-                "syncStatus": store.get('syncStatus'),
-                "statSettings" : store.get('statSettings')
+                "apis" : apis,
+                "general" : general,
+                "syncStatus": syncSettings,
+                "statSettings" : statSettings
             }
             });
 
@@ -65,13 +65,11 @@ const config = new Store({
             store.delete('syncStatus')
             store.delete('statSettings')
 
-            const newConfig = {
+            store.set({
                 profiles: profileObject,
                 general: {"version": "v0.5.0"},
                 current: id
-            }
-
-            store.set(newConfig)
+            })
 
 
             Promise.all([
