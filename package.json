@@ -1,7 +1,7 @@
 {
   "name": "3c-portfolio-manager",
   "productName": "3C Portfolio Manager",
-  "version": "v0.4.1",
+  "version": "v0.5.0",
   "description": "An application to manage your 3Commas portfolio.",
   "private": true,
   "main": "./dist/main.js",
@@ -14,6 +14,7 @@
     "react:dev": "webpack serve --mode=development",
     "electron:dev": "nodemon",
     "webpack": "webpack",
+    "wpanddev": "webpack && concurrently --kill-others \"npm run react:dev\" \"npm run electron:dev\"",
     "dev": "concurrently --kill-others \"npm run react:dev\" \"npm run electron:dev\"",
     "start": "npm run build && electron dist/main.js",
     "rebuild": "./node_modules/.bin/electron-rebuild -f -w better-sqlite3"
@@ -82,7 +83,8 @@
     "electron-fetch": "^1.7.4",
     "electron-notarize": "^1.1.1",
     "electron-store": "^8.0.0",
-    "moment": "^2.29.1"
+    "moment": "^2.29.1",
+    "uuid": "^3.4.0"
   },
   "build": {
     "appId": "com.savvytoolbelt.3cportfoliomanager",
