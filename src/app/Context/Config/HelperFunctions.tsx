@@ -54,14 +54,14 @@ const useProfileState = () => {
 
 }
 
-const configDate = () => {
+const useConfigDate = () => {
     // setting the default state to be 90 days in the past.
     const [date, updateDate] = useState(() => getTime(sub(new Date(), { days: 90 })))
 
     const setNewStatDate = (profile: Type_Profile) => {
         updateDate(() => {
             const startDate: number | undefined = dotProp.get(profile, 'statSettings.startDate')
-            return (startDate) ? startDate : getTime(sub(new Date(), { days: 90 })) ;
+            return (startDate) ? startDate : getTime(sub(new Date(), { days: 90 }));
         })
     }
 
@@ -70,7 +70,7 @@ const configDate = () => {
     }
 }
 
-const configApiData = () => {
+const useConfigApiData = () => {
     const [apiData, updateApiData] = useState({ key: '', secret: '', mode: 'real' });
 
     const setNewApiKeys = (profile: Type_Profile) => {
@@ -94,7 +94,7 @@ const configApiData = () => {
 
 }
 
-const configCurrency = () => {
+const useConfigCurrency = () => {
     const [currency, updateCurrency] = useState<string[]>([])
 
     const setNewCurrency = (profile: Type_Profile) => {
@@ -112,7 +112,7 @@ const configCurrency = () => {
 
 }
 
-const configAccountID = () => {
+const useConfigAccountID = () => {
     const [accountID, updateAccountID] = useState<number[]>([]);
     const setNewAccountIdArray = (profile: Type_Profile) => {
         updateAccountID(() => {
@@ -129,81 +129,88 @@ const configAccountID = () => {
 
 }
 
-const fetchReservedFundsUpdate = async (key:string, secret:string, mode:string, updateReservedFunds: CallableFunction, reservedFunds: Type_ReservedFunds[]) => {
+const fetchReservedFundsUpdate = async (key: string, secret: string, mode: string, updateReservedFunds: CallableFunction, reservedFunds: Type_ReservedFunds[]) => {
     // @ts-ignore
     const accountSummary = await electron.api.getAccountData(key, secret, mode)
 
     if (accountSummary !== undefined || accountSummary.length > 0) {
-        updateReservedFunds( ( prevState: Type_ReservedFunds[]) => {
+        updateReservedFunds((prevState: Type_ReservedFunds[]) => {
 
-                // new data coming in, removing the dups from the array
-                const filteredAccountData = removeDuplicatesInArray(accountSummary, 'id')
-                // console.log(filteredAccountData)
+            // new data coming in, removing the dups from the array
+            const filteredAccountData = removeDuplicatesInArray(accountSummary, 'id')
+            // console.log(filteredAccountData)
 
-                // checking to see if any reserved funds exist
-                if (prevState.length === 0 || prevState === []) {
-                    console.log('setting since there are no account IDs!')
-                    return filteredAccountData.map(account => {
-                        const { id, name } = account
-                        return {
-                            id,
-                            account_name: name,
-                            reserved_funds: 0,
-                            is_enabled: false
-                        }
-                    })
-                }
+            // checking to see if any reserved funds exist
+            if (prevState.length === 0 || prevState === []) {
+                console.log('setting since there are no account IDs!')
+                return filteredAccountData.map(account => {
+                    const { id, name } = account
+                    return {
+                        id,
+                        account_name: name,
+                        reserved_funds: 0,
+                        is_enabled: false
+                    }
+                })
+            }
 
-                // getting account IDs from the reserved funds
-                const configuredAccountIds = removeDuplicatesInArray(reservedFunds.map(account => account.id), 'id') 
-                console.log(configuredAccountIds)
+            // getting account IDs from the reserved funds
+            const configuredAccountIds = removeDuplicatesInArray(reservedFunds.map(account => account.id), 'id')
+            console.log(configuredAccountIds)
 
-                // finding any accounts that did not exist since the last sync.
-                return filteredAccountData
-                    // .filter( account => !configuredAccountIds.includes(account.id) )
-                    .map( account => {
-                        let { id, name } = account
-                        let reserved_funds = 0;
-                        let is_enabled = false;
-                        
-                        let filteredAccount = prevState.find(account => account.id == id)
-                        if(filteredAccount != undefined ){
-                            reserved_funds = filteredAccount.reserved_funds;
-                            is_enabled = filteredAccount.is_enabled;
-                        } 
-                        return {
-                            id,
-                            account_name: name,
-                            reserved_funds,
-                            is_enabled
-                        }
-                    })
-            
+            // finding any accounts that did not exist since the last sync.
+            return filteredAccountData
+                // .filter( account => !configuredAccountIds.includes(account.id) )
+                .map(account => {
+                    let { id, name } = account
+                    let reserved_funds = 0;
+                    let is_enabled = false;
+
+                    let filteredAccount = prevState.find(account => account.id == id)
+                    if (filteredAccount != undefined) {
+                        reserved_funds = filteredAccount.reserved_funds;
+                        is_enabled = filteredAccount.is_enabled;
+                    }
+                    return {
+                        id,
+                        account_name: name,
+                        reserved_funds,
+                        is_enabled
+                    }
+                })
+
         })
     }
-    
+
 }
 
-const configReservedFunds = () => {
+const useConfigReservedFunds = () => {
     const [reservedFunds, updateReservedFunds] = useState<Type_ReservedFunds[]>([]);
     const setNewReservedFunds = (profile: Type_Profile) => {
-        updateReservedFunds( () => {
+        updateReservedFunds(() => {
             const reservedFundsArray: Type_ReservedFunds[] | undefined = dotProp.get(profile, 'statSettings.reservedFunds')
             return (reservedFundsArray) ? reservedFundsArray : [];
         })
     }
 
     return {
-        reservedFunds, 
-        updateReservedFunds, 
+        reservedFunds,
+        updateReservedFunds,
         setNewReservedFunds,
         fetchReservedFundsUpdate
     }
 }
 
-const updateProfileConfig = (profileId:string, data: {}) => {
+const returnProfileById = (profileId: string) => {
+    //    const [allProfiles, updateAppProfiles] = useState<Type_Profile>(defaultProfile)
+    const configState = useGlobalState();
+    const { config } = configState;
+    return config.profiles[profileId];
+}
 
-    console.log({profileId, data})
+const updateProfileConfig = (profileId: string, data: {}) => {
+
+    console.log({ profileId, data })
 
     // accepts profile ID, filters the config based on this
     // updates the needed fields in the config state
@@ -221,21 +228,26 @@ const updateProfileConfig = (profileId:string, data: {}) => {
     //         ...data
     //     };
 
-       
+
     //     return {...newState}
     // })
 }
 
 
+const state = {
+    
+}
 
 
 export {
     returnCurrentProfile,
+    updateProfileConfig,
+    returnProfileById,
+    useConfigDate,
     useProfileState,
-    configDate,
-    configApiData,
-    configCurrency,
-    configAccountID,
-    configReservedFunds,
-    updateProfileConfig
+    useConfigApiData,
+    useConfigCurrency,
+    useConfigAccountID,
+    useConfigReservedFunds,
+
 }

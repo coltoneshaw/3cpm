@@ -1,12 +1,13 @@
 import React, { createContext, useState, useEffect, SetStateAction} from 'react';
 import dotProp from 'dot-prop';
 import { v4 as uuidv4 } from 'uuid'
+
 import { 
-    configDate, 
-    configApiData,
-    configCurrency,
-    configAccountID,
-    configReservedFunds } from "@/app/Context/Config/HelperFunctions";
+    useConfigApiData,
+    useConfigDate,
+    useConfigCurrency,
+    useConfigAccountID,
+    useConfigReservedFunds } from "@/app/Context/Config/HelperFunctions";
 
 import { TconfigValues, Type_Profile, Type_ConfigContext } from '@/types/config'
 
@@ -27,11 +28,11 @@ const ConfigProvider = ({ children }: any) => {
     const [config, updateConfig] = useState<TconfigValues>(defaultConfig);
 
 
-    const {date, updateDate, setNewStatDate} = configDate();
-    const {apiData, setNewApiKeys, updateApiData} = configApiData();
-    const {currency, updateCurrency, setNewCurrency} = configCurrency();
-    const {accountID, updateAccountID, setNewAccountIdArray} = configAccountID();
-    const {reservedFunds, updateReservedFunds, setNewReservedFunds, fetchReservedFundsUpdate} = configReservedFunds();
+    const {date, updateDate, setNewStatDate} = useConfigDate();
+    const {apiData, setNewApiKeys, updateApiData} = useConfigApiData();
+    const {currency, updateCurrency, setNewCurrency} = useConfigCurrency();
+    const {accountID, updateAccountID, setNewAccountIdArray} = useConfigAccountID();
+    const {reservedFunds, updateReservedFunds, setNewReservedFunds, fetchReservedFundsUpdate} = useConfigReservedFunds();
     const fetchAccountsForRequiredFunds = async (key:string, secret:string, mode:string) =>  await fetchReservedFundsUpdate(key, secret, mode, updateReservedFunds, reservedFunds)
 
     // current profile config values.
