@@ -44,3 +44,28 @@ export interface Type_ApiKeys {
     key: string
     secret: string
 }
+
+export interface Type_ConfigContext {
+    config: TconfigValues
+    currentProfile: Type_Profile
+    updateConfig: any
+    setConfigBulk: any
+    reset: any
+    state: {
+        accountID: number[]
+        updateAccountID: any
+        date: number
+        updateDate: any
+        currency: string[]
+        updateCurrency: any
+        updateApiData: any
+        apiData: {key: string, secret: string, mode: string}
+        reservedFunds: Type_ReservedFunds[],
+        updateReservedFunds: any
+        currentProfileId: string
+        updateCurrentProfileId: any
+    },
+    actions: {
+        fetchAccountsForRequiredFunds: any
+    }
+}
