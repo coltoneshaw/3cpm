@@ -5,6 +5,8 @@ import './Settings.scss'
 // @ts-ignore
 import { version } from '#/package.json';
 
+import { returnCurrentProfile } from '@/app/Context/Config/HelperFunctions';
+
 import {
     ButtonGroup,
     Button
@@ -15,7 +17,8 @@ import {
     SaveSubmitButtons,
     ApiSettings,
     ReservedBankroll,
-    StartDatePicker
+    StartDatePicker,
+    ProfileName
 } from './Components/Index'
 
 
@@ -23,9 +26,9 @@ import { ChangelogModal, ToastNotifcations } from '@/app/Features/Index';
 
 const SettingsPage = () => {
 
-    const [open, setOpen] = React.useState(false);
+    const currentProfile = returnCurrentProfile();
 
-
+    const [open, setOpen] = useState(false);
 
     const handleClose = (event: any, reason: string) => {
         if (reason === 'clickaway') {
@@ -46,6 +49,7 @@ const SettingsPage = () => {
         <>
             {/* <h1>Settings</h1> */}
             <div className="settings-div boxData flex-column" style={{ overflow: "visible", margin: "auto" }}>
+                <ProfileName currentName={currentProfile.name}/>
                 <ApiSettings />
                 <div className="flex-column settings-child">
                     <h2 className="text-center ">General Settings:</h2>

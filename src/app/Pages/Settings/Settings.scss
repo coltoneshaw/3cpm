@@ -5,9 +5,12 @@
     width: 75%;
     min-width: 200px;
 
-    padding: 5%;
+    padding: 5em;
     justify-content: space-between;
     text-align: left;
+
+    // relative for the add profile dropdown.
+    position: relative;
 
 }
 
