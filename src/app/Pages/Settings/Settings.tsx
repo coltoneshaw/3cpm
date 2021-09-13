@@ -49,7 +49,7 @@ const SettingsPage = () => {
         <>
             {/* <h1>Settings</h1> */}
             <div className="settings-div boxData flex-column" style={{ overflow: "visible", margin: "auto" }}>
-                <ProfileName currentName={currentProfile.name}/>
+                <ProfileName currentName={currentProfile.name} currentProfileId={currentProfile}/>
                 <ApiSettings />
                 <div className="flex-column settings-child">
                     <h2 className="text-center ">General Settings:</h2>
