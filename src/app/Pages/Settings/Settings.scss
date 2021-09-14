@@ -25,10 +25,21 @@
 
 .settingsButtonDiv{
     justify-content: center;
+
+    .deleteProfile{
+        background-color: var(--color-red);
+        color: var(--color-text-lightbackground);
+        opacity: .9;
+    }
+
+    .deleteProfile:hover {
+        background-color: var(--color-red);
+        opacity: .8;
+    }
 }
 
 .settingsButtonDiv button{
-    width: 150px;
+    width: 200px;
 }
 
 .settings-right {

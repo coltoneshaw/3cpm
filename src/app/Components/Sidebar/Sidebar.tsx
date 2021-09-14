@@ -4,7 +4,8 @@ import './Sidebar.scss';
 
 import { ActiveDealsIcon, BackwardClock, BotPlannerIcon, Coffee, Cog, PieChart } from '@/app/Components/icons/Index';
 
-import { SidebarNav, SidebarLink, ProfileSwitcher } from './Components';
+import { SidebarNav, SidebarLink } from './Components';
+import {ProfileSwitcher} from '@/app/Features/Profiles/Components/Index'
 
 import DisplaySwitcher from './DisplaySwitcher';
 

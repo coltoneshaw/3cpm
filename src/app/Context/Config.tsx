@@ -7,7 +7,8 @@ import {
     useConfigDate,
     useConfigCurrency,
     useConfigAccountID,
-    useConfigReservedFunds } from "@/app/Context/Config/HelperFunctions";
+    useConfigReservedFunds,
+    useConfigCurrentlyEditing } from "@/app/Context/Config/HelperFunctions";
 
 import { TconfigValues, Type_Profile, Type_ConfigContext } from '@/types/config'
 
@@ -34,6 +35,7 @@ const ConfigProvider = ({ children }: any) => {
     const {accountID, updateAccountID, setNewAccountIdArray} = useConfigAccountID();
     const {reservedFunds, updateReservedFunds, setNewReservedFunds, fetchReservedFundsUpdate} = useConfigReservedFunds();
     const fetchAccountsForRequiredFunds = async (key:string, secret:string, mode:string) =>  await fetchReservedFundsUpdate(key, secret, mode, updateReservedFunds, reservedFunds)
+    const { updateCurrentlyEditingProfileId, currentlyEditingProfileId, editingProfileData} = useConfigCurrentlyEditing()
 
     // current profile config values.
     const [currentProfile, updateCurrentProfile] = useState<Type_Profile>(defaultProfile);
@@ -41,6 +43,8 @@ const ConfigProvider = ({ children }: any) => {
 
     // string ID that represents the uuid of the current profile.
     const [currentProfileId, updateCurrentProfileId ] = useState('')
+
+
     
 
     useEffect(() => {
@@ -59,8 +63,13 @@ const ConfigProvider = ({ children }: any) => {
 
         // @ts-ignore
         updateConfig(prevState => ({...prevState, current: currentProfileId}))
+        console.log('new current profile', currentProfileId)
 
     }, [currentProfileId])
+
+    useEffect(() => {
+        console.log('updating the currently editing profile ID', currentlyEditingProfileId)
+    }, [currentlyEditingProfileId])
     
 
     useEffect(() => {
@@ -197,8 +206,11 @@ const ConfigProvider = ({ children }: any) => {
                     apiData,
                     reservedFunds,
                     updateReservedFunds,
+                    editingProfileData,
                     currentProfileId,
-                    updateCurrentProfileId
+                    updateCurrentProfileId,
+                    updateCurrentlyEditingProfileId, 
+                    currentlyEditingProfileId
                 },
                 actions: {
                     fetchAccountsForRequiredFunds

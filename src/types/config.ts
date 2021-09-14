@@ -1,3 +1,5 @@
+import { Dispatch } from "react";
+
 export interface TconfigValues {
     profiles: Record<string, Type_Profile>,
     current: string,
@@ -64,6 +66,9 @@ export interface Type_ConfigContext {
         updateReservedFunds: any
         currentProfileId: string
         updateCurrentProfileId: any
+        currentlyEditingProfileId: string
+        updateCurrentlyEditingProfileId: any
+        editingProfileData: any
     },
     actions: {
         fetchAccountsForRequiredFunds: any

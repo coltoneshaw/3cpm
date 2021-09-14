@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { sub, getTime } from 'date-fns'
 import dotProp from 'dot-prop';
 
@@ -26,7 +26,7 @@ const returnCurrentProfile = () => {
  */
 const useProfileState = () => {
     const configState = useGlobalState();
-    const { config, state: { currentProfileId, updateCurrentProfileId } } = configState;
+    const { config, state: { currentProfileId, updateCurrentProfileId, currentlyEditingProfileId }, state } = configState;
 
     const [profiles, setProfiles] = useState<TconfigValues["profiles"] | {}>(() => { })
 
@@ -40,16 +40,34 @@ const useProfileState = () => {
     const setCurrentProfile = (closeCallback: CallableFunction, id?: string) => {
         if (id) {
             updateCurrentProfileId(id)
-            console.log(id)
         }
         closeCallback()
     }
+
+
+    // const updateId = (id:string) => {
+    //     setNewEditingProfile(id)
+    // }
+
+    let profileId = undefined;
+    useEffect(() => {
+        console.log('updating the ID from the function', currentlyEditingProfileId)
+        profileId = currentlyEditingProfileId
+    }, [currentlyEditingProfileId])
 
     return {
         setCurrentProfile,
         profiles,
         setProfiles,
-        currentProfileId
+        state,
+        getCurrentProfileId: () => currentProfileId,
+        currentlyEditingProfileId,
+        profileId
+        // editing: {
+        //     currentlyEditingProfileId, 
+        //     updateId
+        // }
+        
     }
 
 }
@@ -108,6 +126,34 @@ const useConfigCurrency = () => {
         currency,
         updateCurrency,
         setNewCurrency
+    }
+
+}
+
+const useConfigCurrentlyEditing = () => {
+    const [currentlyEditingProfileId, updateCurrentlyEditingProfileId] = useState('');
+    const [editingProfileData, updateEditingProfileData ] = useState();
+
+    const setNewEditingProfile = (profileId:string) => {
+        console.log(profileId)
+        updateCurrentlyEditingProfileId(() => {
+            
+            return profileId
+        })
+
+        const newProfile = returnProfileById(profileId)
+
+        // @ts-ignore
+        updateEditingProfileData(() => newProfile)
+
+
+    }
+
+    return {
+        currentlyEditingProfileId,
+        updateCurrentlyEditingProfileId,
+        setNewEditingProfile,
+        editingProfileData
     }
 
 }
@@ -208,6 +254,21 @@ const returnProfileById = (profileId: string) => {
     return config.profiles[profileId];
 }
 
+// const useEditingProfile = () => {
+//     const [currentlyEditingProfile, updateCurrentlyEditingProfile] = useState('');
+
+//     return {
+//         currentlyEditingProfile,
+//         updateCurrentlyEditingProfile
+//     }
+
+
+//     return {
+//         editingProfileData: returnProfileById(currentlyEditingProfile),
+//         currentlyEditingProfile,
+//         updateCurrentlyEditingProfile,
+//     }
+// }
 const updateProfileConfig = (profileId: string, data: {}) => {
 
     console.log({ profileId, data })
@@ -234,9 +295,6 @@ const updateProfileConfig = (profileId: string, data: {}) => {
 }
 
 
-const state = {
-    
-}
 
 
 export {
@@ -249,5 +307,7 @@ export {
     useConfigCurrency,
     useConfigAccountID,
     useConfigReservedFunds,
+    // useEditingProfile
+    useConfigCurrentlyEditing
 
 }

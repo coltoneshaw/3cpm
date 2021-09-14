@@ -100,7 +100,7 @@ const defaultProfile:Type_Profile = {
 
 
 const defaultConfig:TconfigValues = {
-    profiles: {},
+    profiles: { "default": defaultProfile }, 
     current: "",
     general: {
         version : version

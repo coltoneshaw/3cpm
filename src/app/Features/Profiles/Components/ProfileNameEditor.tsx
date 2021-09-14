@@ -1,30 +1,32 @@
 import React, { useEffect, useState } from "react";
-
 import { TextField } from '@material-ui/core';
-import { returnCurrentProfile, updateProfileConfig } from '@/app/Context/Config/HelperFunctions';
+import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
+import { storeEditingProfileData, setEditingProfile } from "@/app/redux/configSlice";
 
 
-const ProfileNameEditor = ({currentName,currentProfileId}: { currentName: string, currentProfileId:any }) => {
-
-    const [name, updateName] = useState('')
+const ProfileNameEditor = () => {
+    const profile = useAppSelector(state => state.config.editingProfile)
+    const dispatch = useAppDispatch();
+    const [editingProfile, updateEditingProfile] = useState(profile)
 
     const handleChange = (e: any) => {
-        updateName(e.target.value)
-        updateProfileConfig(currentProfileId, {name})
 
+        const tempProfile = {...profile, name: e.target.value}
+        updateEditingProfile(tempProfile)
+        dispatch(setEditingProfile(tempProfile))
+        dispatch(storeEditingProfileData())
     }
 
-    useEffect( () => {
-        updateName(currentName)
-    }, [currentName])
-
+    useEffect(() => {
+        updateEditingProfile(profile)
+    }, [profile])
 
     return (
         <TextField
             id="ProfileName"
             label="Profile Name"
             name="ProfileName"
-            value={name}
+            value={editingProfile.name}
             onChange={handleChange}
             className="settings-left"
             style={{
