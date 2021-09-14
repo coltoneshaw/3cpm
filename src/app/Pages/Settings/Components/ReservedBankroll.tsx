@@ -4,11 +4,12 @@ import { Switch } from '@material-ui/core';
 
 import { CustomTable } from '@/app/Components/DataTable/Index'
 import styled from 'styled-components'
+import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
 
-
+import { setReservedFunds, configPaths } from '@/app/redux/configSlice'
+import { updateReservedFundsArray, updateNestedEditingProfile } from '@/app/redux/configActions';
 import { Type_ReservedFunds } from '@/types/config';
 
-import { useGlobalState } from '@/app/Context/Config';
 
 const Styles = styled.div`
 
@@ -69,155 +70,166 @@ const Styles = styled.div`
 `
 
 interface Cell {
-    value: {
-      initialValue: string
-    }
-    row: {
-      original: Type_ReservedFunds,
-    }
-    column: {
-      id:string
-    }
-    updateReservedFunds: any
+  value: {
+    initialValue: string
   }
-  
-  // Create an editable cell renderer
-  const EditableCell = ({
-    value: initialValue,
-    row: { original },
-    column: { id: column },
-    updateReservedFunds, // This is a custom function that we supplied to our table instance
-  }:Cell) => {
-    // We need to keep and update the state of the cell normally
-    const [value, setValue] = useState(String(initialValue))
-    // const [size, setSize] = useState(() => String(initialValue).length * 1.5)
-  
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValue(e.target.value)
-
-  
-    }
-  
-    // We'll only update the external data when the input is blurred
-    const onBlur = () => {
-        updateReservedFunds(original.id, column, value, original)
-    }
-
-    useEffect(() => {
-        setValue(String(initialValue))
-    }, [initialValue])
-  
-    return <input value={value} onChange={onChange} onBlur={onBlur} style={{textAlign: 'center', color: 'var(--color-text-lightbackground)'}}/>
+  row: {
+    original: Type_ReservedFunds,
   }
+  column: {
+    id: string
+  }
+  updateReservedFunds: any
+}
+
+// Create an editable cell renderer
+const EditableCell = ({
+  value: initialValue,
+  row: { original },
+  column: { id: column },
+  updateReservedFunds, // This is a custom function that we supplied to our table instance
+}: Cell) => {
+  // We need to keep and update the state of the cell normally
+  const [value, setValue] = useState(String(initialValue))
+  // const [size, setSize] = useState(() => String(initialValue).length * 1.5)
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value)
+
+
+  }
+
+  // We'll only update the external data when the input is blurred
+  const onBlur = () => {
+    updateReservedFunds(original.id, column, value, original)
+  }
+
+  useEffect(() => {
+    setValue(String(initialValue))
+  }, [initialValue])
+
+  return <input value={value} onChange={onChange} onBlur={onBlur} style={{ textAlign: 'center', color: 'var(--color-text-lightbackground)' }} />
+}
 
 const ReservedBankroll = () => {
 
-    // config state
-    const configState = useGlobalState()
-    const { state: { reservedFunds, updateReservedFunds } } = configState
+  const profile = useAppSelector(state => state.config.editingProfile);
+  const [reservedFunds, updateReservedFunds] = useState<Type_ReservedFunds[]>([])
 
-    const columns = useMemo(
-        () => [
-          {
-            Header: 'Enabled?',
-            accessor: 'is_enabled',
-            Cell: ({ cell }: any) => ( <Switch
-                    checked={cell.value}
-                    color="primary"
-                    onClick={handleOnOff}
-                    name={String(cell.row.original.id)}
-                    inputProps={{ 'aria-label': 'secondary checkbox' }}
-                /> )
-          },
-          {
-              Header: 'Account Name',
-              accessor: 'account_name'
-          },
-          {
-              Header: 'Reserved Funds',
-              accessor: 'reserved_funds',
-              Cell: EditableCell,
-              
-          }
-        ],
-        []
-      )
+  useEffect(() => {
+    if (profile.statSettings.reservedFunds) updateReservedFunds(profile.statSettings.reservedFunds)
+
+  }, [profile])
+
+  useEffect(() => {
+    
+  }, [reservedFunds])
+
+  const updateData = (data:Type_ReservedFunds[]) => {
+    updateNestedEditingProfile(data, configPaths.statSettings.reservedFunds)
+    return data
+  }
 
 
-    const handleOnOff = (e: any) => {
-        updateReservedFunds((prevState: Type_ReservedFunds[]) => {
-            return prevState.map(row => {
-                if (e != undefined && e.target !== null) {
-                    if (e.target.name == row.id) {
-                      console.log(row.is_enabled)
-                        row.is_enabled = !row.is_enabled
-                      }
-                }
-                return row
-            })
-        })
-    }
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Enabled?',
+        accessor: 'is_enabled',
+        Cell: ({ cell }: any) => (<Switch
+          checked={cell.value}
+          color="primary"
+          onClick={handleOnOff}
+          name={String(cell.row.original.id)}
+          inputProps={{ 'aria-label': 'secondary checkbox' }}
+        />)
+      },
+      {
+        Header: 'Account Name',
+        accessor: 'account_name'
+      },
+      {
+        Header: 'Reserved Funds',
+        accessor: 'reserved_funds',
+        Cell: EditableCell,
 
-    const handleEditCellChangeCommitted = (id:number, column:string, value:string) => {
+      }
+    ],
+    []
+  )
 
-        updateReservedFunds((prevState: Type_ReservedFunds[]) => {
-            return prevState.map(row => {
-                if (id == row.id) {
 
-                    // @ts-ignore - validate props
-                    row[column] = value
-                    // console.log(`changed ${e.field} to ${e.value}`)
+  const handleOnOff = (e: any) => {
+    updateReservedFunds(prevState => (
+      updateData(prevState.map(row => {
+        let newRow = {...row}
+        if (e.target.name == newRow.id) {
+          newRow.is_enabled = !newRow.is_enabled
+        }
+        return newRow
+      })
+    )))
+  }
 
-                }
-                return row
-            })
-        })
-    }
+  const handleEditCellChangeCommitted = (id: number, column: string, value: string) => {
 
-    return (
-        <div style={{ display: 'flex', overflow: "visible", width: "100%", alignSelf: "center" }}>
-            <div className="settings-dataGrid"   >
+    updateReservedFunds(prevState => (
+      updateData(prevState.map(row => {
+        const newRow = {...row}
+        if (id == newRow.id) {
+          //@ts-ignore
+          newRow[column] = value
 
-                <Styles>
-                    <CustomTable
-                        columns={columns}
-                        data={reservedFunds}
-                        autoResetSortBy={false}
-                        // autoResetPage={false}
-                        manualSortBy={true}
-                        updateReservedFunds={handleEditCellChangeCommitted}
-                        // skipPageReset={skipPageReset}
-                        
-                        getHeaderProps={() => ({
-                            // onClick: () => setSort(column.id),
-                            style: {
-                                height: '44px',
+        }
+        return newRow
+      })
+    )))
+  }
 
-                            },
+  return (
+    <div style={{ display: 'flex', overflow: "visible", width: "100%", alignSelf: "center" }}>
+      <div className="settings-dataGrid"   >
 
-                        })}
-                        
-                        getColumnProps={() => ({
+        <Styles>
+          <CustomTable
+            columns={columns}
+            data={reservedFunds}
+            autoResetSortBy={false}
+            // autoResetPage={false}
+            manualSortBy={true}
+            updateReservedFunds={handleEditCellChangeCommitted}
+            // skipPageReset={skipPageReset}
 
-                        })}
-                        
-                        getRowProps={() => ({
+            getHeaderProps={() => ({
+              // onClick: () => setSort(column.id),
+              style: {
+                height: '44px',
 
-                        })}
-                        //@ts-ignore
-                        getCellProps={cellInfo => ({
+              },
 
-                            style: {
-                                color: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? (cellInfo.row.original.in_profit) ? 'var(--color-green)' : 'var(--color-red)' : null,
-                                fontWeight: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? '600' : null
-                            }
+            })}
 
-                        })}
-                    />
-                </Styles>
-            </div>
-        </div>
-    );
+            getColumnProps={() => ({
+
+            })}
+
+            getRowProps={() => ({
+
+            })}
+            //@ts-ignore
+            getCellProps={cellInfo => ({
+
+              style: {
+                color: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? (cellInfo.row.original.in_profit) ? 'var(--color-green)' : 'var(--color-red)' : null,
+                fontWeight: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? '600' : null
+              }
+
+            })}
+          />
+        </Styles>
+      </div>
+    </div>
+  );
 }
 
 export default ReservedBankroll;

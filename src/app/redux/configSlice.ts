@@ -1,8 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { RootState } from './store'
+import dotProp from 'dot-prop'
 
-import { Type_Profile, TconfigValues } from '@/types/config'
+import { Type_Profile, TconfigValues, Type_ReservedFunds } from '@/types/config'
 import { defaultProfile, defaultConfig } from '@/utils/defaultConfig'
+
+
+const defaultReservedFunds = {
+    id: 0,
+    account_name: '',
+    reserved_funds: 0,
+    is_enabled: false
+}
 
 // Define a type for the slice state
 interface ConfigState {
@@ -10,6 +19,7 @@ interface ConfigState {
     currentProfile: Type_Profile
     editingProfile: Type_Profile
     editingProfileId: string
+    reservedFunds: Type_ReservedFunds[]
 }
 
 // Define the initial state using that type
@@ -17,7 +27,28 @@ const initialState: ConfigState = {
     config: defaultConfig,
     currentProfile: defaultProfile,
     editingProfile: defaultProfile,
-    editingProfileId: defaultConfig.current
+    editingProfileId: defaultConfig.current,
+    reservedFunds: [defaultReservedFunds]
+}
+
+const configPaths = {
+    apis: {
+        threeC: {
+            main: 'apis.threeC',
+            key: 'apis.threeC.key',
+            secret: 'apis.threeC.secret',
+            mode: 'apis.threeC.mode'
+        }
+    },
+    statSettings: {
+        reservedFunds: 'statSettings.reservedFunds',
+        startDate: 'statSettings.startDate',
+        account_id: 'statSettings.account_id',
+    },
+    name: 'name',
+    general: {
+        defaultCurrency: 'general.defaultCurrency'
+    }
 }
 
 export const configSlice = createSlice({
@@ -38,18 +69,48 @@ export const configSlice = createSlice({
             state.editingProfileId = action.payload
         },
         storeEditingProfileData: state => {
-            // const currentConfig = 
             const newConfig = { ...state.config }
             const editingProfile = newConfig.profiles[state.editingProfileId]
             newConfig.profiles[state.editingProfileId] = { ...editingProfile, ...state.editingProfile }
 
             state.config = newConfig
+        },
+        setReservedFunds: (state, action) => {
+            state.reservedFunds = action.payload
+        },
+        updateOnEditingProfile: (state, action) => {
+            console.log(action)
+            const { data, path } = action.payload
+            let newProfile = Object.assign({}, { ...state.editingProfile })
+            console.log(newProfile)
+
+            switch (path) {
+                case configPaths.apis.threeC.main: // update all the api data.
+                    newProfile.apis.threeC = data
+                    break
+                case configPaths.statSettings.reservedFunds: // update all the api data.
+                    newProfile.statSettings.reservedFunds = data
+                    break
+                case configPaths.name: // update all the api data.
+                    newProfile.name = data
+                    break
+                case configPaths.general.defaultCurrency: // update all the currency data
+                    newProfile.general.defaultCurrency = data
+                    break
+                case configPaths.statSettings.startDate: // update all the api data.
+                    newProfile.statSettings.startDate = data
+                    break
+                default:
+                    newProfile = newProfile
+            }
+
+            state.editingProfile = newProfile
         }
     }
 })
 
-export const { setConfig, setCurrentProfile, setEditingProfile, setEditingProfileId, storeEditingProfileData } = configSlice.actions;
-
+export const { setConfig, setCurrentProfile, setEditingProfile, setEditingProfileId, storeEditingProfileData, setReservedFunds, updateOnEditingProfile } = configSlice.actions;
+export { configPaths }
 // export const selectCount = (state: RootState) => state.config.config
 
 export default configSlice.reducer

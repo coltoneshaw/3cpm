@@ -41,6 +41,7 @@ const ProfileSwitcher = () => {
             const styles = (p === currentProfileId) ? { backgroundColor: 'lightBlue' } : {};
             return (
                 <MenuItem 
+                    key={p}
                     onClick={() => { 
                         updateCurrentProfileId(p);
                         dispatch(setConfig({...config, current: p}))

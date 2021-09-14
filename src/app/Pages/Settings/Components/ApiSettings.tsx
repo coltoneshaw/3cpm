@@ -1,45 +1,43 @@
-import React, { useEffect } from 'react';
-import dotProp from 'dot-prop';
+import React, { useEffect, useState } from 'react';
 
-import {TextField, Button, InputLabel, FormControl, MenuItem, Select} from '@material-ui/core';
+import {  useAppSelector } from '@/app/redux/hooks';
+import {  configPaths } from '@/app/redux/configSlice'
+import { updateReservedFundsArray, updateNestedEditingProfile } from '@/app/redux/configActions';
 
-import { useGlobalState } from '@/app/Context/Config';
-import {Type_ApiKeys, Type_Profile} from '@/types/config'
+import { TextField, Button, InputLabel, FormControl, MenuItem, Select } from '@material-ui/core';
+
+import { Type_ApiKeys, Type_Profile, Type_ReservedFunds } from '@/types/config'
 
 
 const ApiSettings = () => {
-    const { state: { updateApiData, apiData }, currentProfile, actions: { fetchAccountsForRequiredFunds } } = useGlobalState();
-
-
-    const updateKeys = (profile: Type_Profile) => {
-        if (dotProp.has(profile, 'apis.threeC'))
-            return profile.apis.threeC
-        return { key: '', secret: '', mode: 'real' }
-    }
-
-
+    const profile = useAppSelector(state => state.config.editingProfile);
+    const reservedFunds = useAppSelector(state => state.config.reservedFunds);
+    const [apiData, updateApiData] = useState(() => ({ key: "", mode: "", secret: "" }))
 
     useEffect(() => {
-        updateApiData(updateKeys(currentProfile));
-    }, [currentProfile]);
+        updateApiData(profile.apis.threeC)
+    }, [profile])
 
     const handleChange = (e: any) => {
-        if(!e.target.name) {
-            console.debug('Failed to change API setting due to blank name')
+        const validKeys = ["key", 'secret', 'mode']
+
+        if (!e.target.name || !validKeys.includes(e.target.name)) {
+            console.debug('Failed to change API setting due to invalid config path.')
             console.debug(e)
             return
         }
+        updateApiData((prevState) => {
+            let newState = { ...prevState }
+            //@ts-ignore
+            newState[e.target.name as keyof Type_Profile] = e.target.value
 
-        const validKeys = ['key', 'secret', 'mode']
-        updateApiData((prevState: Type_ApiKeys) => {
-            let newState = {...prevState}
-
-            if(!validKeys.includes(e.target.name)) return prevState
-
-            newState[e.target.name as keyof Type_ApiKeys] = e.target.value
+            updateNestedEditingProfile(newState, configPaths.apis.threeC.main)
             return newState
         })
+    }
 
+    const handleUpdatingReservedFunds = (reservedFunds: Type_ReservedFunds[]) => {
+        updateNestedEditingProfile(reservedFunds, configPaths.statSettings.reservedFunds)
     }
 
 
@@ -47,7 +45,7 @@ const ApiSettings = () => {
         <div className=" flex-column settings-child">
             <h2 className="text-center ">API Settings</h2>
             <p className="subText">This app requires "Bots read", "Smart trades read", and "Accounts read" within 3commas.</p>
-            <div className=" flex-row" style={{paddingBottom: "25px"}} >
+            <div className=" flex-row" style={{ paddingBottom: "25px" }} >
                 <TextField
                     id="key"
                     label="Key"
@@ -74,8 +72,8 @@ const ApiSettings = () => {
                 />
             </div>
 
-            <div className=" flex-row" style={{paddingBottom: "25px"}} >
-                <FormControl   style={{marginRight: "15px",flexBasis: "50%"}}>
+            <div className=" flex-row" style={{ paddingBottom: "25px" }} >
+                <FormControl style={{ marginRight: "15px", flexBasis: "50%" }}>
                     <InputLabel id="mode-label">Mode</InputLabel>
                     <Select
                         labelId="mode-label"
@@ -101,7 +99,7 @@ const ApiSettings = () => {
                         let secret = apiData.secret
                         let mode = apiData.mode
                         try {
-                            await fetchAccountsForRequiredFunds(key, secret, mode)
+                            await updateReservedFundsArray(key, secret, mode, handleUpdatingReservedFunds, reservedFunds)
                         } catch (error) {
                             alert('there was an error testing the API keys. Check the console for more information.')
                         }
@@ -115,8 +113,8 @@ const ApiSettings = () => {
                     margin: "auto",
                     borderRight: 'none',
                     width: '150px'
-                    }}
-                >
+                }}
+            >
                 Test API Keys
             </Button>
 

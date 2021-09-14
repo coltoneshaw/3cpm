@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
-import { useGlobalState } from '@/app/Context/Config';
+import { useAppSelector } from '@/app/redux/hooks';
+import { configPaths } from '@/app/redux/configSlice'
+import { updateNestedEditingProfile } from '@/app/redux/configActions';
 
 import {
     FormControl,
@@ -66,19 +68,19 @@ const currencyArray: Type_currency[] = [
 
 const CurrencySelector = () => {
 
-    const state = useGlobalState()
+    const profile = useAppSelector(state => state.config.editingProfile);
+    const [currency, updateCurrency] = useState(() => [''])
 
-    const { state: { currency, updateCurrency } } = state
+    useEffect(() => {
+        if(profile.general.defaultCurrency) updateCurrency(profile.general.defaultCurrency)
+        
+    }, [profile])
+
 
     const onChange = (e: any) => {
         updateCurrency([...e.target.value])
-        // console.log(`Changing the default currency from ${config.general.defaultCurrency} to ${e.target.value}`)
+        updateNestedEditingProfile([...e.target.value], configPaths.general.defaultCurrency)
     }
-
-    const returnCurrencyValues = (currencyData: Type_currency[], currencyArray: string[]) => {
-        return currencyData.filter(e => currencyArray.includes(e.value)).map(e => e.name).join(', ')
-    }
-
 
     return (
 
@@ -91,14 +93,10 @@ const CurrencySelector = () => {
                 value={currency}
                 onChange={onChange}
                 input={<Input />}
-                // style={{width: "100%"}}
-                // @ts-ignore
-                renderValue={() => (currency.length > 0) ? returnCurrencyValues(currencyArray, currency) : ""}
+                renderValue={() => (currency.length > 0) ? currency.join(', ') : ""}
                 MenuProps={MenuProps}
                 style={{padding: "10px 0 10px 0", marginLeft: "10px"}}
             >
-                {/* Need to think through All because it's now a selector. */}
-                {/* <MenuItem value=""></MenuItem> */}
 
                 {currencyArray.map((c) => (
                     <MenuItem value={c.value} key={c.value}>

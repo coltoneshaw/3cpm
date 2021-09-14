@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
-// import {get} from '@/app/redux/configSlice'
 import './Settings.scss'
 
 // @ts-ignore
 import { version } from '#/package.json';
-
-// import { useGlobalState } from '@/app/Context/Config';
-// import { returnProfileById } from "@/app/Context/Config/HelperFunctions";
-// import { Type_Profile } from '@/types/config';
-
 
 
 import {
@@ -36,12 +29,6 @@ import { ChangelogModal, ToastNotifcations } from '@/app/Features/Index';
 // this state is either the current profile active, or the profile that was selected to be edited in the modal.
 const SettingsPage = () => {
 
-    const config = useAppSelector(state => state.config.config)
-    const dispatch = useAppDispatch()
-
-    // const configState = useGlobalState();
-    // const { config, state: { currentlyEditingProfileId, currency, currentProfileId } } = configState;
-
 
     const [open, setOpen] = useState(false);
 
@@ -59,20 +46,6 @@ const SettingsPage = () => {
     const handleOpenChangelog = () => {
         setOpenChangelog(true);
     };
-
- 
-
-    // let editingProfile = returnProfileById(currentlyEditingProfileId)
-
-    // let profileId;
-
-    // useEffect(() => {
-    //     console.log('updating the ID from the settings', currentlyEditingProfileId)
-    // }, [currentlyEditingProfileId])
-
-    // useEffect(() => {
-    //     console.log('this updated here')
-    // }, [currentProfileId])
 
     return (
         <>

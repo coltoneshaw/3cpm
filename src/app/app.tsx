@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
 import { updateConfig } from '@/app/redux/configActions';
 
 const App = () => {
+  // const classes = useStyles();
 
   const themeEngine = useThemeProvidor();
   const { styles } = themeEngine

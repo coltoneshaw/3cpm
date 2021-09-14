@@ -235,13 +235,4 @@ const useGlobalState = () => {
 };
 
 
-// const useGlobalDispatch = () => {
-//     const context = React.useContext(GlobalDispatchContext);
-//     if (context === undefined) {
-//         throw new Error(
-//             "useGlobalDispatch must be used within a GlobalContextProvider"
-//         );
-//     }
-//     return context;
-// };
 export { ConfigContext, ConfigProvider, useGlobalState }
