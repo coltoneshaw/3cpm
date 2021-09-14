@@ -1,4 +1,4 @@
-import { setConfig, setCurrentProfile, setEditingProfile, setEditingProfileId, setReservedFunds, updateOnEditingProfile, storeEditingProfileData } from '@/app/redux/configSlice'
+import { setConfig, setCurrentProfile, setEditingProfile, setEditingProfileId, setReservedFunds, updateOnEditingProfile, storeEditingProfileData, deleteProfileById } from '@/app/redux/configSlice'
 
 import { TconfigValues, Type_Profile, Type_ReservedFunds } from '@/types/config';
 
@@ -115,17 +115,39 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
 
 const checkProfileIsValid = (editingProfile: Type_Profile) => {
     try {
-        const {apis: {threeC}, name, statSettings: {reservedFunds, startDate}} = editingProfile
-        if(!threeC.key || !threeC.mode || !threeC.secret) return {status: false, message: 'Missing 3Commas API information'}
-        if(!name) return {status: false, message: 'Missing a valid profile name'}
-        if (!reservedFunds) return {status: false, message: 'Missing accounts. Make sure to click "Test API Keys" and enable an account.'}
-        if( reservedFunds.filter(account => account.is_enabled).length == 0) return {status: false, message: 'Missing an enabled account under reserved funds.'}
-        if(!startDate) return {status: false, message: 'Missing a start date'}
+        const { apis: { threeC }, name, statSettings: { reservedFunds, startDate } } = editingProfile
+        if (!threeC.key || !threeC.mode || !threeC.secret) return { status: false, message: 'Missing 3Commas API information' }
+        if (!name) return { status: false, message: 'Missing a valid profile name' }
+        if (!reservedFunds) return { status: false, message: 'Missing accounts. Make sure to click "Test API Keys" and enable an account.' }
+        if (reservedFunds.filter(account => account.is_enabled).length == 0) return { status: false, message: 'Missing an enabled account under reserved funds.' }
+        if (!startDate) return { status: false, message: 'Missing a start date' }
 
-        return {status: true,}
+        return { status: true, }
     } catch (e) {
         console.error(e)
-        return {status: false, message: 'an error occured when saving. Check the Javascript Console for more details.'}
+        return { status: false, message: 'an error occured when saving. Check the Javascript Console for more details.' }
+    }
+}
+
+const deleteProfileByIdGlobal = (config: TconfigValues, profileId:string, setOpen?:CallableFunction | undefined) => {
+    const profileKeys = Object.keys(config.profiles)
+    if (profileKeys.length <= 1) {
+        alert('Hold on cowboy. You seem to be trying to delete your last profile. If you want to reset your data use Menu > Help > Reset all data.')
+        return
+    }
+    const accept = confirm("Deleting this profile will delete all information attached to it including API keys, and the database. This action will not impact your 3Commas account in any way. Confirm you would like to locally delete this profile.");
+    if (accept) {
+
+        console.log('deleted the profile!')
+
+        store.dispatch(deleteProfileById({ profileId }))
+        storeConfigInFile();
+
+        // delete the profile command
+        // route the user back to a their default profile OR route the user to a new blank profile..?
+        // What happens if it's the last profile? Show a warning maybe saying:
+        // "This is your only profile. Unable to delete. If you want to reset your 3C Portfolio Manager use Menu > Help > Reset all data."
+        if(setOpen) setOpen(true)
     }
 }
 
@@ -136,5 +158,6 @@ export {
     updateReservedFundsArray,
     updateNestedEditingProfile,
     storeConfigInFile,
-    checkProfileIsValid
+    checkProfileIsValid,
+    deleteProfileByIdGlobal
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
-import {setConfig, setEditingProfile, setEditingProfileId} from '@/app/redux/configSlice'
+import {setConfig, setEditingProfile, setEditingProfileId, addEditingProfile} from '@/app/redux/configSlice'
 
 import PersonIcon from '@material-ui/icons/Person';
 
@@ -29,6 +29,12 @@ const ProfileSwitcher = () => {
         updateProfiles(config.profiles)
         updateCurrentProfileId(config.current)
     },[config])
+
+    const addNewProfile = () => {
+        // navigate to settings
+        // add a profile to the store.
+        dispatch(addEditingProfile())
+    }
 
 
     const returnMenuOptions = () => {
@@ -72,7 +78,7 @@ const ProfileSwitcher = () => {
             >
 
                 {returnMenuOptions()}
-                <MenuItem onClick={() => { setOpen(prevState => !prevState) /* need to add the add new profile function to route to settings with a blank slate. */}}>Add new profile</MenuItem>
+                <MenuItem onClick={() => { addNewProfile()}}>Add new profile</MenuItem>
                 <MenuItem onClick={() => { setOpen(prevState => !prevState) }}>Manage profiles</MenuItem>
 
             </HoverMenu>

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { RootState } from './store'
-import dotProp from 'dot-prop'
+import { v4 as uuidv4 } from 'uuid';
 
 import { Type_Profile, TconfigValues, Type_ReservedFunds } from '@/types/config'
 import { defaultProfile, defaultConfig } from '@/utils/defaultConfig'
@@ -103,13 +103,13 @@ export const configSlice = createSlice({
 
             state.editingProfile = newProfile
         },
-        deleteEditingProfile: state => {
+        deleteProfileById: (state, action) => {
+            const {profileId} = action.payload
 
             const profileKeys = Object.keys(state.config.profiles)
             if (profileKeys.length > 1) {
-                const currentlyEditingProfileId = state.editingProfileId
                 const newConfig = { ...state.config }
-                delete newConfig.profiles[currentlyEditingProfileId]
+                delete newConfig.profiles[profileId]
 
                 // setting this to the top profile
                 newConfig.current = Object.keys(newConfig.profiles)[0]
@@ -121,10 +121,18 @@ export const configSlice = createSlice({
 
 
         },
+        addEditingProfile: state => {
+            state.editingProfileId = uuidv4()
+            state.editingProfile = {...defaultProfile}
+        }
     }
 })
 
-export const { setConfig, setCurrentProfile, setEditingProfile, setEditingProfileId, storeEditingProfileData, setReservedFunds, updateOnEditingProfile, deleteEditingProfile } = configSlice.actions;
+export const { 
+    setConfig, setCurrentProfile, setEditingProfile, 
+    setEditingProfileId, storeEditingProfileData, setReservedFunds, 
+    updateOnEditingProfile, deleteProfileById, addEditingProfile
+} = configSlice.actions;
 export { configPaths }
 // export const selectCount = (state: RootState) => state.config.config
 

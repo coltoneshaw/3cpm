@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
-import { storeConfigInFile, checkProfileIsValid } from '@/app/redux/configActions'
-import { storeEditingProfileData, deleteEditingProfile } from '@/app/redux/configSlice'
+import { storeConfigInFile, checkProfileIsValid, deleteProfileByIdGlobal } from '@/app/redux/configActions'
+import { storeEditingProfileData, deleteProfileById } from '@/app/redux/configSlice'
 
 
 import { Button } from '@material-ui/core';
@@ -15,7 +15,7 @@ interface SubmitButtons {
 }
 const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
     const dispatch = useAppDispatch()
-    const { editingProfile, config } = useAppSelector(state => state.config);
+    const { editingProfile, config, editingProfileId } = useAppSelector(state => state.config);
 
     const dataState = useGlobalData()
     const { actions: { updateAllData }, data: { isSyncing } } = dataState
@@ -54,25 +54,7 @@ const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
                 variant="contained"
                 className="deleteProfile"
                 onClick={() => {
-                    const profileKeys = Object.keys(config.profiles)
-                    if (profileKeys.length <= 1) {
-                        alert('Hold on cowboy. You seem to be trying to delete your last profile. If you want to reset your data use Menu > Help > Reset all data.')
-                        return
-                    }
-                    const accept = confirm("Deleting this profile will delete all information attached to it including API keys, and the database. This action will not impact your 3Commas account in any way. Confirm you would like to locally delete this profile.");
-                    if (accept) {
-
-                        console.log('deleted the profile!')
-
-                        dispatch(deleteEditingProfile())
-                        storeConfigInFile();
-
-                        // delete the profile command
-                        // route the user back to a their default profile OR route the user to a new blank profile..?
-                        // What happens if it's the last profile? Show a warning maybe saying:
-                        // "This is your only profile. Unable to delete. If you want to reset your 3C Portfolio Manager use Menu > Help > Reset all data."
-                        setOpen(true)
-                    }
+                    deleteProfileByIdGlobal(config, editingProfileId, setOpen(true))
                 }}
                 disableElevation
             >

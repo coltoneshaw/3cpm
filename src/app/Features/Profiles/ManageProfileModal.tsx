@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 
+import { useAppSelector } from '@/app/redux/hooks';
+import { deleteProfileByIdGlobal } from '@/app/redux/configActions'
+
 import {
     Dialog,
     DialogContent,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import Delete from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
+// import AddIcon from '@material-ui/icons/Add';
 
-import TextField from '@material-ui/core/TextField';
+// import TextField from '@material-ui/core/TextField';
 import { TconfigValues } from '@/types/config'
 
 import { useThemeProvidor } from "@/app/Context/ThemeEngine";
@@ -20,7 +23,9 @@ interface Type_profileModal {
     currentProfileId:string
 }
 
-const ManageProfileModal = ({ open, setOpen, profiles, currentProfileId }:Type_profileModal ) => {
+const ManageProfileModal = ({ open, setOpen, profiles }:Type_profileModal ) => {
+
+    const {config} = useAppSelector(state => state.config)
 
     // TODO
     // - Add an edit button
@@ -28,7 +33,7 @@ const ManageProfileModal = ({ open, setOpen, profiles, currentProfileId }:Type_p
     // - add a set Current Profile button that controls the state in the back.
 
     
-    const [inputValue, changeInputValue] = useState('')
+    // const [inputValue, changeInputValue] = useState('')
 
     const handleClose = () => {
         setOpen(false);
@@ -53,36 +58,36 @@ const ManageProfileModal = ({ open, setOpen, profiles, currentProfileId }:Type_p
 
     }
 
-    const addProfileDiv = () => {
-        // if (selectedCoins.length >= 5) return <p style={{ fontWeight: 300, margin: 'auto' }}>Remove a coin to add another.</p>
+    // const addProfileDiv = () => {
+    //     // if (selectedCoins.length >= 5) return <p style={{ fontWeight: 300, margin: 'auto' }}>Remove a coin to add another.</p>
 
-        return (
-            <>
-                <TextField
-                    id="key"
-                    label="Add Profile"
-                    name="key"
-                    value={inputValue}
-                    onChange={handleChange}
-                    className="settings-left"
-                    style={{
-                        flexBasis: '90%', paddingRight: '2em', color: 'var(--color-text-lightbackground)'
-                    }}
-                />
+    //     return (
+    //         <>
+    //             <TextField
+    //                 id="key"
+    //                 label="Add Profile"
+    //                 name="key"
+    //                 value={inputValue}
+    //                 onChange={handleChange}
+    //                 className="settings-left"
+    //                 style={{
+    //                     flexBasis: '90%', paddingRight: '2em', color: 'var(--color-text-lightbackground)'
+    //                 }}
+    //             />
 
-                <AddIcon
-                    style={{
-                        flexBasis: '10%',
-                        cursor: 'pointer'
+    //             <AddIcon
+    //                 style={{
+    //                     flexBasis: '10%',
+    //                     cursor: 'pointer'
 
-                    }}
-                    onClick={() => {
-                        // addCoin()
-                    }}
-                />
-            </>
-        )
-    }
+    //                 }}
+    //                 onClick={() => {
+    //                     // addCoin()
+    //                 }}
+    //             />
+    //         </>
+    //     )
+    // }
 
     const returnProfilesMapped = () => {
 
@@ -104,7 +109,7 @@ const ManageProfileModal = ({ open, setOpen, profiles, currentProfileId }:Type_p
                         cursor: 'pointer'
                     }}
                     onClick={() => {
-                        // deleteCoin(coin)
+                        deleteProfileByIdGlobal(config, p, undefined)
                     }}
                 />
             </div>
@@ -139,11 +144,11 @@ const ManageProfileModal = ({ open, setOpen, profiles, currentProfileId }:Type_p
 
                         { returnProfilesMapped() }
 
-                        <div className="addCoinDiv flex-row">
+                        {/* <div className="addCoinDiv flex-row">
 
                             { addProfileDiv() }
 
-                        </div>
+                        </div> */}
 
 
 
