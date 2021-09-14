@@ -65,7 +65,6 @@ const StatsPage = () => {
 
 
     const returnAccountNames = () => {
-        console.log(reservedFunds)
         return reservedFunds.length > 0 ?
             currentProfile.statSettings.reservedFunds.filter(account => account.is_enabled).map(account => account.account_name).join(', ')
             :

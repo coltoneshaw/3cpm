@@ -29,7 +29,7 @@ const App = () => {
   return (
     <HashRouter>
       <div style={styles} className="rootDiv">
-        <UpdateBanner />
+          <UpdateBanner />
           <Sidebar />
           <MainWindow />
       </div>

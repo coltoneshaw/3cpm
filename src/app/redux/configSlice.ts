@@ -79,11 +79,8 @@ export const configSlice = createSlice({
             state.reservedFunds = action.payload
         },
         updateOnEditingProfile: (state, action) => {
-            console.log(action)
             const { data, path } = action.payload
             let newProfile = Object.assign({}, { ...state.editingProfile })
-            console.log(newProfile)
-
             switch (path) {
                 case configPaths.apis.threeC.main: // update all the api data.
                     newProfile.apis.threeC = data
@@ -105,11 +102,29 @@ export const configSlice = createSlice({
             }
 
             state.editingProfile = newProfile
-        }
+        },
+        deleteEditingProfile: state => {
+
+            const profileKeys = Object.keys(state.config.profiles)
+            if (profileKeys.length > 1) {
+                const currentlyEditingProfileId = state.editingProfileId
+                const newConfig = { ...state.config }
+                delete newConfig.profiles[currentlyEditingProfileId]
+
+                // setting this to the top profile
+                newConfig.current = Object.keys(newConfig.profiles)[0]
+                state.config = newConfig
+            } else {
+                console.error('You cannot delete all your profiles. It looks like your down to the last one.')
+            }
+
+
+
+        },
     }
 })
 
-export const { setConfig, setCurrentProfile, setEditingProfile, setEditingProfileId, storeEditingProfileData, setReservedFunds, updateOnEditingProfile } = configSlice.actions;
+export const { setConfig, setCurrentProfile, setEditingProfile, setEditingProfileId, storeEditingProfileData, setReservedFunds, updateOnEditingProfile, deleteEditingProfile } = configSlice.actions;
 export { configPaths }
 // export const selectCount = (state: RootState) => state.config.config
 

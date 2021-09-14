@@ -20,6 +20,8 @@ const updateConfig = async () => {
 const storeConfigInFile = async () => {
 
     try {
+        // store.dispatch(storeEditingProfileData());
+
         //@ts-ignore
         await electron.config.set(null, store.getState().config.config)
         updateConfig()
@@ -48,7 +50,7 @@ const updateEditingProfile = (profileData: Type_Profile, profileId: string) => {
 const updateNestedEditingProfile = (data: string | {} | [], path: string) => {
 
     store.dispatch(updateOnEditingProfile({ data, path }))
-    store.dispatch(storeEditingProfileData())
+    // store.dispatch(storeEditingProfileData());
 
 }
 
@@ -111,10 +113,28 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
 
 }
 
+const checkProfileIsValid = (editingProfile: Type_Profile) => {
+    try {
+        const {apis: {threeC}, name, statSettings: {reservedFunds, startDate}} = editingProfile
+        if(!threeC.key || !threeC.mode || !threeC.secret) return {status: false, message: 'Missing 3Commas API information'}
+        if(!name) return {status: false, message: 'Missing a valid profile name'}
+        if (!reservedFunds) return {status: false, message: 'Missing accounts. Make sure to click "Test API Keys" and enable an account.'}
+        if( reservedFunds.filter(account => account.is_enabled).length == 0) return {status: false, message: 'Missing an enabled account under reserved funds.'}
+        if(!startDate) return {status: false, message: 'Missing a start date'}
+
+        return {status: true,}
+    } catch (e) {
+        console.error(e)
+        return {status: false, message: 'an error occured when saving. Check the Javascript Console for more details.'}
+    }
+}
+
+
 
 export {
     updateConfig,
     updateReservedFundsArray,
     updateNestedEditingProfile,
-    storeConfigInFile
+    storeConfigInFile,
+    checkProfileIsValid
 }
