@@ -19,9 +19,16 @@ const updateConfig = async () => {
 
 const storeConfigInFile = async () => {
 
-    //@ts-ignore
-    await electron.config.set(null, store.getState().config.config)
-    updateConfig()
+    try {
+        //@ts-ignore
+        await electron.config.set(null, store.getState().config.config)
+        updateConfig()
+        return true
+    } catch (e) {
+        console.error(e)
+        return false
+    }
+
 }
 
 const updateCurrentProfile = (profileData: Type_Profile) => {
@@ -38,16 +45,16 @@ const updateEditingProfile = (profileData: Type_Profile, profileId: string) => {
  * @param data data to be stored on the editing profile
  * @param path string path to represent where to store the data.
  */
-const updateNestedEditingProfile = (data: string | {} | [], path:string) => {
+const updateNestedEditingProfile = (data: string | {} | [], path: string) => {
 
-    store.dispatch(updateOnEditingProfile({data, path}))
+    store.dispatch(updateOnEditingProfile({ data, path }))
     store.dispatch(storeEditingProfileData())
 
 }
 
 const updateReservedFundsArray = async (key: string, secret: string, mode: string, updateReservedFunds: CallableFunction, reservedFunds: Type_ReservedFunds[]) => {
-    
-        console.log({key, secret, mode})
+
+    console.log({ key, secret, mode })
     // @ts-ignore
     const accountSummary = await electron.api.getAccountData(key, secret, mode)
 

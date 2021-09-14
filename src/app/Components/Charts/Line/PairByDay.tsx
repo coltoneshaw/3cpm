@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {  useAppSelector } from '@/app/redux/hooks';
 
 
 import { Select, InputLabel, FormControl, MenuItem, Checkbox, ListItemText, Input} from '@material-ui/core';
@@ -11,7 +12,6 @@ const lang = getLang()
 
 import { Type_Tooltip } from '@/types/Charts';
 import { getSelectPairDataByDate } from '@/app/Features/3Commas/3Commas';
-import {useGlobalState} from "@/app/Context/Config";
 
 const colors = ["#374151", "#B91C1C", "#B45309", "#047857", "#1D4ED8", "#4338CA", "#6D28D9", "#BE185D"]
 
@@ -22,8 +22,7 @@ interface pairByDate {
 
 
 const PairPerformanceByDate = () => {
-
-    const { config } = useGlobalState()
+    const {config} = useAppSelector(state => state.config);
     const [localData, updateLocalData] = useState<pairByDate[]>([]);
     const [pairs, updatePairs] = useState<{ pair: string, opacity: number }[]>([])
     const [pairFilters, updatePairFilters] = useState<string[]>([]);

@@ -144,7 +144,7 @@ const useThemeProvidor = () => {
     const context = React.useContext(ThemeContext);
     if (context === undefined) {
         throw new Error(
-            "useGlobalState must be used within a GlobalContextProvider"
+            "useThemeProvidor must be used within a GlobalContextProvider"
         );
     }
     return context;

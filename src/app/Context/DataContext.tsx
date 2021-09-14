@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect} from 'react';
 
 // Context Providers
-import { useGlobalState } from './Config';
+import { useAppSelector } from '@/app/redux/hooks';
 
 
 import {
@@ -90,9 +90,13 @@ interface Type_Data_Context {
  * This needs to be nested under the config context as it'll use that!
  */
 const DataProvider = ({ children }: any) => {
+    const {currentProfile} = useAppSelector(state => state.config);
 
-    const configState = useGlobalState()
-    const { currentProfile, state: { reservedFunds } } = configState
+    const [reservedFunds, updateReservedFunds] = useState(() => currentProfile.statSettings.reservedFunds);
+
+    useEffect(() => {
+        if(currentProfile.statSettings.reservedFunds) updateReservedFunds(currentProfile.statSettings.reservedFunds)
+    },[currentProfile.statSettings.reservedFunds])
 
     const [botData, updateBotData] = useState<Type_Query_bots[]>([])
     const [profitData, updateProfitData] = useState<Type_Profit[]>([])

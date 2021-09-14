@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAppSelector } from '@/app/redux/hooks';
 
 import DataTable from './DataTable';
 import { UpdateDataButton } from '@/app/Components/Buttons/Index'
@@ -14,12 +15,13 @@ import { useGlobalData } from '@/app/Context/DataContext';
 import { calc_dropMetrics } from '@/utils/formulas'
 
 import { Type_Query_bots } from '@/types/3Commas';
-import {useGlobalState} from "@/app/Context/Config";
 
 const BotPlannerPage = () => {
 
     const { data: { botData, metricsData: { totalBankroll } } } = useGlobalData();
-    const { config } = useGlobalState();
+
+    const {config} = useAppSelector(state => state.config);
+
 
     const [localBotData, updateLocalBotData] = useState<Type_Query_bots[]>([])
 

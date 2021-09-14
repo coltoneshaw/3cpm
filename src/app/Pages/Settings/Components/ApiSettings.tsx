@@ -10,13 +10,12 @@ import { Type_ApiKeys, Type_Profile, Type_ReservedFunds } from '@/types/config'
 
 
 const ApiSettings = () => {
-    const profile = useAppSelector(state => state.config.editingProfile);
-    const reservedFunds = useAppSelector(state => state.config.reservedFunds);
+    const {editingProfile, reservedFunds} = useAppSelector(state => state.config);
     const [apiData, updateApiData] = useState(() => ({ key: "", mode: "", secret: "" }))
 
     useEffect(() => {
-        updateApiData(profile.apis.threeC)
-    }, [profile])
+        updateApiData(editingProfile.apis.threeC)
+    }, [editingProfile])
 
     const handleChange = (e: any) => {
         const validKeys = ["key", 'secret', 'mode']

@@ -6,14 +6,13 @@ import { HashRouter } from 'react-router-dom'
 
 import { MainWindow } from "@/app/Pages/Index"
 
-import { ConfigProvider } from './Context/Config';
+// import { ConfigProvider } from './Context/Config';
 import { useThemeProvidor } from './Context/ThemeEngine';
 
 import UpdateBanner from './Features/UpdateBanner/UpdateBanner';
 
 
-import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
-// import {setConfig} from '@/app/redux/configSlice'
+import { useAppDispatch } from '@/app/redux/hooks';
 import { updateConfig } from '@/app/redux/configActions';
 
 const App = () => {
@@ -21,7 +20,7 @@ const App = () => {
 
   const themeEngine = useThemeProvidor();
   const { styles } = themeEngine
-
+  
   const dispatch = useAppDispatch()
   useEffect(() => {
     updateConfig();
@@ -31,14 +30,8 @@ const App = () => {
     <HashRouter>
       <div style={styles} className="rootDiv">
         <UpdateBanner />
-        <ConfigProvider>
-
-
           <Sidebar />
           <MainWindow />
-
-        </ConfigProvider>
-
       </div>
 
 

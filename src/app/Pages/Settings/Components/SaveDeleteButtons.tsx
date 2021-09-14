@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 import { Button } from '@material-ui/core';
 
-import { useGlobalState } from '@/app/Context/Config';
 import { useGlobalData } from '@/app/Context/DataContext';
 
 import {storeConfigInFile} from '@/app/redux/configActions'
@@ -12,8 +11,6 @@ interface SubmitButtons {
     setOpen: any
 }
 const SaveDeleteButtons = ({setOpen}: SubmitButtons) => {
-    const configState = useGlobalState()
-    const { config, reset, setConfigBulk }  = configState
 
     const dataState = useGlobalData()
     const {actions: { updateAllData  }, data: { isSyncing}} = dataState
@@ -52,9 +49,9 @@ const SaveDeleteButtons = ({setOpen}: SubmitButtons) => {
                     setLoaderIcon(true)
                     try{
                         const cfg = await storeConfigInFile()
-                        // if(cfg){
-                        //     await updateAllData(1000, callback)
-                        // }
+                        if(cfg){
+                            await updateAllData(1000, callback)
+                        }
                     } catch (error) {
                         console.error(error)
                     }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import dotProp from 'dot-prop';
+import {  useAppSelector } from '@/app/redux/hooks';
 
 import './Stats.scss'
 import { Button, ButtonGroup } from '@material-ui/core';
@@ -7,7 +7,7 @@ import { Button, ButtonGroup } from '@material-ui/core';
 import { RiskMonitor, SummaryStatistics, PerformanceMonitor } from './Views/Index';
 import { UpdateDataButton } from '@/app/Components/Buttons/Index'
 
-import { useGlobalState } from '@/app/Context/Config';
+
 import { useGlobalData } from '@/app/Context/DataContext';
 
 import {
@@ -21,6 +21,7 @@ import { getLang } from '@/utils/helperFunctions';
 const lang = getLang()
 
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+import { current } from 'immer';
 const defaultNav = 'day';
 const localStorageSortName = storageItem.navigation.statsPage
 
@@ -41,16 +42,20 @@ const buttonElements = [
 ]
 
 const StatsPage = () => {
-    const configState = useGlobalState()
-    const { currentProfile, state: { reservedFunds } } = configState
+    const {currentProfile} = useAppSelector(state => state.config);
+
+    const [reservedFunds, updateReservedFunds] = useState(() => currentProfile.statSettings.reservedFunds)
+
+    useEffect(() => {
+        if(currentProfile.statSettings.reservedFunds.length > 0) updateReservedFunds(currentProfile.statSettings.reservedFunds)
+    }, [currentProfile.statSettings.reservedFunds])
+
     const state = useGlobalData()
     const { data: { metricsData}} = state
     const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent, totalDeals, boughtVolume, totalProfit_perf, averageDailyProfit, averageDealHours, totalClosedDeals, totalDealHours } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')
-    const date: undefined | number = dotProp.get(currentProfile, 'statSettings.startDate')
-
-    // const account_id = findAccounts(config, 'statSettings.account_id')
+    const date: undefined | number = currentProfile.statSettings.startDate
 
     useEffect(() => {
         const getSortFromStorage = getStorageItem(localStorageSortName);
@@ -60,14 +65,15 @@ const StatsPage = () => {
 
 
     const returnAccountNames = () => {
+        console.log(reservedFunds)
         return reservedFunds.length > 0 ?
-            reservedFunds.filter(account => account.is_enabled).map(account => account.account_name).join(', ')
+            currentProfile.statSettings.reservedFunds.filter(account => account.is_enabled).map(account => account.account_name).join(', ')
             :
             "n/a";
     }
 
     const returnCurrencyValues = () => {
-        const currencyValues: string[] | undefined = dotProp.get(currentProfile, 'general.defaultCurrency')
+        const currencyValues: string[] | undefined = currentProfile.general.defaultCurrency
         return currencyValues != undefined && currencyValues.length > 0 ?
             currencyValues.join(', ')
             :

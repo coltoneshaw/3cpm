@@ -13,7 +13,8 @@ import { version } from '#/package.json';
 
 import CoinPriceHeader from '@/app/Features/CoinPriceHeader/CoinPriceHeader';
 
-import { ConfigProvider, useGlobalState } from '@/app/Context/Config';
+import { useAppSelector } from '@/app/redux/hooks';
+
 import { DataProvider } from '@/app/Context/DataContext';
 import { ChangelogModal } from '@/app/Features/Index';
 
@@ -22,19 +23,19 @@ import { getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalSt
 
 const MainWindow = () => {
 
-    const configState = useGlobalState()
-    const { state: { apiData }} = configState;
+    const {currentProfile} = useAppSelector(state => state.config);
+
 
     const [homePage, updateHomePage] = useState<string>('/activeDeals')
 
     useEffect(() => {
-        if (apiData.key !== "" && apiData.secret !== "") {
+        if (currentProfile.apis.threeC.key !== "" && currentProfile.apis.threeC.secret !== "") {
             updateHomePage(getStorageItem(storageItem.navigation.homePage) ?? '/activeDeals')
             return
         }
 
         updateHomePage('/settings')
-    }, [apiData])
+    }, [currentProfile.apis.threeC])
 
 
     // changelog state responsible for opening / closing the changelog
@@ -63,7 +64,7 @@ const MainWindow = () => {
 
 
     return (
-        <ConfigProvider>
+        // <ConfigProvider>
             <div className="mainWindow" >
                 <CoinPriceHeader />
                 <ChangelogModal open={openChangelog} setOpen={setOpenChangelog} />
@@ -84,7 +85,7 @@ const MainWindow = () => {
             </div>
 
 
-        </ConfigProvider>
+        // </ConfigProvider>
 
     )
 }
