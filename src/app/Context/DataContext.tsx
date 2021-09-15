@@ -111,14 +111,14 @@ const DataProvider = ({ children }: any) => {
 
     // @ts-ignore
     useEffect(async () => {
-        updateIsSyncing(true)
+        // updateIsSyncing(true)
         try {
             await fetchBotData()
             fetchProfitMetrics()
             fetchPerformanceData()
             getActiveDeals()
             await getAccountData()
-            updateIsSyncing(false)
+            // updateIsSyncing(false)
 
         } catch (error) {
             console.error(error)
@@ -354,13 +354,13 @@ const DataProvider = ({ children }: any) => {
                 updateThreeCData('fullSync', options)
                     .then(async () => {
                         await fetchBotData()
-                        fetchProfitMetrics()
-                        fetchPerformanceData()
-                        getActiveDeals()
+                        await fetchProfitMetrics()
+                        await fetchPerformanceData()
+                        await getActiveDeals()
                         await getAccountData()
-                        calculateMetrics()
-                        updateIsSyncing(false)
+                        await calculateMetrics()
                         callback()
+                        updateIsSyncing(false)
     
                     })
                     return {
