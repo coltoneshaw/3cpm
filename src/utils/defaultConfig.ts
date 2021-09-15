@@ -99,9 +99,10 @@ const defaultProfile:Type_Profile = {
 }
 
 
-const defaultConfig:TconfigValues = {
-    profiles: { "default": defaultProfile }, 
-    current: "",
+const currentId = uuidv4()
+const defaultConfig = {
+    profiles: Object.assign({[currentId]: defaultProfile}), 
+    current: currentId,
     general: {
         version : version
     },
