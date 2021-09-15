@@ -21,7 +21,7 @@ const migrationToProfiles = (config:any) => {
     const { apis, general, syncStatus, statSettings } = config.store
     config.store = {
         profiles: {
-            [id]: { "name": "default", apis, general, syncStatus, statSettings }
+            [id]: { "name": "default", apis: {...apis, mode: "real"}, general, syncStatus, statSettings }
         },
         general: {
             version: 'v0.5.0'
@@ -98,10 +98,14 @@ const setProfileConfig = (key: string, value: any) => {
     return config.set('profiles.' + current + '.' + key, value)
 }
 
+const setDefaultConfig = () => {
+    config.store = defaultConfig
+}
 
 
 export {
     config,
     getProfileConfig,
-    setProfileConfig
+    setProfileConfig,
+    setDefaultConfig
 }

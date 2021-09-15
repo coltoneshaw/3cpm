@@ -143,6 +143,9 @@ const deleteProfileByIdGlobal = (config: TconfigValues, profileId:string, setOpe
         store.dispatch(deleteProfileById({ profileId }))
         storeConfigInFile();
 
+        //@ts-ignore
+        electron.database.deleteAllData(profileId)
+
         // delete the profile command
         // route the user back to a their default profile OR route the user to a new blank profile..?
         // What happens if it's the last profile? Show a warning maybe saying:

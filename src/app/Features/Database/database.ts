@@ -1,5 +1,5 @@
-import {app} from "electron";
-import {config} from "@/utils/config";
+import { app } from "electron";
+import { config } from "@/utils/config";
 import path from "path";
 import Database from 'better-sqlite3';
 
@@ -172,15 +172,15 @@ function initializeAccountTable() {
 
 }
 
-function initialDatabaseSetup(){
+function initialDatabaseSetup() {
     initializeDealTable();
     initializeAccountTable();
     initializeBotsTable();
 }
 
 
-async function checkOrMakeTables(){
-    
+async function checkOrMakeTables() {
+
     // checking if the tables exist.
     const existingTables = await query("SELECT name FROM sqlite_master WHERE type='table';")
 
@@ -197,7 +197,7 @@ async function checkOrMakeTables(){
 
 
 
-function normalizeData( data:any ) {
+function normalizeData(data: any) {
     let valueString;
     if (typeof data == 'string') {
         valueString = data.replaceAll('?', '')
@@ -223,15 +223,15 @@ function normalizeData( data:any ) {
  * 
  * @description Inserting data into a table. Data coming in needs to be an array of objects.
  */
-async function update(table:string, data:any[] ) {
+async function update(table: string, data: any[]) {
 
-    if(data.length == 0) {
+    if (data.length == 0) {
         console.log('no data to write')
         return false
     }
 
     let normalizedData = data.map(row => {
-        let newRow:any = {};
+        let newRow: any = {};
         Object.keys(row).forEach(item => {
             newRow[normalizeData(item)] = normalizeData(row[item])
         })
@@ -256,16 +256,16 @@ async function update(table:string, data:any[] ) {
     await insertMany(normalizedData)
 }
 
-async function upsert( table:string, data:any[], id:string, updateColumn:string ){
+async function upsert(table: string, data: any[], id: string, updateColumn: string) {
 
-    if(data.length == 0) {
+    if (data.length == 0) {
         console.log('no data to write')
         return false
     }
 
     // removing any inconsistencies with how sqlite handles the data.
     let normalizedData = data.map(row => {
-        let newRow:any = {};
+        let newRow: any = {};
         Object.keys(row).forEach(item => {
             newRow[normalizeData(item)] = normalizeData(row[item])
         })
@@ -275,7 +275,7 @@ async function upsert( table:string, data:any[], id:string, updateColumn:string 
 
     // const KEYS = Object.keys(normalizedData[0]).map(e => normalizeData(e)).join()
     // const valueKey = Object.keys(normalizedData[0]).map(key => '@' + key).map(e => normalizeData(e)).join()
-    
+
     const insertMany = db.transaction((dataArray) => {
         for (const row of dataArray) {
             const statement = db.prepare(`UPDATE ${table} SET ${updateColumn} = ${row[updateColumn]} where ${id} = ${row[id]} AND profile_id = '${config.get('current')}';`)
@@ -296,17 +296,25 @@ async function upsert( table:string, data:any[], id:string, updateColumn:string 
  * ### TODO 
  * - Can add the ability to set custom filters to be returned. Not sure the exact benefit of this but it's possible.
  */
-async function query( query:string ) {
+async function query(query: string) {
     const row = await db.prepare(query)
     return await row.all()
 }
 
-async function run(query:string) {
+async function run(query: string) {
     const stmt = db.prepare(query);
     await stmt.run()
 }
 
-async function deleteAllData(profileID: string) {
+async function deleteAllData(profileID?: string) {
+
+    if (!profileID) {
+        // truncating the table
+        await run(`DELETE FROM bots;'`)
+        await run(`DELETE FROM accountData;`)
+        await run(`DELETE FROM deals;'`)
+        console.info('deleting all database info.')
+    }
     console.info('deleting all database info.')
     await run(`DELETE
                FROM bots

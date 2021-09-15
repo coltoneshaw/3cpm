@@ -164,3 +164,5 @@ import { fetchVersions } from './app/Features/UpdateBanner/UpdateApiFetch';
 ipcMain.handle('pm-versions', async (event) => {
   return await fetchVersions()
 });
+
+export {win}

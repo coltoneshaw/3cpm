@@ -1,12 +1,15 @@
-const { app, Menu } = require('electron')
+const { app, Menu, dialog, BrowserWindow } = require('electron')
 
 const isMac = process.platform === 'darwin'
 
+const {deleteAllData} = require('@/app/Features/Database/database');
+const {setDefaultConfig} = require('@/utils/config')
 
+const {win} = require('@/main')
 
 
 const template = [
-  // { role: 'appMenu' }
+  { role: 'appMenu' },
   ...(isMac ? [{
     label: app.name,
     submenu: [
@@ -21,7 +24,7 @@ const template = [
       { role: 'quit' }
     ]
   }] : []),
-  // { role: 'fileMenu' }
+  { role: 'fileMenu' },
   {
     label: 'File',
     submenu: [
@@ -126,7 +129,32 @@ const template = [
           const { shell } = require('electron')
           await shell.openExternal('https://www.buymeacoffee.com/ColtonS')
         }
-      }
+      },
+      { type: 'separator' },
+      {
+        label: 'Delete All Data',
+        click: async () => {
+
+          const options = {
+            type: 'question',
+            buttons: ['Cancel', 'Yes, delete all my data'],
+            defaultId: 2,
+            title: 'Delete data',
+            message: 'Would you like to delete all data?',
+            detail: 'Clearing your config here will delete all the data, settings, API keys, etc. Click accept to move forward.'
+          };
+        
+
+          const data = await dialog.showMessageBoxSync(win, options )
+          if(data === 1) {
+            console.log('deleting all data')
+            // await deleteAllData();
+            // await setDefaultConfig();
+            BrowserWindow.getAllWindows().forEach(window => window.reload())
+          }
+          
+        }
+      },
     ]
   }
 ]
