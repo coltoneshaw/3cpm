@@ -58,6 +58,7 @@ async function setupContextBridge() {
     database: {
       async query(queryString:string) {
         console.log('running database query')
+        console.log(queryString)
         return await ipcRenderer.invoke('query-database', queryString);
       },
       async update(table:string, updateData:object[]) {
