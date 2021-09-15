@@ -1,42 +1,43 @@
-import { getTime, parseISO, formatISO, isValid } from 'date-fns'
-import React, { useState, useEffect} from 'react';
+import { getTime, parseISO, formatISO, isValid, startOfDay, addMinutes } from 'date-fns'
+import { utcToZonedTime } from 'date-fns-tz';
+
+import React, { useState, useEffect } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 
+import {  useAppSelector } from '@/app/redux/hooks';
+import { configPaths } from '@/app/redux/configSlice'
+import { updateNestedEditingProfile } from '@/app/redux/configActions';
 
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-import { useGlobalState } from '@/app/Context/Config';
 
 
 
 
 export default function StartDatePicker() {
-  const state = useGlobalState()
-  const { state: { date, updateDate }} = state
+  const profile = useAppSelector(state => state.config.editingProfile)
+  const [date, updateDate] = useState(() => 0)
 
-  const [localDate, setLocalDate] = useState<string>();
+  useEffect(() => {
+    if(profile.statSettings.startDate) updateDate(profile.statSettings.startDate)
+  
+  }, [profile])
 
   const handleDateChange = (date: any) => {
     if (date != undefined && isValid(new Date(date))) {
-      setLocalDate(date)
-
-      // getting the shortform utc date, stripping and converting to ISO
-      const dateString = formatISO(date, { representation: 'date' })
-      const utcDate = dateString + 'T00:00:00Z'
-      updateDate(getTime(parseISO(utcDate)));
+      const newDate = startOfDay( addMinutes( new Date(date), new Date().getTimezoneOffset() )).getTime();
+      updateDate(newDate)
+      updateNestedEditingProfile(newDate, configPaths.statSettings.startDate)
     }
-
   };
 
-  // converting the date into a ISO date and storing it.
-  useEffect(() => {
+  const modifyDate = (date: number) => {
     const adjustedTime = date + ((new Date()).getTimezoneOffset() * 60000)
-    const dateString = new Date(adjustedTime).toUTCString()
-    setLocalDate(dateString)
-  }, [])
+    return new Date(adjustedTime).toUTCString()
+  }
 
 
   return (
@@ -48,7 +49,7 @@ export default function StartDatePicker() {
         margin="normal"
         id="date-picker-inline"
         label="Stats Start Date"
-        value={localDate}
+        value={modifyDate(date)}
         onChange={handleDateChange}
         KeyboardButtonProps={{
           'aria-label': 'change date',

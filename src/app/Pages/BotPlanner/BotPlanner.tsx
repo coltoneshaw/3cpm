@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAppSelector } from '@/app/redux/hooks';
 
 import DataTable from './DataTable';
 import { UpdateDataButton } from '@/app/Components/Buttons/Index'
@@ -17,8 +18,10 @@ import { Type_Query_bots } from '@/types/3Commas';
 
 const BotPlannerPage = () => {
 
-    const state = useGlobalData();
-    const { data: { botData, metricsData: { totalBankroll } } } = state;
+    const { data: { botData, metricsData: { totalBankroll } } } = useGlobalData();
+
+    const {config} = useAppSelector(state => state.config);
+
 
     const [localBotData, updateLocalBotData] = useState<Type_Query_bots[]>([])
 
@@ -96,15 +99,15 @@ const BotPlannerPage = () => {
         const customBotIds = customBots.map(bot => bot.id);
         if (customBotIds.length === 0) {
             // @ts-ignore - electron
-            electron.database.run(`DELETE from bots where origin = 'custom'`)
+            electron.database.run(`DELETE from bots where origin = 'custom' AND profile_id = '${config.current}'`)
         } else {
             // @ts-ignore - electron
-            electron.database.query("select * from bots where origin = 'custom'; ")
+            electron.database.query(`select * from bots where origin = 'custom' AND profile_id = '${config.current}';`)
                 .then((table: Type_Query_bots[]) => {
                     for (let row of table) {
                         if (!customBotIds.includes(row.id)) {
                             // @ts-ignore - electron
-                            electron.database.run(`DELETE from bots where id = '${row.id}'`)
+                            electron.database.run(`DELETE from bots where id = '${row.id}' AND profile_id = '${config.current}'`)
                         }
                     }
                 });

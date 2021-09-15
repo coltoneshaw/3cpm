@@ -2,16 +2,15 @@ import { Notification } from 'electron';
 import { Type_Deals_API } from '@/types/3Commas'
 
 import { parseNumber } from '@/utils/number_formatting'
-import { config } from '@/utils/config'
+import { getProfileConfig } from '@/utils/config'
 
 import { convertMiliseconds } from '@/utils/helperFunctions'
 
 import path from "path";
 
 const accountFilters = () => {
-
     //@ts-ignore
-    return config.get('statSettings.reservedFunds').filter( account => account.is_enabled).map(account => account.id)
+    return getProfileConfig('statSettings.reservedFunds').filter( account => account.is_enabled).map(account => account.id)
 }
 
 // This is added to prevent duplicate notifications from happening when the computer is asleep

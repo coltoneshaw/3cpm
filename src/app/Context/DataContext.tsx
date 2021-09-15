@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect} from 'react';
 
 // Context Providers
-import { useGlobalState } from './Config';
+import { useAppSelector } from '@/app/redux/hooks';
 
 
 import {
@@ -90,9 +90,13 @@ interface Type_Data_Context {
  * This needs to be nested under the config context as it'll use that!
  */
 const DataProvider = ({ children }: any) => {
+    const {currentProfile} = useAppSelector(state => state.config);
 
-    const configState = useGlobalState()
-    const { config, state: { reservedFunds } } = configState
+    const [reservedFunds, updateReservedFunds] = useState(() => currentProfile.statSettings.reservedFunds);
+
+    useEffect(() => {
+        if(currentProfile.statSettings.reservedFunds) updateReservedFunds(currentProfile.statSettings.reservedFunds)
+    },[currentProfile.statSettings.reservedFunds])
 
     const [botData, updateBotData] = useState<Type_Query_bots[]>([])
     const [profitData, updateProfitData] = useState<Type_Profit[]>([])
@@ -107,27 +111,27 @@ const DataProvider = ({ children }: any) => {
 
     // @ts-ignore
     useEffect(async () => {
-        updateIsSyncing(true)
+        // updateIsSyncing(true)
         try {
             await fetchBotData()
             fetchProfitMetrics()
             fetchPerformanceData()
             getActiveDeals()
             await getAccountData()
-            updateIsSyncing(false)
+            // updateIsSyncing(false)
 
         } catch (error) {
             console.error(error)
             updateIsSyncing(false)
         }
-    }, [config])
+    }, [currentProfile])
 
     /**
      * checking if any of the numbers needed have changed, if so then we pull the data.
      */
     useEffect(() => {
         calculateMetrics()
-    }, [metricsData.position, metricsData.totalBoughtVolume, metricsData.maxRisk, config])
+    }, [metricsData.position, metricsData.totalBoughtVolume, metricsData.maxRisk, currentProfile])
 
 
     const fetchBotData = async () => {
@@ -261,7 +265,7 @@ const DataProvider = ({ children }: any) => {
                 }
 
                 // filtering the accounts based on what is included in the config settings.
-                const filteredAccount = accountData.filter(account => config.statSettings.account_id.includes(account.account_id))
+                const filteredAccount = accountData.filter(account => currentProfile.statSettings.account_id.includes(account.account_id))
 
                 /** TODO
                  * - Add error handling here to properly know what to return if there is no matching accounts
@@ -350,13 +354,13 @@ const DataProvider = ({ children }: any) => {
                 updateThreeCData('fullSync', options)
                     .then(async () => {
                         await fetchBotData()
-                        fetchProfitMetrics()
-                        fetchPerformanceData()
-                        getActiveDeals()
+                        await fetchProfitMetrics()
+                        await fetchPerformanceData()
+                        await getActiveDeals()
                         await getAccountData()
-                        calculateMetrics()
-                        updateIsSyncing(false)
+                        await calculateMetrics()
                         callback()
+                        updateIsSyncing(false)
     
                     })
                     return {

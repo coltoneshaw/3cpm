@@ -1,9 +1,7 @@
 const threeCommasAPI = require('./3commaslib')
 import { Type_API_bots, Type_Deals_API, Type_MarketOrders} from '@/types/3Commas'
 
-import { config } from '@/utils/config';
-
-
+import { getProfileConfig, setProfileConfig } from '@/utils/config';
 
 import {
   calc_dealHours,
@@ -21,11 +19,12 @@ import {
  * 
  * @description - required at the moment so when you make a config change on the frontend you're not using old data.
  */
-const threeCapi = (config: any, key?: string, secret?: string, mode?: string) => {
+const threeCapi = (key?: string, secret?: string, mode?: string) => {
 
-  key = (key) ? key : config.get('apis.threeC.key')
-  secret = (secret) ? secret : config.get('apis.threeC.secret')
-  mode = (mode) ? mode : config.get('apis.threeC.mode')
+
+  key = (key) ? key : getProfileConfig('apis.threeC.key')
+  secret = (secret) ? secret : getProfileConfig('apis.threeC.secret')
+  mode = (mode) ? mode : getProfileConfig('apis.threeC.mode')
 
   if (key == null || secret == null) {
     console.error('missing API keys')
@@ -41,7 +40,7 @@ const threeCapi = (config: any, key?: string, secret?: string, mode?: string) =>
 
 
 async function bots() {
-  const api = threeCapi(config)
+  const api = threeCapi()
   if (!api) return []
 
   let responseArray = [];
@@ -137,7 +136,7 @@ async function bots() {
    * @api_docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/deals_api.md#deal-safety-orders-permission-bots_read-security-signed
    */
 async function getMarketOrders(deal_id: number) {
-  const api = threeCapi(config)
+  const api = threeCapi()
   if (!api) return false
 
   // this is the /market_orders endpoint.
@@ -164,7 +163,7 @@ async function getMarketOrders(deal_id: number) {
 }
 
 async function getActiveDeals() {
-  const api = threeCapi(config)
+  const api = threeCapi()
   if (!api) return []
 
   const response: Type_Deals_API[] = await api.getDeals({ limit: 500, scope: 'active' })
@@ -183,7 +182,7 @@ let activeDealIDs = <number[]>[]
  * @returns object array of deals.
  */
 async function getDealsUpdate(perSyncOffset: number, type: string) {
-  const api = threeCapi(config)
+  const api = threeCapi()
   if (!api) return []
 
   if (type === 'autoSync') {
@@ -202,18 +201,19 @@ async function getDealsUpdate(perSyncOffset: number, type: string) {
 }
 
 async function getDealsThatAreUpdated(perSyncOffset: number) {
-  const api = threeCapi(config)
+  const api = threeCapi()
   if (!api) return []
 
   let responseArray = [];
   let response: Type_Deals_API[];
   let offsetMax = 250000;
   let perOffset = (perSyncOffset) ? perSyncOffset : 1000;
-  let oldestDate, newLastSyncTime;
+  let oldestDate;
+  let newLastSyncTime;
 
 
   // converting the incoming dateUTC to the right format in case it's not done properly.
-  let lastSyncTime = await config.get('syncStatus.deals.lastSyncTime');
+  let lastSyncTime = await getProfileConfig('syncStatus.deals.lastSyncTime');
 
   for (let offset = 0; offset < offsetMax; offset += perOffset) {
 
@@ -254,7 +254,7 @@ async function getDealsThatAreUpdated(perSyncOffset: number) {
   console.log('Response data Length: ' + responseArray.length)
 
   // updating the last sync time if it's actually changed.
-  if (lastSyncTime != newLastSyncTime) { config.set('syncStatus.deals.lastSyncTime', newLastSyncTime) }
+  if (lastSyncTime != newLastSyncTime) { setProfileConfig('syncStatus.deals.lastSyncTime', newLastSyncTime) }
 
   return responseArray
 }
@@ -333,7 +333,7 @@ async function deals(offset: number, type: string) {
  * @docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/accounts_api.md#information-about-all-user-balances-on-specified-exchange--permission-accounts_read-security-signed
  */
 async function getAccountDetail() {
-  const api = threeCapi(config)
+  const api = threeCapi()
   if (!api) return false
 
   let accountData = await api.accounts()
@@ -374,9 +374,9 @@ async function getAccountDetail() {
 }
 
 async function getAccountSummary(key: string, secret: string, mode: string) {
-  let api = threeCapi(config)
+  let api = threeCapi()
   if (key && secret) {
-    api = threeCapi(config, key, secret, mode)
+    api = threeCapi(key, secret, mode)
   }
   if (!api) return false
   let accountData = await api.accounts()

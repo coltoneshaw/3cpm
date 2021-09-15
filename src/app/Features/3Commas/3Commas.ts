@@ -8,19 +8,21 @@ import {
     Type_UpdateFunction
 } from '@/types/3Commas'
 
-import {Type_ReservedFunds} from '@/types/config'
+import { Type_ReservedFunds } from '@/types/config'
 
-import {getDatesBetweenTwoDates} from '@/utils/helperFunctions'
-import {DateRange} from "@/types/Date";
+import { getDatesBetweenTwoDates } from '@/utils/helperFunctions'
+import { DateRange } from "@/types/Date";
 import moment from "moment";
 
 
 const getFiltersQueryString = async () => {
 
     // @ts-ignore
-    const config = await electron.config.get()
+    const profile = await electron.config.getProfile()
+    // @ts-ignore
+    const currentProfileID = await electron.config.get('current')
 
-    const {statSettings: {startDate, reservedFunds}, general: {defaultCurrency}} = config
+    const { statSettings: { startDate, reservedFunds }, general: { defaultCurrency } } = profile
 
     const currencyString = (defaultCurrency) ? defaultCurrency.map((b: string) => "'" + b + "'") : ""
     const startString = startDate
@@ -30,7 +32,8 @@ const getFiltersQueryString = async () => {
     return {
         currencyString,
         accountIdString,
-        startString
+        startString,
+        currentProfileID
     }
 
 }
@@ -44,7 +47,7 @@ const getFiltersQueryString = async () => {
  */
 const updateThreeCData = async (type: string, options: Type_UpdateFunction) => {
 
-    console.info({options})
+    console.info({ options })
 
     // @ts-ignore
     await electron.api.update(type, options);
@@ -55,7 +58,7 @@ const updateThreeCData = async (type: string, options: Type_UpdateFunction) => {
 // This can most likely be moved to the performance dashboard or upwards to the app header.
 const fetchDealDataFunction = async () => {
     const filtersQueryString = await getFiltersQueryString()
-    const {currencyString, accountIdString, startString} = filtersQueryString;
+    const { currencyString, accountIdString, startString } = filtersQueryString;
     const query = `
         SELECT substr(closed_at, 0, 11) as closed_at_str,
                sum(final_profit)        as final_profit,
@@ -65,13 +68,13 @@ const fetchDealDataFunction = async () => {
         WHERE closed_at != null 
                 or finished = 1 
                 and account_id in (${accountIdString} )
-          and currency in (${currencyString} )
-          and closed_at_iso_string
-            > ${startString}
-        GROUP BY
-            closed_at_str
-        ORDER BY
-            closed_at asc;`
+                and currency in (${currencyString} )
+                and closed_at_iso_string > ${startString}
+                and profile_id = '${filtersQueryString.currentProfileID}'
+            GROUP BY
+                 closed_at_str
+            ORDER BY
+                closed_at asc;`
 
     // @ts-ignore
     let dataArray = await electron.database.query(query)
@@ -90,7 +93,7 @@ const fetchDealDataFunction = async () => {
     }
 
 
-    const {days} = getDatesBetweenTwoDates((new Date(startString)).toISOString().split('T')[0], (new Date()).toISOString().split('T')[0])
+    const { days } = getDatesBetweenTwoDates((new Date(startString)).toISOString().split('T')[0], (new Date()).toISOString().split('T')[0])
     const profitArray: Type_Profit[] = [];
     let totalDealHours = dataArray.map((deal: Type_Query_DealData) => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours)
 
@@ -138,7 +141,7 @@ const fetchDealDataFunction = async () => {
 
 const fetchPerformanceDataFunction = async (oDate?: DateRange) => {
     const filtersQueryString = await getFiltersQueryString()
-    const {currencyString, accountIdString, startString} = filtersQueryString;
+    const { currencyString, accountIdString, startString } = filtersQueryString;
 
     let date = initDate(startString, oDate);
     const [fromDateStr, toDateStr] = DateRangeToSQLString(date)
@@ -150,21 +153,27 @@ const fetchPerformanceDataFunction = async (oDate?: DateRange) => {
     // This can most likely be moved to the performance dashboard or upwards to the app header.
 
     const queryString = `
-        SELECT bot_id || '-' || pair as performance_id,
-               bot_name,
-               pair,
-               avg(profitPercent)    as averageHourlyProfitPercent,
-               sum(final_profit)     as total_profit,
-               count(*)              as number_of_deals,
-               sum(bought_volume)    as bought_volume,
-               avg(deal_hours)       as averageDealHours
-        FROM deals
-        WHERE profitPercent is not null
-          and account_id in (${accountIdString})
-          and currency in (${currencyString})
-            ${fromSQL} ${toSQL}
-        GROUP BY
-            performance_id;`
+                SELECT 
+                    bot_id || '-' || pair as performance_id, 
+                    bot_name, 
+                    pair,
+                    avg(profitPercent) as averageHourlyProfitPercent, 
+                    sum(final_profit) as total_profit, 
+                    count(*) as number_of_deals,
+                    sum(bought_volume) as bought_volume,
+                    avg(deal_hours) as averageDealHours
+                FROM 
+                    deals 
+                WHERE
+                    profitPercent is not null
+                    and account_id in (${accountIdString} )
+                    and currency in (${currencyString} )
+                    and closed_at_iso_string > ${startString}
+                    and profile_id = '${filtersQueryString.currentProfileID}'
+                    ${fromSQL} ${toSQL}
+                GROUP BY 
+                    performance_id;`
+
 
     // @ts-ignore
     let databaseQuery = await electron.database.query(queryString);
@@ -179,7 +188,7 @@ const fetchPerformanceDataFunction = async (oDate?: DateRange) => {
             .reduce((sum: number, item: number) => sum + item)
 
         return databaseQuery.map((perfData: Type_Query_PerfArray) => {
-            const {bought_volume, total_profit} = perfData
+            const { bought_volume, total_profit } = perfData
             return {
                 ...perfData,
                 percentTotalVolume: (bought_volume / boughtVolumeSummary) * 100,
@@ -202,7 +211,7 @@ const fetchPerformanceDataFunction = async (oDate?: DateRange) => {
 
 const fetchBotPerformanceMetrics = async (oDate?: DateRange) => {
     const filtersQueryString = await getFiltersQueryString()
-    const {currencyString, accountIdString, startString} = filtersQueryString;
+    const { currencyString, accountIdString, startString } = filtersQueryString;
 
 
     let date = initDate(startString, oDate);
@@ -211,24 +220,27 @@ const fetchBotPerformanceMetrics = async (oDate?: DateRange) => {
     const toSQL = `and closed_at < '${toDateStr}'`
 
     const queryString = `
-        SELECT bot_id,
-               sum(final_profit)                                                         as total_profit,
-               avg(final_profit)                                                         as avg_profit,
-               count(*)                                                                  as number_of_deals,
-               sum(bought_volume)                                                        as bought_volume,
-               avg(deal_hours)                                                           as avg_deal_hours,
-               avg(completed_safety_orders_count + completed_manual_safety_orders_count) as avg_completed_so,
-               bots.name                                                                 as bot_name,
-               bots.type                                                                 as type
-        FROM deals
-                 JOIN
-             bots on deals.bot_id = bots.id
-        WHERE closed_at is not null
-          and deals.account_id in (${accountIdString})
-          and deals.currency in (${currencyString})
-            ${fromSQL} ${toSQL}
-        GROUP BY
-            bot_id;`
+                SELECT bot_id,
+                    sum(final_profit)                                                         as total_profit,
+                    avg(final_profit)                                                         as avg_profit,
+                    count(*)                                                                  as number_of_deals,
+                    sum(bought_volume)                                                        as bought_volume,
+                    avg(deal_hours)                                                           as avg_deal_hours,
+                    avg(completed_safety_orders_count + completed_manual_safety_orders_count) as avg_completed_so,
+                    bots.name                                                                 as bot_name,
+                    bots.type                                                                 as type
+                FROM 
+                    deals
+                JOIN
+                    bots on deals.bot_id = bots.id
+                WHERE 
+                    closed_at is not null
+                    and deals.account_id in (${accountIdString})
+                    and deals.currency in (${currencyString})
+                    and deals.profile_id = '${filtersQueryString.currentProfileID}'
+                    ${fromSQL} ${toSQL}
+                GROUP BY
+                    bot_id;`
 
     // console.log(queryString)
 
@@ -245,14 +257,18 @@ const fetchBotPerformanceMetrics = async (oDate?: DateRange) => {
 
 const botQuery = async () => {
     const filtersQueryString = await getFiltersQueryString()
-    const {accountIdString} = filtersQueryString;
+    const { accountIdString } = filtersQueryString;
 
 
     const queryString = `
-        SELECT *
-        FROM bots
-        WHERE account_id in (${accountIdString})
-           OR origin = 'custom'`
+                SELECT
+                    *
+                FROM 
+                    bots
+                WHERE
+                    profile_id = '${filtersQueryString.currentProfileID}'
+                    and (account_id in (${accountIdString})  OR origin = 'custom')`
+
 
     // console.log(queryString)
 
@@ -272,7 +288,7 @@ const botQuery = async () => {
  */
 const fetchPairPerformanceMetrics = async (oDate?: DateRange) => {
     const filtersQueryString = await getFiltersQueryString()
-    const {currencyString, accountIdString, startString} = filtersQueryString;
+    const { currencyString, accountIdString, startString } = filtersQueryString;
 
     let date = initDate(startString, oDate);
     const [fromDateStr, toDateStr] = DateRangeToSQLString(date)
@@ -291,6 +307,7 @@ const fetchPairPerformanceMetrics = async (oDate?: DateRange) => {
         WHERE closed_at is not null
           and account_id in (${accountIdString})
           and currency in (${currencyString})
+          and profile_id = '${filtersQueryString.currentProfileID}'
             ${fromSQL} ${toSQL}
         GROUP BY
             pair;`
@@ -312,14 +329,18 @@ const fetchPairPerformanceMetrics = async (oDate?: DateRange) => {
 const getActiveDealsFunction = async () => {
     const filtersQueryString = await getFiltersQueryString()
 
-    const {currencyString, accountIdString} = filtersQueryString
+    const { currencyString, accountIdString } = filtersQueryString
     const query = `
-        SELECT *
-        FROM deals
-        WHERE finished = 0
-          and account_id in (${accountIdString})
-          and currency in (${currencyString})
-    `
+                SELECT
+                    * 
+                FROM
+                    deals 
+                WHERE
+                    finished = 0 
+                    and account_id in (${accountIdString} )
+                    and currency in (${currencyString} )
+                    and profile_id = '${filtersQueryString.currentProfileID}'
+                    `
     // console.log(query)
     // @ts-ignore
     let activeDeals: Array<Type_ActiveDeals> = await electron.database.query(query)
@@ -363,13 +384,17 @@ const getAccountDataFunction = async () => {
     // console.log({accountData:  await accountDataAll()})
 
     const filtersQueryString = await getFiltersQueryString()
-    const {currencyString, accountIdString} = filtersQueryString
+    const { currencyString, accountIdString } = filtersQueryString
 
     const query = `
-        SELECT *
-        FROM accountData
-        WHERE account_id IN (${accountIdString})
-          and currency_code IN (${currencyString});
+                SELECT
+                    *
+                FROM
+                    accountData
+                WHERE
+                    account_id IN ( ${accountIdString} )
+                    and currency_code IN ( ${currencyString} )
+                    and profile_id = '${filtersQueryString.currentProfileID}';
     `
     console.log(query)
 
@@ -384,7 +409,7 @@ const getAccountDataFunction = async () => {
         let positionTotal = 0;
 
         for (const account of accountData) {
-            const {on_orders, position} = account
+            const { on_orders, position } = account
             on_ordersTotal += on_orders;
             positionTotal += position;
 
@@ -415,7 +440,7 @@ const getAccountDataFunction = async () => {
 function initDate(startString: string, oDate?: DateRange) {
     let date = new DateRange()
     if (oDate) {
-        date = {...oDate}
+        date = { ...oDate }
     }
 
     if (date.from == null) {
@@ -437,7 +462,7 @@ function initDate(startString: string, oDate?: DateRange) {
  */
 const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange) => {
     const filtersQueryString = await getFiltersQueryString()
-    const {currencyString, accountIdString, startString} = filtersQueryString
+    const { currencyString, accountIdString, startString } = filtersQueryString
 
     const pairString = (pairs) ? pairs.map((b: string) => "'" + b + "'") : ""
 
@@ -455,9 +480,12 @@ const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange) => {
             deals
         WHERE
             closed_at is not null
-          and account_id IN ( ${accountIdString} )
-          and from_currency IN ( ${currencyString} )
-          and pair in (${pairString}) ${fromSQL} ${toSQL}
+            and account_id IN ( ${accountIdString} )
+            and from_currency IN ( ${currencyString} )
+            and pair in (${pairString})
+            and closed_at_iso_string > ${startString}
+            and profile_id = '${filtersQueryString.currentProfileID}'
+            and pair in (${pairString}) ${fromSQL} ${toSQL}
         GROUP BY
             date, pair;
     `
@@ -478,7 +506,7 @@ const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange) => {
             pair: number
         }
 
-        const subDateObject = <any>{date: formattedCurrent};
+        const subDateObject = <any>{ date: formattedCurrent };
         pairs.forEach(pair => {
             const filteredForPair = filteredData.find(deal => deal.pair === pair)
             subDateObject[pair as keyof subDateObject] = (filteredForPair != undefined) ? filteredForPair.profit : 0

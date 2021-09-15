@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import './Settings.scss'
 
 // @ts-ignore
 import { version } from '#/package.json';
+
 
 import {
     ButtonGroup,
@@ -12,20 +12,25 @@ import {
 
 import {
     CurrencySelector,
-    SaveSubmitButtons,
+    SaveDeleteButtons,
     ApiSettings,
     ReservedBankroll,
     StartDatePicker
 } from './Components/Index'
 
+import {ProfileNameEditor} from '@/app/Features/Profiles/Components/Index'
+
 
 import { ChangelogModal, ToastNotifcations } from '@/app/Features/Index';
 
+
+
+// Need to create an 'editing profile' state
+// this state is either the current profile active, or the profile that was selected to be edited in the modal.
 const SettingsPage = () => {
 
-    const [open, setOpen] = React.useState(false);
 
-
+    const [open, setOpen] = useState(false);
 
     const handleClose = (event: any, reason: string) => {
         if (reason === 'clickaway') {
@@ -46,6 +51,7 @@ const SettingsPage = () => {
         <>
             {/* <h1>Settings</h1> */}
             <div className="settings-div boxData flex-column" style={{ overflow: "visible", margin: "auto" }}>
+                <ProfileNameEditor  />
                 <ApiSettings />
                 <div className="flex-column settings-child">
                     <h2 className="text-center ">General Settings:</h2>
@@ -72,7 +78,7 @@ const SettingsPage = () => {
 
                 </div>
 
-                <SaveSubmitButtons setOpen={setOpen} />
+                <SaveDeleteButtons setOpen={setOpen} />
 
                 {/* These buttons still need to be wired up, but for now they are displayed. */}
                 <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ margin: 'auto' }}>

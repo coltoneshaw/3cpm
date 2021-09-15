@@ -5,6 +5,7 @@ import './Sidebar.scss';
 import { ActiveDealsIcon, BackwardClock, BotPlannerIcon, Coffee, Cog, PieChart } from '@/app/Components/icons/Index';
 
 import { SidebarNav, SidebarLink } from './Components';
+import {ProfileSwitcher} from '@/app/Features/Profiles/Components/Index'
 
 import DisplaySwitcher from './DisplaySwitcher';
 
@@ -28,6 +29,7 @@ class Sidebar extends Component {
                 <div className="flex-column sidebar-column" style={{justifyContent: 'flex-end'}}>
                     {/*  @ts-ignore */}
                     <SidebarLink Icon={Coffee} name="Donate" link="" onClick={() => electron.general.openLink('https://www.buymeacoffee.com/ColtonS')} />
+                    <ProfileSwitcher />
                     <SidebarNav Icon={Cog} name="Settings" link="/settings" />
                     <DisplaySwitcher />
                 </div>

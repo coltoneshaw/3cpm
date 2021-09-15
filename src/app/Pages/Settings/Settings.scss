@@ -5,9 +5,12 @@
     width: 75%;
     min-width: 200px;
 
-    padding: 5%;
+    padding: 5em;
     justify-content: space-between;
     text-align: left;
+
+    // relative for the add profile dropdown.
+    position: relative;
 
 }
 
@@ -22,10 +25,21 @@
 
 .settingsButtonDiv{
     justify-content: center;
+
+    .deleteProfile{
+        background-color: var(--color-red);
+        color: var(--color-text-lightbackground);
+        opacity: .9;
+    }
+
+    .deleteProfile:hover {
+        background-color: var(--color-red);
+        opacity: .8;
+    }
 }
 
 .settingsButtonDiv button{
-    width: 150px;
+    width: 200px;
 }
 
 .settings-right {
