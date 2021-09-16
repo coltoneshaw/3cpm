@@ -1,7 +1,7 @@
 import { update, run, query } from '@/app/Features/Database/database';
 const { bots, getAccountDetail, deals, getAccountSummary } = require('./api');
 const { getProfileConfigAll } = require('@/utils/config')
-import { findAndNotifyNewDeals } from '@/app/Features/Notifications/notifications'
+import { findAndNotifyNewDeals } from '@/electron/Notifications/notifications'
 
 import { Type_Deals_API, Type_Query_Accounts, Type_API_bots, Type_UpdateFunction } from '@/types/3Commas'
 import { Type_Profile } from '@/types/config'

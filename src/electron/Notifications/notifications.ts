@@ -88,9 +88,10 @@ function findAndNotifyNewDeals(data: Type_Deals_API[], lastSyncTime: number, sum
         const totalProfit = data.map(deal => deal.final_profit).reduce((sum, profit) => sum + profit);
         const pairs = data.map(deal => deal.pair)
         const moneyBags = ("💰".repeat(data.length))
+        const ifRich = (+totalProfit > 0) ? "rich" : "poor"
         try {
 
-            showNotification(`${data.length} Deals Closed, you're rich`, `Profit: ${parseNumber(totalProfit, 5)} - Pairs: ${pairs.join(', ')}. ${moneyBags} `);
+            showNotification(`${data.length} Deals Closed, you're ${ifRich}`, `Profit: ${parseNumber(totalProfit, 5)} - Pairs: ${pairs.join(', ')}. ${moneyBags} `);
 
             // add the deal IDs to the notified deal array
             dealsNotified.push(...data.map(deal => deal.id))
@@ -101,9 +102,11 @@ function findAndNotifyNewDeals(data: Type_Deals_API[], lastSyncTime: number, sum
     }
 
     for (let deal of data) {
-        const notificationTitle = 'Deal Closed, profit was had.';
+
 
         const {bot_name, pair, final_profit, final_profit_percentage, from_currency, id, created_at, closed_at} = deal;
+        const ifRich = (+final_profit > 0) ? "had" : "lost"
+        const notificationTitle = `Deal Closed, profit was ${ifRich}.`;
 
         // deal length:
 
