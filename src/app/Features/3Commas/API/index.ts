@@ -26,10 +26,10 @@ async function updateAPI(type: string, options: Type_UpdateFunction, profileData
       // console.log(data)
     })
 
-  if (type !== 'autoSync' || options.syncCount === 20) {
-    console.log('updating the accounts!')
+  // if (type !== 'autoSync' || options.syncCount === 20) {
+  //   console.log('updating the accounts!')
     await getAccountData(profileData)
-  }
+  // }
 
 }
 

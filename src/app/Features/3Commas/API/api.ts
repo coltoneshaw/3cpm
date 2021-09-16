@@ -353,7 +353,10 @@ async function getAccountDetail(profileData:Type_Profile) {
 
   let array = [];
 
-  for (let account of accountData) {
+  const accountIDs = profileData.statSettings.reservedFunds.filter(a => a.is_enabled).map(a => a.id)
+
+  for (let account of accountData.filter((a:any) => accountIDs.includes(a.id))) {
+    // console.log('syncing the account ', account.id)
 
     // this loads the account balances from the exchange to 3C ensuring the numbers are updated
     await api.accountLoadBalances(account.id);
