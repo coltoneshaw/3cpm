@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
-import {setConfig, setEditingProfile, setEditingProfileId, addEditingProfile,
+import { addEditingProfile,
     setCurrentProfileById} from '@/app/redux/configSlice'
 import { useHistory } from 'react-router-dom'
 
@@ -54,10 +54,7 @@ const ProfileSwitcher = () => {
                     key={p}
                     onClick={() => { 
                         updateCurrentProfileId(p);
-                        // dispatch(setConfig({...config, current: p}))
                         dispatch(setCurrentProfileById({profileId: p}))
-                        // dispatch(setEditingProfile({...menuProfile}))
-                        // dispatch(setEditingProfileId(p))
                         popupState.close()
                     }} 
                     style={styles}>

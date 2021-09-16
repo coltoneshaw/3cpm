@@ -1,4 +1,4 @@
-import { setConfig, setCurrentProfile, setEditingProfile, setEditingProfileId, setReservedFunds, updateOnEditingProfile, storeEditingProfileData, deleteProfileById } from '@/app/redux/configSlice'
+import { setConfig, setCurrentProfile, setEditingProfile, setReservedFunds, updateOnEditingProfile, storeEditingProfileData, deleteProfileById } from '@/app/redux/configSlice'
 
 import { TconfigValues, Type_Profile, Type_ReservedFunds } from '@/types/config';
 
@@ -39,7 +39,7 @@ const updateCurrentProfile = (profileData: Type_Profile) => {
 
 const updateEditingProfile = (profileData: Type_Profile, profileId: string) => {
     store.dispatch(setEditingProfile(profileData));
-    store.dispatch(setEditingProfileId(profileId));
+    // store.dispatch(setEditingProfileId(profileId));
 }
 
 /**

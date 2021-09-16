@@ -18,7 +18,6 @@ interface ConfigState {
     config: TconfigValues
     currentProfile: Type_Profile
     editingProfile: Type_Profile
-    editingProfileId: string
     reservedFunds: Type_ReservedFunds[]
 }
 
@@ -27,7 +26,6 @@ const initialState: ConfigState = {
     config: defaultConfig,
     currentProfile: defaultProfile,
     editingProfile: defaultProfile,
-    editingProfileId: defaultConfig.current,
     reservedFunds: [defaultReservedFunds]
 }
 
@@ -69,18 +67,18 @@ export const configSlice = createSlice({
             state.currentProfile = {...newConfig.profiles[profileId]}
             state.config = {...newConfig, current: profileId}
             state.editingProfile = {...newConfig.profiles[profileId]}
-            state.editingProfileId = profileId
+            // state.editingProfileId = profileId
         },
         setEditingProfile: (state, action) => {
             state.editingProfile = action.payload
         },
-        setEditingProfileId: (state, action) => {
-            state.editingProfileId = action.payload
-        },
+        // setEditingProfileId: (state, action) => {
+        //     state.editingProfileId = action.payload
+        // },
         storeEditingProfileData: state => {
             const newConfig = { ...state.config }
-            const editingProfile = newConfig.profiles[state.editingProfileId]
-            newConfig.profiles[state.editingProfileId] = { ...editingProfile, ...state.editingProfile }
+            const editingProfile = state.editingProfile
+            newConfig.profiles[editingProfile.id] = { ...editingProfile, ...state.editingProfile }
 
             state.config = newConfig
         },
@@ -131,15 +129,14 @@ export const configSlice = createSlice({
 
         },
         addEditingProfile: state => {
-            state.editingProfileId = uuidv4()
-            state.editingProfile = {...defaultProfile}
+            // state.editingProfileId = uuidv4()
+            state.editingProfile = {...defaultProfile, id: uuidv4()}
         }
     }
 })
 
 export const { 
-    setConfig, setCurrentProfile, setEditingProfile, 
-    setEditingProfileId, storeEditingProfileData, setReservedFunds, 
+    setConfig, setCurrentProfile, setEditingProfile, storeEditingProfileData, setReservedFunds, 
     updateOnEditingProfile, deleteProfileById, addEditingProfile,
     setCurrentProfileById
 } = configSlice.actions;

@@ -15,7 +15,7 @@ interface SubmitButtons {
 }
 const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
     const dispatch = useAppDispatch()
-    const { editingProfile, config, editingProfileId } = useAppSelector(state => state.config);
+    const { editingProfile, config } = useAppSelector(state => state.config);
 
     const dataState = useGlobalData()
     const { actions: { updateAllData }, data: { isSyncing } } = dataState
@@ -54,7 +54,7 @@ const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
                 variant="contained"
                 className="deleteProfile"
                 onClick={() => {
-                    deleteProfileByIdGlobal(config, editingProfileId, setOpen(true))
+                    deleteProfileByIdGlobal(config, editingProfile.id, setOpen(true))
                 }}
                 disableElevation
             >
