@@ -1,6 +1,7 @@
 const { app, Menu, dialog, BrowserWindow } = require('electron')
 
 const isMac = process.platform === 'darwin'
+const log = require('electron-log');
 
 const {deleteAllData} = require('@/main/Database/database');
 const {setDefaultConfig} = require('@/main/Config/config')
@@ -9,7 +10,7 @@ const {win} = require('@/main/main')
 
 
 const template = [
-  { role: 'appMenu' },
+  // { role: 'appMenu' },
   ...(isMac ? [{
     label: app.name,
     submenu: [
@@ -24,7 +25,7 @@ const template = [
       { role: 'quit' }
     ]
   }] : []),
-  { role: 'fileMenu' },
+  // { role: 'fileMenu' },
   {
     label: 'File',
     submenu: [
@@ -147,9 +148,9 @@ const template = [
 
           const data = await dialog.showMessageBoxSync(win, options )
           if(data === 1) {
-            console.log('deleting all data')
-            // await deleteAllData();
-            // await setDefaultConfig();
+            log.info('deleting all data as selected by the menu bar')
+            await deleteAllData();
+            await setDefaultConfig();
             BrowserWindow.getAllWindows().forEach(window => window.reload())
           }
           
