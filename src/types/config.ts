@@ -1,5 +1,3 @@
-import { Dispatch } from "react";
-
 export interface TconfigValues {
     profiles: Record<string, Type_Profile>,
     current: string,
@@ -9,6 +7,7 @@ export interface TconfigValues {
 }
 
 export interface Type_Profile {
+    id: string
     name: string,
     apis: {
         threeC: {

@@ -71,9 +71,11 @@ const configSchema = {
 }
 
 
+const currentId = uuidv4()
 
 const defaultProfile:Type_Profile = {
     name: "New profile",
+    id: currentId,
     apis: {
         threeC: {
             key: "",
@@ -99,7 +101,6 @@ const defaultProfile:Type_Profile = {
 }
 
 
-const currentId = uuidv4()
 const defaultConfig = {
     profiles: Object.assign({[currentId]: defaultProfile}), 
     current: currentId,
@@ -107,6 +108,7 @@ const defaultConfig = {
         version : version
     },
 }
+
 
 export {
     defaultProfile,
