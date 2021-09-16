@@ -56,9 +56,8 @@ const updateNestedEditingProfile = (data: string | {} | [], path: string) => {
 
 const updateReservedFundsArray = async (key: string, secret: string, mode: string, updateReservedFunds: CallableFunction, reservedFunds: Type_ReservedFunds[]) => {
 
-    console.log({ key, secret, mode })
     // @ts-ignore
-    const accountSummary = await electron.api.getAccountData(key, secret, mode)
+    const accountSummary = await electron.api.getAccountData(undefined, key, secret, mode)
 
     if (accountSummary !== undefined || accountSummary.length > 0) {
 

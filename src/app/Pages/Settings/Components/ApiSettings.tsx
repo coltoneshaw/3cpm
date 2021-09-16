@@ -93,7 +93,6 @@ const ApiSettings = () => {
                 onClick={
                     async () => {
                         // @ts-ignore
-                        // await electron.api.getAccountData()
                         let key = apiData.key
                         let secret = apiData.secret
                         let mode = apiData.mode

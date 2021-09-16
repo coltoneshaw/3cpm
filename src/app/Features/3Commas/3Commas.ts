@@ -8,21 +8,26 @@ import {
     Type_UpdateFunction
 } from '@/types/3Commas'
 
-import { Type_ReservedFunds } from '@/types/config'
+import { Type_ReservedFunds, Type_Profile } from '@/types/config'
 
 import { getDatesBetweenTwoDates } from '@/utils/helperFunctions'
 import { DateRange } from "@/types/Date";
 import moment from "moment";
 
 
-const getFiltersQueryString = async () => {
+const getFiltersQueryString = async (profileData?: Type_Profile) => {
 
-    // @ts-ignore
-    const profile = await electron.config.getProfile()
-    // @ts-ignore
-    const currentProfileID = await electron.config.get('current')
+    if (!profileData) {
+        // @ts-ignore
+        const currentProfileID = await electron.config.get('current');
 
-    const { statSettings: { startDate, reservedFunds }, general: { defaultCurrency } } = profile
+        // @ts-ignore
+        profileData = await <Type_Profile>electron.config.get('profile.' + currentProfileID)
+
+        console.log({profileData})
+    }
+
+    const { general: {defaultCurrency}, statSettings: {reservedFunds, startDate}, id } = profileData
 
     const currencyString = (defaultCurrency) ? defaultCurrency.map((b: string) => "'" + b + "'") : ""
     const startString = startDate
@@ -33,7 +38,7 @@ const getFiltersQueryString = async () => {
         currencyString,
         accountIdString,
         startString,
-        currentProfileID
+        currentProfileID: id
     }
 
 }
@@ -45,20 +50,20 @@ const getFiltersQueryString = async () => {
  * @params - type 'autoSync'
  * @params {options} - option string
  */
-const updateThreeCData = async (type: string, options: Type_UpdateFunction) => {
+const updateThreeCData = async (type: string, options: Type_UpdateFunction, profileData: Type_Profile) => {
 
     console.info({ options })
 
     // @ts-ignore
-    await electron.api.update(type, options);
+    await electron.api.update(type, options, profileData);
 }
 
 
 // Filtering by only closed.
 // This can most likely be moved to the performance dashboard or upwards to the app header.
-const fetchDealDataFunction = async () => {
-    const filtersQueryString = await getFiltersQueryString()
-    const { currencyString, accountIdString, startString } = filtersQueryString;
+const fetchDealDataFunction = async (profileData?: Type_Profile) => {
+    const filtersQueryString = await getFiltersQueryString(profileData);
+    const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
     const query = `
         SELECT substr(closed_at, 0, 11) as closed_at_str,
                sum(final_profit)        as final_profit,
@@ -70,7 +75,7 @@ const fetchDealDataFunction = async () => {
                 and account_id in (${accountIdString} )
                 and currency in (${currencyString} )
                 and closed_at_iso_string > ${startString}
-                and profile_id = '${filtersQueryString.currentProfileID}'
+                and profile_id = '${currentProfileID}'
             GROUP BY
                  closed_at_str
             ORDER BY
@@ -139,9 +144,9 @@ const fetchDealDataFunction = async () => {
 
 }
 
-const fetchPerformanceDataFunction = async (oDate?: DateRange) => {
-    const filtersQueryString = await getFiltersQueryString()
-    const { currencyString, accountIdString, startString } = filtersQueryString;
+const fetchPerformanceDataFunction = async (oDate?: DateRange, profileData?: Type_Profile) => {
+    const filtersQueryString = await getFiltersQueryString(profileData);
+    const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
 
     let date = initDate(startString, oDate);
     const [fromDateStr, toDateStr] = DateRangeToSQLString(date)
@@ -169,7 +174,7 @@ const fetchPerformanceDataFunction = async (oDate?: DateRange) => {
                     and account_id in (${accountIdString} )
                     and currency in (${currencyString} )
                     and closed_at_iso_string > ${startString}
-                    and profile_id = '${filtersQueryString.currentProfileID}'
+                    and profile_id = '${currentProfileID}'
                     ${fromSQL} ${toSQL}
                 GROUP BY 
                     performance_id;`
@@ -209,9 +214,9 @@ const fetchPerformanceDataFunction = async (oDate?: DateRange) => {
  *
  */
 
-const fetchBotPerformanceMetrics = async (oDate?: DateRange) => {
-    const filtersQueryString = await getFiltersQueryString()
-    const { currencyString, accountIdString, startString } = filtersQueryString;
+const fetchBotPerformanceMetrics = async (oDate?: DateRange, profileData?: Type_Profile) => {
+    const filtersQueryString = await getFiltersQueryString(profileData);
+    const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
 
 
     let date = initDate(startString, oDate);
@@ -237,7 +242,7 @@ const fetchBotPerformanceMetrics = async (oDate?: DateRange) => {
                     closed_at is not null
                     and deals.account_id in (${accountIdString})
                     and deals.currency in (${currencyString})
-                    and deals.profile_id = '${filtersQueryString.currentProfileID}'
+                    and deals.profile_id = '${currentProfileID}'
                     ${fromSQL} ${toSQL}
                 GROUP BY
                     bot_id;`
@@ -255,9 +260,9 @@ const fetchBotPerformanceMetrics = async (oDate?: DateRange) => {
 
 }
 
-const botQuery = async () => {
-    const filtersQueryString = await getFiltersQueryString()
-    const { accountIdString } = filtersQueryString;
+const botQuery = async (currentProfile?: Type_Profile) => {
+    const filtersQueryString = await getFiltersQueryString(currentProfile);
+    const { accountIdString, currentProfileID } = filtersQueryString;
 
 
     const queryString = `
@@ -266,7 +271,7 @@ const botQuery = async () => {
                 FROM 
                     bots
                 WHERE
-                    profile_id = '${filtersQueryString.currentProfileID}'
+                    profile_id = '${currentProfileID}'
                     and (account_id in (${accountIdString})  OR origin = 'custom')`
 
 
@@ -286,9 +291,9 @@ const botQuery = async () => {
  *
  * @returns An array containing the data for specific bot metrics.
  */
-const fetchPairPerformanceMetrics = async (oDate?: DateRange) => {
-    const filtersQueryString = await getFiltersQueryString()
-    const { currencyString, accountIdString, startString } = filtersQueryString;
+const fetchPairPerformanceMetrics = async (oDate?: DateRange, profileData?: Type_Profile) => {
+    const filtersQueryString = await getFiltersQueryString(profileData);
+    const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
 
     let date = initDate(startString, oDate);
     const [fromDateStr, toDateStr] = DateRangeToSQLString(date)
@@ -307,7 +312,7 @@ const fetchPairPerformanceMetrics = async (oDate?: DateRange) => {
         WHERE closed_at is not null
           and account_id in (${accountIdString})
           and currency in (${currencyString})
-          and profile_id = '${filtersQueryString.currentProfileID}'
+          and profile_id = '${currentProfileID}'
             ${fromSQL} ${toSQL}
         GROUP BY
             pair;`
@@ -326,10 +331,9 @@ const fetchPairPerformanceMetrics = async (oDate?: DateRange) => {
 }
 
 
-const getActiveDealsFunction = async () => {
-    const filtersQueryString = await getFiltersQueryString()
-
-    const { currencyString, accountIdString } = filtersQueryString
+const getActiveDealsFunction = async (profileData?: Type_Profile) => {
+    const filtersQueryString = await getFiltersQueryString(profileData);
+    const { currencyString, accountIdString, currentProfileID } = filtersQueryString;
     const query = `
                 SELECT
                     * 
@@ -339,7 +343,7 @@ const getActiveDealsFunction = async () => {
                     finished = 0 
                     and account_id in (${accountIdString} )
                     and currency in (${currencyString} )
-                    and profile_id = '${filtersQueryString.currentProfileID}'
+                    and profile_id = '${currentProfileID}'
                     `
     // console.log(query)
     // @ts-ignore
@@ -380,11 +384,9 @@ const getActiveDealsFunction = async () => {
  * @param {string} defaultCurrency This is the default currency configured in settings and used as a filter
  * @returns
  */
-const getAccountDataFunction = async () => {
-    // console.log({accountData:  await accountDataAll()})
-
-    const filtersQueryString = await getFiltersQueryString()
-    const { currencyString, accountIdString } = filtersQueryString
+const getAccountDataFunction = async (profileData?: Type_Profile) => {
+    const filtersQueryString = await getFiltersQueryString(profileData);
+    const { currencyString, accountIdString, currentProfileID } = filtersQueryString;
 
     const query = `
                 SELECT
@@ -394,7 +396,7 @@ const getAccountDataFunction = async () => {
                 WHERE
                     account_id IN ( ${accountIdString} )
                     and currency_code IN ( ${currencyString} )
-                    and profile_id = '${filtersQueryString.currentProfileID}';
+                    and profile_id = '${currentProfileID}';
     `
     console.log(query)
 
@@ -437,7 +439,7 @@ const getAccountDataFunction = async () => {
 }
 
 
-function initDate(startString: string, oDate?: DateRange) {
+function initDate(startString: number, oDate?: DateRange) {
     let date = new DateRange()
     if (oDate) {
         date = { ...oDate }
@@ -460,9 +462,9 @@ function initDate(startString: string, oDate?: DateRange) {
  *
  * @description This is used to see pairs on a per date bases in charts. This is not used in the DataContext state. This reports based on the usd_final_profit only
  */
-const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange) => {
-    const filtersQueryString = await getFiltersQueryString()
-    const { currencyString, accountIdString, startString } = filtersQueryString
+const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange, profileData?: Type_Profile) => {
+    const filtersQueryString = await getFiltersQueryString(profileData);
+    const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
 
     const pairString = (pairs) ? pairs.map((b: string) => "'" + b + "'") : ""
 
@@ -484,7 +486,7 @@ const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange) => {
             and from_currency IN ( ${currencyString} )
             and pair in (${pairString})
             and closed_at_iso_string > ${startString}
-            and profile_id = '${filtersQueryString.currentProfileID}'
+            and profile_id = '${currentProfileID}'
             and pair in (${pairString}) ${fromSQL} ${toSQL}
         GROUP BY
             date, pair;

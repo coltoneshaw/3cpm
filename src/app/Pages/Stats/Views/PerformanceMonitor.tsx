@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import { useAppSelector } from '@/app/redux/hooks';
 
 // material UI components
 import {Grid} from '@material-ui/core';
@@ -17,11 +18,12 @@ import {
     fetchPairPerformanceMetrics,
     fetchPerformanceDataFunction
 } from "@/app/Features/3Commas/3Commas";
-import {Type_Bot_Performance_Metrics, Type_Pair_Performance_Metrics, Type_Query_PerfArray} from "@/types/3Commas";
+// import {Type_Bot_Performance_Metrics, Type_Pair_Performance_Metrics, Type_Query_PerfArray} from "@/types/3Commas";
 import {DateRange} from "@/types/Date";
 
 
 const PerformanceMonitor = () => {
+    const { currentProfile } = useAppSelector(state => state.config);
 
     const state = useGlobalData();
     const {data: {performanceData}} = state;
@@ -33,9 +35,9 @@ const PerformanceMonitor = () => {
     useEffect(() => {
 
         Promise.all([
-            fetchPerformanceDataFunction(datePair),
-            fetchBotPerformanceMetrics(datePair),
-            fetchPairPerformanceMetrics(datePair),
+            fetchPerformanceDataFunction(datePair, currentProfile),
+            fetchBotPerformanceMetrics(datePair, currentProfile),
+            fetchPairPerformanceMetrics(datePair, currentProfile),
         ]).then(([perfData, botPerfData, pairPerfData]) => {
             updateLocalPerf((prevState) => {
                 return {

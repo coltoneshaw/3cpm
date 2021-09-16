@@ -62,6 +62,15 @@ export const configSlice = createSlice({
         setCurrentProfile: (state, action) => {
             state.currentProfile = action.payload
         },
+        setCurrentProfileById: (state, action) => {
+            const {profileId} = action.payload
+            console.log({profileId})
+            const newConfig = {...state.config}
+            state.currentProfile = {...newConfig.profiles[profileId]}
+            state.config = {...newConfig, current: profileId}
+            state.editingProfile = {...newConfig.profiles[profileId]}
+            state.editingProfileId = profileId
+        },
         setEditingProfile: (state, action) => {
             state.editingProfile = action.payload
         },
@@ -131,7 +140,8 @@ export const configSlice = createSlice({
 export const { 
     setConfig, setCurrentProfile, setEditingProfile, 
     setEditingProfileId, storeEditingProfileData, setReservedFunds, 
-    updateOnEditingProfile, deleteProfileById, addEditingProfile
+    updateOnEditingProfile, deleteProfileById, addEditingProfile,
+    setCurrentProfileById
 } = configSlice.actions;
 export { configPaths }
 // export const selectCount = (state: RootState) => state.config.config

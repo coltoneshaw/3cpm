@@ -1,7 +1,7 @@
 const threeCommasAPI = require('./3commaslib')
 import { Type_API_bots, Type_Deals_API, Type_MarketOrders} from '@/types/3Commas'
 
-import { getProfileConfig, setProfileConfig } from '@/utils/config';
+import { getProfileConfig, setProfileConfig, getProfileConfigAll } from '@/utils/config';
 
 import {
   calc_dealHours,
@@ -12,6 +12,15 @@ import {
   calc_maxInactiveFunds
 } from '@/utils/formulas';
 
+import { Type_Profile } from "@/types/config"
+
+
+
+const returnProfileData = (profileData?: Type_Profile ) => {
+  if (!profileData) profileData = getProfileConfigAll();
+  return profileData;
+}
+
 /**
  * 
  * @param {object} config This is the config stringat the time of calling this function.
@@ -19,15 +28,18 @@ import {
  * 
  * @description - required at the moment so when you make a config change on the frontend you're not using old data.
  */
-const threeCapi = (key?: string, secret?: string, mode?: string) => {
+const threeCapi = (profileData?: Type_Profile, key?: string, secret?: string, mode?: string) => {
+
+  if(!key || !secret || !mode){
+    const profile = returnProfileData(profileData)
+    key = profile.apis.threeC.key
+    secret = profile.apis.threeC.secret
+    mode = profile.apis.threeC.mode
+  }
 
 
-  key = (key) ? key : getProfileConfig('apis.threeC.key')
-  secret = (secret) ? secret : getProfileConfig('apis.threeC.secret')
-  mode = (mode) ? mode : getProfileConfig('apis.threeC.mode')
-
-  if (key == null || secret == null) {
-    console.error('missing API keys')
+  if (key == null || secret == null || mode == null) {
+    console.error('missing API keys or mode')
     return false
   }
 
@@ -39,8 +51,8 @@ const threeCapi = (key?: string, secret?: string, mode?: string) => {
 }
 
 
-async function bots() {
-  const api = threeCapi()
+async function bots(profileData?:Type_Profile) {
+  const api = threeCapi(profileData)
   if (!api) return []
 
   let responseArray = [];
@@ -135,8 +147,8 @@ async function bots() {
    * @description Fetching market orders for bots that are active and have active market orders
    * @api_docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/deals_api.md#deal-safety-orders-permission-bots_read-security-signed
    */
-async function getMarketOrders(deal_id: number) {
-  const api = threeCapi()
+async function getMarketOrders(deal_id: number, profileData: Type_Profile) {
+  const api = threeCapi(profileData)
   if (!api) return false
 
   // this is the /market_orders endpoint.
@@ -162,8 +174,8 @@ async function getMarketOrders(deal_id: number) {
   
 }
 
-async function getActiveDeals() {
-  const api = threeCapi()
+async function getActiveDeals(profileData?: Type_Profile) {
+  const api = threeCapi(profileData)
   if (!api) return []
 
   const response: Type_Deals_API[] = await api.getDeals({ limit: 500, scope: 'active' })
@@ -181,8 +193,8 @@ let activeDealIDs = <number[]>[]
  * @param {number} offset - Total to sync per update
  * @returns object array of deals.
  */
-async function getDealsUpdate(perSyncOffset: number, type: string) {
-  const api = threeCapi()
+async function getDealsUpdate(perSyncOffset: number, type: string, profileData: Type_Profile) {
+  const api = threeCapi(profileData)
   if (!api) return []
 
   if (type === 'autoSync') {
@@ -193,15 +205,17 @@ async function getDealsUpdate(perSyncOffset: number, type: string) {
       return activeDeals
     }
 
-    const updatedDeals = await getDealsThatAreUpdated(perSyncOffset)
+    const updatedDeals = await getDealsThatAreUpdated(perSyncOffset, profileData)
     return [...activeDeals, ...updatedDeals]
   }
 
-  return await getDealsThatAreUpdated(perSyncOffset)
+  return await getDealsThatAreUpdated(perSyncOffset, profileData)
 }
 
-async function getDealsThatAreUpdated(perSyncOffset: number) {
-  const api = threeCapi()
+
+// TODO - refactor to not create it's own API instance here.
+async function getDealsThatAreUpdated(perSyncOffset: number, profileData:Type_Profile) {
+  const api = threeCapi(profileData)
   if (!api) return []
 
   let responseArray = [];
@@ -213,7 +227,8 @@ async function getDealsThatAreUpdated(perSyncOffset: number) {
 
 
   // converting the incoming dateUTC to the right format in case it's not done properly.
-  let lastSyncTime = await getProfileConfig('syncStatus.deals.lastSyncTime');
+  let lastSyncTime = (profileData.syncStatus.deals.lastSyncTime) ? profileData.syncStatus.deals.lastSyncTime : 0;
+
 
   for (let offset = 0; offset < offsetMax; offset += perOffset) {
 
@@ -254,16 +269,14 @@ async function getDealsThatAreUpdated(perSyncOffset: number) {
   console.log('Response data Length: ' + responseArray.length)
 
   // updating the last sync time if it's actually changed.
-  if (lastSyncTime != newLastSyncTime) { setProfileConfig('syncStatus.deals.lastSyncTime', newLastSyncTime) }
+  if (lastSyncTime != newLastSyncTime) { setProfileConfig('syncStatus.deals.lastSyncTime', newLastSyncTime, profileData.id) }
 
   return responseArray
 }
 
 
-async function deals(offset: number, type: string) {
-  let deals = await getDealsUpdate(offset, type);
-  // let botData = await bots();
-
+async function deals(offset: number, type: string, profileData:Type_Profile) {
+  let deals = await getDealsUpdate(offset, type, profileData);
   let dealArray = [];
 
   for (let deal of deals) {
@@ -289,7 +302,7 @@ async function deals(offset: number, type: string) {
     // This potentially adds a heavy API call to each sync, requiring it to hit the manual SO endpoint every sync.
     // fetching market order information for any deals that are not closed.
     if (active_manual_safety_orders > 0 || completed_manual_safety_orders_count > 0){
-      let fetched_market_order_data = await getMarketOrders(id)
+      let fetched_market_order_data = await getMarketOrders(id, profileData)
       if(fetched_market_order_data) market_order_data = fetched_market_order_data
     } 
 
@@ -332,8 +345,8 @@ async function deals(offset: number, type: string) {
  * 
  * @docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/accounts_api.md#information-about-all-user-balances-on-specified-exchange--permission-accounts_read-security-signed
  */
-async function getAccountDetail() {
-  const api = threeCapi()
+async function getAccountDetail(profileData:Type_Profile) {
+  const api = threeCapi(profileData)
   if (!api) return false
 
   let accountData = await api.accounts()
@@ -373,11 +386,8 @@ async function getAccountDetail() {
   return array
 }
 
-async function getAccountSummary(key: string, secret: string, mode: string) {
-  let api = threeCapi()
-  if (key && secret) {
-    api = threeCapi(key, secret, mode)
-  }
+async function getAccountSummary(profileData?: Type_Profile, key?: string, secret?: string, mode?: string) {
+  let api = threeCapi(profileData, key, secret, mode)
   if (!api) return false
   let accountData = await api.accounts()
 

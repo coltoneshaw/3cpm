@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
-import {setConfig, setEditingProfile, setEditingProfileId, addEditingProfile} from '@/app/redux/configSlice'
+import {setConfig, setEditingProfile, setEditingProfileId, addEditingProfile,
+    setCurrentProfileById} from '@/app/redux/configSlice'
+import { useHistory } from 'react-router-dom'
 
 import PersonIcon from '@material-ui/icons/Person';
 
@@ -30,10 +32,12 @@ const ProfileSwitcher = () => {
         updateCurrentProfileId(config.current)
     },[config])
 
+    const history = useHistory()
     const addNewProfile = () => {
         // navigate to settings
         // add a profile to the store.
         dispatch(addEditingProfile())
+        history.push('/settings')
     }
 
 
@@ -50,9 +54,10 @@ const ProfileSwitcher = () => {
                     key={p}
                     onClick={() => { 
                         updateCurrentProfileId(p);
-                        dispatch(setConfig({...config, current: p}))
-                        dispatch(setEditingProfile({...menuProfile}))
-                        dispatch(setEditingProfileId(p))
+                        // dispatch(setConfig({...config, current: p}))
+                        dispatch(setCurrentProfileById({profileId: p}))
+                        // dispatch(setEditingProfile({...menuProfile}))
+                        // dispatch(setEditingProfileId(p))
                         popupState.close()
                     }} 
                     style={styles}>

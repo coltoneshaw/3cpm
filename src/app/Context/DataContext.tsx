@@ -34,6 +34,8 @@ import {
     botQuery
 } from '@/app/Features/3Commas/3Commas';
 
+import { Type_ReservedFunds, Type_Profile } from '@/types/config'
+
 
 const defaultBalance = {
     on_orders: 0,
@@ -85,18 +87,35 @@ interface Type_Data_Context {
     }
 }
 
+
+
 /**
  * 
  * This needs to be nested under the config context as it'll use that!
  */
 const DataProvider = ({ children }: any) => {
-    const {currentProfile} = useAppSelector(state => state.config);
+    const {currentProfile, config} = useAppSelector(state => state.config);
 
-    const [reservedFunds, updateReservedFunds] = useState(() => currentProfile.statSettings.reservedFunds);
+    const reservedFunds = currentProfile.statSettings.reservedFunds
+
+
+    const profileData =  {
+        defaultCurrency: currentProfile.general.defaultCurrency,
+        reservedFunds: currentProfile.statSettings.reservedFunds,
+        startDate: currentProfile.statSettings.startDate,
+        currentProfileID: config.current
+    }
+
+    // const [reservedFunds, updateReservedFunds] = useState(() => currentProfile.statSettings.reservedFunds);
+    const [currentProfileId, updateCurrentProfileId] = useState(() => config.current)
 
     useEffect(() => {
-        if(currentProfile.statSettings.reservedFunds) updateReservedFunds(currentProfile.statSettings.reservedFunds)
-    },[currentProfile.statSettings.reservedFunds])
+        updateCurrentProfileId(config.current)
+    }, [config])
+
+    // useEffect(() => {
+    //     if(currentProfile.statSettings.reservedFunds) updateReservedFunds(currentProfile.statSettings.reservedFunds)
+    // },[currentProfile.statSettings.reservedFunds])
 
     const [botData, updateBotData] = useState<Type_Query_bots[]>([])
     const [profitData, updateProfitData] = useState<Type_Profit[]>([])
@@ -113,18 +132,19 @@ const DataProvider = ({ children }: any) => {
     useEffect(async () => {
         // updateIsSyncing(true)
         try {
-            await fetchBotData()
-            fetchProfitMetrics()
-            fetchPerformanceData()
-            getActiveDeals()
-            await getAccountData()
+            console.error('updating the current profile!')
+            await fetchBotData(currentProfile)
+            await fetchProfitMetrics(currentProfile)
+            await fetchPerformanceData(currentProfile)
+            await getActiveDeals(currentProfile)
+            await getAccountData(currentProfile)
             // updateIsSyncing(false)
 
         } catch (error) {
             console.error(error)
             updateIsSyncing(false)
         }
-    }, [currentProfile])
+    }, [currentProfileId])
 
     /**
      * checking if any of the numbers needed have changed, if so then we pull the data.
@@ -134,15 +154,16 @@ const DataProvider = ({ children }: any) => {
     }, [metricsData.position, metricsData.totalBoughtVolume, metricsData.maxRisk, currentProfile])
 
 
-    const fetchBotData = async () => {
+    const fetchBotData = async (currentProfile?: Type_Profile) => {
 
         try {
             // @ts-ignore
-            await electron.api.updateBots()
+            await electron.api.updateBots(currentProfile)
 
             // @ts-ignore
-            botQuery()
+            botQuery(currentProfile)
                 .then((result: Type_Query_bots[]) => {
+                    if(!result) return
                     updateBotData(result ?? [])
                 })
         } catch (error) {
@@ -157,9 +178,10 @@ const DataProvider = ({ children }: any) => {
      * @metrics - returns just TotalProfit
      * Confirmed working
      */
-    const fetchProfitMetrics = () => {
-        fetchDealDataFunction()
+    const fetchProfitMetrics = (profileData?: Type_Profile) => {
+        fetchDealDataFunction(profileData)
             .then(data => {
+                if(!data) return
 
                 // TODO - look into getting autocomplete working here.
                 const { profitData, metrics } = data
@@ -174,20 +196,17 @@ const DataProvider = ({ children }: any) => {
             })
     }
 
-    // const fetchPairDataByDate = (pairs: string[]) => {
-    //     getSelectPairDataByDate(pairs)
-    //         .then( data =>  console.log(data))
-    // }
 
     /**
      * @data - returns an array with a `bot_id - pair` key that's unique. Only specific data on that pair that's needed.
      * Update the database query for more.
      * Confirmed working
      */
-    const fetchPerformanceData = () => {
+    const fetchPerformanceData = (profileData?: Type_Profile) => {
         
-        fetchPerformanceDataFunction()
+        fetchPerformanceDataFunction(undefined, profileData)
             .then(((data: Type_Query_PerfArray[]) => {
+                if(!data) return
                 console.log('updated Performance Data!')
 
                 updatePerformanceData((prevState) => {
@@ -205,8 +224,9 @@ const DataProvider = ({ children }: any) => {
                 })
             }))
 
-        fetchBotPerformanceMetrics()
+        fetchBotPerformanceMetrics(undefined, profileData)
             .then((data: Type_Bot_Performance_Metrics[]) => {
+                if(!data) return
                 console.log('getting bot performance metrics')
                 updatePerformanceData((prevState) => {
                     return { ...prevState, bot: data }
@@ -214,8 +234,9 @@ const DataProvider = ({ children }: any) => {
 
             })
 
-        fetchPairPerformanceMetrics()
+        fetchPairPerformanceMetrics(undefined, profileData)
             .then((data: Type_Pair_Performance_Metrics[]) => {
+                if(!data) return
                 console.log('getting pair performance metrics')
                 updatePerformanceData((prevState) => {
                     return { ...prevState, pair: data }
@@ -229,9 +250,10 @@ const DataProvider = ({ children }: any) => {
      * @data - active deals, entire array returned by 3C
      * Confirmed working
      */
-    const getActiveDeals = async () => {
-        await getActiveDealsFunction()
+    const getActiveDeals = async (profileData?: Type_Profile) => {
+        await getActiveDealsFunction(profileData)
             .then(data => {
+                if(!data) return
                 console.log('updated active deals and related metrics!')
                 const { activeDeals, metrics } = data
                 updateActiveDeals(() => activeDeals)
@@ -255,9 +277,10 @@ const DataProvider = ({ children }: any) => {
      * @balance - on_orders, position
      * @metrics - same as balance.
      */
-    const getAccountData = async () => {
-        await getAccountDataFunction()
+    const getAccountData = async (profileData?: Type_Profile) => {
+        await getAccountDataFunction(profileData)
             .then(data => {
+                if(!data) return
                 const { accountData, balance } = data
 
                 if (accountData == undefined || accountData.length === 0) {
@@ -351,13 +374,13 @@ const DataProvider = ({ children }: any) => {
             }
 
             try {
-                updateThreeCData('fullSync', options)
+                updateThreeCData('fullSync', options, currentProfile)
                     .then(async () => {
-                        await fetchBotData()
-                        await fetchProfitMetrics()
-                        await fetchPerformanceData()
-                        await getActiveDeals()
-                        await getAccountData()
+                        await fetchBotData(currentProfile)
+                        await fetchProfitMetrics(currentProfile)
+                        await fetchPerformanceData(currentProfile)
+                        await getActiveDeals(currentProfile)
+                        await getAccountData(currentProfile)
                         await calculateMetrics()
                         callback()
                         updateIsSyncing(false)
@@ -419,11 +442,11 @@ const DataProvider = ({ children }: any) => {
             let syncCount = prevState.syncCount
             try {
 
-                updateThreeCData('autoSync', options)
+                updateThreeCData('autoSync', options, currentProfile)
                     .then(() => {
-                        fetchProfitMetrics()
-                        fetchPerformanceData()
-                        getActiveDeals()
+                        fetchProfitMetrics(currentProfile)
+                        fetchPerformanceData(currentProfile)
+                        getActiveDeals(currentProfile)
                         calculateMetrics()
                         updateIsSyncing(false)
                     })

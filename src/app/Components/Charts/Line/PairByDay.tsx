@@ -24,7 +24,7 @@ interface pairByDate {
 
 
 const PairPerformanceByDate = ({ datePair }: { datePair: DateRange }) => {
-    const { config } = useAppSelector(state => state.config);
+    const { config, currentProfile } = useAppSelector(state => state.config);
     const [localData, updateLocalData] = useState<pairByDate[]>([]);
     const [pairs, updatePairs] = useState<{ pair: string, opacity: number }[]>([])
     const [pairFilters, updatePairFilters] = useState<string[]>([]);
@@ -68,7 +68,7 @@ const PairPerformanceByDate = ({ datePair }: { datePair: DateRange }) => {
 
         // selecting the pair data and sorting by profit for easier viewing.
         //@ts-ignore
-        electron.database.query(`select pair, sum(actual_profit) as total_profit from deals WHERE ${wheres} and  profile_id = '${config.current}'  group by pair order by total_profit desc;`)
+        electron.database.query(`select pair, sum(actual_profit) as total_profit from deals WHERE ${wheres} and  profile_id = '${currentProfile.id}'  group by pair order by total_profit desc;`)
 
             .then((result: { pair: string }[]) => {
                 updatePairs(result.map(pair => ({ pair: pair.pair, opacity: 1 })))
@@ -84,8 +84,12 @@ const PairPerformanceByDate = ({ datePair }: { datePair: DateRange }) => {
     }, [datePair])
 
     useEffect(() => {
-        getSelectPairDataByDate(pairFilters, datePair)
-            .then(data => updateLocalData(data))
+
+        getSelectPairDataByDate(pairFilters, datePair, currentProfile)
+            .then(data => {
+                if(!data) return 
+                updateLocalData(data)
+            })
     }, [pairFilters, datePair])
 
     return (

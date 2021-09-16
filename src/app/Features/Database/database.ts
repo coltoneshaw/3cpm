@@ -223,7 +223,7 @@ function normalizeData(data: any) {
  * 
  * @description Inserting data into a table. Data coming in needs to be an array of objects.
  */
-async function update(table: string, data: any[]) {
+async function update(table: string, data: any[], profileId:string) {
 
     if (data.length == 0) {
         console.log('no data to write')
@@ -235,7 +235,7 @@ async function update(table: string, data: any[]) {
         Object.keys(row).forEach(item => {
             newRow[normalizeData(item)] = normalizeData(row[item])
         })
-        newRow["profile_id"] = config.get('current')
+        newRow["profile_id"] = profileId;
         return newRow
     })
 

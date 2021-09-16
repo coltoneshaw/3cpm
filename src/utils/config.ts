@@ -1,4 +1,4 @@
-import { TconfigValues } from "@/types/config";
+import { TconfigValues, Type_Profile } from "@/types/config";
 
 const Store = require('electron-store');
 const { run } = require('@/app/Features/Database/database')
@@ -93,9 +93,18 @@ const getProfileConfig = (key: string) => {
 }
 
 
-const setProfileConfig = (key: string, value: any) => {
-    const current = config.get('current')
-    return config.set('profiles.' + current + '.' + key, value)
+
+const getProfileConfigAll = (profileId?: string) => {
+
+    if(!profileId)  profileId = <string>config.get('current')
+
+    return <Type_Profile>config.get('profiles.' + profileId)
+}
+
+
+const setProfileConfig = (key: string, value: any, profileId?:string) => {
+    if(!profileId) profileId = config.get('current')
+    return config.set('profiles.' + profileId + '.' + key, value)
 }
 
 const setDefaultConfig = () => {
@@ -107,5 +116,6 @@ export {
     config,
     getProfileConfig,
     setProfileConfig,
-    setDefaultConfig
+    setDefaultConfig,
+    getProfileConfigAll
 }
