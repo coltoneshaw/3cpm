@@ -70,7 +70,6 @@ async function getAndStoreBotData(profileData: Type_Profile) {
           // deleting the bots that do not exist in the sync
           // this helps to keep the database clean since bots can be removed from 3C but there is no `deleted_at` flag in the APO
           const botIDs = data.map(bot => bot.id)
-          console.log(botIDs)
           const { id } = profileData
 
           await run(`DELETE FROM bots WHERE id not in ( ${botIDs.join()}) and profile_id = '${id}' ;`)

@@ -33,7 +33,8 @@ const UpdateBanner = () => {
                     return
                 }
 
-                const currentVersion = versionData[0]
+                // check to see if this is a beta version or a full release before displaying
+                const currentVersion = versionData.filter((release:any) => !release.prerelease)[0]
                 updateLatestVersion(currentVersion.tag_name)
                 latestLink = currentVersion.html_url
                 console.log(latestLink)
