@@ -1,5 +1,7 @@
 import { app } from "electron";
-import { config } from "@/utils/config";
+import { config } from "@/main/Config/config";
+const log = require('electron-log');
+
 import path from "path";
 import Database from 'better-sqlite3';
 
@@ -226,7 +228,7 @@ function normalizeData(data: any) {
 async function update(table: string, data: any[], profileId:string) {
 
     if (data.length == 0) {
-        console.log('no data to write')
+        log.log('no data to write')
         return false
     }
 
@@ -259,7 +261,7 @@ async function update(table: string, data: any[], profileId:string) {
 async function upsert(table: string, data: any[], id: string, updateColumn: string) {
 
     if (data.length == 0) {
-        console.log('no data to write')
+        log.log('no data to write')
         return false
     }
 
@@ -313,9 +315,9 @@ async function deleteAllData(profileID?: string) {
         await run(`DELETE FROM bots;'`)
         await run(`DELETE FROM accountData;`)
         await run(`DELETE FROM deals;'`)
-        console.info('deleting all database info.')
+        log.info('deleting all database info.')
     }
-    console.info('deleting all database info.')
+    log.info('deleting all database info.')
     await run(`DELETE
                FROM bots
                WHERE profile_id = '${profileID}'`)
@@ -325,7 +327,7 @@ async function deleteAllData(profileID?: string) {
     await run(`DELETE
                FROM deals
                WHERE profile_id = '${profileID}'`)
-    console.info('database info deleted.')
+    log.info('database info deleted.')
 
 }
 

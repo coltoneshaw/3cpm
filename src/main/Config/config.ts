@@ -1,7 +1,8 @@
 import { TconfigValues, Type_Profile } from "@/types/config";
+const log = require('electron-log');
 
 const Store = require('electron-store');
-const { run } = require('@/app/Features/Database/database')
+const { run } = require('@/main/Database/database')
 import { v4 as uuidv4 } from 'uuid';
 import { defaultConfig } from '@/utils/defaultConfig';
 
@@ -13,7 +14,7 @@ const migrateCurrencyToArray = (store: any) => {
 
 const migrationToProfiles = (config:any) => {
     if(config.get('general.version') === 'v0.5.0') {
-        console.debug('looks like this is already on the latest version.')
+        log.debug('looks like this is already on the latest version.')
         return false
     }
     const id = uuidv4()
@@ -40,8 +41,8 @@ const migrationToProfiles = (config:any) => {
             run(`UPDATE deals SET profile_id='${id}' WHERE profile_id IS NULL`)
         })
     } catch (e) {
-        console.error(e)
-        console.error('error migrating to v0.5 ')
+        log.error(e)
+        log.error('error migrating to v0.5 ')
     }
     
 }
@@ -51,17 +52,17 @@ const migrationToProfiles = (config:any) => {
 const config = new Store({
     migrations: {
         // '0.0.3': ( store: any )=>{
-        //     console.info('migrating the config store to 0.0.2-RC1')
+        //     log.info('migrating the config store to 0.0.2-RC1')
         //     store.set('statSettings.account_id', []);
         //     migrateCurrencyToArray(store)
         // },
         // '0.0.4': ( store: any )=>{
-        //     console.info('migrating the config store to 0.0.4')
-        //     console.log('adding a reserved funds array.')
+        //     log.info('migrating the config store to 0.0.4')
+        //     log.log('adding a reserved funds array.')
         //     store.set('statSettings.reservedFunds', []);
         // },
         // '0.1.0': ( store: any )=>{
-        //     console.info('migrating the config store to 0.1.0')
+        //     log.info('migrating the config store to 0.1.0')
         //     run('drop table bots;')
         //     store.set('general.updated', true)
         // },
@@ -69,13 +70,13 @@ const config = new Store({
         //     store.set('general.updated', true)
         // },
         '<=0.2.0': () => {
-            console.log('running the v0.2 migration!!!!!!!!!!!!!!!!!!!!')
+            log.log('running the v0.2 migration!!!!!!!!!!!!!!!!!!!!')
             // removing the bots that have been synced so they can be resynced and a new column added
             run('ALTER TABLE bots ADD COLUMN hide boolean;')
             run("delete from deals where status in ('failed', 'cancelled') ")
         },
         'v0.5.0': (store: any) => {
-            console.info('migrating the config store to 0.5.0')
+            log.info('migrating the config store to 0.5.0')
             
             migrationToProfiles(store)
 

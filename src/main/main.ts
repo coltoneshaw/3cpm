@@ -1,13 +1,15 @@
 import {app, BrowserWindow, ipcMain, shell, Menu} from 'electron';
-import {config} from './utils/config';
+import {config} from '@/main/Config/config';
 // import isDev from 'electron-is-dev'; // New Import
+const log = require('electron-log');
+
 
 const path = require("path");
 const isDev = !app.isPackaged;
 
-import { menu } from './electron/menu';
+import { menu } from './menu';
 
-const { update, query, checkOrMakeTables, run, deleteAllData, upsert } = require( '@/app/Features/Database/database');
+const { update, query, checkOrMakeTables, run, deleteAllData, upsert } = require( '@/main/Database/database');
 
 let win;
 
@@ -114,7 +116,7 @@ ipcMain.handle('database-deleteAll', (e, profileID: string) => {
 });
 
 ipcMain.handle('database-checkOrMakeTables', () => {
-  console.log('attempting to check if tables exist yet.')
+  log.log('attempting to check if tables exist yet.')
   checkOrMakeTables()
 });
 
@@ -125,7 +127,7 @@ ipcMain.handle('database-checkOrMakeTables', () => {
  * 
  */
 
- const { updateAPI, getAndStoreBotData, getAccountSummary } = require('@/app/Features/3Commas/API/index');
+ const { updateAPI, getAndStoreBotData, getAccountSummary } = require('@/main/3Commas/index')
  import {Type_Profile} from '@/types/config'
 
  ipcMain.handle('api-updateData', async (event, type, options, profileData?:Type_Profile) => {
@@ -156,7 +158,7 @@ ipcMain.handle('binance-getCoins', async (event) => {
     return await fetchCoinPricesBinance()
 });
 
-import { fetchVersions } from './app/Features/UpdateBanner/UpdateApiFetch';
+import { fetchVersions } from '../app/Features/UpdateBanner/UpdateApiFetch';
 
 ipcMain.handle('pm-versions', async (event) => {
   return await fetchVersions()

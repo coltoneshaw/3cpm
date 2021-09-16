@@ -1,6 +1,8 @@
 'use strict'
 import crypto from "crypto";
-import fetch from 'electron-fetch'
+import fetch from 'electron-fetch';
+const log = require('electron-log');
+
 
 const API_URL = 'https://api.3commas.io'
 
@@ -50,7 +52,7 @@ class threeCommasAPI {
 
             return await response.json()
         } catch (e) {
-            console.log(e);
+            log.error(e);
             return false
         }
     }

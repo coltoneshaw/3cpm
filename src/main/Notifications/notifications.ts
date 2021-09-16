@@ -2,7 +2,7 @@ import { Notification } from 'electron';
 import { Type_Deals_API } from '@/types/3Commas'
 
 import { parseNumber } from '@/utils/number_formatting'
-import { getProfileConfig } from '@/utils/config'
+import { getProfileConfig } from '@/main/Config/config'
 
 import { convertMiliseconds } from '@/utils/helperFunctions'
 

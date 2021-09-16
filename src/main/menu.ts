@@ -2,10 +2,10 @@ const { app, Menu, dialog, BrowserWindow } = require('electron')
 
 const isMac = process.platform === 'darwin'
 
-const {deleteAllData} = require('@/app/Features/Database/database');
-const {setDefaultConfig} = require('@/utils/config')
+const {deleteAllData} = require('@/main/Database/database');
+const {setDefaultConfig} = require('@/main/Config/config')
 
-const {win} = require('@/main')
+const {win} = require('@/main/main')
 
 
 const template = [

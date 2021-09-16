@@ -1,7 +1,8 @@
-const threeCommasAPI = require('./3commaslib')
+const threeCommasAPI = require('./3commaslib');
+const log = require('electron-log');
 import { Type_API_bots, Type_Deals_API, Type_MarketOrders} from '@/types/3Commas'
 
-import { getProfileConfig, setProfileConfig, getProfileConfigAll } from '@/utils/config';
+import { getProfileConfig, setProfileConfig, getProfileConfigAll } from '@/main/Config/config';
 
 import {
   calc_dealHours,
@@ -39,7 +40,7 @@ const threeCapi = (profileData?: Type_Profile, key?: string, secret?: string, mo
 
 
   if (key == null || secret == null || mode == null) {
-    console.error('missing API keys or mode')
+    log.error('missing API keys or mode')
     return false
   }
 
@@ -248,7 +249,7 @@ async function getDealsThatAreUpdated(perSyncOffset: number, profileData:Type_Pr
       newLastSyncTime = new Date(response[0].updated_at).getTime()
     }
 
-    console.info({
+    log.debug({
       'responseArrayLength': responseArray.length,
       'currentResponse': response.length,
       offset,
@@ -266,7 +267,7 @@ async function getDealsThatAreUpdated(perSyncOffset: number, profileData:Type_Pr
 
   }
 
-  console.log('Response data Length: ' + responseArray.length)
+  log.info('Response data Length: ' + responseArray.length)
 
   // updating the last sync time if it's actually changed.
   if (lastSyncTime != newLastSyncTime) { setProfileConfig('syncStatus.deals.lastSyncTime', newLastSyncTime, profileData.id) }
@@ -356,7 +357,7 @@ async function getAccountDetail(profileData:Type_Profile) {
   const accountIDs = profileData.statSettings.reservedFunds.filter(a => a.is_enabled).map(a => a.id)
 
   for (let account of accountData.filter((a:any) => accountIDs.includes(a.id))) {
-    // console.log('syncing the account ', account.id)
+    // log.info('syncing the account ', account.id)
 
     // this loads the account balances from the exchange to 3C ensuring the numbers are updated
     await api.accountLoadBalances(account.id);

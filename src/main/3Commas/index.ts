@@ -1,7 +1,10 @@
-import { update, run, query } from '@/app/Features/Database/database';
+import { update, run, query } from '@/main/Database/database';
 const { bots, getAccountDetail, deals, getAccountSummary } = require('./api');
-const { getProfileConfigAll } = require('@/utils/config')
-import { findAndNotifyNewDeals } from '@/electron/Notifications/notifications'
+const log = require('electron-log');
+
+const { getProfileConfigAll } = require('@/main/Config/config')
+import { findAndNotifyNewDeals } from '@/main/Notifications/notifications'
+
 
 import { Type_Deals_API, Type_Query_Accounts, Type_API_bots, Type_UpdateFunction } from '@/types/3Commas'
 import { Type_Profile } from '@/types/config'
@@ -17,17 +20,19 @@ async function updateAPI(type: string, options: Type_UpdateFunction, profileData
     profileData = getProfileConfigAll()
   }
 
+  log.debug(profileData)
+
   await deals(options.offset, type, profileData)
     .then((data: Type_Deals_API[]) => {
 
       // if notifications need to be enabled for the fullSync then the type below needs to be updated.
       if (type === 'autoSync' && options.notifications && options.time != undefined) findAndNotifyNewDeals(data, options.time, options.summary)
       update('deals', data, profileData.id)
-      // console.log(data)
+      // log.info(data)
     })
 
   // if (type !== 'autoSync' || options.syncCount === 20) {
-  //   console.log('updating the accounts!')
+  //   log.info('updating the accounts!')
     await getAccountData(profileData)
   // }
 
@@ -92,7 +97,7 @@ async function getAndStoreBotData(profileData: Type_Profile) {
 
       })
   } catch (error) {
-    console.error('error getting bot data', error)
+    log.error('error getting bot data', error)
   }
 
 }

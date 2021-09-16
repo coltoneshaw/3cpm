@@ -16,7 +16,8 @@
     "webpack": "webpack",
     "dev": "concurrently --kill-others \"npm run react:dev\" \"npm run electron:dev\"",
     "start": "npm run build && electron dist/main.js",
-    "rebuild": "./node_modules/.bin/electron-rebuild -f -w better-sqlite3"
+    "rebuild": "./node_modules/.bin/electron-rebuild -f -w better-sqlite3",
+    "wpanddev": "webpack && concurrently --kill-others \"npm run react:dev\" \"npm run electron:dev\""
   },
   "repository": {
     "type": "git",
@@ -83,6 +84,7 @@
     "date-fns-tz": "^1.1.6",
     "dot-prop": "^6.0.1",
     "electron-fetch": "^1.7.4",
+    "electron-log": "^4.4.1",
     "electron-notarize": "^1.1.1",
     "electron-store": "^8.0.0",
     "material-ui-popup-state": "^1.9.3",
