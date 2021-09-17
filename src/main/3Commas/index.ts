@@ -1,5 +1,5 @@
 import { update, run, query } from '@/main/Database/database';
-const { bots, getAccountDetail, deals, getAccountSummary } = require('./api');
+const { bots, getAccountDetail, deals, getAccountSummary, getDealOrders } = require('./api');
 const log = require('electron-log');
 
 const { getProfileConfigAll } = require('@/main/Config/config')
@@ -109,5 +109,6 @@ export {
   getAccountDetail,
   deals,
   getAccountData,
-  getAccountSummary
+  getAccountSummary,
+  getDealOrders
 }

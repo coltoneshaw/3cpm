@@ -172,7 +172,23 @@ async function getMarketOrders(deal_id: number, profileData: Type_Profile) {
       failed: <[] | Type_MarketOrders[]>manualSOs.filter(deal => deal.status_string === 'Cancelled'),
       active: <[] | Type_MarketOrders[]>manualSOs.filter(deal => deal.status_string === 'Active')
     }
-  
+
+}
+
+/**
+ * @param profileData
+ * @param {number} deal_id The deal id of an active deal
+ *
+ * @param onlyManual
+ * @description Fetching market orders for bots that are active and have active market orders
+ * @api_docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/deals_api.md#deal-safety-orders-permission-bots_read-security-signed
+ */
+async function getDealOrders(profileData: Type_Profile, deal_id: number) {
+  const api = threeCapi(profileData)
+  if (!api) return false
+
+  // this is the /market_orders endpoint.
+  return await api.getDealSafetyOrders(deal_id + "")
 }
 
 async function getActiveDeals(profileData?: Type_Profile) {
@@ -305,7 +321,7 @@ async function deals(offset: number, type: string, profileData:Type_Profile) {
     if (active_manual_safety_orders > 0 || completed_manual_safety_orders_count > 0){
       let fetched_market_order_data = await getMarketOrders(id, profileData)
       if(fetched_market_order_data) market_order_data = fetched_market_order_data
-    } 
+    }
 
     let tempObject = {
 
@@ -341,9 +357,9 @@ async function deals(offset: number, type: string, profileData:Type_Profile) {
 
 
 /**
- * 
- * @returns 
- * 
+ *
+ * @returns
+ *
  * @docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/accounts_api.md#information-about-all-user-balances-on-specified-exchange--permission-accounts_read-security-signed
  */
 async function getAccountDetail(profileData:Type_Profile) {
@@ -412,5 +428,6 @@ export {
   getAccountDetail,
   deals,
   bots,
-  getAccountSummary
+  getAccountSummary,
+  getDealOrders
 }

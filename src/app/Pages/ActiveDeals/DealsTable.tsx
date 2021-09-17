@@ -6,7 +6,7 @@ import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 
 import Styles from './StyledDiv'
-
+import SubRowAsync from "@/app/Pages/ActiveDeals/Subrow";
 
 
 function DealsTable({ data }: { data: object[] }) {
@@ -25,6 +25,15 @@ function DealsTable({ data }: { data: object[] }) {
 
     const columns = React.useMemo(
         () => [
+            {
+                id: 'expander',
+                Header: null,
+                Cell: ({ row }: any) => (
+                    <span {...row.getToggleRowExpandedProps()}>
+                    {row.isExpanded ? '🔽' : '▶️'}
+                  </span>
+                ),
+            },
             {
                 Header: 'Bot Name',
                 accessor: 'bot_name', // accessor is the "key" in the data,
@@ -168,9 +177,21 @@ function DealsTable({ data }: { data: object[] }) {
                     return < span className=" monospace-cell">{cell.value}%</span>
                 },
             }
-
-
         ], [])
+
+
+
+    // Create a function that will render our row sub components
+    const renderRowSubComponent = React.useCallback(
+        ({ row, visibleColumns }) => (
+            <SubRowAsync
+                row={row}
+                visibleColumns={visibleColumns}
+            />
+        ),
+        []
+    );
+
 
 
 
@@ -179,6 +200,7 @@ function DealsTable({ data }: { data: object[] }) {
             <CustomTable
                 columns={columns}
                 data={localData}
+                renderRowSubComponent={renderRowSubComponent}
                 autoResetSortBy={false}
                 autoResetPage={false}
                 localStorageSortName={localStorageSortName}
