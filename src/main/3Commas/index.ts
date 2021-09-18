@@ -17,7 +17,8 @@ import { Type_Profile } from '@/types/config'
  */
 async function updateAPI(type: string, options: Type_UpdateFunction, profileData: Type_Profile) {
   if (!profileData) {
-    profileData = getProfileConfigAll()
+    log.error(' No profile was provided to the updateAPI call');
+    return false
   }
 
   log.debug(profileData)

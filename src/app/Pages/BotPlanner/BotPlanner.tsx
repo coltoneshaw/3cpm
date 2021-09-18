@@ -11,21 +11,15 @@ import Risk from "./Risk";
 
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
-import { useGlobalData } from '@/app/Context/DataContext';
 import { calc_dropMetrics } from '@/utils/formulas'
 
 import { Type_Query_bots } from '@/types/3Commas';
 
 const BotPlannerPage = () => {
 
-    const { data: { botData, metricsData: { totalBankroll } } } = useGlobalData();
-
+    const { metricsData: {totalBankroll}, botData} = useAppSelector(state => state.threeCommas);
     const {config} = useAppSelector(state => state.config);
-
-
     const [localBotData, updateLocalBotData] = useState<Type_Query_bots[]>([])
-
-
 
     useEffect(() => {
 
@@ -114,8 +108,6 @@ const BotPlannerPage = () => {
         }
 
         // const existingBots = localBotData.filter(bot => bot.origin === 'sync').map(bot => ({id: bot.id, metrics: bot.metrics}))
-
-        // console.log(existingBots)
 
         // @ts-ignore
         await electron.database.upsert('bots', localBotData, 'id', 'hide')

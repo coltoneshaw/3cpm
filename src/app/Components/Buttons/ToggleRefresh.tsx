@@ -4,7 +4,8 @@ import { Button } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 
-import { useGlobalData } from '@/app/Context/DataContext';
+import { useAppSelector } from '@/app/redux/hooks';
+import {refreshFunction} from '@/app/redux/threeCommas/Actions'
 
 
 interface Type_ButtonProps {
@@ -18,8 +19,7 @@ interface Type_ButtonProps {
  * - Move the state of this timer somewhere shared so it doesn't continue to cause issues with updating
  */
 const ToggleRefreshButton = ({ style, className }: Type_ButtonProps) => {
-    const state = useGlobalData()
-    const { data: { isSyncing }, autoSync: { buttonEnabled, setButtonEnabled } } = state
+    const { autoRefresh} = useAppSelector(state => state.threeCommas);
 
     return (
         <Button
@@ -28,13 +28,15 @@ const ToggleRefreshButton = ({ style, className }: Type_ButtonProps) => {
             className={className}
             onClick={async () => {
                 // activate the interval timer here.
-                setButtonEnabled( ( prevState:boolean ) => {
-                    // console.log(`timer was ${prevState} and now it's ${!prevState}`)
-                    return !prevState
-                })
+                if(autoRefresh) {
+                    refreshFunction('stop')
+                    return
+                }
+
+                refreshFunction('start', 200)
             }}
             disableElevation
-            startIcon={ (buttonEnabled) ? <StopIcon /> : <PlayArrowIcon/> }
+            startIcon={ (autoRefresh) ? <StopIcon /> : <PlayArrowIcon/> }
             style={{
                 ...style, 
                 backgroundColor: 'var(--color-primary)',

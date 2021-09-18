@@ -8,8 +8,6 @@ import { RiskMonitor, SummaryStatistics, PerformanceMonitor } from './Views/Inde
 import { UpdateDataButton } from '@/app/Components/Buttons/Index'
 
 
-import { useGlobalData } from '@/app/Context/DataContext';
-
 import {
     Card_ActiveDeals, Card_totalInDeals, Card_MaxDca,
     Card_TotalBankRoll, Card_TotalProfit, Card_MaxRiskPercent,
@@ -21,7 +19,6 @@ import { getLang } from '@/utils/helperFunctions';
 const lang = getLang()
 
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
-import { current } from 'immer';
 const defaultNav = 'day';
 const localStorageSortName = storageItem.navigation.statsPage
 
@@ -43,6 +40,7 @@ const buttonElements = [
 
 const StatsPage = () => {
     const {currentProfile} = useAppSelector(state => state.config);
+    const {metricsData} = useAppSelector(state => state.threeCommas);
 
     const [reservedFunds, updateReservedFunds] = useState(() => currentProfile.statSettings.reservedFunds)
 
@@ -50,8 +48,6 @@ const StatsPage = () => {
         if(currentProfile.statSettings.reservedFunds.length > 0) updateReservedFunds(currentProfile.statSettings.reservedFunds)
     }, [currentProfile.statSettings.reservedFunds])
 
-    const state = useGlobalData()
-    const { data: { metricsData}} = state
     const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent, totalDeals, boughtVolume, totalProfit_perf, averageDailyProfit, averageDealHours, totalClosedDeals, totalDealHours } = metricsData
 
     const [currentView, changeView] = useState('summary-stats')

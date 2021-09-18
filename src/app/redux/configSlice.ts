@@ -13,20 +13,13 @@ const defaultReservedFunds = {
     is_enabled: false
 }
 
-// Define a type for the slice state
-interface ConfigState {
-    config: TconfigValues
-    currentProfile: Type_Profile
-    editingProfile: Type_Profile
-    reservedFunds: Type_ReservedFunds[]
-}
 
 // Define the initial state using that type
-const initialState: ConfigState = {
-    config: defaultConfig,
-    currentProfile: defaultProfile,
-    editingProfile: defaultProfile,
-    reservedFunds: [defaultReservedFunds]
+const initialState = {
+    config: <TconfigValues> defaultConfig,
+    currentProfile: <Type_Profile> defaultProfile,
+    editingProfile: <Type_Profile>defaultProfile,
+    reservedFunds: <Type_ReservedFunds[]>[defaultReservedFunds]
 }
 
 const configPaths = {

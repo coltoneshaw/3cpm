@@ -3,7 +3,7 @@ import { Switch, Checkbox } from '@material-ui/core';
 import { Delete as DeleteIcon } from '@material-ui/icons';
 import styled from 'styled-components'
 
-import { useGlobalData } from '@/app/Context/DataContext';
+import { useAppSelector } from '@/app/redux/hooks';
 import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 import { parseNumber } from '@/utils/number_formatting';
@@ -158,9 +158,8 @@ interface Type_DataTable {
 const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
   const localStorageSortName = storageItem.tables.BotPlanner.sort;
 
-  const state = useGlobalData()
+  const { metricsData: {totalBankroll}} = useAppSelector(state => state.threeCommas);
 
-  const { data: { metricsData: { totalBankroll } } } = state;
 
 
   // handling this locally because it does not need to be saved yet.

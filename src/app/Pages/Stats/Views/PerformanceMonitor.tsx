@@ -9,7 +9,6 @@ import {BotPerformanceBubble, DealPerformanceBubble} from '@/app/Components/Char
 import {DealAllocationBar} from '@/app/Components/Charts/Bar';
 import {PairPerformanceByDate} from '@/app/Components/Charts/Line';
 
-import {useGlobalData} from '@/app/Context/DataContext';
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from '@date-io/date-fns';
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
@@ -24,31 +23,30 @@ import {DateRange} from "@/types/Date";
 
 const PerformanceMonitor = () => {
     const { currentProfile } = useAppSelector(state => state.config);
+    const { performanceData } = useAppSelector(state => state.threeCommas);
 
-    const state = useGlobalData();
-    const {data: {performanceData}} = state;
 
 
     let [localPerf, updateLocalPerf] = useState(performanceData)
     let [datePair, updateDatePair] = useState<DateRange>(new DateRange())
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        Promise.all([
-            fetchPerformanceDataFunction(datePair, currentProfile),
-            fetchBotPerformanceMetrics(datePair, currentProfile),
-            fetchPairPerformanceMetrics(datePair, currentProfile),
-        ]).then(([perfData, botPerfData, pairPerfData]) => {
-            updateLocalPerf((prevState) => {
-                return {
-                    ...prevState,
-                    pair_bot: perfData,
-                    bot: botPerfData,
-                    pair: pairPerfData
-                }
-            })
-        })
-    }, [performanceData, datePair])
+    //     Promise.all([
+    //         fetchPerformanceDataFunction(datePair, currentProfile),
+    //         fetchBotPerformanceMetrics(datePair, currentProfile),
+    //         fetchPairPerformanceMetrics(datePair, currentProfile),
+    //     ]).then(([perfData, botPerfData, pairPerfData]) => {
+    //         updateLocalPerf((prevState) => {
+    //             return {
+    //                 ...prevState,
+    //                 pair_bot: perfData,
+    //                 bot: botPerfData,
+    //                 pair: pairPerfData
+    //             }
+    //         })
+    //     })
+    // }, [performanceData, datePair])
 
 
     const updateFromDate = (date: MaterialUiPickersDate) => {

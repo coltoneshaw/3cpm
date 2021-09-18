@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
 import { storeConfigInFile, checkProfileIsValid, deleteProfileByIdGlobal } from '@/app/redux/configActions'
 import { storeEditingProfileData, deleteProfileById } from '@/app/redux/configSlice'
+import {updateAllData} from '@/app/redux/threeCommas/Actions'
 
 
 import { Button } from '@material-ui/core';
 
-import { useGlobalData } from '@/app/Context/DataContext';
 
 import LoaderIcon from '@/app/Components/icons/Loading/Loading'
 
@@ -17,8 +17,7 @@ const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
     const dispatch = useAppDispatch()
     const { editingProfile, config } = useAppSelector(state => state.config);
 
-    const dataState = useGlobalData()
-    const { actions: { updateAllData }, data: { isSyncing } } = dataState
+    const { isSyncing } = useAppSelector(state => state.threeCommas);
     const [, setLoaderIcon] = useState(false)
 
     const callback = () => setOpen(true)
@@ -32,7 +31,7 @@ const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
                 dispatch(storeEditingProfileData())
                 const cfg = await storeConfigInFile()
                 if (cfg) {
-                    await updateAllData(1000, callback)
+                    await updateAllData(1000, editingProfile, 'fullSync')
                 }
                 return
             } catch (error) {

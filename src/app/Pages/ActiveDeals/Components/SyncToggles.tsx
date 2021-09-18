@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 
 import { FormControlLabel, Checkbox} from '@material-ui/core';
 
-import { useGlobalData } from "@/app/Context/DataContext";
+import { useAppSelector } from '@/app/redux/hooks';
+import { setSyncData } from "@/app/redux/threeCommas/threeCommasSlice";
 
 import { Type_SyncOptions } from "@/types/3Commas";
 
@@ -12,32 +13,14 @@ import { Type_SyncOptions } from "@/types/3Commas";
  */
 const SyncToggles = () => {
 
-    const dataState = useGlobalData()
-    const { autoSync: { syncOptions, setSyncOptions } } = dataState
+    const { syncOptions, autoRefresh} = useAppSelector(state => state.threeCommas);
 
-    const changeSummary = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSyncOptions( ( prevState:Type_SyncOptions ) => ({
-            ...prevState,
-            summary: event.target.checked
-        }))
-    }
+    // const { autoSync: { syncOptions, setSyncOptions } } = dataState
 
-    const changeNotifications = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSyncOptions( ( prevState:Type_SyncOptions ) => ({
-            ...prevState,
-            notifications: event.target.checked
-        }))
-    }
+    const changeSummary = (event: React.ChangeEvent<HTMLInputElement>) =>  setSyncData({summary: event.target.checked})
 
-    // can't have notifications disabled and summary enabled
-    useEffect(() => {
-        if(!syncOptions.notifications) {
-            setSyncOptions( ( prevState:Type_SyncOptions ) => ({
-                ...prevState,
-                summary: false
-            }))
-        }
-    }, [syncOptions.notifications])
+    const changeNotifications = (event: React.ChangeEvent<HTMLInputElement>) =>  setSyncData({notifications: event.target.checked})
+
 
     return (
         <div className="syncToggles">

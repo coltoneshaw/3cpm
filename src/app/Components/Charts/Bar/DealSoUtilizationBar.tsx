@@ -11,19 +11,19 @@ import NoData from '@/app/Pages/Stats/Components/NoData';
 
 
 const DealSoUtilizationBar = ({ title, data = [] }: Type_ActiveDealCharts) => {
-
+    let localData = [...data]
 
     const renderChart = () => {
-        if (data.length === 0) {
+        if (localData.length === 0) {
             return (<NoData/>)
         }
-        data = data.sort(dynamicSort("-bought_volume"))
+        localData = localData.sort(dynamicSort("-bought_volume"))
 
         return (
             <ResponsiveContainer width="100%" height="90%" minHeight="300px">
                 <BarChart
                     // width={500}
-                    data={data}
+                    data={localData}
 
                     stackOffset="expand"
                 >

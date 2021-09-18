@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Button } from '@material-ui/core';
 import SyncIcon from '@material-ui/icons/Sync';
 
-import { useGlobalData } from '@/app/Context/DataContext';
+import { useAppSelector } from '@/app/redux/hooks';
+import {updateAllData} from '@/app/redux/threeCommas/Actions'
+
 import { ToastNotifcations } from '@/app/Features/Index'
 
 interface Type_ButtonProps {
@@ -12,9 +14,11 @@ interface Type_ButtonProps {
     disabled?: boolean
 }
 const UpdateDataButton = ({ style, className}: Type_ButtonProps) => {
+    const { threeCommas: {isSyncing}, config: {currentProfile}} = useAppSelector(state => state);
 
-    const state = useGlobalData()
-    const { data: { isSyncing }, actions: { updateAllData } } = state
+    const [spinning, updateSpinning] = useState(false)
+    useEffect(() => updateSpinning(isSyncing), [isSyncing])
+
 
     const [open, setOpen] = React.useState(false);
 
@@ -36,16 +40,16 @@ const UpdateDataButton = ({ style, className}: Type_ButtonProps) => {
             <Button
                 // variant="contained"
                 // color="primary"
-                disabled={isSyncing}
+                disabled={spinning}
                 className={className}
                 onClick={() => {
-                    updateAllData(1000, handleClick)
+                    updateAllData(1000, currentProfile, 'fullSync', handleClick)
                 }}
                 disableElevation
                 // startIcon={}
                 style={style}
             >
-                <SyncIcon className={isSyncing ? "iconSpinning" : ""} />            </Button>
+                <SyncIcon className={spinning ? "iconSpinning" : ""} />            </Button>
             <ToastNotifcations open={open} handleClose={handleClose} message="Sync finished." />
         </>
     )

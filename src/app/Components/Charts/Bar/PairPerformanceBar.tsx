@@ -79,13 +79,16 @@ const PairPerformanceBar = ({ title, data = []}: Type_Pair_Performance) => {
         if (data.length === 0) {
             return (<NoData/>)
         }
-        data = filterData(data)
-        data = data.sort(dynamicSort(sort))
 
+        let newData = [...data]
+        newData = filterData(newData)
+        newData = newData.sort(dynamicSort(sort))
+
+        
         return (<ResponsiveContainer width="100%" height="100%" minHeight="800px">
             <ComposedChart
 
-                data={data}
+                data={newData}
                 margin={{
                     top: 25,
                     right: 0,
