@@ -57,6 +57,7 @@ function CustomTable({
             autoResetSortBy: false,
             updateLocalBotData,
             updateReservedFunds,
+            autoResetExpanded: false,
 
             //@ts-ignore
             initialState: { sortBy: initialSortBy(localStorageSortName) },
