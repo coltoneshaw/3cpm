@@ -60,10 +60,14 @@ function SubRowAsync({ row, visibleColumns }: any) {
 
     useEffect(() => {
         // @ts-ignore
-        electron.api.getDealOrders(currentProfile, row.original.id).then((data) => {
-            setOrdersData(data.reverse());
+        const getDealOrdersPromise = electron.api.getDealOrders(currentProfile, row.original.id)
+
+        Promise.all([getDealOrdersPromise]).then(([getDealOrdersResult]) => {
+            setOrdersData(getDealOrdersResult.reverse());
+
             setLoading(false);
         })
+
     }, []);
 
     return (
