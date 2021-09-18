@@ -231,8 +231,10 @@ const refreshFunction = (method:string, offset?:number) => {
             break
         case 'run' :
             const profileData = store.getState().config.currentProfile
-            updateAllData(offset, profileData, 'autoSync', undefined)
-                .then(() => refreshFunction('run', offset))
+            setTimeout(() => {
+                updateAllData(offset, profileData, 'autoSync', undefined)
+                    .then(() => refreshFunction('run', offset))
+            }, 15000);
     }
 }
 

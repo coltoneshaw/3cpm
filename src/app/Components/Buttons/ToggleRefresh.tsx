@@ -4,9 +4,9 @@ import { Button } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 
-import { useAppSelector } from '@/app/redux/hooks';
+import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
 import {refreshFunction} from '@/app/redux/threeCommas/Actions'
-
+import {setAutoRefresh} from '@/app/redux/threeCommas/threeCommasSlice'
 
 interface Type_ButtonProps {
     style?: object,
@@ -20,6 +20,7 @@ interface Type_ButtonProps {
  */
 const ToggleRefreshButton = ({ style, className }: Type_ButtonProps) => {
     const { autoRefresh} = useAppSelector(state => state.threeCommas);
+    const dispatch = useAppDispatch()
 
     return (
         <Button
@@ -33,7 +34,8 @@ const ToggleRefreshButton = ({ style, className }: Type_ButtonProps) => {
                     return
                 }
 
-                refreshFunction('start', 200)
+                dispatch(setAutoRefresh(true))
+                refreshFunction('run', 200)
             }}
             disableElevation
             startIcon={ (autoRefresh) ? <StopIcon /> : <PlayArrowIcon/> }
