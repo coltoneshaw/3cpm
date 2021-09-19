@@ -26,8 +26,8 @@ function DealsTable({ data }: { data: object[] }) {
     const columns = React.useMemo(
         () => [
             {
-                id: 'expander',
                 Header: null,
+                accessor: 'id',
                 Cell: ({ row }: any) => (
                     <span {...row.getToggleRowExpandedProps()}>
                     {row.isExpanded ? '🔽' : '▶️'}
