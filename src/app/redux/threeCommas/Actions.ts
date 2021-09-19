@@ -1,6 +1,13 @@
 import store from '@/app/redux/store'
 
-import { setData, setIsSyncing, setSyncData, setAutoRefresh } from '@/app/redux/threeCommas/threeCommasSlice'
+import {
+    setData,
+    setIsSyncing,
+    setSyncData,
+    trackAutoRefreshProgress,
+    resetAutoRefresh,
+    setAutoRefresh
+} from '@/app/redux/threeCommas/threeCommasSlice'
 import { initialState } from '@/app/redux/threeCommas/initialState'
 
 import type { Type_Profile, Type_ReservedFunds } from '@/types/config';
@@ -221,20 +228,39 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
 }
 
 const refreshFunction = (method:string, offset?:number) => {
+    const refreshRate = 50
 
-    const active = store.getState().threeCommas.autoRefresh
-    if(!active) return
+    const {active, current, max} = store.getState().threeCommas.autoRefresh
+
+    if(!active) {
+        store.dispatch(resetAutoRefresh())
+        return
+    }
+
 
     switch (method) {
         case 'stop' :
             store.dispatch(setAutoRefresh(false))
             break
+
         case 'run' :
             const profileData = store.getState().config.currentProfile
+
             setTimeout(() => {
+                store.dispatch(trackAutoRefreshProgress(refreshRate))
+
+                if (current < max) {
+                    refreshFunction('run', offset)
+                    return
+                }
+
+
                 updateAllData(offset, profileData, 'autoSync', undefined)
-                    .then(() => refreshFunction('run', offset))
-            }, 15000);
+                    .then(() => {
+                        store.dispatch(resetAutoRefresh())
+                        refreshFunction('run', offset)
+                    })
+            }, refreshRate);
     }
 }
 

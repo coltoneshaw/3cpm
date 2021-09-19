@@ -57,7 +57,7 @@ const ActiveDealsPage = () => {
                     <SyncToggles />
 
                     <div className="filters tableButtons" >
-                    <ToggleRefreshButton style={{ width: '250px', margin: '5px', height: '38px' }} />
+                    <ToggleRefreshButton style={{ width: '250px', margin: '5px', height: '38px' }} className={"ToggleRefreshButton"} />
                     <UpdateDataButton className="CtaButton" style={{ margin: '5px', height: '38px' }} disabled={true} />
                     </div>
 
