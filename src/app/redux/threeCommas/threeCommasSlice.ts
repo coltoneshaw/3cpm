@@ -28,12 +28,12 @@ export const threeCommasSlice = createSlice({
             // right now this will just merge the sync data.
             state.syncOptions = { ...action.payload, ...state.syncOptions }
         },
-        startAutoRefresh: (state) => {
-            state.autoRefresh.active = true
-        },
-        stopAutoRefresh: (state) => {
-            state.autoRefresh.active = false
-            resetAutoRefresh()
+        setAutoRefresh: (state, action: PayloadAction<boolean>) => {
+            if(!Boolean(action.payload) || !action.payload) return
+            state.autoRefresh.active = action.payload
+
+            // resetting the refresh state if it is being turned off
+            if(!action.payload) resetAutoRefresh()
         },
         trackAutoRefreshProgress: (state, action: PayloadAction<number>) => {
             state.autoRefresh.current += action.payload
@@ -80,6 +80,6 @@ export const threeCommasSlice = createSlice({
     }
 })
 
-export const { setData, setIsSyncing, setSyncData, startAutoRefresh, trackAutoRefreshProgress, stopAutoRefresh, resetAutoRefresh } = threeCommasSlice.actions;
+export const { setData, setIsSyncing, setSyncData, trackAutoRefreshProgress, setAutoRefresh, resetAutoRefresh } = threeCommasSlice.actions;
 
 export default threeCommasSlice.reducer

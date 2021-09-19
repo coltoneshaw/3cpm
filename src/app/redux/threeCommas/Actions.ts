@@ -6,7 +6,7 @@ import {
     setSyncData,
     trackAutoRefreshProgress,
     resetAutoRefresh,
-    stopAutoRefresh
+    setAutoRefresh
 } from '@/app/redux/threeCommas/threeCommasSlice'
 import { initialState } from '@/app/redux/threeCommas/initialState'
 
@@ -230,7 +230,9 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
 const refreshFunction = (method:string, offset?:number) => {
     const refreshRate = 50
 
-    if(!store.getState().threeCommas.autoRefresh.active) {
+    const {active, current, max} = store.getState().threeCommas.autoRefresh
+
+    if(!active) {
         store.dispatch(resetAutoRefresh())
         return
     }
@@ -238,7 +240,7 @@ const refreshFunction = (method:string, offset?:number) => {
 
     switch (method) {
         case 'stop' :
-            store.dispatch(stopAutoRefresh())
+            store.dispatch(setAutoRefresh(false))
             break
 
         case 'run' :
@@ -247,7 +249,7 @@ const refreshFunction = (method:string, offset?:number) => {
             setTimeout(() => {
                 store.dispatch(trackAutoRefreshProgress(refreshRate))
 
-                if (store.getState().threeCommas.autoRefresh.current < store.getState().threeCommas.autoRefresh.max) {
+                if (current < max) {
                     refreshFunction('run', offset)
                     return
                 }

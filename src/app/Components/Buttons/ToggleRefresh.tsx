@@ -6,7 +6,7 @@ import StopIcon from '@material-ui/icons/Stop';
 
 import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
 import {refreshFunction} from '@/app/redux/threeCommas/Actions'
-import {startAutoRefresh} from '@/app/redux/threeCommas/threeCommasSlice'
+import {setAutoRefresh} from '@/app/redux/threeCommas/threeCommasSlice'
 
 interface Type_ButtonProps {
     style?: object,
@@ -36,7 +36,7 @@ const ToggleRefreshButton = ({ style, className }: Type_ButtonProps) => {
                     return
                 }
 
-                dispatch(startAutoRefresh())
+                dispatch(setAutoRefresh(true))
                 refreshFunction('run', 200)
             }}
             disableElevation
