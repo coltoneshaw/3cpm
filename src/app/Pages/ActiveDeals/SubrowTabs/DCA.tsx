@@ -1,5 +1,6 @@
 import {Grid, TextField} from "@material-ui/core";
 import React, {useEffect} from "react";
+import {parseNumber} from '@/utils/number_formatting'
 
 function DCA({row, ordersData}:any) {
 
@@ -79,21 +80,21 @@ function DCA({row, ordersData}:any) {
         <tbody>
         <tr>
             <td>Original</td>
-            <td>{ originalAvg }</td>
-            <td>{ originalTPAt }</td>
-            <td>{ row.original.take_profit }%</td>
+            <td>{ parseNumber( originalAvg, 5) }</td>
+            <td>{ parseNumber( originalTPAt, 5) }</td>
+            <td>{ parseNumber( row.original.take_profit, 2) }%</td>
         </tr>
         <tr>
             <td>New</td>
-            <td>{ avg }</td>
-            <td>{ tpAt }</td>
-            <td>{ tpPercent}%</td>
+            <td>{ parseNumber( avg, 5) }</td>
+            <td>{ parseNumber(  tpAt, 5) }</td>
+            <td>{parseNumber(tpPercent, 2)}%</td>
         </tr>
         <tr>
             <td>Diff</td>
-            <td>{ originalAvg - avg }</td>
-            <td>{ originalTPAt - tpAt }</td>
-            <td>{ row.original.take_profit - tpPercent}%</td>
+            <td>{ parseNumber(  originalAvg - avg, 5) }</td>
+            <td>{ parseNumber(  originalTPAt - tpAt, 5) }</td>
+            <td>{parseNumber( row.original.take_profit - tpPercent, 2)}%</td>
         </tr>
         </tbody>
     </table>
