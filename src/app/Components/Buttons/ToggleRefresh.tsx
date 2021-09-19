@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import { Button, LinearProgress } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
@@ -22,14 +22,18 @@ import './ToggleRefresh.scss'
  */
 const ToggleRefreshButton = ({ style, className }: Type_ButtonProps) => {
     const {autoRefresh} = useAppSelector(state => state.threeCommas);
-    const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch();
+
+    const [localRefresh, updateLocalRefresh] = useState(() => autoRefresh)
+
+    useEffect(() => updateLocalRefresh(autoRefresh), [autoRefresh])
 
     return (
         <Button
             // variant="contained"
             // color="primary"
             className={className}
-            onClick={async () => {
+            onClick={() => {
                 // activate the interval timer here.
                 if(autoRefresh.active) {
                     refreshFunction('stop')
@@ -40,7 +44,7 @@ const ToggleRefreshButton = ({ style, className }: Type_ButtonProps) => {
                 refreshFunction('run', 200)
             }}
             disableElevation
-            startIcon={ (autoRefresh.active) ? <StopIcon /> : <PlayArrowIcon/> }
+            startIcon={ (localRefresh.active) ? <StopIcon /> : <PlayArrowIcon/> }
             style={{
                 ...style, 
                 backgroundColor: 'var(--color-primary)',

@@ -29,7 +29,6 @@ export const threeCommasSlice = createSlice({
             state.syncOptions = { ...action.payload, ...state.syncOptions }
         },
         setAutoRefresh: (state, action: PayloadAction<boolean>) => {
-            if(!Boolean(action.payload) || !action.payload) return
             state.autoRefresh.active = action.payload
 
             // resetting the refresh state if it is being turned off

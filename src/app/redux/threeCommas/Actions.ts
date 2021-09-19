@@ -249,7 +249,7 @@ const refreshFunction = (method:string, offset?:number) => {
             setTimeout(() => {
                 store.dispatch(trackAutoRefreshProgress(refreshRate))
 
-                if (current < max) {
+                if (current + refreshRate < max) {
                     refreshFunction('run', offset)
                     return
                 }
