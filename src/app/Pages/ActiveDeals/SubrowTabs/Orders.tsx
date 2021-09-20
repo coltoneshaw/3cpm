@@ -5,7 +5,8 @@ const dateFormatter = (dateString:string) => new Date(dateString).toLocaleDateSt
 
 function Orders({row, ordersData}: any) {
 
-    return ( <table className="table table-bordered table-striped RUBYDEV__deals_table_thead_border_fix">
+    return ( 
+    <table className="table table-bordered table-striped RUBYDEV__deals_table_thead_border_fix ">
         <thead>
         <tr>
             <th>Side</th>
@@ -18,18 +19,18 @@ function Orders({row, ordersData}: any) {
             <th className="hidden-xs">Updated</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody  className="dcaCalcTable">
         {ordersData.map((r:any) => (
             <tr key={"order-" + r.order_id}>
                 <td>{r.order_type}</td>
                 <td>{r.deal_order_type}</td>
                 <td>{r.status_string}</td>
-                <td>
+                <td  className=" monospace-cell" style={{textAlign: 'left'}}>
                     { r.order_type == "BUY" && (<>Desired: {parseNumber( r.rate, 5)}<br/>Real: {parseNumber( r.average_price, 5)}</>)}
                     { r.order_type == "SELL" && (<>{parseNumber( r.rate, 5)}</>)}
                 </td>
-                <td>{parseNumber( +r.quantity, 5)}</td>
-                <td>{parseNumber( r.total, 5)}</td>
+                <td className=" monospace-cell">{parseNumber( +r.quantity, 5)}</td>
+                <td className=" monospace-cell">{parseNumber( r.total, 5)}</td>
                 <td>{dateFormatter(r.created_at)}</td>
                 <td>{dateFormatter(r.updated_at)}</td>
             </tr>)
