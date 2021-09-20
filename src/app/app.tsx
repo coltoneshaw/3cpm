@@ -14,7 +14,7 @@ import UpdateBanner from './Features/UpdateBanner/UpdateBanner';
 
 import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
 import { updateConfig } from '@/app/redux/configActions';
-import { updateAllData } from './redux/threeCommas/Actions';
+import { updateAllDataQuery } from './redux/threeCommas/Actions';
 
 const App = () => {
   // const classes = useStyles();
@@ -29,7 +29,9 @@ const App = () => {
 
   }, [dispatch]);
 
-  // useEffect(() => {updateAllData(1000,currentProfile, 'fullSync', undefined );}, [currentProfile])
+  useEffect(() => {
+    if(currentProfile && currentProfile.statSettings && currentProfile.statSettings.reservedFunds.filter(a => a.is_enabled).length > 0) updateAllDataQuery(currentProfile);
+  }, [currentProfile])
 
   return (
     <HashRouter>

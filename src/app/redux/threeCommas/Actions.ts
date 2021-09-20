@@ -11,7 +11,7 @@ import {
 import { initialState } from '@/app/redux/threeCommas/initialState'
 
 import type { Type_Profile, Type_ReservedFunds } from '@/types/config';
-import type {Type_Query_PerfArray} from '@/types/3Commas'
+import type { Type_Query_PerfArray } from '@/types/3Commas'
 
 
 
@@ -52,7 +52,7 @@ const fetchAndStoreBotData = async (currentProfile: Type_Profile) => {
         await electron.api.updateBots(currentProfile)
 
         // @ts-ignore
-        botQuery(currentProfile)
+        return botQuery(currentProfile)
             .then(result => {
                 if (!result) return
                 dispatch_setBotData(result)
@@ -63,8 +63,8 @@ const fetchAndStoreBotData = async (currentProfile: Type_Profile) => {
     }
 }
 
-const fetchAndStoreProfitData = (profileData: Type_Profile) => {
-    fetchDealDataFunction(profileData)
+const fetchAndStoreProfitData = async (profileData: Type_Profile) => {
+    await fetchDealDataFunction(profileData)
         .then(data => {
             if (!data) return
             const { profitData, metrics } = data
@@ -73,9 +73,9 @@ const fetchAndStoreProfitData = (profileData: Type_Profile) => {
         })
 }
 
-const fetchAndStorePerformanceData = (profileData: Type_Profile) => {
+const fetchAndStorePerformanceData = async (profileData: Type_Profile) => {
 
-    fetchPerformanceDataFunction(undefined, profileData)
+    await fetchPerformanceDataFunction(undefined, profileData)
         .then(((data: Type_Query_PerfArray[]) => {
             if (!data || data.length === 0) return
             console.log('updated Performance Data!')
@@ -92,14 +92,14 @@ const fetchAndStorePerformanceData = (profileData: Type_Profile) => {
 
         }))
 
-    fetchBotPerformanceMetrics(undefined, profileData)
+    await fetchBotPerformanceMetrics(undefined, profileData)
         .then((data => {
             if (!data) return
             console.log('getting bot performance metrics')
             dispatch_setPerformanceData({ bot: data })
         }))
 
-    fetchPairPerformanceMetrics(undefined, profileData)
+    await fetchPairPerformanceMetrics(undefined, profileData)
         .then((data => {
             if (!data) return
             console.log('getting bot performance metrics')
@@ -107,8 +107,8 @@ const fetchAndStorePerformanceData = (profileData: Type_Profile) => {
         }))
 }
 
-const fetchAndStoreActiveDeals = (profileData: Type_Profile) => {
-    getActiveDealsFunction(profileData)
+const fetchAndStoreActiveDeals = async (profileData: Type_Profile) => {
+    await getActiveDealsFunction(profileData)
         .then(data => {
             if (!data) return
             console.log('updated active deals and related metrics!')
@@ -121,8 +121,8 @@ const fetchAndStoreActiveDeals = (profileData: Type_Profile) => {
         })
 }
 
-const fetchAndStoreAccountData = (profileData: Type_Profile) => {
-    getAccountDataFunction(profileData)
+const fetchAndStoreAccountData = async (profileData: Type_Profile) => {
+    return getAccountDataFunction(profileData)
         .then(data => {
             if (!data || !data.accountData || data.accountData.length === 0) return
             const { accountData, balance } = data
@@ -138,7 +138,7 @@ const fetchAndStoreAccountData = (profileData: Type_Profile) => {
 const undefToZero = (value: number | undefined) => ((value) ? value : 0)
 
 const calculateMetrics = () => {
-    const {config, threeCommas} = store.getState()
+    const { config, threeCommas } = store.getState()
     const { maxRisk, totalBoughtVolume, position, on_orders } = threeCommas.metricsData
     const reservedFundsArray = <Type_ReservedFunds[]>config.currentProfile.statSettings.reservedFunds
 
@@ -186,64 +186,68 @@ const calculateMetrics = () => {
  */
 
 
-const updateAllData = async (offset: number = 1000, profileData: Type_Profile, type: 'autoSync' | 'fullSync', callback?: CallableFunction, ) => {
+const updateAllData = async (offset: number = 1000, profileData: Type_Profile, type: 'autoSync' | 'fullSync', callback?: CallableFunction) => {
 
     const syncOptions = store.getState().threeCommas.syncOptions
     store.dispatch(setIsSyncing(true))
 
-        let syncCount = (syncOptions.syncCount) ? syncOptions.syncCount : 0
+    let syncCount = (syncOptions.syncCount) ? syncOptions.syncCount : 0
 
-        const options = {
-            syncCount,
-            summary: (syncOptions.summary) ? syncOptions.summary : false,
-            notifications: (syncOptions.notifications) ? syncOptions.notifications : false,
-            time: (syncOptions.time) ? syncOptions.time : 0,
-            offset
-        }
+    const options = {
+        syncCount,
+        summary: (syncOptions.summary) ? syncOptions.summary : false,
+        notifications: (syncOptions.notifications) ? syncOptions.notifications : false,
+        time: (syncOptions.time) ? syncOptions.time : 0,
+        offset
+    }
 
-        try {
-            await updateThreeCData(type, options, profileData)
-                .then(async () => {
-                    fetchAndStoreBotData(profileData),
-                    fetchAndStoreProfitData(profileData),
-                    fetchAndStorePerformanceData(profileData),
-                    fetchAndStoreActiveDeals(profileData),
-                    fetchAndStoreAccountData(profileData)
-                })
-                .then(() => { 
-                    calculateMetrics()
-                    store.dispatch(setSyncData({
-                        syncCount: syncCount++,
-                        time: options.time + 15000
-                    }))
-                })
-            
-        } catch (error) {
-            console.error(error)
-            alert('Error updating your data. Check the console for more information.')
-        } finally {
-            if(callback) callback()
-            store.dispatch(setIsSyncing(false))
-        }
+    try {
+        await updateThreeCData(type, options, profileData)
+            .then(async () => updateAllDataQuery(profileData))
+            .then(() => {
+                store.dispatch(setSyncData({
+                    syncCount: syncCount++,
+                    time: options.time + 15000
+                }))
+            })
+
+    } catch (error) {
+        console.error(error)
+        alert('Error updating your data. Check the console for more information.')
+    } finally {
+        if (callback) callback()
+        store.dispatch(setIsSyncing(false))
+    }
 }
 
-const refreshFunction = (method:string, offset?:number) => {
+const updateAllDataQuery = (profileData: Type_Profile) => {
+    Promise.all([fetchAndStoreBotData(profileData),
+        fetchAndStoreProfitData(profileData),
+        fetchAndStorePerformanceData(profileData),
+        fetchAndStoreActiveDeals(profileData),
+        fetchAndStoreAccountData(profileData)])
+        .then(() => calculateMetrics())
+
+    
+}
+
+const refreshFunction = (method: string, offset?: number) => {
     const refreshRate = 50
 
-    const {active, current, max} = store.getState().threeCommas.autoRefresh
+    const { active, current, max } = store.getState().threeCommas.autoRefresh
 
-    if(!active) {
+    if (!active) {
         store.dispatch(resetAutoRefresh())
         return
     }
 
 
     switch (method) {
-        case 'stop' :
+        case 'stop':
             store.dispatch(setAutoRefresh(false))
             break
 
-        case 'run' :
+        case 'run':
             const profileData = store.getState().config.currentProfile
 
             setTimeout(() => {
@@ -274,5 +278,6 @@ export {
     fetchAndStoreActiveDeals,
     fetchAndStoreAccountData,
     updateAllData,
-    refreshFunction
+    refreshFunction,
+    updateAllDataQuery
 }
