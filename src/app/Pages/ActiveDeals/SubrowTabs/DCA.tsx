@@ -70,7 +70,7 @@ function DCA({ row, ordersData }: any) {
         </Grid>
 
 
-        <table style={{ marginTop: "2rem", tableLayout: 'fixed', width: '50%', margin: 'auto'}}>
+        <table style={{tableLayout: 'fixed', width: '50%', margin: 'auto',  marginTop: "2rem", }}>
             <thead>
                 <tr>
                     <th></th>
