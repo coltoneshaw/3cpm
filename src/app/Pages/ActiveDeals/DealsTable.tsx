@@ -12,7 +12,7 @@ const returnErrorTooltip = (errorMessage: string, value: string) => {
 
     return (
         <CardTooltip title={<> <strong>Error: </strong>{errorMessage} </>} >
-            < span className=" monospace-cell" style={{ color: 'var(--color-red)' }}>{value}</span>
+            < span className=" monospace-cell" style={{ color: 'var(--color-red)', fontWeight: 700 }}>{value}</span>
         </CardTooltip>
     )
 }
