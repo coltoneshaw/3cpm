@@ -214,7 +214,8 @@ function DealsTable({ data }: { data: object[] }) {
                     // onClick: () => setSort(column.id),
                     style: {
                         height: '44px',
-                        backgroundColor: 'var(--color-secondary-light87)'
+                        backgroundColor: 'var(--color-secondary-light87)',
+                        zIndex: '1000'
                     },
 
                 })}
