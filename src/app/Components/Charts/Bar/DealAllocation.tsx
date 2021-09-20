@@ -10,21 +10,22 @@ import NoData from '@/app/Pages/Stats/Components/NoData';
 
 const DealAllocationBar = ( {title, data = []}: Type_DealPerformanceCharts) => {
 
+    let localData = [...data]
         const renderChart = () => {
 
-            if (data.length === 0) {
+            if (localData.length === 0) {
                 return (<NoData />)
             }
 
             // removing everything over a specific percent of total volume.
-            data = data.filter( row => row.percentTotalVolume > .15)
+            localData = localData.filter( row => row.percentTotalVolume > .15)
                 .sort(dynamicSort("-percentTotalProfit"))
             return (
                 <ResponsiveContainer width="100%" minHeight="300px">
                     <BarChart
                         width={500}
                         height={200}
-                        data={data}
+                        data={localData}
 
                         stackOffset="expand"
                     >

@@ -3,10 +3,20 @@ import { CustomTable } from '@/app/Components/DataTable/Index'
 import { getDateString } from '@/utils/helperFunctions';
 import { parseNumber } from '@/utils/number_formatting';
 import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+import CardTooltip from '@/app/Components/Charts/DataCards/CustomToolTip';
 
 
 import Styles from './StyledDiv'
 import SubRowAsync from "@/app/Pages/ActiveDeals/Subrow";
+
+const returnErrorTooltip = (errorMessage: string, value: string) => {
+
+    return (
+        <CardTooltip title={<> <strong>Error: </strong>{errorMessage} </>} >
+            < span className=" monospace-cell" style={{ color: 'var(--color-red)', fontWeight: 700 }}>{value}</span>
+        </CardTooltip>
+    )
+}
 
 
 function DealsTable({ data }: { data: object[] }) {
@@ -119,12 +129,24 @@ function DealsTable({ data }: { data: object[] }) {
             {
                 Header: 'Active SO',
                 accessor: 'current_active_safety_orders',
-                style: { textAlign: 'center' },
+                style: {
+                    textAlign: 'center',
+                },
+                Cell: ({ cell }: any) => {
+                    if (cell.row.original.deal_has_error == 1) return returnErrorTooltip(cell.row.original.error_message, cell.value);
+                    return < span className=" monospace-cell">{cell.value}</span>
+                },
             },
             {
                 Header: '# SO',
                 accessor: 'safetyOrderString',
-                style: { textAlign: 'center' },
+                style: {
+                    textAlign: 'center'
+                },
+                Cell: ({ cell }: any) => {
+                    if (cell.row.original.deal_has_error == 1) return returnErrorTooltip(cell.row.original.error_message, cell.value);
+                    return < span className=" monospace-cell">{cell.value}</span>
+                },
             },
 
             {

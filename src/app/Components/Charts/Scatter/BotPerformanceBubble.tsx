@@ -50,25 +50,25 @@ const BotPerformanceBubble = ({ title, data = [] }: Type_BotPerformanceCharts) =
     }
 
     const filterData = (data: Type_Bot_Performance_Metrics[] ) => {
-        data = data.sort(dynamicSort('-total_profit'));
-        const length = data.length;
+        let localData = [...data].sort(dynamicSort('-total_profit'));
+        const length = localData.length;
         const fiftyPercent = length / 2
         const twentyPercent = length / 5
 
         if (filter === 'top20')  {
-            data = data.sort(dynamicSort('-total_profit'));
-            return data.filter( (bot, index) => index < twentyPercent)
+            localData = localData.sort(dynamicSort('-total_profit'));
+            return localData.filter( (bot, index) => index < twentyPercent)
         } else if (filter === 'top50')  {
-            data = data.sort(dynamicSort('-total_profit'));
-            return data.filter( (bot, index) => index < fiftyPercent)
+            localData = localData.sort(dynamicSort('-total_profit'));
+            return localData.filter( (bot, index) => index < fiftyPercent)
         } else if (filter === 'bottom50')  {
-            data = data.sort(dynamicSort('total_profit'));
-            return data.filter( (bot, index) => index < fiftyPercent)
+            localData = localData.sort(dynamicSort('total_profit'));
+            return localData.filter( (bot, index) => index < fiftyPercent)
         } else if (filter === 'bottom20') {
-            data = data.sort(dynamicSort('total_profit'));
-            return data.filter((bot, index) => index < twentyPercent)
+            localData = localData.sort(dynamicSort('total_profit'));
+            return localData.filter((bot, index) => index < twentyPercent)
         }
-        return data;
+        return localData;
 
 
     }
@@ -79,7 +79,7 @@ const BotPerformanceBubble = ({ title, data = [] }: Type_BotPerformanceCharts) =
         }
 
         // sort this by the index
-        const localData = filterData(data);
+        let localData = filterData([...data]);
 
         return (<ResponsiveContainer width="100%" height="100%" minHeight="400px">
 

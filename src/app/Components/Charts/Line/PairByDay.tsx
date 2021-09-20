@@ -24,7 +24,7 @@ interface pairByDate {
 
 
 const PairPerformanceByDate = ({ datePair }: { datePair: DateRange }) => {
-    const { config, currentProfile } = useAppSelector(state => state.config);
+    const { currentProfile } = useAppSelector(state => state.config);
     const [localData, updateLocalData] = useState<pairByDate[]>([]);
     const [pairs, updatePairs] = useState<{ pair: string, opacity: number }[]>([])
     const [pairFilters, updatePairFilters] = useState<string[]>([]);

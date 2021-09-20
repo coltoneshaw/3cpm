@@ -11,7 +11,7 @@ const formatDeals = (activeDeals: Type_ActiveDeals[]) => {
             safety_order_step_percentage, martingale_step_coefficient,
             current_price, take_profit_price,
             take_profit, base_order_volume, safety_order_volume, martingale_volume_coefficient,
-            bought_volume, bought_amount, completed_safety_orders_count, completed_manual_safety_orders_count
+            bought_volume, bought_amount, completed_safety_orders_count, completed_manual_safety_orders_count, trailing_deviation, trailing_enabled
 
         } = deal
 
@@ -20,6 +20,8 @@ const formatDeals = (activeDeals: Type_ActiveDeals[]) => {
 
         // let digits = 5;
         // if(bought_amount < 1) digits = 4
+
+        const ttp = (trailing_enabled) ? `(${trailing_deviation})` : ''
 
         return {
             ...deal,
@@ -33,7 +35,7 @@ const formatDeals = (activeDeals: Type_ActiveDeals[]) => {
             // the below values need to be formatted to the same length across all the data
             max_deviation: calc_deviation(max_safety_orders, safety_order_step_percentage, martingale_step_coefficient),
             // in_profit: actual_usd_profit > 0,
-            bot_settings: `TP: ${take_profit}, BO: ${base_order_volume}, SO: ${safety_order_volume}, SOS: ${safety_order_step_percentage}%, OS: ${martingale_volume_coefficient}, SS: ${martingale_step_coefficient}, MSTC: ${max_safety_orders}`,
+            bot_settings: `TP: ${take_profit} ${ttp}, BO: ${base_order_volume}, SO: ${safety_order_volume}, SOS: ${safety_order_step_percentage}%, OS: ${martingale_volume_coefficient}, SS: ${martingale_step_coefficient}, MSTC: ${max_safety_orders}`,
             bought_volume: (bought_volume != null) ? bought_volume.toFixed(2) : 0,
             // bought_amount: parseNumber( bought_amount, 5, true) + ' ' + pair,
             unrealized_profit: ( take_profit / 100 ) * bought_volume

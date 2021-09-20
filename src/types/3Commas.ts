@@ -21,7 +21,7 @@ export interface Type_Pair_Performance_Metrics {
     avg_deal_hours: number
 }
 
-export interface Type_Performance_Metrics {
+export type Type_Performance_Metrics = {
     pair_bot?: Type_Query_PerfArray[]
     bot?: Type_Bot_Performance_Metrics[]
     pair?: Type_Pair_Performance_Metrics[]
@@ -39,7 +39,7 @@ export interface Type_Bot_Performance_Metrics {
     type: string
 }
 
-export interface Type_Query_DealData {
+export type Type_Query_DealData = {
     final_profit: number,
     closed_at: string
     id: number
@@ -57,7 +57,7 @@ export type Type_Profit = {
 
 
 
-export interface Type_Deals {
+export type Type_Deals = {
     id: number // in use
     type: string // in use
     bot_id: number // in use
@@ -140,13 +140,13 @@ export interface Type_Deals {
 }
 
 
-export interface Type_ActiveDeals extends Type_Deals {
+export type Type_ActiveDeals = Type_Deals & {
     max_deal_funds: number
     bought_volume: number
     so_volume_remaining: number
 }
 
-export interface Type_Query_Accounts {
+export type Type_Query_Accounts = {
     currency_code: string
     id: number
     account_id: number
@@ -160,13 +160,13 @@ export interface Type_Query_Accounts {
     market_code: number
 }
 
-export interface Type_Pair_By_Date {
+export type Type_Pair_By_Date = {
     date: string
     pair: string
     profit: number
 }
 
-export interface Type_bots {
+export type Type_bots ={
     id: number | string
     origin: string
     account_id: number
@@ -215,7 +215,7 @@ export interface Type_bots {
     hide: boolean
 }
 
-export interface Type_Query_bots extends Type_bots {
+export type Type_Query_bots = Type_bots & {
     pairs: string
 }
 
@@ -223,7 +223,7 @@ export interface Type_API_bots extends Type_bots {
     pairs: string[]
 }
 
-export interface Type_MetricData {
+export type Type_MetricData = {
     activeDealCount: number
     totalProfit_perf: number
     totalDeals: number

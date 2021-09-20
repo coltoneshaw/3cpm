@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-import { useGlobalData } from '@/app/Context/DataContext';
+import { useAppSelector } from '@/app/redux/hooks';
 import { Type_Query_bots } from '@/types/3Commas';
 
 
@@ -17,9 +17,7 @@ import {
 // Need to import metric contexts here
 const Risk = ({ localBotData }: { localBotData: Type_Query_bots[] }) => {
 
-    const state = useGlobalData();
-    const { data: { metricsData: { totalBankroll, totalBoughtVolume, position, reservedFundsTotal } } } = state;
-
+    const { metricsData: {totalBankroll, totalBoughtVolume, position, reservedFundsTotal}} = useAppSelector(state => state.threeCommas);
     /**
      * Bankroll - sum, on_orders, position all added together. Needs to come from global state most likely.
      * risk - bank roll / total DCA risk

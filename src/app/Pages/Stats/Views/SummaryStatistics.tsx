@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAppSelector } from '@/app/redux/hooks';
 
 // material UI components
 import {Grid} from '@material-ui/core';
@@ -6,12 +7,12 @@ import {Grid} from '@material-ui/core';
 // custom charts
 import { SummaryProfitByDay } from '@/app/Components/Charts/Area'
 import { PairPerformanceBar, BotPerformanceBar, ProfitByDay } from '@/app/Components/Charts/Bar';
-import { useGlobalData } from '@/app/Context/DataContext';
 
 const SummaryStatistics = () => {
 
-    const state = useGlobalData();
-    const { data: { profitData, performanceData } } = state;
+    const { profitData, performanceData } = useAppSelector(state => state.threeCommas);
+
+
     return (
         <>
             <Grid container spacing={4}>

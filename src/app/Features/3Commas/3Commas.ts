@@ -24,10 +24,10 @@ const getFiltersQueryString = async (profileData?: Type_Profile) => {
         // @ts-ignore
         profileData = await <Type_Profile>electron.config.get('profile.' + currentProfileID)
 
-        console.log({profileData})
+        console.log({ profileData })
     }
 
-    const { general: {defaultCurrency}, statSettings: {reservedFunds, startDate}, id } = profileData
+    const { general: { defaultCurrency }, statSettings: { reservedFunds, startDate }, id } = profileData
 
     const currencyString = (defaultCurrency) ? defaultCurrency.map((b: string) => "'" + b + "'") : ""
     const startString = startDate
@@ -92,7 +92,9 @@ const fetchDealDataFunction = async (profileData?: Type_Profile) => {
             metrics: {
                 totalProfit: 0,
                 averageDailyProfit: 0,
-                averageDealHours: 0
+                averageDealHours: 0,
+                totalClosedDeals: 0,
+                totalDealHours: 0
             }
         }
     }
@@ -331,7 +333,7 @@ const fetchPairPerformanceMetrics = async (oDate?: DateRange, profileData?: Type
 }
 
 
-const getActiveDealsFunction = async (profileData?: Type_Profile) => {
+const getActiveDealsFunction = async (profileData: Type_Profile) => {
     const filtersQueryString = await getFiltersQueryString(profileData);
     const { currencyString, accountIdString, currentProfileID } = filtersQueryString;
     const query = `

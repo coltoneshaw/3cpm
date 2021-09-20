@@ -18,6 +18,7 @@ import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/Loca
 
 const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
 
+
     const defaultFilter = 'all';
     const defaultSort = '-total_profit';
 
@@ -54,26 +55,27 @@ const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
     }
 
     const filterData = (data: Type_Bot_Performance_Metrics[] ) => {
-        data = data.sort(dynamicSort('-total_profit'));
+        let newData = [...data]
+        newData = newData.sort(dynamicSort('-total_profit'));
         const length = data.length;
         const fiftyPercent = length / 2
         const twentyPercent = length / 5
 
         if (filter === 'top20')  {
-            data = data.sort(dynamicSort('-total_profit'));
-            return data.filter( (bot, index) => index < twentyPercent)
+            newData = newData.sort(dynamicSort('-total_profit'));
+            return newData.filter( (bot, index) => index < twentyPercent)
         } else if (filter === 'top50')  {
-            data = data.sort(dynamicSort('-total_profit'));
-            return data.filter( (bot, index) => index < fiftyPercent)
+            newData = newData.sort(dynamicSort('-total_profit'));
+            return newData.filter( (bot, index) => index < fiftyPercent)
         } else if (filter === 'bottom50')  {
-            data = data.sort(dynamicSort('total_profit'));
-            return data.filter( (bot, index) => index < fiftyPercent)
+            newData = newData.sort(dynamicSort('total_profit'));
+            return newData.filter( (bot, index) => index < fiftyPercent)
         } else if (filter === 'bottom20')  {
-            data = data.sort(dynamicSort('total_profit'));
-            return data.filter( (bot, index) => index < twentyPercent)
+            newData = newData.sort(dynamicSort('total_profit'));
+            return newData.filter( (bot, index) => index < twentyPercent)
         }
 
-        return data;
+        return newData;
     }
 
     const renderChart = () => {
@@ -81,12 +83,13 @@ const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
             return (<NoData />)
         }
 
-        data = filterData(data).sort(dynamicSort(sort))
+        let newData = filterData(data).sort(dynamicSort(sort))
+        // let newData = [...data]
         return (
         <ResponsiveContainer width="100%" height="90%" minHeight="800px">
             <ComposedChart
 
-                data={data}
+                data={newData}
                 margin={{
                     top: 25,
                     right: 0,

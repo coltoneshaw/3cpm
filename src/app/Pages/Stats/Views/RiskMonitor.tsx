@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAppSelector } from '@/app/redux/hooks';
 
 // material UI components
 import { Grid } from '@material-ui/core';
@@ -6,14 +7,12 @@ import { Grid } from '@material-ui/core';
 // custom charts
 import { DealSoUtilizationBar, SoDistribution } from '@/app/Components/Charts/Bar/index'
 import SpeedometerDiv from '@/app/Pages/Stats/Components/SpeedometerDiv';
-import { useGlobalData } from '@/app/Context/DataContext';
 
 
 
 const RiskMonitor = () => {
 
-    const state = useGlobalData();
-    const { data: { activeDeals, metricsData} } = state;
+    const { activeDeals, metricsData } = useAppSelector(state => state.threeCommas);
     return (
         <>
             <SpeedometerDiv

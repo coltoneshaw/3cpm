@@ -12,19 +12,26 @@ import { useThemeProvidor } from './Context/ThemeEngine';
 import UpdateBanner from './Features/UpdateBanner/UpdateBanner';
 
 
-import { useAppDispatch } from '@/app/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
 import { updateConfig } from '@/app/redux/configActions';
+import { updateAllDataQuery } from './redux/threeCommas/Actions';
 
 const App = () => {
   // const classes = useStyles();
 
   const themeEngine = useThemeProvidor();
+  const {currentProfile} = useAppSelector(state => state.config)
   const { styles } = themeEngine
   
   const dispatch = useAppDispatch()
   useEffect(() => {
     updateConfig();
-  }, [dispatch])
+
+  }, [dispatch]);
+
+  useEffect(() => {
+    if(currentProfile && currentProfile.statSettings && currentProfile.statSettings.reservedFunds.filter(a => a.is_enabled).length > 0) updateAllDataQuery(currentProfile);
+  }, [currentProfile])
 
   return (
     <HashRouter>

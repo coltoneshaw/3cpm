@@ -3,7 +3,7 @@ import DealsTable from './DealsTable';
 import { UpdateDataButton, ToggleRefreshButton } from '@/app/Components/Buttons/Index'
 import { formatDeals } from '@/app/Components/DataTable/Index'
 
-import { useGlobalData } from '@/app/Context/DataContext';
+import { useAppSelector } from '@/app/redux/hooks';
 import { Card_ActiveDeals, Card_totalInDeals, Card_ActiveDealReserve, Card_TotalDayProfit, Card_TotalUnrealizedProfit, Card_TotalRoi } from '@/app/Components/Charts/DataCards';
 import { SyncToggles } from './Components/index';
 
@@ -12,8 +12,7 @@ import './ActiveDeals.scss'
 
 const ActiveDealsPage = () => {
 
-    const dataState = useGlobalData()
-    let { data: { activeDeals, metricsData, profitData } } = dataState
+    const { activeDeals, metricsData, profitData} = useAppSelector(state => state.threeCommas);
 
     const todaysProfit = (profitData.length > 0) ? profitData[profitData.length - 1].profit : 0 
     const activeDealReserve = (activeDeals.length > 0) ? activeDeals.map( deal => deal.actual_usd_profit ).reduce( (sum, profit) => sum  + profit ) : 0;
@@ -58,7 +57,7 @@ const ActiveDealsPage = () => {
                     <SyncToggles />
 
                     <div className="filters tableButtons" >
-                    <ToggleRefreshButton style={{ width: '250px', margin: '5px', height: '38px' }} />
+                    <ToggleRefreshButton style={{ width: '250px', margin: '5px', height: '38px' }} className={"ToggleRefreshButton"} />
                     <UpdateDataButton className="CtaButton" style={{ margin: '5px', height: '38px' }} disabled={true} />
                     </div>
 

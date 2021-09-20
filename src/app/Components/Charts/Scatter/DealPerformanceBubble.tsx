@@ -37,14 +37,12 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
 
 
     const getPosition = (data: Type_Query_PerfArray[], metric: string) => {
-        data = data.sort(dynamicSort(metric))
+        let localData = [...data].sort(dynamicSort(metric))
 
-        const length = data.length
+        const length = localData.length
 
-        return data.map((entry, index) => {
-
+        return localData.map((entry, index) => {
             // @ts-ignore
-
             return <Cell key={entry.performance_id} fill={colors[Math.round((index / length) * (colors.length - 1))]} opacity={.8}/>
         })
 
@@ -55,7 +53,7 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
         if (data.length === 0) {
             return (<NoData/>)
         }
-        const newData = data
+        let localData = [...data]
             .filter(row => row.percentTotalVolume > 1.5)
 
         return (
@@ -101,8 +99,8 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
                         type="number"
                         dataKey="total_profit"
                         range={[
-                            Math.min(...newData.map(deal => deal.total_profit)) * 4,
-                            Math.max(...newData.map(deal => deal.total_profit)) * 4
+                            Math.min(...localData.map(deal => deal.total_profit)) * 4,
+                            Math.max(...localData.map(deal => deal.total_profit)) * 4
                         ]}
                         name="Bought Volume"/>
 
@@ -114,11 +112,11 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
                         // TODOD - pass props properly to the custom tool tip
                         content={<CustomTooltip/>}
                     />
-                    <Scatter name="Deal Performance" data={newData} isAnimationActive={false}>
+                    <Scatter name="Deal Performance" data={localData} isAnimationActive={false}>
                         {/* <LabelList dataKey="pair" /> */}
 
                         {
-                            getPosition(newData, sort)
+                            getPosition(localData, sort)
                         }
                     </Scatter>
                 </ScatterChart>
