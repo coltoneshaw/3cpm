@@ -12,8 +12,7 @@ import SubRowAsync from "@/app/Pages/ActiveDeals/Subrow";
 function DealsTable({ data }: { data: object[] }) {
     const localStorageSortName = storageItem.tables.DealsTable.sort;
 
-    const [localData, updateLocalData] = useState<object[]>([])
-
+    const [localData, updateLocalData] = useState<object[]>([]);
 
     useEffect(() => {
         updateLocalData(data)
@@ -26,13 +25,19 @@ function DealsTable({ data }: { data: object[] }) {
     const columns = React.useMemo(
         () => [
             {
-                Header: null,
                 accessor: 'id',
+                Header: ({ toggleAllRowsExpanded, rows}: { toggleAllRowsExpanded: any, rows: any[] }) => {
+                    return (
+                    <span onClick={() => toggleAllRowsExpanded(false)} style={{cursor: 'pointer'}}>
+                        X
+                    </span>
+                )},
                 Cell: ({ row }: any) => (
                     <span {...row.getToggleRowExpandedProps()}>
-                    {row.isExpanded ? '🔽' : '▶️'}
-                  </span>
+                        {row.isExpanded ? '🔽' : '▶️'}
+                    </span>
                 ),
+                disableSortBy: true
             },
             {
                 Header: 'Bot Name',
@@ -121,7 +126,7 @@ function DealsTable({ data }: { data: object[] }) {
                 accessor: 'safetyOrderString',
                 style: { textAlign: 'center' },
             },
-            
+
             {
                 Header: '$ Profit',
                 id: 'actual_usd_profit',

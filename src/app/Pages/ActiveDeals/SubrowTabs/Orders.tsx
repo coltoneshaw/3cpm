@@ -1,6 +1,8 @@
 import React from "react";
 import {parseNumber} from '@/utils/number_formatting'
 
+const dateFormatter = (dateString:string) => new Date(dateString).toLocaleDateString(undefined, { month: '2-digit', day: '2-digit' , year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'})
+
 function Orders({row, ordersData}: any) {
 
     return ( <table className="table table-bordered table-striped RUBYDEV__deals_table_thead_border_fix">
@@ -28,8 +30,8 @@ function Orders({row, ordersData}: any) {
                 </td>
                 <td>{parseNumber( +r.quantity, 5)}</td>
                 <td>{parseNumber( r.total, 5)}</td>
-                <td>{r.created_at}</td>
-                <td>{r.updated_at}</td>
+                <td>{dateFormatter(r.created_at)}</td>
+                <td>{dateFormatter(r.updated_at)}</td>
             </tr>)
         )}
         </tbody>
