@@ -2,8 +2,6 @@
 
 The 3C Portfolio Manager is an essential add-on to your 3Commas experience. It enables you to manage your DCA bots with greater analytics, real-time alerting, and tons of additional features. It's a downloadable desktop application that's supported across Mac OS, Windows, and Linux operating systems. We are always expanding and adding new features! You may have seen this before as the 3C Portfolio Manager. That Google Sheet was the project that paved the way for the success of this application.
 
-## 
-
 ### Supported Operating Systems
 
 * Debian:
