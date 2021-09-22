@@ -47,7 +47,6 @@ const OrderTimeline = ({row, ordersData}: {row: any, ordersData: Type_MarketOrde
                 <td className="monospace-cell">{(r.quantity) ? parseNumber( +r.quantity, 5) : '-'}</td>
                 <td className="monospace-cell">{(r.total) ? parseNumber( r.total, 5) : '-'}</td>
                 <td>{(r.created_at) ? dateFormatter(r.created_at) : ''}</td>
-                <td>{(r.updated_at) ? dateFormatter(r.updated_at): ''}</td>
             </tr>)
         )}
         </tbody>
