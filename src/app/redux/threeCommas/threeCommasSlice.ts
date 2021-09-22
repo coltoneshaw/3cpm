@@ -23,10 +23,9 @@ export const threeCommasSlice = createSlice({
             state.isSyncing = Boolean(action.payload)
         },
         setSyncData: (state, action: PayloadAction<Type_SyncData>) => {
-
             // TODO - need to figure out a way to handle this better when multiple things are syncing at the same time
             // right now this will just merge the sync data.
-            state.syncOptions = { ...action.payload, ...state.syncOptions }
+            state.syncOptions = { ...state.syncOptions, ...action.payload }
         },
         setAutoRefresh: (state, action: PayloadAction<boolean>) => {
             state.autoRefresh.active = action.payload
