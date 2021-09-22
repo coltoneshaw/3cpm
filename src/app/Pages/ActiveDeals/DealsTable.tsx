@@ -4,10 +4,9 @@ import { getDateString } from '@/utils/helperFunctions';
 import { parseNumber } from '@/utils/number_formatting';
 import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 import CardTooltip from '@/app/Components/Charts/DataCards/CustomToolTip';
-
+import {SubRowAsync} from './Components/index'
 
 import Styles from './StyledDiv'
-import SubRowAsync from "@/app/Pages/ActiveDeals/Subrow";
 
 const returnErrorTooltip = (errorMessage: string, value: string) => {
 

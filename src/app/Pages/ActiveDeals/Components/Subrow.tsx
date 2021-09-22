@@ -1,20 +1,20 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
-import {useAppSelector} from "@/app/redux/hooks";
+import { useAppSelector } from "@/app/redux/hooks";
 import Box from '@material-ui/core/Box';
 import Tab from '@material-ui/core/Tab';
 import TabContext from '@material-ui/lab/TabContext';
 import TabList from '@material-ui/lab/TabList';
 import TabPanel from '@material-ui/lab/TabPanel';
-import Orders from "@/app/Pages/ActiveDeals/SubrowTabs/Orders";
-import DCA from "@/app/Pages/ActiveDeals/SubrowTabs/DCA";
+import { OrderTimeline, DCA, Orders } from './SubrowTabs/Index'
+import type { Type_MarketOrders } from '@/types/3Commas'
 
 
 function SubRows({ row, visibleColumns, ordersData, loading }: any) {
     if (loading) {
         return (
             <tr>
-                <td/>
+                <td />
                 <td colSpan={visibleColumns.length - 1}>
                     Loading...
                 </td>
@@ -22,7 +22,7 @@ function SubRows({ row, visibleColumns, ordersData, loading }: any) {
         );
     }
 
-    const [activeTab, setActiveTab] = React.useState('orders');
+    const [activeTab, setActiveTab] = React.useState('timeline');
     const handleChange = (event: any, newValue: string) => {
         setActiveTab(newValue);
     };
@@ -30,12 +30,13 @@ function SubRows({ row, visibleColumns, ordersData, loading }: any) {
 
     return (
         <tr>
-            <td/>
+            <td />
             <td colSpan={visibleColumns.length - 1}>
                 <TabContext value={activeTab}>
 
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <TabList onChange={handleChange}>
+                            <Tab label="Timeline" value="timeline" />
                             <Tab label="Orders" value="orders" />
                             <Tab label="DCA" value="dca" />
                         </TabList>
@@ -46,6 +47,9 @@ function SubRows({ row, visibleColumns, ordersData, loading }: any) {
                     <TabPanel value="dca">
                         <DCA ordersData={ordersData} row={row} />
                     </TabPanel>
+                    <TabPanel value="timeline">
+                        <OrderTimeline ordersData={ordersData} row={row} />
+                    </TabPanel>
                 </TabContext>
             </td>
         </tr>
@@ -54,19 +58,19 @@ function SubRows({ row, visibleColumns, ordersData, loading }: any) {
 
 function SubRowAsync({ row, visibleColumns }: any) {
     const [loading, setLoading] = useState(true);
-    const [ordersData, setOrdersData] = useState([]);
+    const [ordersData, setOrdersData] = useState<Type_MarketOrders[] | any[]>([]);
 
-    const {currentProfile} = useAppSelector(state => state.config);
+    const { currentProfile } = useAppSelector(state => state.config);
 
     useEffect(() => {
         // @ts-ignore
         const getDealOrdersPromise = electron.api.getDealOrders(currentProfile, row.original.id)
 
-        Promise.all([getDealOrdersPromise]).then(([getDealOrdersResult]) => {
-            setOrdersData(getDealOrdersResult.reverse());
-
-            setLoading(false);
-        })
+        Promise.all([getDealOrdersPromise])
+            .then(([getDealOrdersResult]) => {
+                setOrdersData(getDealOrdersResult.reverse());
+                setLoading(false);
+            })
 
     }, []);
 
