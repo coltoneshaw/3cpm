@@ -12,7 +12,7 @@ import { initialState } from '@/app/redux/threeCommas/initialState'
 
 import type { Type_Profile, Type_ReservedFunds } from '@/types/config';
 import type { Type_Query_PerfArray } from '@/types/3Commas'
-
+import dotProp from 'dot-prop';
 
 
 // Utilities
@@ -185,9 +185,24 @@ const calculateMetrics = () => {
  * 
  */
 
+ const preSyncCheck = (profileData: Type_Profile) => {
+
+    if(!profileData || dotProp.has(profileData, 'profileData.apis.threeC') ||
+        dotProp.has(profileData, 'profileData.apis.threeC.key') || 
+        dotProp.has(profileData, 'profileData.apis.threeC.secret') || 
+        dotProp.has(profileData, 'profileData.apis.threeC.mode')
+    ) {
+            console.error('missing api keys or required profile')
+            return false
+        }
+
+    return profileData
+}
 
 const updateAllData = async (offset: number = 1000, profileData: Type_Profile, type: 'autoSync' | 'fullSync', callback?: CallableFunction) => {
 
+    if(!preSyncCheck(profileData)) return
+    
     const syncOptions = store.getState().threeCommas.syncOptions
     store.dispatch(setIsSyncing(true))
 
@@ -231,6 +246,8 @@ const updateAllDataQuery = (profileData: Type_Profile) => {
     
 }
 
+
+
 const refreshFunction = (method: string, offset?: number) => {
     const refreshRate = 50
 
@@ -242,13 +259,18 @@ const refreshFunction = (method: string, offset?: number) => {
     }
 
 
+
     switch (method) {
         case 'stop':
             store.dispatch(setAutoRefresh(false))
             break
 
         case 'run':
-            const profileData = store.getState().config.currentProfile
+            const profileData = preSyncCheck(store.getState().config.currentProfile)
+            if(!profileData)  {
+                refreshFunction('stop')
+                return
+            }
 
             setTimeout(() => {
                 store.dispatch(trackAutoRefreshProgress(refreshRate))

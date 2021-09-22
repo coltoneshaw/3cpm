@@ -67,14 +67,19 @@ const template = [
     submenu: [
       { role: 'reload' },
       { role: 'forceReload' },
-    //   {
-    //     label: 'Clear Cache and Reload',
-    //     accelerator: 'Shift+CmdOrCtrl+R',
-    //     click() {
+      {
+        label: 'Clear Local Storage',
+        click() {
+          BrowserWindow.getAllWindows().forEach(window =>{
+            window.webContents
+            .executeJavaScript('localStorage.clear();', true)
+            .then(() => {
+              window.reload()
+            });
 
-    //         win.reload();
-    //     },
-    // },
+          } )
+        },
+    },
       { role: 'toggleDevTools' },
       { type: 'separator' },
       { role: 'resetZoom' },

@@ -24,7 +24,6 @@ const getFiltersQueryString = async (profileData?: Type_Profile) => {
         // @ts-ignore
         profileData = await <Type_Profile>electron.config.get('profile.' + currentProfileID)
 
-        console.log({ profileData })
     }
 
     const { general: { defaultCurrency }, statSettings: { reservedFunds, startDate }, id } = profileData

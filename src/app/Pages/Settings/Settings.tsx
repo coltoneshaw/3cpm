@@ -50,7 +50,7 @@ const SettingsPage = () => {
     return (
         <>
             {/* <h1>Settings</h1> */}
-            <div className="settings-div boxData flex-column" style={{ overflow: "visible", margin: "auto" }}>
+            <div className="settings-div boxData flex-column" style={{ overflow: "auto", margin: "auto" }}>
                 <ProfileNameEditor  />
                 <ApiSettings />
                 <div className="flex-column settings-child">

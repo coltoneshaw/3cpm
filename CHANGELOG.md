@@ -1,3 +1,23 @@
+# v0.5.0
+
+## New Features
+- Save settings into a custom profile and fast swap between! Even supports multiple 3 Commas accounts.
+- Auto-refresh bar has a built in loading indicator
+- DCA calculator and order details built into every active deal!
+- Force paper or real account directly in the settings.
+
+## Enhancements
+- Enabled accounts are synced on every auto refresh, no more out of date data!
+- Update banner now differentiates between beta and general releases.
+- TTP has been added to the active deals bot name hover.
+- Active deals with an error have the `Active SO` and `# SO` in bold red with a tooltip hover to see the specific error message.
+- Adjusted wording on deal notifications if you lost money.
+- Reset all data is moved under Menu > Help > Delete All
+
+
+## Backend Changes
+- Entire data handling has been moved from React context API to Redux
+
 # v0.4.1
 
 ## New Features

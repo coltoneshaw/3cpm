@@ -21,7 +21,6 @@ async function updateAPI(type: string, options: Type_UpdateFunction, profileData
     return false
   }
 
-  log.debug(profileData)
 
   await deals(options.offset, type, profileData)
     .then((data: Type_Deals_API[]) => {
