@@ -73,7 +73,7 @@ const template = [
           BrowserWindow.getAllWindows().forEach(window =>{
             window.webContents
             .executeJavaScript('localStorage.clear();', true)
-            .then(result => {
+            .then(() => {
               window.reload()
             });
 
