@@ -9,6 +9,11 @@
 
 ## Developers
 
+* [3Commas API](developers/3commas-api.md)
 * [Setup a dev build](developers/setup-a-dev-build/README.md)
   * [Packaging the application](developers/setup-a-dev-build/packaging-the-application.md)
+
+---
+
+* [Changelog](changelog.md)
 
