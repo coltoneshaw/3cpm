@@ -187,10 +187,10 @@ const calculateMetrics = () => {
 
  const preSyncCheck = (profileData: Type_Profile) => {
 
-    if(!profileData || !dotProp.has(profileData, 'profileData.apis.threeC') ||
-        !dotProp.has(profileData, 'profileData.apis.threeC.key') || 
-        !dotProp.has(profileData, 'profileData.apis.threeC.secret') || 
-        !dotProp.has(profileData, 'profileData.apis.threeC.mode')
+    if(!profileData || dotProp.has(profileData, 'profileData.apis.threeC') ||
+        dotProp.has(profileData, 'profileData.apis.threeC.key') || 
+        dotProp.has(profileData, 'profileData.apis.threeC.secret') || 
+        dotProp.has(profileData, 'profileData.apis.threeC.mode')
     ) {
             console.error('missing api keys or required profile')
             return false
