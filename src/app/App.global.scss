@@ -14,11 +14,8 @@
 
  html, body, #root, .rootDiv {
    height: 100%;
-   /* // overflow: hidden; */
    margin: 0;
-   /* // overscroll-behavior: none; */
    min-height: 100vh;
-   /* min-height: 1000px; */
    min-width: 1200px;
    width: 100vw;
  }
@@ -62,8 +59,7 @@
      flex-grow: 1;
      background-color: var(--color-background);
      padding: 3%;
-     overflow: scroll;
-
+     overflow: auto;
      display: flex;
      flex-direction: column;
  }
@@ -117,24 +113,27 @@
   text-align: right;
 }
 
-
-
-// @import url('./Components/Pages/BotPlanner/BotPlanner.scss');
-// @import url('./Components/Pages/Settings/Settings.scss');
-// @import url('./Components/Pages/Stats/Stats.scss');
-// @import url('./Components/Charts/DataCards/Card.scss');
-// @import url('./Components/Sidebar/Sidebar.scss');
-// @import url('@/app/Pages/ActiveDeals/ActiveDeals.scss');
-
+/**
+Material Switch Overrides.
+**/
 
 .MuiSwitch-track{
   background-color: var(--color-secondary-light50) !important;
 }
 
 .Mui-checked + .MuiSwitch-track {
-  background-color: var(--color-primary-dark25) !important;
-
+  background-color: var(--color-green) !important;
 }
+
+.MuiSwitch-colorPrimary.Mui-checked + .MutiSwitch-track {
+  background-color: var(--color-secondary-light25) !important;
+}
+
+.MuiSwitch-thumb {
+  background-color: var(--color-secondary-light25) !important;
+}
+
+
 
 .MuiSelect-root,
 .MuiFormLabel-root,
@@ -142,6 +141,17 @@
 .MuiSelect-icon,
 .MuiIconButton-label {
   color: var(--color-text-lightbackground) !important;
+}
+
+
+.MuiInput-underline:before {
+  border-bottom: 1px solid var(--color-text-lightbackground)  !important;
+  opacity: .6 !important;
+}
+
+.MuiInput-underline:after {
+  border-bottom: 1px solid var(--color-CTA)  !important;
+  opacity: .6 !important;
 }
 
 
@@ -178,13 +188,6 @@
   border: 1px solid var(--color-CTA-light25) !important;
 }
 
-.MuiSwitch-colorPrimary.Mui-checked + .MutiSwitch-track {
-  background-color: var(--color-secondary-light25) !important;
-}
-
-.MuiSwitch-thumb {
-  background-color: var(--color-secondary) !important;
-}
 
 .MuiCheckbox-colorSecondary.Mui-checked,
 .MuiButton-textPrimary  {

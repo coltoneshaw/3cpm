@@ -54,11 +54,15 @@ const Styles = styled.div`
     
             :hover {
               input {
-                background-color: var(--color-secondary-light25);
-                color: var(--color-text-darkbackground);
+                background-color: var(--color-secondary-light25) !important;
+                color: var(--color-text-darkbackground) !important;
               }
                 background-color: var(--color-secondary-light25);
                 color: var(--color-text-darkbackground);
+
+                .MuiSwitch-thumb {
+                  background-color: darkgrey !important;
+                }
             }
         };
 
@@ -187,44 +191,23 @@ const ReservedBankroll = () => {
   }
 
   return (
-    <div style={{ display: 'flex', overflow: "visible", width: "100%", alignSelf: "center" }}>
+    <div style={{ display: 'flex', overflow: "none", width: "100%", alignSelf: "center" }}>
       <div className="settings-dataGrid"   >
 
         <Styles>
           <CustomTable
             columns={columns}
             data={reservedFunds}
-            autoResetSortBy={false}
-            // autoResetPage={false}
-            manualSortBy={true}
             updateReservedFunds={handleEditCellChangeCommitted}
-            // skipPageReset={skipPageReset}
-
             getHeaderProps={() => ({
-              // onClick: () => setSort(column.id),
               style: {
                 height: '44px',
-
               },
-
             })}
-
-            getColumnProps={() => ({
-
-            })}
-
-            getRowProps={() => ({
-
-            })}
+            getColumnProps={() => ({})}
+            getRowProps={() => ({})}
             //@ts-ignore
-            getCellProps={cellInfo => ({
-
-              style: {
-                color: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? (cellInfo.row.original.in_profit) ? 'var(--color-green)' : 'var(--color-red)' : null,
-                fontWeight: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? '600' : null
-              }
-
-            })}
+            getCellProps={cellInfo => ({})}
           />
         </Styles>
       </div>
