@@ -30,7 +30,7 @@ function Orders({row, ordersData}: any) {
                     { r.order_type == "SELL" && (<>{parseNumber( r.rate, 5)}</>)}
                 </td>
                 <td className=" monospace-cell">{parseNumber( +r.quantity, 5)}</td>
-                <td className=" monospace-cell">{parseNumber( r.total, 5)}</td>
+                <td className=" monospace-cell">{(r.total) ? parseNumber( r.total, 5): '-'}</td>
                 <td>{dateFormatter(r.created_at)}</td>
                 <td>{dateFormatter(r.updated_at)}</td>
             </tr>)
