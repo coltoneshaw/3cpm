@@ -275,9 +275,6 @@ const botQuery = async (currentProfile?: Type_Profile) => {
                     profile_id = '${currentProfileID}'
                     and (account_id in (${accountIdString})  OR origin = 'custom')`
 
-
-    // console.log(queryString)
-
     // @ts-ignore
     let databaseQuery = await electron.database.query(queryString);
 

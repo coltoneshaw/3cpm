@@ -15,20 +15,23 @@ interface Type_PieMetrics {
 const BalancePie = ({ title, metrics }:Type_PieMetrics) => {
 
 
-    const { availableBankroll, totalBoughtVolume, on_orders } = metrics
+    const { availableBankroll, totalBoughtVolume, on_orders, totalBankroll } = metrics
     const chartData = [{
         name: 'Available',
         metric: availableBankroll,
+        percent: (availableBankroll / totalBankroll) * 100,
         key: 1
     },
     {
         name: 'Limit Orders',
         metric: on_orders,
+        percent: (on_orders / totalBankroll) * 100,
         key: 2
     },
     {
         name: "Purchased",
         metric: totalBoughtVolume,
+        percent: (totalBoughtVolume / totalBankroll) * 100,
         key: 3
     }
 
@@ -82,11 +85,13 @@ function CustomTooltip({ active, payload }: Type_Tooltip) {
     if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
-    const {name, value} = payload[0]
+
+    const {name, metric, percent} = payload[0].payload
     return (
         <div className="tooltip">
             <h4>{name}</h4>
-            <p>${parseNumber(value)}</p>
+            <p>${parseNumber(metric)}</p>
+            <p>{(percent) ? percent.toFixed(2) : 0}%</p>
         </div>
     )
 }
