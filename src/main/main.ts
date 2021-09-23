@@ -127,7 +127,7 @@ ipcMain.handle('database-checkOrMakeTables', () => {
  * 
  */
 
- const { updateAPI, getAndStoreBotData, getAccountSummary } = require('@/main/3Commas/index')
+ const { updateAPI, getAndStoreBotData, getAccountSummary, getDealOrders } = require('@/main/3Commas/index')
  import {Type_Profile} from '@/types/config'
 
  ipcMain.handle('api-updateData', async (event, type, options, profileData?:Type_Profile) => {
@@ -137,7 +137,11 @@ ipcMain.handle('database-checkOrMakeTables', () => {
  ipcMain.handle('api-getAccountData', async (event, profileData: Type_Profile, key?:string, secret?:string, mode?:string) => {
   return await getAccountSummary(profileData, key, secret, mode)
 });
- 
+
+ipcMain.handle('api-getDealOrders', async (event, profileData: Type_Profile, deal_id: number) => {
+    return await getDealOrders(profileData, deal_id)
+});
+
 
  ipcMain.handle('api-getBots', async (event, profileData:Type_Profile) => {
    await getAndStoreBotData(profileData)

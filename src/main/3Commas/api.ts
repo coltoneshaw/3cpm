@@ -1,6 +1,6 @@
 const threeCommasAPI = require('./3commaslib');
 const log = require('electron-log');
-import { Type_API_bots, Type_Deals_API, Type_MarketOrders} from '@/types/3Commas'
+import { Type_API_bots, Type_Deals_API, Type_MarketOrders } from '@/types/3Commas'
 
 import { getProfileConfig, setProfileConfig, getProfileConfigAll } from '@/main/Config/config';
 
@@ -17,7 +17,7 @@ import { Type_Profile } from "@/types/config"
 
 
 
-const returnProfileData = (profileData?: Type_Profile ) => {
+const returnProfileData = (profileData?: Type_Profile) => {
   if (!profileData) profileData = getProfileConfigAll();
   return profileData;
 }
@@ -31,7 +31,7 @@ const returnProfileData = (profileData?: Type_Profile ) => {
  */
 const threeCapi = (profileData?: Type_Profile, key?: string, secret?: string, mode?: string) => {
 
-  if(!key || !secret || !mode){
+  if (!key || !secret || !mode) {
     const profile = returnProfileData(profileData)
     key = profile.apis.threeC.key
     secret = profile.apis.threeC.secret
@@ -52,7 +52,7 @@ const threeCapi = (profileData?: Type_Profile, key?: string, secret?: string, mo
 }
 
 
-async function bots(profileData?:Type_Profile) {
+async function bots(profileData?: Type_Profile) {
   const api = threeCapi(profileData)
   if (!api) return []
 
@@ -168,11 +168,47 @@ async function getMarketOrders(deal_id: number, profileData: Type_Profile) {
     }
   }
   return {
-      filled: <[] | Type_MarketOrders[]>manualSOs.filter(deal => deal.status_string === 'Filled'),
-      failed: <[] | Type_MarketOrders[]>manualSOs.filter(deal => deal.status_string === 'Cancelled'),
-      active: <[] | Type_MarketOrders[]>manualSOs.filter(deal => deal.status_string === 'Active')
-    }
-  
+    filled: <[] | Type_MarketOrders[]>manualSOs.filter(deal => deal.status_string === 'Filled'),
+    failed: <[] | Type_MarketOrders[]>manualSOs.filter(deal => deal.status_string === 'Cancelled'),
+    active: <[] | Type_MarketOrders[]>manualSOs.filter(deal => deal.status_string === 'Active')
+  }
+
+}
+
+/**
+ * @param profileData
+ * @param {number} deal_id The deal id of an active deal
+ *
+ * @param onlyManual
+ * @description Fetching market orders for bots that are active and have active market orders
+ * @api_docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/deals_api.md#deal-safety-orders-permission-bots_read-security-signed
+ */
+async function getDealOrders(profileData: Type_Profile, deal_id: number) {
+  const api = threeCapi(profileData)
+  if (!api) return false
+
+  // this is the /market_orders endpoint.
+
+  const data = await api.getDealSafetyOrders(deal_id)
+
+  return (!data) ? [] :
+    data.map((order: Type_MarketOrders) => {
+
+      // market orders do not use the rate metric, but active orders do not use the average price
+      const rate = (order.rate != 0) ? +order.rate : +order.average_price;
+
+      // total is blank for active deals. Calculating the total to be used within the app.
+      if(order.status_string === 'Active' && order.rate && order.quantity) order.total = rate * order.quantity
+      return {
+        ...order,
+        average_price: +order.average_price, // this is zero on sell orders
+        quantity: +order.quantity,
+        quantity_remaining: +order.quantity_remaining,
+        rate,
+        total: +order.total,
+      }
+    })
+
 }
 
 async function getActiveDeals(profileData?: Type_Profile) {
@@ -215,7 +251,7 @@ async function getDealsUpdate(perSyncOffset: number, type: string, profileData: 
 
 
 // TODO - refactor to not create it's own API instance here.
-async function getDealsThatAreUpdated(perSyncOffset: number, profileData:Type_Profile) {
+async function getDealsThatAreUpdated(perSyncOffset: number, profileData: Type_Profile) {
   const api = threeCapi(profileData)
   if (!api) return []
 
@@ -276,7 +312,7 @@ async function getDealsThatAreUpdated(perSyncOffset: number, profileData:Type_Pr
 }
 
 
-async function deals(offset: number, type: string, profileData:Type_Profile) {
+async function deals(offset: number, type: string, profileData: Type_Profile) {
   let deals = await getDealsUpdate(offset, type, profileData);
   let dealArray = [];
 
@@ -298,14 +334,14 @@ async function deals(offset: number, type: string, profileData:Type_Profile) {
     // this fix is for a bug in 3C where the active SO can be greater than 0 with max safety orders being lower which causes a mis calculation and ignoring all the SOs.
     max_safety_orders = Math.max(completed_safety_orders_count + current_active_safety_orders, max_safety_orders)
 
-    let market_order_data = <{filled: any[], failed: any[], active: any[]}>{filled: [], failed: [], active: []}
+    let market_order_data = <{ filled: any[], failed: any[], active: any[] }>{ filled: [], failed: [], active: [] }
 
     // This potentially adds a heavy API call to each sync, requiring it to hit the manual SO endpoint every sync.
     // fetching market order information for any deals that are not closed.
-    if (active_manual_safety_orders > 0 || completed_manual_safety_orders_count > 0){
+    if (active_manual_safety_orders > 0 || completed_manual_safety_orders_count > 0) {
       let fetched_market_order_data = await getMarketOrders(id, profileData)
-      if(fetched_market_order_data) market_order_data = fetched_market_order_data
-    } 
+      if (fetched_market_order_data) market_order_data = fetched_market_order_data
+    }
 
     let tempObject = {
 
@@ -341,12 +377,12 @@ async function deals(offset: number, type: string, profileData:Type_Profile) {
 
 
 /**
- * 
- * @returns 
- * 
+ *
+ * @returns
+ *
  * @docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/accounts_api.md#information-about-all-user-balances-on-specified-exchange--permission-accounts_read-security-signed
  */
-async function getAccountDetail(profileData:Type_Profile) {
+async function getAccountDetail(profileData: Type_Profile) {
   const api = threeCapi(profileData)
   if (!api) return false
 
@@ -356,7 +392,7 @@ async function getAccountDetail(profileData:Type_Profile) {
 
   const accountIDs = profileData.statSettings.reservedFunds.filter(a => a.is_enabled).map(a => a.id)
 
-  for (let account of accountData.filter((a:any) => accountIDs.includes(a.id))) {
+  for (let account of accountData.filter((a: any) => accountIDs.includes(a.id))) {
     // log.info('syncing the account ', account.id)
 
     // this loads the account balances from the exchange to 3C ensuring the numbers are updated
@@ -412,5 +448,6 @@ export {
   getAccountDetail,
   deals,
   bots,
-  getAccountSummary
+  getAccountSummary,
+  getDealOrders
 }

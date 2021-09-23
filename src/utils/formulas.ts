@@ -177,6 +177,37 @@ const calc_dropMetrics = (bankRoll:number, botData:Type_Query_bots[]) => {
      });
 }
 
+const calc_SafetyArray = (safety_order_volume:number , max_safety_orders:number , completed_safety_orders:number , martingale_volume_coefficient:number, martingale_step_coefficient:number, safety_order_step_percentage:number  ) => {
+    // setting the initial drawdown value.
+    let drawdown = +safety_order_step_percentage
+    let prevDeviation = +safety_order_step_percentage
+
+    const safetyArray = <any[]>[]
+
+    safetyArray.push({
+        so_count: 1,
+        deviation: prevDeviation,
+        volume: safety_order_volume
+    })
+
+    for (let so_count = 2; so_count <= +max_safety_orders; so_count++) {
+        let so_deviation = (prevDeviation * martingale_step_coefficient);
+        const volume = safety_order_volume * martingale_volume_coefficient ** (so_count - 1)
+
+        drawdown += so_deviation
+        prevDeviation = so_deviation
+
+        const safetyObject = {
+            so_count,
+            deviation: drawdown,
+            volume
+        }
+
+        safetyArray.push(safetyObject)
+    }
+    return safetyArray
+}
+
 export {
     calc_deviation,
     calc_DealMaxFunds_bot,
@@ -185,5 +216,6 @@ export {
     calc_dealHours,
     calc_maxBotFunds,
     calc_dropCoverage,
-    calc_dropMetrics
+    calc_dropMetrics,
+    calc_SafetyArray
 }

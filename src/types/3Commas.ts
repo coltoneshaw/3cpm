@@ -247,14 +247,20 @@ export type Type_MetricData = {
     totalMaxRisk: number // adding maxRisk and inactiveBotFunds together.
 }
 
-export interface Type_MarketOrders {
-    deal_order_type: any;
-    status_string: any;
+export type Type_MarketOrders = {
+    order_id: string
+    deal_order_type: string;
+    order_type: string // buy / sell
+    status_string: string;
     quantity: number;
     quantity_remaining: number;
     total: number;
     rate: number;
     average_price: number;
+    cancellable: boolean
+    created_at: string // ISO string
+    updated_at: string // ISO string
+
 }
 export interface Type_UpdateFunction{
     offset: number
