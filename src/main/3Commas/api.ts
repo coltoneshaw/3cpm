@@ -189,34 +189,26 @@ async function getDealOrders(profileData: Type_Profile, deal_id: number) {
 
   // this is the /market_orders endpoint.
 
-  const data = await api.getDealSafetyOrders(deal_id + "")
+  const data = await api.getDealSafetyOrders(deal_id)
 
-  const dealOrders = (!data) ? data :
+  return (!data) ? [] :
     data.map((order: Type_MarketOrders) => {
 
+      // market orders do not use the rate metric, but active orders do not use the average price
+      const rate = (order.rate != 0) ? +order.rate : +order.average_price;
+
       // total is blank for active deals. Calculating the total to be used within the app.
-      if(order.status_string === 'Active' && order.rate && order.quantity) order.total = order.rate * order.quantity
+      if(order.status_string === 'Active' && order.rate && order.quantity) order.total = rate * order.quantity
       return {
         ...order,
         average_price: +order.average_price, // this is zero on sell orders
         quantity: +order.quantity,
         quantity_remaining: +order.quantity_remaining,
-        rate: +order.rate,
+        rate,
         total: +order.total,
       }
     })
 
-  return dealOrders
-  // converting the numbers from strings to ints since 3C API returns only strings for these values
-  // .map((order: Type_MarketOrders) => {
-  //   return {
-  //     average_price: +order.average_price, // this is zero on sell orders
-  //     quantity: +order.quantity,
-  //     quantity_remaining: +order.quantity_remaining,
-  //     rate: +order.rate,
-  //     total: +order.total
-  //   }
-  // })
 }
 
 async function getActiveDeals(profileData?: Type_Profile) {
