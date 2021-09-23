@@ -10,7 +10,7 @@ interface Type_Card {
 
 /**
  * 
- * @param metric - accepts the `maxRisk` metric from the global data store.
+ * @param metric - accepts the `totalMaxRisk` metric from the global data store.
  */
 const Card_MaxDca = ({metric }:Type_Card) => {
 

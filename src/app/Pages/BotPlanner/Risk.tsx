@@ -32,6 +32,7 @@ const Risk = ({ localBotData }: { localBotData: Type_Query_bots[] }) => {
      * - Can move these calculations on to the data card itself to clean up these functions. That would mean not every card gets a metric since most are calculated.
      */
     let maxDCA = (enabledDeals.length > 0) ? enabledDeals.map(deal => deal.max_funds).reduce((sum, max) => sum + max) : 0;
+    // const inactiveBotFunds = result.map(r => r.enabled_inactive_funds).reduce((sum, funds) => sum + funds ) ?? 0;
 
     let risk = (maxDCA / totalBankroll) * 100
     let botCount = localBotData.filter(deal => deal.is_enabled).length
@@ -44,7 +45,7 @@ const Risk = ({ localBotData }: { localBotData: Type_Query_bots[] }) => {
     return (
         <div className="riskDiv activeDealCards" style={{ flex: 1 }}>
             <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
-            <Card_MaxRiskPercent metric={risk} additionalData={{ totalBankroll, maxDCA }}/>
+            <Card_MaxRiskPercent metric={risk} additionalData={{ totalBankroll, maxDCA, inactiveBotFunds: 0 }}/>
             <Card_EnabledBots metric={botCount} />
             <Card_MaxDca metric={maxDCA} />
             <Card_DropCoverage metric={dropCoverage} />

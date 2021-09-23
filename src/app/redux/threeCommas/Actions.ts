@@ -11,7 +11,7 @@ import {
 import { initialState } from '@/app/redux/threeCommas/initialState'
 
 import type { Type_Profile, Type_ReservedFunds } from '@/types/config';
-import type { Type_Query_PerfArray } from '@/types/3Commas'
+import type { Type_Query_bots, Type_Query_PerfArray } from '@/types/3Commas'
 import dotProp from 'dot-prop';
 
 
@@ -46,16 +46,20 @@ const dispatch_setBalanceData = (data: typeof initialState.balanceData) => store
  * These functions are responsible for fetching the related data from the local database, then updating the current state
  */
 
-const fetchAndStoreBotData = async (currentProfile: Type_Profile) => {
+const fetchAndStoreBotData = async (currentProfile: Type_Profile, update: boolean) => {
     try {
         // @ts-ignore
         await electron.api.updateBots(currentProfile)
 
         // @ts-ignore
         return botQuery(currentProfile)
-            .then(result => {
+            .then((result: Type_Query_bots[]) => {
                 if (!result) return
-                dispatch_setBotData(result)
+                if(update) dispatch_setBotData(result)
+
+                const inactiveBotFunds = result.map(r => r.enabled_inactive_funds).reduce((sum, funds) => sum + funds ) ?? 0;
+                // pull enabled_inactive_funds from the bots and add it to metrics.
+                dispatch_setMetricsData({inactiveBotFunds })
 
             })
     } catch (error) {
@@ -139,13 +143,13 @@ const undefToZero = (value: number | undefined) => ((value) ? value : 0)
 
 const calculateMetrics = () => {
     const { config, threeCommas } = store.getState()
-    const { maxRisk, totalBoughtVolume, position, on_orders } = threeCommas.metricsData
+    const { maxRisk, totalBoughtVolume, position, on_orders, inactiveBotFunds } = threeCommas.metricsData
     const reservedFundsArray = <Type_ReservedFunds[]>config.currentProfile.statSettings.reservedFunds
 
     const LOCAL_on_orders = undefToZero(on_orders)
     const LOCAL_position = undefToZero(position)
     const LOCAL_totalBoughtVolume = undefToZero(totalBoughtVolume)
-    const LOCAL_maxRisk = undefToZero(maxRisk)
+    const LOCAL_maxRisk = undefToZero(maxRisk + inactiveBotFunds)
 
     // Position = available + on orders.
     const reservedFundsTotal = (reservedFundsArray.length) ? reservedFundsArray.filter(account => account.is_enabled).map(account => account.reserved_funds).reduce((sum: number, item: number) => sum + item) : 0
@@ -160,10 +164,13 @@ const calculateMetrics = () => {
         totalBankroll,
         availableBankroll,
         totalInDeals,
-        reservedFundsArray
+        reservedFundsArray,
+        totalMaxRisk: LOCAL_maxRisk
     })
 
     // active sum already includes on_orders.
+
+    // TODO - May need to remove the `toFixed` here.
 
     dispatch_setMetricsData({
         maxRiskPercent: Number(((LOCAL_maxRisk / totalBankroll) * 100).toFixed(0)),
@@ -171,7 +178,8 @@ const calculateMetrics = () => {
         totalBankroll,
         availableBankroll,
         totalInDeals,
-        reservedFundsTotal
+        reservedFundsTotal,
+        totalMaxRisk: LOCAL_maxRisk
     })
 
 }
@@ -218,7 +226,7 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
 
     try {
         await updateThreeCData(type, options, profileData)
-            .then(async () => updateAllDataQuery(profileData))
+            .then(async () => updateAllDataQuery(profileData, type))
             .then(() => {
                 store.dispatch(setSyncData({
                     syncCount: syncCount++,
@@ -235,8 +243,10 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
     }
 }
 
-const updateAllDataQuery = (profileData: Type_Profile) => {
-    Promise.all([fetchAndStoreBotData(profileData),
+const updateAllDataQuery = (profileData: Type_Profile, type:string) => {
+
+    // if the type if fullSync this will store the bot data. If we store the bot data in the redux state it will overwrite any user changes. 
+    Promise.all([fetchAndStoreBotData(profileData, type ==='fullSync'),
         fetchAndStoreProfitData(profileData),
         fetchAndStorePerformanceData(profileData),
         fetchAndStoreActiveDeals(profileData),

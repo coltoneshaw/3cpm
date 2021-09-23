@@ -42,7 +42,9 @@ export const initialState = {
         availableBankroll: 0,
         reservedFundsTotal: 0,
         totalClosedDeals: 0,
-        totalDealHours: 0
+        totalDealHours: 0,
+        inactiveBotFunds: 0,
+        totalMaxRisk: 0
     },
     additionalData: [],
     isSyncing: false,

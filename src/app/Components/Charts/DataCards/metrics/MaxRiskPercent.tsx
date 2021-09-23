@@ -7,7 +7,7 @@ import { parseNumber } from "@/utils/number_formatting"
 
 interface Type_Card {
     metric: number,
-    additionalData: { maxDCA:number , totalBankroll:number }
+    additionalData: { maxDCA:number , totalBankroll:number, inactiveBotFunds:number }
 }
 
 /**
@@ -17,10 +17,10 @@ interface Type_Card {
  */
 const Card_MaxRiskPercent = ({metric, additionalData}:Type_Card) => {
 
-    const { totalBankroll, maxDCA } = additionalData;
+    const { totalBankroll, maxDCA, inactiveBotFunds } = additionalData;
 
     const title = "Risk %"
-    const message = descriptions.calculations.risk(maxDCA, totalBankroll)
+    const message = descriptions.calculations.risk(maxDCA, totalBankroll, inactiveBotFunds)
     const key = title.replace(/\s/g, '')
     return (
         <Card title={title} message={message} key={key} metric={ parseNumber( metric, 2) + "%"} />

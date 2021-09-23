@@ -12,7 +12,7 @@ import { Type_MetricData } from "@/types/3Commas";
 const RoiCards = ({ metricsData, currentView }: { currentView: string, metricsData: Type_MetricData }) => {
 
     const {
-        activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders,
+        activeDealCount, totalInDeals, maxRisk, inactiveBotFunds, totalMaxRisk, totalBankroll, position, on_orders,
         totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent, totalDeals,
         boughtVolume, totalProfit_perf, averageDailyProfit, averageDealHours, totalClosedDeals, totalDealHours } = metricsData
 
@@ -28,7 +28,7 @@ const RoiCards = ({ metricsData, currentView }: { currentView: string, metricsDa
         } else if (currentView === 'risk-monitor') {
             return (
                 <>
-                    <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{ totalBankroll, maxDCA: maxRisk }} />
+                    <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{ totalBankroll, maxDCA: maxRisk,  inactiveBotFunds }} />
                     <Card_ActiveDeals metric={activeDealCount} />
                     <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
                     <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
@@ -48,7 +48,7 @@ const RoiCards = ({ metricsData, currentView }: { currentView: string, metricsDa
     return (
         <div className="flex-column" style={{ alignItems: 'center' }}>
             <div className="riskDiv" style={{ paddingBottom: '32px' }}>
-                <Card_MaxDca metric={maxRisk} />
+                <Card_MaxDca metric={totalMaxRisk} />
                 <Card_TotalRoi additionalData={{ totalProfit, totalBankroll }} />
                 {additionalMetrics(currentView)}
             </div>

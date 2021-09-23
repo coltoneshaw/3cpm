@@ -180,7 +180,7 @@ export type Type_bots ={
     created_at?: string
     updated_at?: string
     enabled_active_funds?: number
-    enabled_inactive_funds?: number
+    enabled_inactive_funds: number
     finished_deals_count?: number
     finished_deals_profit_usd?: number
     from_currency: string
@@ -243,6 +243,8 @@ export type Type_MetricData = {
     reservedFundsTotal: number,
     totalClosedDeals: number, // total number of deals closed for the filtered time
     totalDealHours: number // this is the total hours in deals you have for the filtered time
+    inactiveBotFunds: number // this is active bots that have an open deal (inactive funds).
+    totalMaxRisk: number // adding maxRisk and inactiveBotFunds together.
 }
 
 export interface Type_MarketOrders {

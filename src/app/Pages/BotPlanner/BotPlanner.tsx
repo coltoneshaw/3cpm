@@ -67,7 +67,8 @@ const BotPlannerPage = () => {
         profit_currency: '',
         account_name: 'Fake Bot',
         account_id: 111111111,
-        active_deals_count: 0
+        active_deals_count: 0,
+        enabled_inactive_funds: 0
     }
 
     const addToTable = () => {
