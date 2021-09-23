@@ -3,8 +3,9 @@
 ## New Features
 - Save settings into a custom profile and fast swap between! Even supports multiple 3 Commas accounts.
 - Auto-refresh bar has a built in loading indicator
-- DCA calculator and order details built into every active deal!
+- DCA calculator, order details, and order timeline built into every active deal.
 - Force paper or real account directly in the settings.
+- Documentation on docs.3cpm.io along with a link in the sidebar!
 
 ## Enhancements
 - Enabled accounts are synced on every auto refresh, no more out of date data!
@@ -13,6 +14,13 @@
 - Active deals with an error have the `Active SO` and `# SO` in bold red with a tooltip hover to see the specific error message.
 - Adjusted wording on deal notifications if you lost money.
 - Reset all data is moved under Menu > Help > Delete All
+- Added a clear all local storage under Menu > Edit
+- Adjusted metrics to be ordered the same across stats.
+
+## Bugs
+- Fixed a few spelling mistakes across the app
+- Fixed the max risk bar from overflowing if over 400% risk.
+- Updated unnecessary scroll bars across the app
 
 
 ## Backend Changes

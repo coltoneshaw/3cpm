@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { FormControlLabel, Checkbox} from '@material-ui/core';
+import { FormControlLabel, Checkbox } from '@material-ui/core';
 
 import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
 import { setSyncData } from "@/app/redux/threeCommas/threeCommasSlice";
@@ -13,19 +13,19 @@ import { Type_SyncOptions } from "@/types/3Commas";
  */
 const SyncToggles = () => {
 
-    const { syncOptions, autoRefresh} = useAppSelector(state => state.threeCommas);
+    const { syncOptions, autoRefresh } = useAppSelector(state => state.threeCommas);
     const dispatch = useAppDispatch()
 
     const [summary, setSummary] = useState(() => syncOptions.summary)
     const [notifications, setNotifications] = useState(() => syncOptions.notifications)
 
     const changeSummary = (event: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(setSyncData({summary: event.target.checked}))
+        dispatch(setSyncData({ summary: event.target.checked }))
     }
 
 
-    const changeNotifications = (event: React.ChangeEvent<HTMLInputElement>) =>  {
-        dispatch(setSyncData({notifications: event.target.checked}))
+    const changeNotifications = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setSyncData({ notifications: event.target.checked }))
     }
 
     useEffect(() => {
@@ -36,33 +36,34 @@ const SyncToggles = () => {
 
     return (
         <div className="syncToggles">
-        <FormControlLabel
-            control={
-                <Checkbox
-                    checked={summary}
-                    onChange={changeSummary}
-                    name="summary"
-                    style={{color: 'var(--color-secondary)'}}
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={notifications}
+                        onChange={changeNotifications}
+                        name="notifications"
+                        color="primary"
+                        style={{ color: 'var(--color-secondary)' }}
 
-                />
-            }
-            label="Summary Notifications"
-        />
+                    />
+                }
+                label="Enable Notifications"
 
-        <FormControlLabel
-            control={
-                <Checkbox
-                    checked={notifications}
-                    onChange={changeNotifications}
-                    name="notifications"
-                    color="primary"
-                    style={{color: 'var(--color-secondary)'}}
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={summary}
+                        onChange={changeSummary}
+                        name="summary"
+                        style={{ color: 'var(--color-secondary)' }}
 
-                />
-            }
-            label="Enable Notifications"
+                    />
+                }
+                label="Summarize Notifications"
+            />
 
-        />
+
         </div>
     )
 }
