@@ -12,7 +12,7 @@ import {
     ListItemText,
     Checkbox,
     Input
-} from '@material-ui/core';
+} from '@mui/material';
 
 // initializing a state for each of the two props that we are using.
 const ITEM_HEIGHT = 48;

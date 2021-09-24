@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Switch, Checkbox } from '@material-ui/core';
-import { Delete as DeleteIcon } from '@material-ui/icons';
+import { Switch, Checkbox } from '@mui/material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 import styled from 'styled-components'
 
 import { useAppSelector } from '@/app/redux/hooks';

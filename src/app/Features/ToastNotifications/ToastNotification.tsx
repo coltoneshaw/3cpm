@@ -1,7 +1,7 @@
 import React from 'react';
-import {Snackbar, IconButton} from '@material-ui/core';
+import {Snackbar, IconButton} from '@mui/material';
 
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface Type_Snack {
     open: boolean

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAppSelector } from '@/app/redux/hooks';
 
 import './Stats.scss'
-import { Button, ButtonGroup } from '@material-ui/core';
+import { Button, ButtonGroup } from '@mui/material';
 
 import { RiskMonitor, SummaryStatistics, PerformanceMonitor } from './Views/Index';
 import { UpdateDataButton } from '@/app/Components/Buttons/Index'

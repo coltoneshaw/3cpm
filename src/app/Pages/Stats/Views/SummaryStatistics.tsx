@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppSelector } from '@/app/redux/hooks';
 
 // material UI components
-import {Grid} from '@material-ui/core';
+import {Grid} from '@mui/material';
 
 // custom charts
 import { SummaryProfitByDay } from '@/app/Components/Charts/Area'

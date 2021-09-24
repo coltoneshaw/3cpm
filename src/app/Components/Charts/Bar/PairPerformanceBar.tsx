@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Scatter,Legend, ResponsiveContainer, Line, Label } from 'recharts';
-import { InputLabel, MenuItem, FormControl, Select } from '@material-ui/core';
+import { InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
 

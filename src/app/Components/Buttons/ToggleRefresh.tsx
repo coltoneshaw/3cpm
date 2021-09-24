@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 
-import { Button, LinearProgress } from '@material-ui/core';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import StopIcon from '@material-ui/icons/Stop';
+import { Button, LinearProgress } from '@mui/material';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
 
 import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
 import {refreshFunction} from '@/app/redux/threeCommas/Actions'

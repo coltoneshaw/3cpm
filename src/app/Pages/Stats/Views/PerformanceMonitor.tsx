@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { useAppSelector } from '@/app/redux/hooks';
 
 // material UI components
-import {Grid} from '@material-ui/core';
+import {Grid} from '@mui/material';
 
 // custom charts
 import {BotPerformanceBubble, DealPerformanceBubble} from '@/app/Components/Charts/Scatter';

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 
 import { useAppSelector } from "@/app/redux/hooks";
-import Box from '@material-ui/core/Box';
-import Tab from '@material-ui/core/Tab';
-import TabContext from '@material-ui/lab/TabContext';
-import TabList from '@material-ui/lab/TabList';
-import TabPanel from '@material-ui/lab/TabPanel';
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import { OrderTimeline, DCA, Orders } from './SubrowTabs/Index'
 import type { Type_MarketOrders } from '@/types/3Commas'
 

@@ -4,7 +4,7 @@ import {  useAppSelector } from '@/app/redux/hooks';
 import {  configPaths } from '@/app/redux/configSlice'
 import { updateReservedFundsArray, updateNestedEditingProfile } from '@/app/redux/configActions';
 
-import { TextField, Button, InputLabel, FormControl, MenuItem, Select } from '@material-ui/core';
+import { TextField, Button, InputLabel, FormControl, MenuItem, Select } from '@mui/material';
 
 import { Type_ApiKeys, Type_Profile, Type_ReservedFunds } from '@/types/config'
 
@@ -72,14 +72,18 @@ const ApiSettings = () => {
             </div>
 
             <div className=" flex-row" style={{ paddingBottom: "25px" }} >
-                <FormControl style={{ marginRight: "15px", flexBasis: "50%" }}>
+                <FormControl style={{ flexBasis: "50%" }} fullWidth>
                     <InputLabel id="mode-label">Mode</InputLabel>
                     <Select
                         labelId="mode-label"
                         id="mode"
                         name="mode"
+                        label="Mode"
                         value={apiData.mode}
                         onChange={handleChange}
+                        style={{
+                            marginRight: '15px'
+                        }}
                     >
                         <MenuItem value={"real"}>Real</MenuItem>
                         <MenuItem value={"paper"}>Paper</MenuItem>

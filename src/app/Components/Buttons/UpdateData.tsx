@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import { Button } from '@material-ui/core';
-import SyncIcon from '@material-ui/icons/Sync';
+import { Button } from '@mui/material';
+import SyncIcon from '@mui/icons-material/Sync';
 
 import { useAppSelector } from '@/app/redux/hooks';
 import {updateAllData} from '@/app/redux/threeCommas/Actions'

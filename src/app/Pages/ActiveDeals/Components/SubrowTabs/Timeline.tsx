@@ -3,7 +3,7 @@ import { parseNumber } from '@/utils/number_formatting'
 import { dynamicSort } from "@/utils/helperFunctions";
 import type { Type_MarketOrders, Type_Deals } from '@/types/3Commas'
 import { calc_SafetyArray } from "@/utils/formulas";
-import { FormControlLabel, Checkbox } from '@material-ui/core';
+import { FormControlLabel, Checkbox } from '@mui/material';
 
 const dateFormatter = (dateString: string) => new Date(dateString).toLocaleDateString(undefined, { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })
 
