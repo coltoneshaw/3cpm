@@ -161,6 +161,7 @@ const BotPerformanceBubble = ({ title, data = [] }: Type_BotPerformanceCharts) =
                     <FormControl  >
                         <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
                         <Select
+                            variant="standard"
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={filter}

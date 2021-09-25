@@ -2,7 +2,6 @@ import { getTime, parseISO, formatISO, isValid, startOfDay, addMinutes } from 'd
 import { utcToZonedTime } from 'date-fns-tz';
 
 import React, { useState, useEffect } from 'react';
-import DateAdapter from '@mui/lab/AdapterDateFns';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { TextField, FormControl } from '@mui/material';
 
@@ -10,14 +9,6 @@ import { TextField, FormControl } from '@mui/material';
 import { useAppSelector } from '@/app/redux/hooks';
 import { configPaths } from '@/app/redux/configSlice'
 import { updateNestedEditingProfile } from '@/app/redux/configActions';
-
-// import {
-//   MuiPickersUtilsProvider,
-//   KeyboardDatePicker,
-// } from '@material-ui/pickers';
-
-
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 
 export default function StartDatePicker() {
@@ -29,7 +20,7 @@ export default function StartDatePicker() {
 
   }, [profile])
 
-  const handleDateChange = (date: any) => {
+  const handleDateChange = (date: Date | null) => {
     if (date != undefined && isValid(new Date(date))) {
       const newDate = startOfDay(addMinutes(new Date(date), new Date().getTimezoneOffset())).getTime();
       updateDate(newDate)
@@ -45,7 +36,6 @@ export default function StartDatePicker() {
 
   return (
     <FormControl style={{ width: "100%",}}>
-      <LocalizationProvider dateAdapter={DateAdapter}>
         <DesktopDatePicker
           label="Stats Start Date"
           views={['day']}
@@ -59,7 +49,6 @@ export default function StartDatePicker() {
           className="desktopPicker"
         />
 
-      </LocalizationProvider>
     </FormControl>
 
   );

@@ -186,6 +186,7 @@ const PairPerformanceBar = ({ title, data = []}: Type_Pair_Performance) => {
                     <FormControl  >
                         <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
                         <Select
+                            variant="standard"
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={sort}
@@ -202,6 +203,7 @@ const PairPerformanceBar = ({ title, data = []}: Type_Pair_Performance) => {
                     <FormControl  >
                         <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
                         <Select
+                            variant="standard"
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={filter}

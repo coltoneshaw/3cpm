@@ -131,6 +131,7 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
                     <FormControl  >
                         <InputLabel id="demo-simple-select-label">Color By</InputLabel>
                         <Select
+                            variant="standard"
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={sort}

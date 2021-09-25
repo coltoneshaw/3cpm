@@ -69,14 +69,11 @@ const AddCoinModal = ({ open, setOpen, coinNames, currentCoins }: { open: boolea
             <>
                 <Autocomplete
                     options={['', ...coinNames]}
-                    // getOptionLabel={(option) => option.title}
-                    style={{ flexBasis: '90%', paddingRight: '2em', color: 'var(--color-text-lightbackground)' }}
+                    style={{ flexBasis: '90%', marginRight: '2em', color: 'var(--color-text-lightbackground)' }}
                     value={inputValue}
                     //@ts-ignore
                     onChange={(e) => changeInputValue(e.target.innerText)}
-                    renderInput={(params) => <TextField {...params} label="Add Coin" variant="outlined"
-
-                    />}
+                    renderInput={(params) => <TextField {...params} label="Add Coin" variant="outlined"/>}
                 />
                 <AddIcon
                     style={{

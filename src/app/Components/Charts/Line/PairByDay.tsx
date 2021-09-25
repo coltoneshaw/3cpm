@@ -103,6 +103,7 @@ const PairPerformanceByDate = ({ datePair }: { datePair: DateRange }) => {
                         <InputLabel>Show</InputLabel>
 
                         <Select
+                            variant="standard"
                             multiple
                             value={pairFilters}
                             onChange={handleChange}

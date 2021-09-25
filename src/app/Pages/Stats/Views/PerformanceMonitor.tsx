@@ -1,24 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppSelector } from '@/app/redux/hooks';
 
 // material UI components
-import {Grid} from '@mui/material';
+import { Grid } from '@mui/material';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import { TextField, FormControl } from '@mui/material';
+
 
 // custom charts
-import {BotPerformanceBubble, DealPerformanceBubble} from '@/app/Components/Charts/Scatter';
-import {DealAllocationBar} from '@/app/Components/Charts/Bar';
-import {PairPerformanceByDate} from '@/app/Components/Charts/Line';
+import { BotPerformanceBubble, DealPerformanceBubble } from '@/app/Components/Charts/Scatter';
+import { DealAllocationBar } from '@/app/Components/Charts/Bar';
+import { PairPerformanceByDate } from '@/app/Components/Charts/Line';
 
-import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
-import DateFnsUtils from '@date-io/date-fns';
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {
     fetchBotPerformanceMetrics,
     fetchPairPerformanceMetrics,
     fetchPerformanceDataFunction
 } from "@/app/Features/3Commas/3Commas";
-// import {Type_Bot_Performance_Metrics, Type_Pair_Performance_Metrics, Type_Query_PerfArray} from "@/types/3Commas";
-import {DateRange} from "@/types/Date";
+import { DateRange } from "@/types/Date";
 
 
 const PerformanceMonitor = () => {
@@ -30,36 +29,36 @@ const PerformanceMonitor = () => {
     let [localPerf, updateLocalPerf] = useState(performanceData)
     let [datePair, updateDatePair] = useState<DateRange>(new DateRange())
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     Promise.all([
-    //         fetchPerformanceDataFunction(datePair, currentProfile),
-    //         fetchBotPerformanceMetrics(datePair, currentProfile),
-    //         fetchPairPerformanceMetrics(datePair, currentProfile),
-    //     ]).then(([perfData, botPerfData, pairPerfData]) => {
-    //         updateLocalPerf((prevState) => {
-    //             return {
-    //                 ...prevState,
-    //                 pair_bot: perfData,
-    //                 bot: botPerfData,
-    //                 pair: pairPerfData
-    //             }
-    //         })
-    //     })
-    // }, [performanceData, datePair])
+        Promise.all([
+            fetchPerformanceDataFunction(datePair, currentProfile),
+            fetchBotPerformanceMetrics(datePair, currentProfile),
+            fetchPairPerformanceMetrics(datePair, currentProfile),
+        ]).then(([perfData, botPerfData, pairPerfData]) => {
+            updateLocalPerf((prevState) => {
+                return {
+                    ...prevState,
+                    pair_bot: perfData,
+                    bot: botPerfData,
+                    pair: pairPerfData
+                }
+            })
+        })
+    }, [performanceData, datePair])
 
 
-    const updateFromDate = (date: MaterialUiPickersDate) => {
+    const updateFromDate = (date: Date | null) => {
         updateDatePair(prevState => {
-            let newDate = {...prevState}
+            let newDate = { ...prevState }
             newDate.from = date
             return newDate
         })
     }
 
-    const updateToDate = (date: MaterialUiPickersDate) => {
+    const updateToDate = (date: Date | null) => {
         updateDatePair(prevState => {
-            let newDate = {...prevState}
+            let newDate = { ...prevState }
             newDate.to = date
             return newDate
         })
@@ -67,63 +66,59 @@ const PerformanceMonitor = () => {
 
     return (
         <>
+            <Grid container spacing={1}>
+                <Grid item xs={3} >
+                    <DesktopDatePicker
+                        label="From"
+                        views={['day']}
+                        inputFormat="MM/dd/yyyy"
+                        value={datePair.from}
+                        onChange={updateFromDate}
+                        renderInput={(params) => (
+                            <TextField {...params} helperText={params?.inputProps?.placeholder} />
 
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Grid container spacing={3}>
-                    <Grid item xs={6}>
-                        <KeyboardDatePicker
-                            disableToolbar
-                            variant="inline"
-                            format="MM/dd/yyyy"
-                            margin="normal"
-                            id="from"
-                            name="from"
-                            label="From"
-                            value={datePair.from}
-                            onChange={updateFromDate}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change from date',
-                            }}
-                        />
-
-
-                        <KeyboardDatePicker
-                            style={{marginLeft: "1rem"}}
-                            disableToolbar
-                            variant="inline"
-                            format="MM/dd/yyyy"
-                            margin="normal"
-                            id="to"
-                            name="to"
-                            label="To"
-                            value={datePair.to}
-                            onChange={updateToDate}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change to date',
-                            }}
-                        />
-                    </Grid>
+                        )}
+                        className="desktopPicker"
+                    />
                 </Grid>
-            </MuiPickersUtilsProvider>
+                <Grid item xs={3} >
+
+                    <DesktopDatePicker
+                        label="To"
+                        views={['day']}
+                        inputFormat="MM/dd/yyyy"
+                        value={datePair.to}
+                        onChange={updateToDate}
+                        renderInput={(params) => (
+                            <TextField {...params} helperText={params?.inputProps?.placeholder} />
+
+                        )}
+                        className="desktopPicker"
+                    />
+                </Grid>
+
+
+
+            </Grid>
 
 
             <Grid container spacing={4}>
                 <Grid item xs={12}>
-                    <DealAllocationBar title="Deal Allocation" data={localPerf.pair_bot} key="dealAllocationBar"/>
+                    <DealAllocationBar title="Deal Allocation" data={localPerf.pair_bot} key="dealAllocationBar" />
                 </Grid>
                 <Grid item xs={12} lg={6}>
                     <DealPerformanceBubble title="Deal Performance Scatter" data={localPerf.pair_bot}
-                                           key="dealPerformanceBubble"/>
+                        key="dealPerformanceBubble" />
 
                 </Grid>
                 <Grid item xs={12} lg={6}>
                     <BotPerformanceBubble title="Bot Performance Scatter" data={localPerf.bot}
-                                          key="botPerformanceBubble"/>
+                        key="botPerformanceBubble" />
 
                 </Grid>
 
                 <Grid item xs={12}>
-                    <PairPerformanceByDate key="pairPerformance" datePair={datePair}/>
+                    <PairPerformanceByDate key="pairPerformance" datePair={datePair} />
 
                 </Grid>
             </Grid>

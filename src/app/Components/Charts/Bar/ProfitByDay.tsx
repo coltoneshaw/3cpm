@@ -90,6 +90,7 @@ const ProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
         return (
             <FormControl >
                 <Select
+                    variant="standard"
                     value={dateType}
                     onChange={handleChange}
                     style={{
