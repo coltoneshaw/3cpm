@@ -44,7 +44,7 @@ export default function StartDatePicker() {
 
 
   return (
-    <FormControl style={{ width: "100%", margin: '10px', marginTop: '20px' }}>
+    <FormControl style={{ width: "100%",}}>
       <LocalizationProvider dateAdapter={DateAdapter}>
         <DesktopDatePicker
           label="Stats Start Date"
