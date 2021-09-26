@@ -5,7 +5,8 @@ import { useAppSelector } from '@/app/redux/hooks';
 import { Grid } from '@mui/material';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { TextField, FormControl } from '@mui/material';
-
+import DateRangePicker, { DateRange } from '@mui/lab/DateRangePicker';
+import Box from '@mui/material/Box';
 
 // custom charts
 import { BotPerformanceBubble, DealPerformanceBubble } from '@/app/Components/Charts/Scatter';
@@ -17,7 +18,7 @@ import {
     fetchPairPerformanceMetrics,
     fetchPerformanceDataFunction
 } from "@/app/Features/3Commas/3Commas";
-import { DateRange } from "@/types/Date";
+import { DateRange as Type_DateRange } from "@/types/Date";
 
 
 const PerformanceMonitor = () => {
@@ -27,7 +28,7 @@ const PerformanceMonitor = () => {
 
 
     let [localPerf, updateLocalPerf] = useState(performanceData)
-    let [datePair, updateDatePair] = useState<DateRange>(new DateRange())
+    let [datePair, updateDatePair] = useState<Type_DateRange>(new Type_DateRange())
 
     useEffect(() => {
 
@@ -48,56 +49,34 @@ const PerformanceMonitor = () => {
     }, [performanceData, datePair])
 
 
-    const updateFromDate = (date: Date | null) => {
-        updateDatePair(prevState => {
-            let newDate = { ...prevState }
-            newDate.from = date
-            return newDate
-        })
-    }
+    const updateFilterDate = (date: DateRange<Date>) => {
+        updateDatePair({from: date[0], to: date[1]})
 
-    const updateToDate = (date: Date | null) => {
-        updateDatePair(prevState => {
-            let newDate = { ...prevState }
-            newDate.to = date
-            return newDate
-        })
     }
-
+    const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
     return (
         <>
             <Grid container spacing={1}>
-                <Grid item xs={3} >
-                    <DesktopDatePicker
-                        label="From"
-                        views={['day']}
-                        inputFormat="MM/dd/yyyy"
-                        value={datePair.from}
-                        onChange={updateFromDate}
-                        renderInput={(params) => (
-                            <TextField {...params} helperText={params?.inputProps?.placeholder} />
-
+                <Grid item xs={5} style={{ marginBottom: '10px' }}>
+                    <DateRangePicker
+                        startText="Start Date"
+                        endText="End Date"
+                        value={value}
+                        maxDate={new Date()}
+                        onChange={(newValue) => {
+                            updateFilterDate(newValue);
+                            setValue(newValue)
+                        }}
+                        renderInput={(startProps, endProps) => (
+                            <>
+                                <TextField {...startProps} />
+                                <Box sx={{ mx: 2 }}> to </Box>
+                                <TextField {...endProps} />
+                            </>
                         )}
-                        className="desktopPicker"
+                        
                     />
                 </Grid>
-                <Grid item xs={3} >
-
-                    <DesktopDatePicker
-                        label="To"
-                        views={['day']}
-                        inputFormat="MM/dd/yyyy"
-                        value={datePair.to}
-                        onChange={updateToDate}
-                        renderInput={(params) => (
-                            <TextField {...params} helperText={params?.inputProps?.placeholder} />
-
-                        )}
-                        className="desktopPicker"
-                    />
-                </Grid>
-
-
 
             </Grid>
 
