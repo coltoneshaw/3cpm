@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import {formatCurrency} from'@/utils/granularity'
+
+
 import { CustomTable } from '@/app/Components/DataTable/Index'
 import { getDateString } from '@/utils/helperFunctions';
 import { parseNumber } from '@/utils/number_formatting';
@@ -19,6 +22,7 @@ const returnErrorTooltip = (errorMessage: string, value: string) => {
 
 
 function DealsTable({ data }: { data: object[] }) {
+
     const localStorageSortName = storageItem.tables.DealsTable.sort;
 
     const [localData, updateLocalData] = useState<object[]>([]);
@@ -90,9 +94,7 @@ function DealsTable({ data }: { data: object[] }) {
                 style: { textAlign: 'right' },
                 sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                 Cell: ({ cell }: any) => {
-                    // let digits = 5;
-                    // if(cell.value < 1) digits = 4
-                    return < span className=" monospace-cell">{parseNumber(cell.value, 5, true)}</span>
+                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
                 }
             },
             {
@@ -101,9 +103,7 @@ function DealsTable({ data }: { data: object[] }) {
                 style: { textAlign: 'right' },
                 sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                 Cell: ({ cell }: any) => {
-                    // let digits = 5;
-                    // if(cell.value < 1) digits = 4
-                    return < span className=" monospace-cell">{parseNumber(cell.value, 5, true)}</span>
+                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
                 }
             },
             {
@@ -111,8 +111,7 @@ function DealsTable({ data }: { data: object[] }) {
                 accessor: 'bought_volume',
                 style: { textAlign: 'right' },
                 Cell: ({ cell }: any) => {
-                    // let digits = 5;
-                    return < span className=" monospace-cell">{parseNumber(cell.value, 5, true)}</span>
+                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
                 }
             },
             {
@@ -122,7 +121,7 @@ function DealsTable({ data }: { data: object[] }) {
                 className: '',
                 sortable: false,
                 Cell: ({ cell }: any) => {
-                    return < span className=" monospace-cell">{parseNumber(cell.value, 5, true)}</span>
+                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
                 },
             },
             {
@@ -157,7 +156,7 @@ function DealsTable({ data }: { data: object[] }) {
                 Cell: ({ cell }: any) => {
 
                     const in_profit = (cell.row.original.actual_profit_percentage > 0) ? 'green' : 'red'
-                    return <span className={"pill pill-left monospace-cell " + in_profit} >{parseNumber(cell.value, 2)}</span>
+                    return < span className={"pill pill-left monospace-cell " + in_profit} >{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
                 },
                 style: {
                     paddingRight: 0,
@@ -184,7 +183,7 @@ function DealsTable({ data }: { data: object[] }) {
                 style: { textAlign: 'right' },
                 sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                 Cell: ({ cell }: any) => {
-                    return <span className=" monospace-cell" style={{ paddingLeft: '1em' }}>{parseNumber(cell.value, 4, true)}</span>
+                    return < span className=" monospace-cell" style={{ paddingLeft: '1em' }}>{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
                 }
             },
             {
@@ -192,7 +191,8 @@ function DealsTable({ data }: { data: object[] }) {
                 accessor: 'max_deal_funds',
                 style: { textAlign: 'right' },
                 Cell: ({ cell }: any) => {
-                    return < span className=" monospace-cell">{cell.value}</span>
+                    console.log(cell.value)
+                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
                 },
             },
             {

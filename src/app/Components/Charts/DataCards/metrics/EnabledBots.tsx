@@ -12,14 +12,12 @@ interface Type_Card {
  * 
  * @param metric - accepts the botCount metric. This is should be locally filtered and is the total number of enabled bots.
  */
-const Card_EnabledBots = ({metric}:Type_Card) => {
+const Card_EnabledBots = ({ metric }: Type_Card) => {
 
     const title = "Enabled Bots"
     const message = descriptions.calculations.activeBots
     const key = title.replace(/\s/g, '')
-    return (
-        <Card title={title} message={message} key={key} metric={metric} />
-    )
+    return (<Card title={title} message={message} key={key} metric={{ metric: metric, symbol: '' }} />)
 }
 
 export default Card_EnabledBots;

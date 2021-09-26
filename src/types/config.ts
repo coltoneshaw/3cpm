@@ -1,3 +1,5 @@
+import type { supportedCurrencies} from'@/utils/granularity'
+
 export interface TconfigValues {
     profiles: Record<string, Type_Profile>,
     current: string,
@@ -17,7 +19,7 @@ export interface Type_Profile {
         }
     },
     general: {
-        defaultCurrency: string[],
+        defaultCurrency: (keyof typeof supportedCurrencies)[] | [],
         globalLimit: number
         updated: boolean
     },
