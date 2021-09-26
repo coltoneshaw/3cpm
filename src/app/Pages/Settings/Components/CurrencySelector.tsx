@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useAppSelector } from '@/app/redux/hooks';
 import { configPaths } from '@/app/redux/configSlice'
@@ -12,7 +12,7 @@ import {
     ListItemText,
     Checkbox,
     Input
-} from '@material-ui/core';
+} from '@mui/material';
 
 // initializing a state for each of the two props that we are using.
 const ITEM_HEIGHT = 48;
@@ -72,8 +72,8 @@ const CurrencySelector = () => {
     const [currency, updateCurrency] = useState(() => [''])
 
     useEffect(() => {
-        if(profile.general.defaultCurrency) updateCurrency(profile.general.defaultCurrency)
-        
+        if (profile.general.defaultCurrency) updateCurrency(profile.general.defaultCurrency)
+
     }, [profile])
 
 
@@ -83,21 +83,22 @@ const CurrencySelector = () => {
     }
 
     return (
-
-        <FormControl style={{width: "100%"}}>
-            <InputLabel>Currency</InputLabel>
-
-
+        <FormControl style={{ width: '100%', marginBottom: '25px' }} fullWidth>
+            <InputLabel id="currency-label">Currency</InputLabel>
             <Select
+                labelId="currency-label"
                 multiple
+                id="currency"
+                name="currency"
+                label="Currency"
                 value={currency}
                 onChange={onChange}
-                input={<Input />}
                 renderValue={() => (currency.length > 0) ? currency.join(', ') : ""}
-                MenuProps={MenuProps}
-                style={{padding: "10px 0 10px 0", marginLeft: "10px"}}
+                style={{
+                    marginRight: '15px',
+                    width: '100%'
+                }}
             >
-
                 {currencyArray.map((c) => (
                     <MenuItem value={c.value} key={c.value}>
                         <Checkbox checked={currency.indexOf(c.name) > - 1} />

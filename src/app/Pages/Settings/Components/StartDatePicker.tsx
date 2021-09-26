@@ -2,19 +2,13 @@ import { getTime, parseISO, formatISO, isValid, startOfDay, addMinutes } from 'd
 import { utcToZonedTime } from 'date-fns-tz';
 
 import React, { useState, useEffect } from 'react';
-import DateFnsUtils from '@date-io/date-fns';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import { TextField, FormControl } from '@mui/material';
 
-import {  useAppSelector } from '@/app/redux/hooks';
+
+import { useAppSelector } from '@/app/redux/hooks';
 import { configPaths } from '@/app/redux/configSlice'
 import { updateNestedEditingProfile } from '@/app/redux/configActions';
-
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-
-
-
 
 
 export default function StartDatePicker() {
@@ -22,13 +16,13 @@ export default function StartDatePicker() {
   const [date, updateDate] = useState(() => 0)
 
   useEffect(() => {
-    if(profile.statSettings.startDate) updateDate(profile.statSettings.startDate)
-  
+    if (profile.statSettings.startDate) updateDate(profile.statSettings.startDate)
+
   }, [profile])
 
-  const handleDateChange = (date: any) => {
+  const handleDateChange = (date: Date | null) => {
     if (date != undefined && isValid(new Date(date))) {
-      const newDate = startOfDay( addMinutes( new Date(date), new Date().getTimezoneOffset() )).getTime();
+      const newDate = startOfDay(addMinutes(new Date(date), new Date().getTimezoneOffset())).getTime();
       updateDate(newDate)
       updateNestedEditingProfile(newDate, configPaths.statSettings.startDate)
     }
@@ -41,23 +35,21 @@ export default function StartDatePicker() {
 
 
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <KeyboardDatePicker
-        disableToolbar
-        variant="inline"
-        format="MM/dd/yyyy"
-        margin="normal"
-        id="date-picker-inline"
-        label="Stats Start Date"
-        value={modifyDate(date)}
-        onChange={handleDateChange}
-        KeyboardButtonProps={{
-          'aria-label': 'change date',
-        }}
-        style={{
-          width: "100%"
-        }}
-      />
-    </MuiPickersUtilsProvider>
+    <FormControl style={{ width: "100%",}}>
+        <DesktopDatePicker
+          label="Stats Start Date"
+          views={['day']}
+          inputFormat="MM/dd/yyyy"
+          value={date}
+          onChange={handleDateChange}
+          renderInput={(params) => (
+            <TextField {...params} helperText={params?.inputProps?.placeholder} />
+
+          )}
+          className="desktopPicker"
+        />
+
+    </FormControl>
+
   );
 }

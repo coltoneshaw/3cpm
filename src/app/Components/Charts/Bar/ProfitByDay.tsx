@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
 
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Type_Profit } from '@/types/3Commas';
 import { getLang, removeDuplicatesInArray } from '@/utils/helperFunctions';
 const lang = getLang()
@@ -78,7 +78,7 @@ const ProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
         setDateType((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
     }, [])
 
-    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const handleChange = (event: SelectChangeEvent) => {
         const selectedSort = (event.target.value != undefined) ? event.target.value as string : defaultSort;
         setDateType(selectedSort);
         setStorageItem(localStorageSortName, selectedSort)
@@ -90,6 +90,7 @@ const ProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
         return (
             <FormControl >
                 <Select
+                    variant="standard"
                     value={dateType}
                     onChange={handleChange}
                     style={{

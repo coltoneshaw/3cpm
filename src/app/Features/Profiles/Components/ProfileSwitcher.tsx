@@ -4,10 +4,10 @@ import { addEditingProfile,
     setCurrentProfileById} from '@/app/redux/configSlice'
 import { useHistory } from 'react-router-dom'
 
-import PersonIcon from '@material-ui/icons/Person';
+import PersonIcon from '@mui/icons-material/Person';
 
 import HoverMenu from 'material-ui-popup-state/HoverMenu'
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from '@mui/material/MenuItem';
 
 import ManageProfileModal from "@/app/Features/Profiles/ManageProfileModal";
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useAppSelector } from '@/app/redux/hooks';
 
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import AddCoinModal from "./AddCoinModal";
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 

@@ -30,7 +30,7 @@ const App = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if(currentProfile && currentProfile.statSettings && currentProfile.statSettings.reservedFunds.filter(a => a.is_enabled).length > 0) updateAllDataQuery(currentProfile);
+    if(currentProfile && currentProfile.statSettings && currentProfile.statSettings.reservedFunds.filter(a => a.is_enabled).length > 0) updateAllDataQuery(currentProfile, 'update');
   }, [currentProfile])
 
   return (

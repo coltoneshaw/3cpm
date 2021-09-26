@@ -3,7 +3,7 @@ import './Sidebar.scss';
 
 
 import { ActiveDealsIcon, BackwardClock, BotPlannerIcon, Coffee, Cog, PieChart } from '@/app/Components/icons/Index';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { SidebarNav, SidebarLink } from './Components';
 import { ProfileSwitcher } from '@/app/Features/Profiles/Components/Index'
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Scatter } from 'recharts';
 
 
-import {InputLabel, MenuItem, FormControl, Select} from '@material-ui/core';
+import {InputLabel, MenuItem, FormControl, Select} from '@mui/material';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
@@ -210,6 +210,7 @@ const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
                 <FormControl  >
                     <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
                     <Select
+                        variant="standard"
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={sort}
@@ -228,6 +229,7 @@ const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
                 <FormControl  >
                         <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
                         <Select
+                            variant="standard"
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={filter}

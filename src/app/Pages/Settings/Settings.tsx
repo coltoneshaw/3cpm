@@ -8,7 +8,7 @@ import { version } from '#/package.json';
 import {
     ButtonGroup,
     Button
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
     CurrencySelector,

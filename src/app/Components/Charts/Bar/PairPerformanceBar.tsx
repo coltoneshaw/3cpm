@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Scatter,Legend, ResponsiveContainer, Line, Label } from 'recharts';
-import { InputLabel, MenuItem, FormControl, Select } from '@material-ui/core';
+import { InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
@@ -186,6 +186,7 @@ const PairPerformanceBar = ({ title, data = []}: Type_Pair_Performance) => {
                     <FormControl  >
                         <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
                         <Select
+                            variant="standard"
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={sort}
@@ -202,6 +203,7 @@ const PairPerformanceBar = ({ title, data = []}: Type_Pair_Performance) => {
                     <FormControl  >
                         <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
                         <Select
+                            variant="standard"
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={filter}

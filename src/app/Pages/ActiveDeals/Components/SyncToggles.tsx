@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { FormControlLabel, Checkbox } from '@material-ui/core';
+import { FormControlLabel, Checkbox } from '@mui/material';
 
 import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
 import { setSyncData } from "@/app/redux/threeCommas/threeCommasSlice";

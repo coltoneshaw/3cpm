@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppSelector } from '@/app/redux/hooks';
 
 
-import { Select, InputLabel, FormControl, MenuItem, Checkbox, ListItemText, Input } from '@material-ui/core';
+import { Select, InputLabel, FormControl, MenuItem, Checkbox, ListItemText, Input } from '@mui/material';
 import { ComposedChart, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line } from 'recharts';
 
 import { getLang } from '@/utils/helperFunctions';
@@ -103,6 +103,7 @@ const PairPerformanceByDate = ({ datePair }: { datePair: DateRange }) => {
                         <InputLabel>Show</InputLabel>
 
                         <Select
+                            variant="standard"
                             multiple
                             value={pairFilters}
                             onChange={handleChange}

@@ -5,7 +5,7 @@ import { version } from '#/package.json';
 
 import './UpdateBanner.scss';
 
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 let latestLink = 'https://github.com/coltoneshaw/3c-portfolio-manager/releases'
 
 const UpdateBanner = () => {

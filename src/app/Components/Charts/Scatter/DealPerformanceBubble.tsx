@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis } from 'recharts';
-import { InputLabel, MenuItem, FormControl, Select} from '@material-ui/core';
+import { InputLabel, MenuItem, FormControl, Select} from '@mui/material';
 
 import { Type_Tooltip, Type_DealPerformanceCharts } from '@/types/Charts'
 import { Type_Query_PerfArray } from '@/types/3Commas';
@@ -131,6 +131,7 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
                     <FormControl  >
                         <InputLabel id="demo-simple-select-label">Color By</InputLabel>
                         <Select
+                            variant="standard"
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={sort}

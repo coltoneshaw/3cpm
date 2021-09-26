@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import {
     Dialog,
     DialogContent,
-} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { useThemeProvidor } from "@/app/Context/ThemeEngine";
 
 import './changelogModal.scss'

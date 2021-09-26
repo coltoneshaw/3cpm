@@ -5,7 +5,7 @@ import { storeEditingProfileData, deleteProfileById } from '@/app/redux/configSl
 import {updateAllData} from '@/app/redux/threeCommas/Actions'
 
 
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 
 
 import LoaderIcon from '@/app/Components/icons/Loading/Loading'

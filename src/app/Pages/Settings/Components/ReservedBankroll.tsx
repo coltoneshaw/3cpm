@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 // import { DataGrid } from '@material-ui/data-grid';
-import { Switch } from '@material-ui/core';
+import { Switch } from '@mui/material';
 
 import { CustomTable } from '@/app/Components/DataTable/Index'
 import styled from 'styled-components'
