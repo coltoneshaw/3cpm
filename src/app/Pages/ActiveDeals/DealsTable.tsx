@@ -156,7 +156,8 @@ function DealsTable({ data }: { data: object[] }) {
                 Cell: ({ cell }: any) => {
 
                     const in_profit = (cell.row.original.actual_profit_percentage > 0) ? 'green' : 'red'
-                    return < span className={"pill pill-left monospace-cell " + in_profit} >{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
+                    // leaving this as USD for now because 3C only displays this value in a USD quote.
+                    return < span className={"pill pill-left monospace-cell " + in_profit} >{formatCurrency( ['USD'], cell.value, false).metric}</span>
                 },
                 style: {
                     paddingRight: 0,

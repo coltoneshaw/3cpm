@@ -1,9 +1,12 @@
 import React from "react";
-import {parseNumber} from '@/utils/number_formatting'
+import {formatCurrency} from'@/utils/granularity'
 
 const dateFormatter = (dateString:string) => new Date(dateString).toLocaleDateString(undefined, { month: '2-digit', day: '2-digit' , year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'})
 
 function Orders({row, ordersData}: any) {
+
+    const formatCurrencyLocally = (value:number) =>  formatCurrency([row.original.from_currency], value).metric
+
 
     return ( 
     <table className="table table-bordered table-striped RUBYDEV__deals_table_thead_border_fix ">
@@ -26,11 +29,11 @@ function Orders({row, ordersData}: any) {
                 <td>{r.deal_order_type}</td>
                 <td>{r.status_string}</td>
                 <td  className=" monospace-cell" style={{textAlign: 'left'}}>
-                    { r.order_type == "BUY" && (<>Desired: {parseNumber( r.rate, 5)}<br/>Real: {parseNumber( r.average_price, 5)}</>)}
-                    { r.order_type == "SELL" && (<>{parseNumber( r.rate, 5)}</>)}
+                    { r.order_type == "BUY" && (<>Desired: {formatCurrencyLocally( r.rate)}<br/>Real: {formatCurrencyLocally( r.average_price)}</>)}
+                    { r.order_type == "SELL" && (<>{formatCurrencyLocally( r.rate)}</>)}
                 </td>
-                <td className=" monospace-cell">{parseNumber( +r.quantity, 5)}</td>
-                <td className=" monospace-cell">{(r.total) ? parseNumber( r.total, 5): '-'}</td>
+                <td className=" monospace-cell">{formatCurrencyLocally( +r.quantity)}</td>
+                <td className=" monospace-cell">{(r.total) ? formatCurrencyLocally( r.total): '-'}</td>
                 <td>{dateFormatter(r.created_at)}</td>
                 <td>{dateFormatter(r.updated_at)}</td>
             </tr>)

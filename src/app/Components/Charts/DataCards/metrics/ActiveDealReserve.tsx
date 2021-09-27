@@ -19,6 +19,8 @@ const Card_ActiveDealReserve = ({metric, currency }:Type_Card) => {
     const message = descriptions.metrics.activeDealReserves
     const key = title.replace(/\s/g, '')
 
+    // overriding the currency here since the values are all currently in USD.
+    currency = ['USD']
     return ( <Card title={title} message={message} key={key} metric={formatCurrency(currency, metric)} /> )
 }
 
