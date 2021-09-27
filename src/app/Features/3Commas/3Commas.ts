@@ -263,7 +263,7 @@ const fetchBotPerformanceMetrics = async (oDate?: DateRange, profileData?: Type_
 
 const botQuery = async (currentProfile?: Type_Profile) => {
     const filtersQueryString = await getFiltersQueryString(currentProfile);
-    const { accountIdString, currentProfileID } = filtersQueryString;
+    const { accountIdString, currentProfileID, currencyString } = filtersQueryString;
 
 
     const queryString = `
@@ -273,6 +273,7 @@ const botQuery = async (currentProfile?: Type_Profile) => {
                     bots
                 WHERE
                     profile_id = '${currentProfileID}'
+                    and from_currency in (${currencyString})
                     and (account_id in (${accountIdString})  OR origin = 'custom')`
 
     // @ts-ignore

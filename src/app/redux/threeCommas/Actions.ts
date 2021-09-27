@@ -56,8 +56,8 @@ const fetchAndStoreBotData = async (currentProfile: Type_Profile, update: boolea
             .then((result: Type_Query_bots[]) => {
                 if (!result) return
                 if(update) dispatch_setBotData(result)
-
-                const inactiveBotFunds = result.map(r => r.enabled_inactive_funds).reduce((sum, funds) => sum + funds ) ?? 0;
+                
+                const inactiveBotFunds = result.filter(b => b.is_enabled === 1).map(r => r.enabled_inactive_funds).reduce((sum, funds) => sum + funds ) ?? 0;
                 // pull enabled_inactive_funds from the bots and add it to metrics.
                 dispatch_setMetricsData({inactiveBotFunds })
 
@@ -165,7 +165,9 @@ const calculateMetrics = () => {
         availableBankroll,
         totalInDeals,
         reservedFundsArray,
-        totalMaxRisk: LOCAL_maxRisk
+        totalMaxRisk: LOCAL_maxRisk,
+        maxRisk,
+        inactiveBotFunds
     })
 
     // active sum already includes on_orders.
