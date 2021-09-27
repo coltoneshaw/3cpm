@@ -106,7 +106,7 @@ const CurrencySelector = () => {
                     width: '100%'
                 }}
             >
-                {Object.keys(supportedCurrencies).map((c: string) => {
+                {Object.keys(supportedCurrencies).sort().map((c: string) => {
                     const currencyOption = supportedCurrencies[c as keyof typeof supportedCurrencies]
                     return (
                         <MenuItem value={currencyOption.value} key={currencyOption.value}>
@@ -116,7 +116,7 @@ const CurrencySelector = () => {
                             */}
                             {/*  @ts-ignore */}
                             <Checkbox checked={currency.indexOf(currencyOption.value) > - 1} />
-                            <ListItemText primary={currencyOption.value} />
+                            <ListItemText primary={currencyOption.value + ` (${currencyOption.name} - ${currencyOption.type})`} />
                         </MenuItem>
                     )
 

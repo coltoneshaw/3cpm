@@ -110,7 +110,7 @@ export type Type_Deals = {
     stop_loss_type: string
     safety_order_volume_type: string
     base_order_volume_type: string
-    from_currency: string
+    from_currency: "AUD" | "BIDR" | "BNB" | "BRL" | "BTC" | "BUSD" | "BVND" | "DAI" | "ETH" | "EUR" | "GBP" | "IDRT" | "NGN" | "RUB" | "TRX" | "TRY" | "TUSD" | "UAH" | "USD" | "USDC" | "USDT" | "USDP" | "VAI" | "XRP"
     to_currency: string
     current_price: number
     take_profit_price: number
