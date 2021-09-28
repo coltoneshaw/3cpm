@@ -26,7 +26,7 @@ async function updateAPI(type: string, options: Type_UpdateFunction, profileData
     .then((data: Type_Deals_API[]) => {
 
       // if notifications need to be enabled for the fullSync then the type below needs to be updated.
-      if (type === 'autoSync' && options.notifications && options.time != undefined) findAndNotifyNewDeals(data, options.time, options.summary)
+      if (type === 'autoSync' && options.notifications && options.time != undefined || options.syncCount != 0) findAndNotifyNewDeals(data, options.time, options.summary)
       update('deals', data, profileData.id)
       // log.info(data)
     })
