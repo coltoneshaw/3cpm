@@ -19,9 +19,6 @@ import {
 
 import { Type_Query_bots } from '@/types/3Commas'
 
-// import { DataGrid } from '@material-ui/data-grid';
-// import { MuiClassObject } from '@/app/Context/MuiClassObject'
-
 import { CustomTable } from '@/app/Components/DataTable/Index'
 
 const Styles = styled.div`

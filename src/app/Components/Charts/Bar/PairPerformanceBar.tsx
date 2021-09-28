@@ -125,6 +125,7 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
                             dx: 0,
                             dy: 20
                         }}
+                        
                         tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)}
 
                     />
