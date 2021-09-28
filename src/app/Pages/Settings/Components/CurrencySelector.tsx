@@ -27,46 +27,6 @@ const MenuProps = {
     },
 };
 
-// interface Type_currency {
-//     name: string
-//     value: string
-// }
-
-// const currencyArray: Type_currency[] = [
-//     {
-//         name: "USD",
-//         value: "USD",
-//     },
-//     {
-//         name: "USDT",
-//         value: "USDT",
-//     },
-//     {
-//         name: "BUSD",
-//         value: "BUSD",
-//     },
-//     {
-//         name: "USDC",
-//         value: "USDC",
-//     },
-//     {
-//         name: "GBP",
-//         value: "GBP"
-//     },
-//     {
-//         name: "ETH",
-//         value: "ETH"
-//     },
-//     {
-//         name: "BTC",
-//         value: "BTC"
-//     },
-//     {
-//         name: "EUR",
-//         value: "EUR"
-//     }
-// ]
-
 const CurrencySelector = () => {
 
     const profile = useAppSelector(state => state.config.editingProfile);
