@@ -6,6 +6,7 @@
 - DCA calculator, order details, and order timeline built into every active deal.
 - Force paper or real account directly in the settings.
 - Documentation on docs.3cpm.io along with a link in the sidebar!
+- Support for ALL 3Commas quote pairs across the entire app.
 
 ## Enhancements
 - Enabled accounts are synced on every auto refresh, no more out of date data!
@@ -16,6 +17,8 @@
 - Reset all data is moved under Menu > Help > Delete All
 - Added a clear all local storage under Menu > Edit
 - Adjusted metrics to be ordered the same across stats.
+- Dynamic chart height for bot / pair performance based on the number of data points.
+- Improved overall chart formatting (highlighting, colors, bar width, etc.)
 
 ## Bugs
 - Fixed a few spelling mistakes across the app
@@ -40,8 +43,6 @@
 - Fixed bug in the Manual SO count metric showing cancelled deals counted.
 - Fixed hovering on the darkmode icon.
 - Fixed the labels incorrectly wrapping on the bot performance charts
-
-
 
 
 # v0.4.0
