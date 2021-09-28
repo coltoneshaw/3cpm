@@ -83,21 +83,21 @@ const PerformanceMonitor = () => {
 
             <Grid container spacing={4}>
                 <Grid item xs={12}>
-                    <DealAllocationBar title="Deal Allocation" data={localPerf.pair_bot} key="dealAllocationBar" />
+                    <DealAllocationBar data={localPerf.pair_bot} key="dealAllocationBar" defaultCurrency={currentProfile.general.defaultCurrency}/>
                 </Grid>
                 <Grid item xs={12} lg={6}>
-                    <DealPerformanceBubble title="Deal Performance Scatter" data={localPerf.pair_bot}
+                    <DealPerformanceBubble  data={localPerf.pair_bot} defaultCurrency={currentProfile.general.defaultCurrency}
                         key="dealPerformanceBubble" />
 
                 </Grid>
                 <Grid item xs={12} lg={6}>
-                    <BotPerformanceBubble title="Bot Performance Scatter" data={localPerf.bot}
+                    <BotPerformanceBubble data={localPerf.bot} defaultCurrency={currentProfile.general.defaultCurrency}
                         key="botPerformanceBubble" />
 
                 </Grid>
 
                 <Grid item xs={12}>
-                    <PairPerformanceByDate key="pairPerformance" datePair={datePair} />
+                    <PairPerformanceByDate key="pairPerformance" datePair={datePair} defaultCurrency={currentProfile.general.defaultCurrency} />
 
                 </Grid>
             </Grid>

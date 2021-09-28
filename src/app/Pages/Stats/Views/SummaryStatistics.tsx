@@ -11,22 +11,23 @@ import { PairPerformanceBar, BotPerformanceBar, ProfitByDay } from '@/app/Compon
 const SummaryStatistics = () => {
 
     const { profitData, performanceData } = useAppSelector(state => state.threeCommas);
+    const defaultCurrency = useAppSelector(state => state.config.currentProfile.general.defaultCurrency);
 
 
     return (
         <>
             <Grid container spacing={4}>
                 <Grid item xs={6}>
-                    <ProfitByDay data={profitData} X="profit" />
+                    <ProfitByDay data={profitData} X="profit" defaultCurrency={defaultCurrency}/>
                 </Grid>
                 <Grid item xs={6}>
-                    <SummaryProfitByDay data={profitData} X="runningSum" />
+                    <SummaryProfitByDay data={profitData} X="runningSum"  defaultCurrency={defaultCurrency}/>
                 </Grid>
                 <Grid item xs={6} xl={6}>
-                    <PairPerformanceBar title="Pair Performance" data={performanceData.pair}/>
+                    <PairPerformanceBar title="Pair Performance" data={performanceData.pair}  defaultCurrency={defaultCurrency}/>
                 </Grid>
                 <Grid item xs={6} xl={6}>
-                    <BotPerformanceBar title="Bot Performance" data={performanceData.bot}/>
+                    <BotPerformanceBar  data={performanceData.bot}  defaultCurrency={defaultCurrency}/>
                 </Grid>
             </Grid>
         </>

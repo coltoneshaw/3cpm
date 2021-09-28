@@ -4,12 +4,17 @@
     opacity: .9;
     color: var(--color-text-lightbackground);
     padding: 5px;
-    text-align: center;
+    text-align: left;
 }
 
 .tooltip h4, .tooltip p {
     padding: 0;
     margin: 0;
+}
+
+.tooltip h4{
+    text-align: center;
+    padding-bottom: 1em;
 }
 
 .chartTitle{

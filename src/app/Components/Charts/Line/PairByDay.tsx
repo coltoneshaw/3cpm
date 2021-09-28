@@ -15,7 +15,6 @@ import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/Loca
 import type { Type_Tooltip } from '@/types/Charts';
 import type { defaultCurrency, Type_Profile } from '@/types/config'
 import type { DateRange } from "@/types/Date";
-import { SelectChangeEvent } from '@mui/material';
 
 
 
@@ -67,6 +66,13 @@ const PairPerformanceByDate = ({ datePair, defaultCurrency }: { datePair: DateRa
         updatePairFilters([...filter]);
         setStorageItem(storageItem.charts.pairByDateFilter, [...filter])
     };
+
+    // if any part of the current profile reserved funds changes then we clear the pairs
+    useEffect(() => {
+        updatePairFilters([]);
+        setStorageItem(storageItem.charts.pairByDateFilter, [])
+
+    }, [currentProfile.statSettings.reservedFunds])
 
     useEffect(() => {
 
@@ -174,6 +180,7 @@ const PairPerformanceByDate = ({ datePair, defaultCurrency }: { datePair: DateRa
                         type="number"
                         name="Profit"
                         width={yWidth}
+                        allowDecimals={true}
                         tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)}
                     />
 

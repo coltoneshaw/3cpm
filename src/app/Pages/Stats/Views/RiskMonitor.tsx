@@ -13,17 +13,20 @@ import SpeedometerDiv from '@/app/Pages/Stats/Components/SpeedometerDiv';
 const RiskMonitor = () => {
 
     const { activeDeals, metricsData } = useAppSelector(state => state.threeCommas);
+    const defaultCurrency = useAppSelector(state => state.config.currentProfile.general.defaultCurrency);
+
     return (
         <>
             <SpeedometerDiv
                 metrics={metricsData}
+                defaultCurrency={defaultCurrency}
             />
             <Grid container spacing={4}>
                 <Grid item sm={12} lg={12} xl={6}>
-                    <DealSoUtilizationBar data={activeDeals} title="Deal Max Utilization" />
+                    <DealSoUtilizationBar data={activeDeals} defaultCurrency={defaultCurrency}/>
                 </Grid>
                 <Grid item sm={12} lg={12} xl={6}>
-                    <SoDistribution data={activeDeals} title="Active Deals SO Distribution" metrics={metricsData} />
+                    <SoDistribution data={activeDeals}  metrics={metricsData} defaultCurrency={defaultCurrency}/>
                 </Grid>
             </Grid>
         </>

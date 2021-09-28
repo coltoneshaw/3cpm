@@ -8,6 +8,8 @@ export interface TconfigValues {
     },
 }
 
+export type defaultCurrency = (keyof typeof supportedCurrencies)[] | []
+
 export interface Type_Profile {
     id: string
     name: string,
@@ -19,7 +21,7 @@ export interface Type_Profile {
         }
     },
     general: {
-        defaultCurrency: (keyof typeof supportedCurrencies)[] | [],
+        defaultCurrency: defaultCurrency
         globalLimit: number
         updated: boolean
     },

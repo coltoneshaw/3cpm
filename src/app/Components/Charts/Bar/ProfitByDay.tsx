@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import {yAxisWidth, currencyTickFormatter, currencyTooltipFormatter} from '@/app/Components/Charts/formatting'
 
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -13,7 +14,6 @@ import NoData from '@/app/Pages/Stats/Components/NoData';
 
 import { Type_ProfitChart, Type_Tooltip } from '@/types/Charts';
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
-import { parseNumber } from '@/utils/number_formatting';
 
 
 interface Type_NewDateProfit {
@@ -53,9 +53,15 @@ const convertToNewDates = (data: Type_Profit[], langString: any, type: string) =
 }
 
 
-const ProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
+const ProfitByDay = ({ data = [], X, defaultCurrency }: Type_ProfitChart) => {
 
     const defaultSort = 'day';
+
+    // pull in the currency
+    // need to make a formula that takes the number of decimals from the currency * 10 to return the width of the data.
+
+    const yWidth = yAxisWidth(defaultCurrency)
+
 
     const localStorageSortName = storageItem.charts.ProfitByDay.sort
 
@@ -84,7 +90,6 @@ const ProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
         setStorageItem(localStorageSortName, selectedSort)
     };
 
-
     const filterDropdown = () => {
 
         return (
@@ -108,6 +113,7 @@ const ProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
         )
     }
 
+
     const renderChart = () => {
         if (data.length === 0) {
             return (<NoData/>)
@@ -115,13 +121,11 @@ const ProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
         const filteredData = convertToNewDates(data, filterString, dateType);
         const calculateAverage = () => {
             const totalProfit = (filteredData.length > 0) ? filteredData.map(deal => deal.profit).reduce((sum, profit) => sum + profit) : 0
-            return Math.round(totalProfit / filteredData.length)
+            return currencyTickFormatter(totalProfit / filteredData.length, defaultCurrency) 
         }
         return (
             <ResponsiveContainer width="100%" height="100%" minHeight="300px">
                 <BarChart
-                    // width={500}
-                    // height={300}
                     data={filteredData}
                     margin={{
                         top: 5,
@@ -129,6 +133,7 @@ const ProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
                         left: 20,
                         bottom: 5,
                     }}
+                    
 
                 >
 
@@ -149,18 +154,20 @@ const ProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
                     />
 
                     <ReferenceLine y={calculateAverage()} stroke="var(--color-primary-light25)" strokeWidth={2} isFront={true}
-                                   label={{value: calculateAverage(), position: 'right'}}/>
+                                   label={{value: calculateAverage(), position: 'left'}} />
                     <YAxis
                         dataKey={X}
                         tickLine={false}
                         axisLine={false}
-                        tickCount={6}
+                        width={yWidth}
                         type="number"
+                        tickFormatter = {(value:any) => currencyTickFormatter(value, defaultCurrency)}
+                    
                     />
 
                     {/* TODO - pass the custom props down properly here.  */}
                     {/* @ts-ignore */}
-                    <Tooltip content={<CustomTooltip/>} cursor={{strokeDasharray: '3 3'}}/>
+                    <Tooltip content={<CustomTooltip formatter={(value:any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{strokeDasharray: '3 3'}} />
                     <Bar type="monotone" dataKey={X} fill="var(--color-secondary-light25)"/>
                 </BarChart>
 
@@ -177,7 +184,7 @@ const ProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
 }
 
 
-function CustomTooltip({ active, payload}: Type_Tooltip) {
+const CustomTooltip = ({ active, payload, formatter}: Type_Tooltip) =>{
     if (!active || payload.length == 0 || payload[0] == undefined) {
         return <></>
     }
@@ -198,7 +205,7 @@ function CustomTooltip({ active, payload}: Type_Tooltip) {
     return (
         <div className="tooltip">
             <h4>{date}</h4>
-            <p>$ {parseNumber(profit, 2)}</p>
+            <p>{formatter(profit)}</p>
         </div>
     )
 }
