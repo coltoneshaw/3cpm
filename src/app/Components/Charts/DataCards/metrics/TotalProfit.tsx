@@ -2,25 +2,24 @@ import React from "react";
 
 import Card from "../Card";
 import descriptions from "@/descriptions";
-import { parseNumber } from '@/utils/number_formatting'
+import {formatCurrency, supportedCurrencies} from'@/utils/granularity'
 
 interface Type_Card {
-    metric: number
+    metric: number,
+    currency: (keyof typeof supportedCurrencies)[]
 }
-
 /**
  * 
  * @param metric - accepts the `totalProfit` metric from the global data store.
  */
-const Card_TotalProfit = ({metric }:Type_Card) => {
+const Card_TotalProfit = ({metric, currency }:Type_Card) => {
 
     const title = "Total Profit"
     const message = descriptions.calculations.totalProfit
     const key = title.replace(/\s/g, '')
 
-    return (
-        <Card title={title} message={message} key={key} metric={parseNumber(metric)} />
-    )
+    return ( <Card title={title} message={message} key={key} metric={formatCurrency(currency, metric)} /> )
+
 }
 
 export default Card_TotalProfit;

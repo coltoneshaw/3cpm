@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Scatter } from 'recharts';
-
-
 import {InputLabel, MenuItem, FormControl, Select} from '@mui/material';
-
+import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Scatter } from 'recharts';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
-import { parseNumber} from '@/utils/number_formatting';
-import { dynamicSort } from '@/utils/helperFunctions';
 
-import { Type_Bot_Performance_Metrics } from '@/types/3Commas';
-import { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts';
+import type { Type_Bot_Performance_Metrics } from '@/types/3Commas';
+import type { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts';
 
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+import { parseNumber} from '@/utils/number_formatting';
+import { dynamicSort } from '@/utils/helperFunctions';
+import {filterData} from '@/app/Components/Charts/formatting'
+import {currencyTickFormatter, currencyTooltipFormatter} from '@/app/Components/Charts/formatting'
 
 
 
-const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
+const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCharts) => {
 
 
     const defaultFilter = 'all';
@@ -54,37 +53,15 @@ const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
         return id != sort
     }
 
-    const filterData = (data: Type_Bot_Performance_Metrics[] ) => {
-        let newData = [...data]
-        newData = newData.sort(dynamicSort('-total_profit'));
-        const length = data.length;
-        const fiftyPercent = length / 2
-        const twentyPercent = length / 5
-
-        if (filter === 'top20')  {
-            newData = newData.sort(dynamicSort('-total_profit'));
-            return newData.filter( (bot, index) => index < twentyPercent)
-        } else if (filter === 'top50')  {
-            newData = newData.sort(dynamicSort('-total_profit'));
-            return newData.filter( (bot, index) => index < fiftyPercent)
-        } else if (filter === 'bottom50')  {
-            newData = newData.sort(dynamicSort('total_profit'));
-            return newData.filter( (bot, index) => index < fiftyPercent)
-        } else if (filter === 'bottom20')  {
-            newData = newData.sort(dynamicSort('total_profit'));
-            return newData.filter( (bot, index) => index < twentyPercent)
-        }
-
-        return newData;
-    }
+    
 
     const renderChart = () => {
         if (data.length === 0) {
             return (<NoData />)
         }
 
-        let newData = filterData(data).sort(dynamicSort(sort))
-        // let newData = [...data]
+        let newData = filterData(data, filter).sort(dynamicSort(sort))
+        
         return (
         <ResponsiveContainer width="100%" height="90%" minHeight="800px">
             <ComposedChart
@@ -101,16 +78,14 @@ const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
             >
                 <CartesianGrid opacity={.3} vertical={true} horizontal={false}/>
                 <Legend verticalAlign="top" height={36} />
-                <Tooltip
-                    // @ts-ignore - tooltip refactoring
-                    // todo - improve how tooltips can pass the values.
-                    content={<CustomTooltip />}
-                />
+                {/* TODO - pass the custom props down properly here.  */}
+                {/* @ts-ignore */}
+                <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
                 <YAxis
                     dataKey="bot_name"
                     type="category"
                     axisLine={false}
-                    width={110}
+                    width={140}
                     textAnchor="end"
 
                     tickFormatter={(str) => {
@@ -128,13 +103,15 @@ const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
                     domain={[0, 'auto']}
                     allowDataOverflow={true}
                     height={50}
-                    allowDecimals={false}
+                    allowDecimals={true}
                     label={{
                         value: "Total Profit",
                         position: "Bottom",
                         dx: 0,
                         dy: 20
                     }}
+                    tickFormatter = {(value:any) => currencyTickFormatter(value, defaultCurrency)}
+
 
                     />
                 <XAxis
@@ -194,10 +171,6 @@ const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
                 <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours"  fill="var(--color-secondary)" xAxisId="avg_deal_hours"/>
                 <Scatter name="Avg. Profit" dataKey="avg_profit"  fill="#F87171" xAxisId="avg_profit"/>
 
-
-                {/* <Line name="Total Profit" type="monotone" yAxisId="total_profit" dataKey="total_profit" stroke="#E8AE00" dot={false} strokeWidth={1.75} /> */}
-                {/* <Line name="Avg. Deal Hours" type="monotone" yAxisId="avg_deal_hours" dataKey="avg_deal_hours" dot={false} strokeWidth={1.75} /> */}
-
             </ComposedChart>
         </ResponsiveContainer>)
     }
@@ -205,7 +178,7 @@ const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
     return (
         <div className="boxData stat-chart  ">
             <div style={{position: "relative"}}>
-                <h3 className="chartTitle">{title}</h3>
+                <h3 className="chartTitle">Bot Performance</h3>
                 <div style={{ position:"absolute", right: 0, top: 0, height: "50px", zIndex: 5}}>
                 <FormControl  >
                     <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
@@ -255,7 +228,7 @@ const BotPerformanceBar = ({ title, data = [] }: Type_BotPerformanceCharts) => {
 }
 
 
-function CustomTooltip({ active, payload}: Type_Tooltip) {
+function CustomTooltip({ active, payload, formatter}: Type_Tooltip) {
     if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
@@ -266,10 +239,10 @@ function CustomTooltip({ active, payload}: Type_Tooltip) {
         <div className="tooltip">
             <h4>{bot_name}</h4>
             <p>{type}</p>
-            <p><strong>Bought volume:</strong> ${parseNumber(bought_volume, 2)} </p>
+            <p><strong>Bought volume:</strong> {formatter(bought_volume)} </p>
             <p><strong>Deal count:</strong> {number_of_deals} </p>
-            <p><strong>Avg profit per deal:</strong> ${parseNumber(avg_profit, 2)} </p>
-            <p><strong>Total Profit:</strong> ${parseNumber(total_profit, 2)} </p>
+            <p><strong>Avg profit per deal:</strong> {formatter(avg_profit)} </p>
+            <p><strong>Total Profit:</strong> {formatter(total_profit)} </p>
             <p><strong>Avg deal hours:</strong> {parseNumber(avg_deal_hours, 2)} </p>
         </div>
     )

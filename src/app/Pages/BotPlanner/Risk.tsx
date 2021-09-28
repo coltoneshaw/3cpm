@@ -16,7 +16,7 @@ import {
 
 // Need to import metric contexts here
 const Risk = ({ localBotData }: { localBotData: Type_Query_bots[] }) => {
-
+    const { defaultCurrency } = useAppSelector(state => state.config.currentProfile.general);
     const { metricsData: {totalBankroll, totalBoughtVolume, position, reservedFundsTotal}} = useAppSelector(state => state.threeCommas);
     /**
      * Bankroll - sum, on_orders, position all added together. Needs to come from global state most likely.
@@ -44,10 +44,10 @@ const Risk = ({ localBotData }: { localBotData: Type_Query_bots[] }) => {
 
     return (
         <div className="riskDiv activeDealCards" style={{ flex: 1 }}>
-            <Card_TotalBankRoll metric={totalBankroll} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
-            <Card_MaxRiskPercent metric={risk} additionalData={{ totalBankroll, maxDCA, inactiveBotFunds: 0 }}/>
+            <Card_TotalBankRoll metric={totalBankroll} currency={defaultCurrency} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
+            <Card_MaxRiskPercent metric={risk} additionalData={{ totalBankroll, maxDCA, inactiveBotFunds: 0 }} currency={defaultCurrency}/>
             <Card_EnabledBots metric={botCount} />
-            <Card_MaxDca metric={maxDCA} />
+            <Card_MaxDca metric={maxDCA} currency={defaultCurrency} />
             <Card_DropCoverage metric={dropCoverage} />
 
         </div>

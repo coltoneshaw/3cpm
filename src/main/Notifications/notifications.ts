@@ -80,7 +80,7 @@ function findAndNotifyNewDeals(data: Type_Deals_API[], lastSyncTime: number, sum
 
 
     // end the function if no deals exist in the filtered array
-    if(data.length === 0) return false
+    if(data.length === 0 || !lastSyncTime) return false
 
     // if summary enabled and more than one deal exists.
     if (summary && data.length > 1) {

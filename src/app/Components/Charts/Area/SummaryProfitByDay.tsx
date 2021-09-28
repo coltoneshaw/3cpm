@@ -11,9 +11,13 @@ import { parseNumber } from '@/utils/number_formatting';
 
 import { Type_ProfitChart, Type_Tooltip } from '@/types/Charts';
 
+import { yAxisWidth, currencyTickFormatter, currencyTooltipFormatter } from '@/app/Components/Charts/formatting'
 
 
-const SummaryProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
+
+const SummaryProfitByDay = ({ data = [], X, defaultCurrency }: Type_ProfitChart) => {
+
+    const yWidth = yAxisWidth(defaultCurrency)
 
     const renderChart = () => {
         if (data.length === 0) {
@@ -21,57 +25,57 @@ const SummaryProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
         }
 
         return (
-        <ResponsiveContainer width="100%" height="100%" minHeight="300px" >
-            <AreaChart
-                width={500}
-                data={data}
-                margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                }}
-
-            >
-                <CartesianGrid opacity={.3} vertical={false} />
-                <XAxis
-                    dataKey="utc_date"
-                    axisLine={false}
-                    tickLine={false}
-                    minTickGap={50}
-                    tickFormatter={(str) => {
-                        if (str == 'auto') return ""
-                        return new Date(str).toLocaleDateString(lang, { month: '2-digit', day: '2-digit' })
-
+            <ResponsiveContainer width="100%" height="100%" minHeight="300px" >
+                <AreaChart
+                    width={500}
+                    data={data}
+                    margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
                     }}
-                />
-                <YAxis
-                    dataKey={X}
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={tick => parseNumber(tick, 0)}
-                    tickCount={9}
-                    // TODO - Need to look at passing in a tick array that contains the values rounded to 100s.
-                    type="number"
-                    allowDecimals={false}
-                    domain={[0, (dataMax: number) =>  Math.ceil(dataMax / 100 ) * 100]}
-                />
 
-                <Tooltip
-                    cursor={{ strokeDasharray: '3 3' }}
-                    // @ts-ignore
-                    content={<CustomTooltip />}
-                />
-                <defs>
-                    <linearGradient id="gradiant" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset={20} stopColor="var(--color-secondary-light87)" stopOpacity={1} />
-                        <stop offset={0} stopColor="var(--color-secondary-light25)" stopOpacity={1} />
-                    </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey={X} stroke="var(--color-secondary)" strokeWidth={1.75} fill="url(#gradiant)" />
-            </AreaChart>
+                >
+                    <CartesianGrid opacity={.3} vertical={false} />
+                    <XAxis
+                        dataKey="utc_date"
+                        axisLine={false}
+                        tickLine={false}
+                        minTickGap={50}
+                        tickFormatter={(str) => {
+                            if (str == 'auto') return ""
+                            return new Date(str).toLocaleDateString(lang, { month: '2-digit', day: '2-digit' })
 
-        </ResponsiveContainer>)
+                        }}
+                    />
+                    <YAxis
+                        dataKey={X}
+                        tickLine={false}
+                        axisLine={false}
+                        // tickFormatter={tick => parseNumber(tick, 0)}
+                        tickCount={6}
+                        width={yWidth}
+                        tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)}
+                        type="number"
+                        allowDecimals={true}
+                        domain={[0, 'auto']}
+                    />
+
+                    {/* TODO - pass the custom props down properly here.  */}
+                    {/* @ts-ignore */}
+                    <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
+
+                    <defs>
+                        <linearGradient id="gradiant" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset={20} stopColor="var(--color-secondary-light87)" stopOpacity={1} />
+                            <stop offset={0} stopColor="var(--color-secondary-light25)" stopOpacity={1} />
+                        </linearGradient>
+                    </defs>
+                    <Area type="monotone" dataKey={X} stroke="var(--color-secondary)" strokeWidth={1.75} fill="url(#gradiant)" />
+                </AreaChart>
+
+            </ResponsiveContainer>)
     }
 
 
@@ -84,7 +88,7 @@ const SummaryProfitByDay = ({ data = [], X }: Type_ProfitChart) => {
     )
 }
 
-const CustomTooltip = ({ active , payload = [], label }:Type_Tooltip) => {
+const CustomTooltip = ({ active, payload, formatter, label}: Type_Tooltip) =>{
 
     if (!active || payload.length == 0 || payload[0] == undefined) {
         return <></>
@@ -95,7 +99,7 @@ const CustomTooltip = ({ active , payload = [], label }:Type_Tooltip) => {
     return (
         <div className="tooltip">
             <h4>{label}</h4>
-            <p>$ {parseNumber( payload[0].value, 2) }</p>
+            <p>{formatter(payload[0].value)}</p>
         </div>
     )
 

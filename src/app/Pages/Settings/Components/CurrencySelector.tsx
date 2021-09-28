@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useAppSelector } from '@/app/redux/hooks';
 import { configPaths } from '@/app/redux/configSlice'
 import { updateNestedEditingProfile } from '@/app/redux/configActions';
+import { formatCurrency, supportedCurrencies } from '@/utils/granularity'
 
 import {
     FormControl,
@@ -26,71 +27,33 @@ const MenuProps = {
     },
 };
 
-interface Type_currency {
-    name: string
-    value: string
-}
-
-const currencyArray: Type_currency[] = [
-    {
-        name: "USD",
-        value: "USD",
-    },
-    {
-        name: "USDT",
-        value: "USDT",
-    },
-    {
-        name: "BUSD",
-        value: "BUSD",
-    },
-    {
-        name: "USDC",
-        value: "USDC",
-    },
-    {
-        name: "GBP",
-        value: "GBP"
-    },
-    {
-        name: "ETH",
-        value: "ETH"
-    },
-    {
-        name: "BTC",
-        value: "BTC"
-    },
-    {
-        name: "EUR",
-        value: "EUR"
-    }
-]
-
 const CurrencySelector = () => {
 
     const profile = useAppSelector(state => state.config.editingProfile);
-    const [currency, updateCurrency] = useState(() => [''])
-
+    const [currency, updateCurrency] = useState<(keyof typeof supportedCurrencies)[]>([])
     useEffect(() => {
         if (profile.general.defaultCurrency) updateCurrency(profile.general.defaultCurrency)
-
     }, [profile])
 
 
     const onChange = (e: any) => {
+        if( e.target.value.some( (cur:string) => !Object.keys(supportedCurrencies).includes(cur) )){
+            console.error('No matching currency code found.')
+            return false
+        }
         updateCurrency([...e.target.value])
         updateNestedEditingProfile([...e.target.value], configPaths.general.defaultCurrency)
     }
 
     return (
         <FormControl style={{ width: '100%', marginBottom: '25px' }} fullWidth>
-            <InputLabel id="currency-label">Currency</InputLabel>
+            <InputLabel id="currency-label">Stat / Metric Currency</InputLabel>
             <Select
                 labelId="currency-label"
                 multiple
                 id="currency"
                 name="currency"
-                label="Currency"
+                label="Stat / Metric Currency"
                 value={currency}
                 onChange={onChange}
                 renderValue={() => (currency.length > 0) ? currency.join(', ') : ""}
@@ -99,12 +62,23 @@ const CurrencySelector = () => {
                     width: '100%'
                 }}
             >
-                {currencyArray.map((c) => (
-                    <MenuItem value={c.value} key={c.value}>
-                        <Checkbox checked={currency.indexOf(c.name) > - 1} />
-                        <ListItemText primary={c.name} />
-                    </MenuItem>
-                ))}
+                {Object.keys(supportedCurrencies).sort().map((c: string) => {
+                    const currencyOption = supportedCurrencies[c as keyof typeof supportedCurrencies]
+                    return (
+                        <MenuItem value={currencyOption.value} key={currencyOption.value}>
+
+                            {/* 
+                                TODO - need to fix the type below
+                            */}
+                            {/*  @ts-ignore */}
+                            <Checkbox checked={currency.indexOf(currencyOption.value) > - 1} />
+                            <ListItemText primary={currencyOption.value + ` (${currencyOption.name} - ${currencyOption.type})`} />
+                        </MenuItem>
+                    )
+
+                }
+
+                )}
             </Select>
         </FormControl>
     )

@@ -263,7 +263,7 @@ const fetchBotPerformanceMetrics = async (oDate?: DateRange, profileData?: Type_
 
 const botQuery = async (currentProfile?: Type_Profile) => {
     const filtersQueryString = await getFiltersQueryString(currentProfile);
-    const { accountIdString, currentProfileID } = filtersQueryString;
+    const { accountIdString, currentProfileID, currencyString } = filtersQueryString;
 
 
     const queryString = `
@@ -273,6 +273,7 @@ const botQuery = async (currentProfile?: Type_Profile) => {
                     bots
                 WHERE
                     profile_id = '${currentProfileID}'
+                    and from_currency in (${currencyString})
                     and (account_id in (${accountIdString})  OR origin = 'custom')`
 
     // @ts-ignore
@@ -343,12 +344,11 @@ const getActiveDealsFunction = async (profileData: Type_Profile) => {
                     and currency in (${currencyString} )
                     and profile_id = '${currentProfileID}'
                     `
-    // console.log(query)
     // @ts-ignore
     let activeDeals: Array<Type_ActiveDeals> = await electron.database.query(query)
 
 
-    if (activeDeals == null || activeDeals.length > 0) {
+    if (activeDeals != undefined && activeDeals.length > 0) {
         activeDeals = activeDeals.map((row: Type_ActiveDeals) => {
             const so_volume_remaining = row.max_deal_funds - row.bought_volume
             return {
@@ -520,6 +520,8 @@ const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange, profil
 
 }
 
+
+
 const DateRangeToSQLString = (d: DateRange) => {
     let fromDateStr = moment.utc(d.from)
         .subtract(d.from?.getTimezoneOffset(), "minutes")
@@ -545,7 +547,8 @@ export {
     fetchBotPerformanceMetrics,
     fetchPairPerformanceMetrics,
     botQuery,
-    getSelectPairDataByDate
+    getSelectPairDataByDate,
+    getFiltersQueryString
 }
 
 

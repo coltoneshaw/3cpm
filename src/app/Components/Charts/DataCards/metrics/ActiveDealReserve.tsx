@@ -2,25 +2,26 @@ import React from "react";
 
 import Card from "../Card";
 import descriptions from "@/descriptions";
-import { parseNumber } from '@/utils/number_formatting'
+import {formatCurrency, supportedCurrencies} from'@/utils/granularity'
 
 interface Type_Card {
-    metric: number
+    metric: number,
+    currency: (keyof typeof supportedCurrencies)[]
 }
 
 /**
  * 
  * @param metric - accepts a sum of the active deal reserves. Which is just a total of `actual_usd_profit` together.
  */
-const Card_ActiveDealReserve = ({metric }:Type_Card) => {
+const Card_ActiveDealReserve = ({metric, currency }:Type_Card) => {
 
     const title = "Active Deal Reserve"
     const message = descriptions.metrics.activeDealReserves
     const key = title.replace(/\s/g, '')
 
-    return (
-        <Card title={title} message={message} key={key} metric={'$' + parseNumber(metric, 2)} />
-    )
+    // overriding the currency here since the values are all currently in USD.
+    currency = ['USD']
+    return ( <Card title={title} message={message} key={key} metric={formatCurrency(currency, metric)} /> )
 }
 
 export default Card_ActiveDealReserve;

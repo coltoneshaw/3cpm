@@ -1,6 +1,7 @@
 import { Grid, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { parseNumber } from '@/utils/number_formatting'
+import {formatCurrency} from'@/utils/granularity'
 
 const calcTpPrice = (currentPrice: number, tpPrice: number) => ((tpPrice - currentPrice) / currentPrice) * 100
 
@@ -36,6 +37,9 @@ function DCA({ row, ordersData }: any) {
     const [atPrice, setAtPrice] = useState<number>(parseFloat(row.original.current_price));
     const [tpPercent, setTpPercent] = useState<number>(parseFloat(row.original.take_profit));
 
+
+    const formatCurrencyLocally = (value:number) =>  formatCurrency([row.original.from_currency], value).metric
+    
     useEffect(() => {
         if (isNaN(addFunds)) {
             setAddFundsField(0)
@@ -83,22 +87,22 @@ function DCA({ row, ordersData }: any) {
             <tbody className="dcaCalcTable">
                 <tr>
                     <td>Original</td>
-                    <td className=" monospace-cell">{parseNumber(origCalc.average, 5)}</td>
-                    <td className=" monospace-cell">{parseNumber(origCalc.tpAt, 5)}</td>
+                    <td className=" monospace-cell">{formatCurrencyLocally(origCalc.average)}</td>
+                    <td className=" monospace-cell">{formatCurrencyLocally(origCalc.tpAt)}</td>
                     <td className=" monospace-cell">{parseNumber(row.original.take_profit, 2)}%</td>
                     <td className=" monospace-cell">{parseNumber(origCalc.gainRequired, 2)}%</td>
                 </tr>
                 <tr>
                     <td>New</td>
-                    <td className=" monospace-cell">{parseNumber(newCalc.average, 5)}</td>
-                    <td className=" monospace-cell">{parseNumber(newCalc.tpAt, 5)}</td>
+                    <td className=" monospace-cell">{formatCurrencyLocally(newCalc.average)}</td>
+                    <td className=" monospace-cell">{formatCurrencyLocally(newCalc.tpAt)}</td>
                     <td className=" monospace-cell">{parseNumber(tpPercent, 2)}%</td>
                     <td className=" monospace-cell">{parseNumber(newCalc.gainRequired, 2)}%</td>
                 </tr>
                 <tr className="summaryRow"> 
                     <td>Difference</td>
-                    <td className=" monospace-cell">{parseNumber(origCalc.average - newCalc.average, 5)}</td>
-                    <td className=" monospace-cell">{parseNumber(origCalc.tpAt - newCalc.tpAt, 5)}</td>
+                    <td className=" monospace-cell">{formatCurrencyLocally(origCalc.average - newCalc.average)}</td>
+                    <td className=" monospace-cell">{formatCurrencyLocally(origCalc.tpAt - newCalc.tpAt)}</td>
                     <td className=" monospace-cell">{parseNumber(row.original.take_profit - tpPercent, 2)}%</td>
                     <td className=" monospace-cell">{parseNumber(origCalc.gainRequired - newCalc.gainRequired, 2)}%</td>
                 </tr>

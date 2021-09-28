@@ -18,9 +18,8 @@ const Card_TotalDeals = ({metric}:Type_Card) => {
     const title = "Total Deals"
     const message = descriptions.metrics.totalDeals
     const key = title.replace(/\s/g, '')
-    return (
-        <Card title={title} message={message} key={key} metric={parseNumber(metric)} />
-    )
+    return (<Card title={title} message={message} key={key} metric={ {metric: metric, symbol: ''} } />)
+
 }
 
 export default Card_TotalDeals;

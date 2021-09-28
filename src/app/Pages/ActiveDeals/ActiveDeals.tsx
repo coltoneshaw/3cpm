@@ -13,6 +13,8 @@ import './ActiveDeals.scss'
 const ActiveDealsPage = () => {
 
     const { activeDeals, metricsData, profitData} = useAppSelector(state => state.threeCommas);
+    const { defaultCurrency } = useAppSelector(state => state.config.currentProfile.general);
+
 
     const todaysProfit = (profitData.length > 0) ? profitData[profitData.length - 1].profit : 0 
     const activeDealReserve = (activeDeals.length > 0) ? activeDeals.map( deal => deal.actual_usd_profit ).reduce( (sum, profit) => sum  + profit ) : 0;
@@ -37,11 +39,11 @@ const ActiveDealsPage = () => {
                 <div className="flex-row" style={{ flex: 1, paddingBottom: '.5em' }}>
                     <div className="riskDiv activeDealCards">
                         <Card_ActiveDeals metric={activeDealCount} />
-                        <Card_totalInDeals metric={totalInDeals} additionalData={{ on_orders, totalBoughtVolume }} />
-                        <Card_TotalDayProfit metric={todaysProfit} />
-                        <Card_ActiveDealReserve metric={activeDealReserve} />
-                        <Card_TotalUnrealizedProfit metric={unrealizedProfitTotal} />
-                        <Card_TotalRoi additionalData={{totalBankroll, totalProfit:todaysProfit}} />
+                        <Card_totalInDeals metric={totalInDeals} currency={defaultCurrency} additionalData={{ on_orders, totalBoughtVolume }} />
+                        <Card_TotalDayProfit metric={todaysProfit}  currency={defaultCurrency} />
+                        <Card_ActiveDealReserve metric={activeDealReserve} currency={defaultCurrency} />
+                        <Card_TotalUnrealizedProfit metric={unrealizedProfitTotal} currency={defaultCurrency}  />
+                        <Card_TotalRoi additionalData={{totalBankroll, totalProfit:todaysProfit}} currency={defaultCurrency}/>
                     </div>
 
                 </div>

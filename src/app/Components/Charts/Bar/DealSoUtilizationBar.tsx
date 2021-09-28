@@ -1,16 +1,18 @@
 import React from 'react';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { parseNumber, formatPercent } from '@/utils/number_formatting';
-import { Type_Tooltip, Type_ActiveDealCharts} from '@/types/Charts';
-import { Type_ActiveDeals } from '@/types/3Commas';
+import { formatPercent } from '@/utils/number_formatting';
 import { dynamicSort } from '@/utils/helperFunctions';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
+import {currencyTooltipFormatter} from '@/app/Components/Charts/formatting'
+
+import type { Type_ActiveDeals } from '@/types/3Commas';
+import type { Type_Tooltip, Type_ActiveDealCharts} from '@/types/Charts';
 
 
 
-const DealSoUtilizationBar = ({ title, data = [] }: Type_ActiveDealCharts) => {
+const DealSoUtilizationBar = ({ data = [], defaultCurrency }: Type_ActiveDealCharts) => {
     let localData = [...data]
 
     const renderChart = () => {
@@ -29,10 +31,10 @@ const DealSoUtilizationBar = ({ title, data = [] }: Type_ActiveDealCharts) => {
                 >
                     <Legend/>
                     <CartesianGrid opacity={.3} vertical={false}/>
-                    <Tooltip
-                        // @ts-ignore - Pass tooltip props down properly.
-                        content={<CustomTooltip/>}
-                    />
+
+                    {/* TODO - pass the custom props down properly here.  */}
+                    {/* @ts-ignore */}
+                    <Tooltip content={<CustomTooltip formatter={(value:any) => currencyTooltipFormatter(value, defaultCurrency)} />} />
                     <XAxis
                         dataKey="pair"
                         angle={45}
@@ -45,10 +47,7 @@ const DealSoUtilizationBar = ({ title, data = [] }: Type_ActiveDealCharts) => {
                         height={75}
 
                     />
-                    <YAxis
-                        tickFormatter={tick => tick * 100 + "%"}
-
-                    />
+                    <YAxis tickFormatter={tick => tick * 100 + "%"} />
 
 
                     <Bar dataKey="bought_volume" stackId="a" fill="var(--color-secondary-light25)"
@@ -61,7 +60,7 @@ const DealSoUtilizationBar = ({ title, data = [] }: Type_ActiveDealCharts) => {
 
     return (
         <div className="boxData stat-chart " >
-            <h3 className="chartTitle">{title}</h3>
+            <h3 className="chartTitle">Deal Max Utilization</h3>
             {renderChart()}
         </div>
     )
@@ -69,7 +68,7 @@ const DealSoUtilizationBar = ({ title, data = [] }: Type_ActiveDealCharts) => {
 
 
 
-function CustomTooltip({ active, payload, label }: Type_Tooltip) {
+function CustomTooltip({ active, payload, label, formatter }: Type_Tooltip) {
     if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
@@ -82,12 +81,8 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
             <h4>{label}</h4>
             <p><strong>Bot:</strong> {bot_name}</p>
             <p><strong>SO:</strong> {completed_safety_orders_count + completed_manual_safety_orders_count } / {max_safety_orders}</p>
-            <p><strong>Bought
-                Volume:</strong> ${parseNumber(payload[0].value)} ( {formatPercent(bought_volume, max_deal_funds)} )
-            </p>
-            <p><strong>SO Volume
-                Remaining:</strong> ${parseNumber(payload[1].value)} ( {formatPercent(so_volume_remaining, max_deal_funds)} )
-            </p>
+            <p><strong>Bought Volume:</strong> {formatter(payload[0].value)} ( {formatPercent(bought_volume, max_deal_funds)} ) </p>
+            <p><strong>SO Volume Remaining:</strong> {formatter(payload[1].value)} ( {formatPercent(so_volume_remaining, max_deal_funds)} )</p>
         </div>
     )
 }

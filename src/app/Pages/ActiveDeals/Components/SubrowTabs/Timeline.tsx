@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import { parseNumber } from '@/utils/number_formatting'
+import {formatCurrency, supportedCurrencies} from'@/utils/granularity'
+
 import { dynamicSort } from "@/utils/helperFunctions";
 import type { Type_MarketOrders, Type_Deals } from '@/types/3Commas'
 import { calc_SafetyArray } from "@/utils/formulas";
 import { FormControlLabel, Checkbox } from '@mui/material';
 
+
+
 const dateFormatter = (dateString: string) => new Date(dateString).toLocaleDateString(undefined, { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })
 
 const OrderTimeline = ({ row, ordersData }: { row: { original: Type_Deals }, ordersData: Type_MarketOrders[] }) => {
     const [future, updateFuture] = useState(false)
-    const changeNotifications = (event: React.ChangeEvent<HTMLInputElement>) => updateFuture(event.target.checked)
+    const changeFuture = (event: React.ChangeEvent<HTMLInputElement>) => updateFuture(event.target.checked)
+
+    // this has an error because the Type_Deals should have the from_currency be a key
+    const formatCurrencyLocally = (value:number) =>  formatCurrency([row.original.from_currency], value).metric
+
 
     const currentPrice = {
         order_id: 'current',
@@ -60,7 +68,7 @@ const OrderTimeline = ({ row, ordersData }: { row: { original: Type_Deals }, ord
                 control={
                     <Checkbox
                         checked={future}
-                        onChange={changeNotifications}
+                        onChange={changeFuture}
                         name="Show future SOs"
                         style={{ color: 'var(--color-secondary)' }}
 
@@ -87,9 +95,9 @@ const OrderTimeline = ({ row, ordersData }: { row: { original: Type_Deals }, ord
                             <td>{r.order_type}</td>
                             <td>{r.deal_order_type}</td>
                             <td>{r.status_string}</td>
-                            <td className="monospace-cell">{(r.rate) ? parseNumber(r.rate, 4) : parseNumber(r.average_price, 4)}</td>
-                            <td className="monospace-cell">{(r.quantity) ? parseNumber(+r.quantity, 5) : '-'}</td>
-                            <td className="monospace-cell">{(r.total) ? parseNumber(r.total, 5) : '-'}</td>
+                            <td className="monospace-cell">{(r.rate) ? formatCurrencyLocally(r.rate) : formatCurrencyLocally(r.average_price)}</td>
+                            <td className="monospace-cell">{(r.quantity) ? formatCurrencyLocally(+r.quantity) : '-'}</td>
+                            <td className="monospace-cell">{(r.total) ? formatCurrencyLocally(r.total) : '-'}</td>
                             <td>{(r.created_at) ? dateFormatter(r.created_at) : '-'}</td>
                         </tr>)
                     )}
