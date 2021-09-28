@@ -60,7 +60,11 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
         }
 
         let newData = filterData(data, filter).sort(dynamicSort(sort))
-        return (<ResponsiveContainer width="100%" height="100%" minHeight="800px">
+
+        // adjusting the chart height based on the number of data points include.d 15px is rougly the width required, 200px is for the other chart elements.
+        let chartHeight = `${(newData.length * 15) + 200}px` 
+        return (
+        <ResponsiveContainer width="100%" height="90%" minHeight={chartHeight}>
             <ComposedChart
 
                 data={newData}
@@ -72,6 +76,8 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
                 }}
                 layout="vertical"
                 stackOffset="expand"
+                maxBarSize={50}
+                barGap={1}
             >
                 <CartesianGrid opacity={.3} vertical={true} horizontal={false} />
                 <Legend verticalAlign="top" height={36} />
@@ -83,7 +89,7 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
                     type="category"
                     textAnchor="end"
                     fontSize=".75em"
-                    minTickGap={-80}
+                    minTickGap={-50}
                     axisLine={false}
                     width={110}
 
@@ -97,6 +103,7 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
                     offset={20}
                     height={50}
                     allowDecimals={true}
+                    tickCount={4}
                     label={{
                         value: "Total Profit",
                         position: "Bottom",
@@ -115,6 +122,7 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
                     allowDataOverflow={true}
                     height={50}
                     allowDecimals={false}
+                    tickCount={6}
                     label={{
                         value: "Avg. Deal Hours",
                         position: "Bottom",
@@ -131,8 +139,8 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
                     domain={[0, 'auto']}
                     allowDataOverflow={true}
                     height={50}
-                    allowDecimals={false}
-
+                    allowDecimals={true}
+                    tickCount={4}
                     label={{
                         value: "Bought Volume",
                         position: "Bottom",
@@ -142,12 +150,9 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
 
                 />
 
-                <Bar name="Total Profit" dataKey="total_profit" fill="var(--color-CTA-dark25)" xAxisId="total_profit"
-                    fillOpacity={.8} />
+                <Bar name="Total Profit" dataKey="total_profit" fill="var(--color-CTA-dark25)" xAxisId="total_profit" fillOpacity={.8} />
                 <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--color-primary-light25-light25)" />
-
-                <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours" fill="var(--color-secondary)"
-                    xAxisId="avg_deal_hours" />
+                <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours" fill="var(--color-secondary)" xAxisId="avg_deal_hours" />
 
             </ComposedChart>
         </ResponsiveContainer>)

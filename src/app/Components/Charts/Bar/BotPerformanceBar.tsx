@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {InputLabel, MenuItem, FormControl, Select} from '@mui/material';
+import { InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Scatter } from 'recharts';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
@@ -8,10 +8,10 @@ import type { Type_Bot_Performance_Metrics } from '@/types/3Commas';
 import type { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts';
 
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
-import { parseNumber} from '@/utils/number_formatting';
+import { parseNumber } from '@/utils/number_formatting';
 import { dynamicSort } from '@/utils/helperFunctions';
-import {filterData} from '@/app/Components/Charts/formatting'
-import {currencyTickFormatter, currencyTooltipFormatter} from '@/app/Components/Charts/formatting'
+import { filterData } from '@/app/Components/Charts/formatting'
+import { currencyTickFormatter, currencyTooltipFormatter } from '@/app/Components/Charts/formatting'
 
 
 
@@ -36,7 +36,7 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
 
     }, [])
 
-    const handleSortChange = (event:any) => {
+    const handleSortChange = (event: any) => {
         const selectedSort = (event.target.value != undefined) ? event.target.value : defaultSort;
         setSort(selectedSort);
         setStorageItem(localStorageSortName, selectedSort)
@@ -49,11 +49,11 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
     };
 
 
-    const hide = (id:string ) => {
+    const hide = (id: string) => {
         return id != sort
     }
 
-    
+
 
     const renderChart = () => {
         if (data.length === 0) {
@@ -61,145 +61,146 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
         }
 
         let newData = filterData(data, filter).sort(dynamicSort(sort))
-        
+
+        // adjusting the chart height based on the number of data points include.d 15px is rougly the width required, 200px is for the other chart elements.
+
+        let chartHeight = `${(newData.length * 15) + 200}px`
         return (
-        <ResponsiveContainer width="100%" height="90%" minHeight="800px">
-            <ComposedChart
+            <ResponsiveContainer width="100%" height="90%" minHeight={chartHeight}>
+                <ComposedChart
 
-                data={newData}
-                margin={{
-                    top: 25,
-                    right: 0,
-                    left: 0,
-                    bottom: 5,
-                }}
-                layout="vertical"
-                // stackOffset="expand"
-            >
-                <CartesianGrid opacity={.3} vertical={true} horizontal={false}/>
-                <Legend verticalAlign="top" height={36} />
-                {/* TODO - pass the custom props down properly here.  */}
-                {/* @ts-ignore */}
-                <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
-                <YAxis
-                    dataKey="bot_name"
-                    type="category"
-                    axisLine={false}
-                    width={140}
-                    textAnchor="end"
-
-                    tickFormatter={(str) => {
-                        return (str.length > 14 ) ? str.slice(0, 11) + "..." : str
+                    data={newData}
+                    margin={{
+                        top: 25,
+                        right: 0,
+                        left: 0,
+                        bottom: 5,
                     }}
-
-                    fontSize=".75em"
-                    minTickGap={-80}
-
-                />
-                <XAxis
-                    xAxisId="total_profit"
-                    type="number"
-                    hide={hide("-total_profit")}
-                    domain={[0, 'auto']}
-                    allowDataOverflow={true}
-                    height={50}
-                    allowDecimals={true}
-                    label={{
-                        value: "Total Profit",
-                        position: "Bottom",
-                        dx: 0,
-                        dy: 20
-                    }}
-                    tickFormatter = {(value:any) => currencyTickFormatter(value, defaultCurrency)}
-
+                    layout="vertical"
+                    // stackOffset="expand"
+                    maxBarSize={50}
+                    barGap={1}
+                >
+                    <CartesianGrid opacity={.3} vertical={true} horizontal={false} />
+                    <Legend verticalAlign="top" height={45} />
+                    {/* TODO - pass the custom props down properly here.  */}
+                    {/* @ts-ignore */}
+                    <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
+                    <YAxis
+                        dataKey="bot_name"
+                        type="category"
+                        axisLine={false}
+                        width={140}
+                        textAnchor="end"
+                        tickFormatter={(str) => {
+                            return (str.length > 14) ? str.slice(0, 11) + "..." : str
+                        }}
+                        fontSize=".75em"
+                        minTickGap={-30}
+                    />
+                    <XAxis
+                        xAxisId="total_profit"
+                        type="number"
+                        hide={hide("-total_profit")}
+                        domain={[0, 'auto']}
+                        allowDataOverflow={true}
+                        height={50}
+                        allowDecimals={true}
+                        label={{
+                            value: "Total Profit",
+                            position: "Bottom",
+                            dx: 0,
+                            dy: 20
+                        }}
+                        tickCount={4}
+                        tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)}
+                    />
+                    <XAxis
+                        xAxisId="avg_deal_hours"
+                        type="number"
+                        hide={hide("-avg_deal_hours")}
+                        domain={[0, 'auto']}
+                        allowDataOverflow={true}
+                        height={50}
+                        allowDecimals={false}
+                        label={{
+                            value: "Avg. Deal Hours",
+                            position: "Bottom",
+                            dx: 0,
+                            dy: 20
+                        }}
+                        tickCount={6}
+                    />
+                    <XAxis
+                        xAxisId="bought_volume"
+                        type="number"
+                        hide={hide("-bought_volume")}
+                        domain={[0, 'auto']}
+                        allowDataOverflow={true}
+                        height={50}
+                        allowDecimals={true}
+                        tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)}
+                        tickCount={4}
+                        label={{
+                            value: "Bought Volume",
+                            position: "Bottom",
+                            dx: 0,
+                            dy: 20
+                        }}
 
                     />
-                <XAxis
-                    xAxisId="avg_deal_hours"
-                    type="number"
-                    hide={hide("-avg_deal_hours")}
-                    domain={[0, 'auto']}
-                    allowDataOverflow={true}
-                    height={50}
-                    allowDecimals={false}
-                    label={{
-                        value: "Avg. Deal Hours",
-                        position: "Bottom",
-                        dx: 0,
-                        dy: 20
-                    }}
-
-                    />
-                <XAxis
-                    xAxisId="bought_volume"
-                    type="number"
-                    hide={hide("-bought_volume")}
-                    domain={[0, 'auto']}
-                    allowDataOverflow={true}
-                    height={50}
-                    allowDecimals={false}
-
-                    label={{
-                        value: "Bought Volume",
-                        position: "Bottom",
-                        dx: 0,
-                        dy: 20
-                    }}
-
-                    />
-                <XAxis
-                    xAxisId="avg_profit"
-                    type="number"
-                    hide={hide("-avg_profit")}
-                    domain={[0, 'auto']}
-                    allowDataOverflow={true}
-                    height={50}
-                    allowDecimals={false}
-
-                    label={{
-                        value: "Avg profit per deal",
-                        position: "Bottom",
-                        dx: 0,
-                        dy: 20
-                    }}
-
+                    <XAxis
+                        xAxisId="avg_profit"
+                        type="number"
+                        hide={hide("-avg_profit")}
+                        domain={[0, 'auto']}
+                        allowDataOverflow={true}
+                        height={50}
+                        allowDecimals={false}
+                        tickCount={4}
+                        label={{
+                            value: "Avg profit per deal",
+                            position: "Bottom",
+                            dx: 0,
+                            dy: 20
+                        }}
                     />
 
 
-                <Bar name="Total Profit" dataKey="total_profit" fill="var(--color-CTA-dark25)"  xAxisId="total_profit" fillOpacity={.8} />
-                <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--color-primary-light25-light25)"  />
-                <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours"  fill="var(--color-secondary)" xAxisId="avg_deal_hours"/>
-                <Scatter name="Avg. Profit" dataKey="avg_profit"  fill="#F87171" xAxisId="avg_profit"/>
+                    <Bar name="Total Profit" dataKey="total_profit" fill="var(--color-CTA-dark25)" xAxisId="total_profit" fillOpacity={.8} />
+                    <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--color-primary-light25-light25)" />
+                    <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours" fill="var(--color-secondary)" xAxisId="avg_deal_hours" />
+                    <Scatter name="Avg. Profit" dataKey="avg_profit" fill="#F87171" xAxisId="avg_profit" />
 
-            </ComposedChart>
-        </ResponsiveContainer>)
+                </ComposedChart>
+            </ResponsiveContainer>)
     }
 
     return (
         <div className="boxData stat-chart  ">
-            <div style={{position: "relative"}}>
+            <div style={{ position: "relative" }}>
                 <h3 className="chartTitle">Bot Performance</h3>
-                <div style={{ position:"absolute", right: 0, top: 0, height: "50px", zIndex: 5}}>
-                <FormControl  >
-                    <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
-                    <Select
-                        variant="standard"
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={sort}
-                        onChange={handleSortChange}
-                        style={{width: "150px"}}
-                    >
-                        <MenuItem value="-total_profit">Profit</MenuItem>
-                        <MenuItem value="-bought_volume">Bought Volume</MenuItem>
-                        <MenuItem value="-avg_deal_hours">Avg. Deal Hours</MenuItem>
-                        <MenuItem value="-avg_profit">Avg. Profit</MenuItem>
-                    </Select>
-                </FormControl>
+                <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>
+                    <FormControl  >
+                        <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
+                        <Select
+                            variant="standard"
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={sort}
+                            onChange={handleSortChange}
+                            style={{ width: "150px" }}
+                        >
+                            <MenuItem value="-total_profit">Profit</MenuItem>
+                            <MenuItem value="-bought_volume">Bought Volume</MenuItem>
+                            <MenuItem value="-avg_deal_hours">Avg. Deal Hours</MenuItem>
+                            <MenuItem value="-avg_profit">Avg. Profit</MenuItem>
+                        </Select>
+                    </FormControl>
                 </div>
 
-                <div style={{ position:"absolute", left: 0, top: 0, height: "50px", zIndex: 5}}>
-                <FormControl  >
+                <div style={{ position: "absolute", left: 0, top: 0, height: "50px", zIndex: 5 }}>
+                    <FormControl  >
                         <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
                         <Select
                             variant="standard"
@@ -217,9 +218,9 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
                         </Select>
                     </FormControl>
                 </div>
-                   
 
-                
+
+
 
             </div>
             {renderChart()}
@@ -228,7 +229,7 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
 }
 
 
-function CustomTooltip({ active, payload, formatter}: Type_Tooltip) {
+function CustomTooltip({ active, payload, formatter }: Type_Tooltip) {
     if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }

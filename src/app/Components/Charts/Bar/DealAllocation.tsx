@@ -29,12 +29,14 @@ const DealAllocationBar = ({ data = [], defaultCurrency }: Type_DealPerformanceC
                     data={localData}
 
                     stackOffset="expand"
+                    maxBarSize={50}
+                    barGap={1}
                 >
                     <Legend />
                     <CartesianGrid opacity={.3} vertical={false} />
                     {/* TODO - pass the custom props down properly here.  */}
                     {/* @ts-ignore */}
-                    <Tooltip content={<CustomTooltip formatter={(value:any) => currencyTooltipFormatter(value, defaultCurrency)} />}/>
+                    <Tooltip content={<CustomTooltip formatter={(value:any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{strokeDasharray: '3 3', opacity: .2}}/>
                     <XAxis
                         dataKey="pair"
                         angle={45}
