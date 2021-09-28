@@ -24,26 +24,62 @@ const getPosition = (data: Type_Query_PerfArray[], metric: string) => {
 
 }
 
+const filterData = (data: Type_Query_PerfArray[], filter: String) => {
+    let localData = [...data].sort(dynamicSort('-total_profit'));
+    const length = localData.length;
+    const fiftyPercent = length / 2
+    const twentyPercent = length / 5
+
+    if (filter === 'top20') {
+        localData = localData.sort(dynamicSort('-total_profit'));
+        return localData.filter((deal, index) => index < twentyPercent)
+    } else if (filter === 'top50') {
+        localData = localData.sort(dynamicSort('-total_profit'));
+        return localData.filter((deal, index) => index < fiftyPercent)
+    } else if (filter === 'bottom50') {
+        localData = localData.sort(dynamicSort('total_profit'));
+        return localData.filter((deal, index) => index < fiftyPercent)
+    } else if (filter === 'bottom20') {
+        localData = localData.sort(dynamicSort('total_profit'));
+        return localData.filter((deal, index) => index < twentyPercent)
+    }
+    return localData;
+}
+
+const defaultFilter = 'all';
+const defaultSort = 'percentTotalProfit';
+
 /**
  * TODO
  * - Look at combining this chart by "pair-BO" to minimize bubbles on the chart.
  */
 const DealPerformanceBubble = ({ data = [], defaultCurrency }: Type_DealPerformanceCharts) => {
 
-    const defaultSort = 'percentTotalProfit';
-    const localStorageSortName = storageItem.charts.DealPerformanceBubble.sort
+    
+    const {filter: storedFilter, sort: storedSort} = storageItem.charts.DealPerformanceBubble
 
-    const [sort, setSort] = useState(defaultSort);
+    // const [sort, setSort] = useState(defaultSort);
+
+    const [filter, setFilter] = useState(defaultFilter);
 
     useEffect(() => {
-        const getSortFromStorage = getStorageItem(localStorageSortName);
-        setSort((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
+        const getFilterFromStorage = getStorageItem(storedFilter);
+        setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
+
+        // const getSortFromStorage = getStorageItem(storedSort);
+        // setSort((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
     }, [])
 
+    // const handleChange = (event: any) => {
+    //     const selectedSort = (event.target.value != undefined) ? event.target.value : defaultSort;
+    //     setSort(selectedSort);
+    //     setStorageItem(storedSort, selectedSort)
+    // };
+
     const handleChange = (event: any) => {
-        const selectedSort = (event.target.value != undefined) ? event.target.value : defaultSort;
-        setSort(selectedSort);
-        setStorageItem(localStorageSortName, selectedSort)
+        const selectedFilter = (event.target.value != undefined) ? event.target.value : defaultFilter;
+        setFilter(selectedFilter);
+        setStorageItem(storedFilter, selectedFilter)
     };
 
 
@@ -52,8 +88,7 @@ const DealPerformanceBubble = ({ data = [], defaultCurrency }: Type_DealPerforma
         if (data.length === 0) {
             return (<NoData />)
         }
-        let localData = [...data]
-            .filter(row => row.percentTotalVolume > 1.5)
+        let localData = filterData([...data], filter);
 
         return (
             <ResponsiveContainer width="100%" height="100%" minHeight="400px">
@@ -108,7 +143,7 @@ const DealPerformanceBubble = ({ data = [], defaultCurrency }: Type_DealPerforma
 
                     <Scatter name="Deal Performance" data={localData} isAnimationActive={false}>
 
-                        {getPosition(localData, sort)}
+                        {getPosition(localData, defaultSort)}
                     </Scatter>
                 </ScatterChart>
             </ResponsiveContainer>)
@@ -119,7 +154,7 @@ const DealPerformanceBubble = ({ data = [], defaultCurrency }: Type_DealPerforma
             <div style={{ position: "relative" }}>
                 <h3 className="chartTitle">Deal Performance Scatter</h3>
                 <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>
-                    <FormControl  >
+                    {/* <FormControl  >
                         <InputLabel id="demo-simple-select-label">Color By</InputLabel>
                         <Select
                             variant="standard"
@@ -132,6 +167,21 @@ const DealPerformanceBubble = ({ data = [], defaultCurrency }: Type_DealPerforma
                             <MenuItem value="percentTotalProfit">Profit</MenuItem>
                             <MenuItem value="percentTotalVolume">Bought Volume</MenuItem>
                             <MenuItem value="number_of_deals">Total # of Deals</MenuItem>
+                        </Select>
+                    </FormControl> */}
+                    <FormControl  >
+                        <InputLabel>Filter By</InputLabel>
+                        <Select
+                            variant="standard"
+                            value={filter}
+                            onChange={handleChange}
+                            style={{ width: "150px" }}
+                        >
+                            <MenuItem value="all">All</MenuItem>
+                            <MenuItem value="top20">Top 20%</MenuItem>
+                            <MenuItem value="top50">Top 50%</MenuItem>
+                            <MenuItem value="bottom50">Bottom 50%</MenuItem>
+                            <MenuItem value="bottom20">Bottom 20%</MenuItem>
                         </Select>
                     </FormControl>
                 </div>

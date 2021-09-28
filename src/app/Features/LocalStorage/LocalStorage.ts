@@ -16,7 +16,8 @@ const storageItem = {
             filter: 'filter-botPerformanceBubble'// filter for the bot bubble - values are 'all' , top20, top50, bottom50, bottom20
         },
         DealPerformanceBubble:{
-            sort: 'sort-dealPerformanceBubble' // percentTotalProfit , number_of_deals , percentTotalVolume
+            sort: 'sort-dealPerformanceBubble', // percentTotalProfit , number_of_deals , percentTotalVolume
+            filter: 'filter-dealPerformanceBubble'// filter for the bot bubble - values are 'all' , top20, top50, bottom50, bottom20
         },
         PairPerformanceBar: {
             sort: 'sort-pairPerformanceBar', // -total_profit, -bought_volume, -avg_deal_hours

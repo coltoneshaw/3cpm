@@ -52,8 +52,6 @@ const getPosition = (localData: Type_Bot_Performance_Metrics[]) => {
 const BotPerformanceBubble = ({ data = [], defaultCurrency }: Type_BotPerformanceCharts) => {
 
     const yWidth = yAxisWidth(defaultCurrency)
-
-
     const [filter, setFilter] = useState('all');
 
     const defaultFilter = 'all';
