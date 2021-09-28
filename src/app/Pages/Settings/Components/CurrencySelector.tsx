@@ -31,12 +31,8 @@ const CurrencySelector = () => {
 
     const profile = useAppSelector(state => state.config.editingProfile);
     const [currency, updateCurrency] = useState<(keyof typeof supportedCurrencies)[]>([])
-
     useEffect(() => {
-
-        //@ts-ignore
         if (profile.general.defaultCurrency) updateCurrency(profile.general.defaultCurrency)
-
     }, [profile])
 
 

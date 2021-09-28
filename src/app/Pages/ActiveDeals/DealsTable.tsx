@@ -192,7 +192,6 @@ function DealsTable({ data }: { data: object[] }) {
                 accessor: 'max_deal_funds',
                 style: { textAlign: 'right' },
                 Cell: ({ cell }: any) => {
-                    console.log(cell.value)
                     return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
                 },
             },

@@ -344,12 +344,11 @@ const getActiveDealsFunction = async (profileData: Type_Profile) => {
                     and currency in (${currencyString} )
                     and profile_id = '${currentProfileID}'
                     `
-    // console.log(query)
     // @ts-ignore
     let activeDeals: Array<Type_ActiveDeals> = await electron.database.query(query)
 
 
-    if (activeDeals == null || activeDeals.length > 0) {
+    if (activeDeals != undefined && activeDeals.length > 0) {
         activeDeals = activeDeals.map((row: Type_ActiveDeals) => {
             const so_volume_remaining = row.max_deal_funds - row.bought_volume
             return {
