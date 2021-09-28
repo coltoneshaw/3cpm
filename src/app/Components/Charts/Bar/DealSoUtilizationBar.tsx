@@ -68,7 +68,7 @@ const DealSoUtilizationBar = ({ data = [], defaultCurrency }: Type_ActiveDealCha
 
 
 function CustomTooltip({ active, payload, label, formatter }: Type_Tooltip) {
-    if (!active || payload.length == 0 || payload[0] == undefined) {
+    if (!active || !payload ||  payload[0] == undefined) {
         return null
     }
 

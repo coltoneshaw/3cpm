@@ -96,7 +96,7 @@ const SoDistribution = ({ data = [], metrics, defaultCurrency }: Type_SoDistribu
 
 
 function CustomTooltip({ active, payload, label, formatter }: Type_Tooltip) {
-    if (!active || payload.length == 0 || payload[0] == undefined) {
+    if (!active || !payload || payload[0] == undefined) {
         return null
     }
 

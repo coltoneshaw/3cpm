@@ -475,7 +475,7 @@ const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange, profil
     const query = `
         SELECT substr(closed_at, 0, 11) as date,
             pair,
-            sum(usd_final_profit) as profit
+            sum(final_profit) as profit
         FROM
             deals
         WHERE
