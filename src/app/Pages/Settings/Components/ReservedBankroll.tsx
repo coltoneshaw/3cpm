@@ -4,10 +4,10 @@ import { Switch } from '@mui/material';
 
 import { CustomTable } from '@/app/Components/DataTable/Index'
 import styled from 'styled-components'
-import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
+import { useAppSelector } from '@/app/redux/hooks';
 
-import { setReservedFunds, configPaths } from '@/app/redux/configSlice'
-import { updateReservedFundsArray, updateNestedEditingProfile } from '@/app/redux/configActions';
+import { configPaths } from '@/app/redux/configSlice'
+import { updateNestedEditingProfile } from '@/app/redux/configActions';
 import { Type_ReservedFunds } from '@/types/config';
 
 

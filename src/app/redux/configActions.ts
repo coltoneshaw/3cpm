@@ -1,4 +1,5 @@
-import { setConfig, setCurrentProfile, setEditingProfile, setReservedFunds, updateOnEditingProfile, storeEditingProfileData, deleteProfileById } from '@/app/redux/configSlice'
+import { setConfig, setCurrentProfile, setEditingProfile, updateOnEditingProfile, deleteProfileById } from '@/app/redux/configSlice'
+import {setSyncData} from '@/app/redux/threeCommas/threeCommasSlice'
 
 import { TconfigValues, Type_Profile, Type_ReservedFunds } from '@/types/config';
 
@@ -35,6 +36,9 @@ const storeConfigInFile = async () => {
 
 const updateCurrentProfile = (profileData: Type_Profile) => {
     store.dispatch(setCurrentProfile(profileData));
+
+    // setting this to zero here to prevent a spam of notifications with auto sync enabled. 
+    store.dispatch(setSyncData({syncCount: 0, time: 0}))
 }
 
 const updateEditingProfile = (profileData: Type_Profile, profileId: string) => {
@@ -82,8 +86,7 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
         }
 
         // getting account IDs from the reserved funds
-        const configuredAccountIds = removeDuplicatesInArray(reservedFunds.map(account => account.id), 'id')
-        console.log(configuredAccountIds)
+        // const configuredAccountIds = removeDuplicatesInArray(reservedFunds.map(account => account.id), 'id')
 
         // finding any accounts that did not exist since the last sync.
         const reservedFundsArray = filteredAccountData

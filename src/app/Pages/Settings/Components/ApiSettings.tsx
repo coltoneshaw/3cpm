@@ -6,7 +6,7 @@ import { updateReservedFundsArray, updateNestedEditingProfile } from '@/app/redu
 
 import { TextField, Button, InputLabel, FormControl, MenuItem, Select } from '@mui/material';
 
-import { Type_ApiKeys, Type_Profile, Type_ReservedFunds } from '@/types/config'
+import { Type_Profile, Type_ReservedFunds } from '@/types/config'
 
 
 const ApiSettings = () => {
@@ -106,10 +106,6 @@ const ApiSettings = () => {
                             alert('there was an error testing the API keys. Check the console for more information.')
                         }
                     }
-                    // fetch all accounts from the API
-                    // store these accounts in the database
-                    // update the accountData property & the reserved funds.
-                    // update the table on the page.
                 }
                 style={{
                     margin: "auto",

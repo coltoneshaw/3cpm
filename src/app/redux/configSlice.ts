@@ -75,9 +75,7 @@ export const configSlice = createSlice({
 
             state.config = newConfig
         },
-        setReservedFunds: (state, action) => {
-            state.reservedFunds = action.payload
-        },
+
         updateOnEditingProfile: (state, action) => {
             const { data, path } = action.payload
             let newProfile = Object.assign({}, { ...state.editingProfile })
@@ -129,7 +127,7 @@ export const configSlice = createSlice({
 })
 
 export const { 
-    setConfig, setCurrentProfile, setEditingProfile, storeEditingProfileData, setReservedFunds, 
+    setConfig, setCurrentProfile, setEditingProfile, storeEditingProfileData, 
     updateOnEditingProfile, deleteProfileById, addEditingProfile,
     setCurrentProfileById
 } = configSlice.actions;
