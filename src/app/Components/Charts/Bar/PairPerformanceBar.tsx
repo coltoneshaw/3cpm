@@ -62,100 +62,100 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
         let newData = filterData(data, filter).sort(dynamicSort(sort))
 
         // adjusting the chart height based on the number of data points include.d 15px is rougly the width required, 200px is for the other chart elements.
-        let chartHeight = `${(newData.length * 15) + 200}px` 
+        let chartHeight = `${(newData.length * 15) + 200}px`
         return (
-        <ResponsiveContainer width="100%" height="90%" minHeight={chartHeight}>
-            <ComposedChart
+            <ResponsiveContainer width="100%" height="90%" minHeight={chartHeight}>
+                <ComposedChart
 
-                data={newData}
-                margin={{
-                    top: 25,
-                    right: 0,
-                    left: 0,
-                    bottom: 5,
-                }}
-                layout="vertical"
-                stackOffset="expand"
-                maxBarSize={50}
-                barGap={1}
-            >
-                <CartesianGrid opacity={.3} vertical={true} horizontal={false} />
-                <Legend verticalAlign="top" height={36} />
-                {/* TODO - pass the custom props down properly here.  */}
-                {/* @ts-ignore */}
-                <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
-                <YAxis
-                    dataKey="pair"
-                    type="category"
-                    textAnchor="end"
-                    fontSize=".75em"
-                    minTickGap={-50}
-                    axisLine={false}
-                    width={110}
-
-                />
-                <XAxis
-                    xAxisId="total_profit"
-                    type="number"
-                    hide={hide("-total_profit")}
-                    domain={[0, 'auto']}
-                    allowDataOverflow={true}
-                    offset={20}
-                    height={50}
-                    allowDecimals={true}
-                    tickCount={4}
-                    label={{
-                        value: "Total Profit",
-                        position: "Bottom",
-                        dx: 0,
-                        dy: 20
+                    data={newData}
+                    margin={{
+                        top: 25,
+                        right: 0,
+                        left: 0,
+                        bottom: 5,
                     }}
-                    tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)}
+                    layout="vertical"
+                    stackOffset="expand"
+                    maxBarSize={50}
+                    barGap={1}
+                >
+                    <CartesianGrid opacity={.3} vertical={true} horizontal={false} />
+                    <Legend verticalAlign="top" height={36} />
+                    {/* TODO - pass the custom props down properly here.  */}
+                    {/* @ts-ignore */}
+                    <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
+                    <YAxis
+                        dataKey="pair"
+                        type="category"
+                        textAnchor="end"
+                        fontSize=".75em"
+                        minTickGap={-50}
+                        axisLine={false}
+                        width={110}
 
-                />
+                    />
+                    <XAxis
+                        xAxisId="total_profit"
+                        type="number"
+                        hide={hide("-total_profit")}
+                        domain={[0, 'auto']}
+                        allowDataOverflow={true}
+                        offset={20}
+                        height={50}
+                        allowDecimals={true}
+                        tickCount={4}
+                        label={{
+                            value: "Total Profit",
+                            position: "Bottom",
+                            dx: 0,
+                            dy: 20
+                        }}
+                        tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)}
 
-                <XAxis
-                    xAxisId="avg_deal_hours"
-                    type="number"
-                    hide={hide("-avg_deal_hours")}
-                    domain={[0, 'auto']}
-                    allowDataOverflow={true}
-                    height={50}
-                    allowDecimals={false}
-                    tickCount={6}
-                    label={{
-                        value: "Avg. Deal Hours",
-                        position: "Bottom",
-                        dx: 0,
-                        dy: 20
-                    }}
+                    />
+
+                    <XAxis
+                        xAxisId="avg_deal_hours"
+                        type="number"
+                        hide={hide("-avg_deal_hours")}
+                        domain={[0, 'auto']}
+                        allowDataOverflow={true}
+                        height={50}
+                        allowDecimals={false}
+                        tickCount={6}
+                        label={{
+                            value: "Avg. Deal Hours",
+                            position: "Bottom",
+                            dx: 0,
+                            dy: 20
+                        }}
 
 
-                />
-                <XAxis
-                    xAxisId="bought_volume"
-                    type="number"
-                    hide={hide("-bought_volume")}
-                    domain={[0, 'auto']}
-                    allowDataOverflow={true}
-                    height={50}
-                    allowDecimals={true}
-                    tickCount={4}
-                    label={{
-                        value: "Bought Volume",
-                        position: "Bottom",
-                        dx: 0,
-                        dy: 20
-                    }}
+                    />
+                    <XAxis
+                        xAxisId="bought_volume"
+                        type="number"
+                        hide={hide("-bought_volume")}
+                        domain={[0, 'auto']}
+                        allowDataOverflow={true}
+                        height={50}
+                        allowDecimals={true}
+                        tickCount={4}
+                        label={{
+                            value: "Bought Volume",
+                            position: "Bottom",
+                            dx: 0,
+                            dy: 20
+                        }}
 
-                />
+                    />
 
-                <Bar name="Total Profit" dataKey="total_profit" fill="var(--color-CTA-dark25)" xAxisId="total_profit" fillOpacity={.8} />
-                <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--color-primary-light25-light25)" />
-                <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours" fill="var(--color-secondary)" xAxisId="avg_deal_hours" />
+                    <Bar name="Total Profit" dataKey="total_profit" fill="var(--chart-metric2-color)" xAxisId="total_profit" fillOpacity={.8} />
+                    <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--chart-metric1-color)" />
+                    <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours" fill="var(--chart-metric3-color)" xAxisId="avg_deal_hours" />
 
-            </ComposedChart>
-        </ResponsiveContainer>)
+                </ComposedChart>
+            </ResponsiveContainer>)
     }
 
     return (

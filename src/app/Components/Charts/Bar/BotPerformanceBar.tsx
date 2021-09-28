@@ -167,10 +167,10 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
                     />
 
 
-                    <Bar name="Total Profit" dataKey="total_profit" fill="var(--color-CTA-dark25)" xAxisId="total_profit" fillOpacity={.8} />
-                    <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--color-primary-light25-light25)" />
-                    <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours" fill="var(--color-secondary)" xAxisId="avg_deal_hours" />
-                    <Scatter name="Avg. Profit" dataKey="avg_profit" fill="#F87171" xAxisId="avg_profit" />
+                    <Bar name="Total Profit" dataKey="total_profit" fill="var(--chart-metric2-color)" xAxisId="total_profit" fillOpacity={.8} />
+                    <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--chart-metric1-color)" />
+                    <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours" fill="var(--chart-metric3-color)" xAxisId="avg_deal_hours" />
+                    <Scatter name="Avg. Profit" dataKey="avg_profit" fill="var(--chart-metric4-color)" xAxisId="avg_profit" />
 
                 </ComposedChart>
             </ResponsiveContainer>)

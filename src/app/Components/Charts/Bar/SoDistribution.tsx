@@ -79,8 +79,8 @@ const SoDistribution = ({ data = [], metrics, defaultCurrency }: Type_SoDistribu
                     />
 
 
-                    <Bar dataKey="percentOfDeals" fill="var(--color-primary-light25)" name='% of deals'/>
-                    <Bar dataKey="percentOfVolume" fill="var(--color-secondary-light25)" name='% of volume'/>
+                    <Bar dataKey="percentOfDeals" fill="var(--chart-metric1-color)" name='% of deals'/>
+                    <Bar dataKey="percentOfVolume" fill="var(--chart-metric3-color)" name='% of volume'/>
 
                 </BarChart>
             </ResponsiveContainer>)

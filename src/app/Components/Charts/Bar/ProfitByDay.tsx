@@ -168,7 +168,7 @@ const ProfitByDay = ({ data = [], X, defaultCurrency }: Type_ProfitChart) => {
                     {/* TODO - pass the custom props down properly here.  */}
                     {/* @ts-ignore */}
                     <Tooltip content={<CustomTooltip formatter={(value:any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{strokeDasharray: '3 3', opacity: .2}} />
-                    <Bar type="monotone" dataKey={X} fill="var(--color-secondary-light25)"/>
+                    <Bar type="monotone" dataKey={X} fill="var(--chart-metric1-color)"/>
                 </BarChart>
 
             </ResponsiveContainer>)

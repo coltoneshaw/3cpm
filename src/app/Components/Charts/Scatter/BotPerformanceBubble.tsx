@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis } from 'recharts';
 import { InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 
-import {currencyTooltipFormatter, yAxisWidth, currencyTickFormatter} from '@/app/Components/Charts/formatting'
+import { currencyTooltipFormatter, yAxisWidth, currencyTickFormatter } from '@/app/Components/Charts/formatting'
 
 import { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts'
 import { Type_Bot_Performance_Metrics } from '@/types/3Commas';
@@ -14,10 +14,10 @@ import { dynamicSort } from '@/utils/helperFunctions';
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 
-const colors = ["#cfe1f2", "#b5d4e9", "#93c3df", "#6daed5", "#4b97c9", "#2f7ebc", "#1864aa", "#0a4a90", "#08306b"]
+const colors = ["#DBEAFE", "#BFDBFE", "#93C5FD", "#60A5FA", "#3B82F6", "#2563EB", "#1D4ED8", "#1E40AF", "#1E3A8A"]
 
 
-const filterData = (data: Type_Bot_Performance_Metrics[], filter:String) => {
+const filterData = (data: Type_Bot_Performance_Metrics[], filter: String) => {
     let localData = [...data].sort(dynamicSort('-total_profit'));
     const length = localData.length;
     const fiftyPercent = length / 2

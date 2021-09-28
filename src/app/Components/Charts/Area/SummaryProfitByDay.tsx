@@ -68,11 +68,11 @@ const SummaryProfitByDay = ({ data = [], X, defaultCurrency }: Type_ProfitChart)
 
                     <defs>
                         <linearGradient id="gradiant" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset={20} stopColor="var(--color-secondary-light87)" stopOpacity={1} />
-                            <stop offset={0} stopColor="var(--color-secondary-light25)" stopOpacity={1} />
+                            <stop offset={20} stopColor="var(--chart-metric1-color)" stopOpacity={.2} />
+                            <stop offset={0} stopColor="var(--chart-metric1-color)" stopOpacity={.2} />
                         </linearGradient>
                     </defs>
-                    <Area type="monotone" dataKey={X} stroke="var(--color-secondary)" strokeWidth={1.75} fill="url(#gradiant)" />
+                    <Area type="monotone" dataKey={X} stroke="var(--chart-metric3-color)" strokeWidth={2} fill="url(#gradiant)" />
                 </AreaChart>
 
             </ResponsiveContainer>)

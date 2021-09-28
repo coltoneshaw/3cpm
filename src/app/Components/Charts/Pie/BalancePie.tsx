@@ -9,7 +9,6 @@ import type { Type_MetricData } from '@/types/3Commas';
 import type { defaultCurrency } from '@/types/config';
 
 
-const COLORS = ['var(--color-primary-light25)', 'var(--color-secondary-light25)', 'var(--color-CTA)', '#FF8042'];
 
 interface Type_PieMetrics {
     title: string
@@ -24,19 +23,22 @@ const BalancePie = ({ title, metrics, defaultCurrency }: Type_PieMetrics) => {
         name: 'Available',
         metric: availableBankroll,
         percent: (availableBankroll / totalBankroll) * 100,
-        key: 1
+        key: 1,
+        color: 'var(--chart-metric2-color)'
     },
     {
         name: 'Limit Orders',
         metric: on_orders,
         percent: (on_orders / totalBankroll) * 100,
-        key: 2
+        key: 2,
+        color: 'var(--chart-metric1-color)'
     },
     {
         name: "Purchased",
         metric: totalBoughtVolume,
         percent: (totalBoughtVolume / totalBankroll) * 100,
-        key: 3
+        key: 3,
+        color: 'var(--chart-metric3-color)'
     }
 
     ]
@@ -60,8 +62,8 @@ const BalancePie = ({ title, metrics, defaultCurrency }: Type_PieMetrics) => {
                             data={chartData} dataKey="metric" cx="50%" cy="50%" outerRadius={85}
                             style={{ outline: 'none' }}
                         >
-                            {chartData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke='none' />
+                            {chartData.map((entry) => (
+                                <Cell key={`cell-${entry.key}`} fill={entry.color} stroke='none' />
                             ))}
                         </Pie>
                         <Legend verticalAlign="bottom" height={36} />

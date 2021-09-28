@@ -52,8 +52,8 @@ const DealAllocationBar = ({ data = [], defaultCurrency }: Type_DealPerformanceC
                     />
 
 
-                    <Bar dataKey="percentTotalVolume" fill="var(--color-secondary-light25)" name="% Total Volume" />
-                    <Bar dataKey="percentTotalProfit" fill="var(--color-primary-light25)" name="% Total Profit" />
+                    <Bar dataKey="percentTotalVolume" fill="var(--chart-metric1-color)" name="% Total Volume" />
+                    <Bar dataKey="percentTotalProfit" fill="var(--chart-metric3-color)" name="% Total Profit" />
                 </BarChart>
             </ResponsiveContainer>)
     }

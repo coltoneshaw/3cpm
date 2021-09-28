@@ -20,7 +20,7 @@ import type { DateRange } from "@/types/Date";
 
 import { getSelectPairDataByDate, getFiltersQueryString } from '@/app/Features/3Commas/3Commas';
 
-const colors = ["#374151", "#B91C1C", "#B45309", "#047857", "#1D4ED8", "#4338CA", "#6D28D9", "#BE185D"]
+const colors = ['var(--chart-metric1-color)', 'var(--chart-metric2-color)','var(--chart-metric3-color)','var(--chart-metric4-color)', 'var(--chart-metric5-color)', 'var(--chart-metric6-color)', 'var(--chart-metric7-color)', 'var(--chart-metric8-color)']
 
 interface pairByDate {
     date: string

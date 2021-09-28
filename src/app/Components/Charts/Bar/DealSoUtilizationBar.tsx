@@ -51,10 +51,8 @@ const DealSoUtilizationBar = ({ data = [], defaultCurrency }: Type_ActiveDealCha
                     <YAxis tickFormatter={tick => tick * 100 + "%"} />
 
 
-                    <Bar dataKey="bought_volume" stackId="a" fill="var(--color-secondary-light25)"
-                         name="% Bought Volume"/>
-                    <Bar dataKey="so_volume_remaining" stackId="a" fill="var(--color-primary-light25)" opacity={.6}
-                         name="% SO Volume Remaining"/>
+                    <Bar dataKey="bought_volume" stackId="a" fill="var(--chart-metric3-color)" opacity={.8} name="% Bought Volume"/>
+                    <Bar dataKey="so_volume_remaining" stackId="a" fill="var(--chart-metric1-color)" opacity={.9} name="% SO Volume Remaining"/>
                 </BarChart>
             </ResponsiveContainer>)
     }
