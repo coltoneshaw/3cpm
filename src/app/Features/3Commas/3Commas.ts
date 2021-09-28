@@ -521,6 +521,8 @@ const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange, profil
 
 }
 
+
+
 const DateRangeToSQLString = (d: DateRange) => {
     let fromDateStr = moment.utc(d.from)
         .subtract(d.from?.getTimezoneOffset(), "minutes")
@@ -546,7 +548,8 @@ export {
     fetchBotPerformanceMetrics,
     fetchPairPerformanceMetrics,
     botQuery,
-    getSelectPairDataByDate
+    getSelectPairDataByDate,
+    getFiltersQueryString
 }
 
 
