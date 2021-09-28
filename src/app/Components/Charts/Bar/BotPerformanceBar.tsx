@@ -26,6 +26,9 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
 
     const [sort, setSort] = useState(defaultSort);
     const [filter, setFilter] = useState(defaultFilter);
+    const [metricsDisplayed, updatedMetricsDisplayed] = useState(() => ({ 'total_profit': false, 'bought_volume': false, 'avg_deal_hours': false, 'avg_profit' : false }))
+
+
 
     useEffect(() => {
         const getFilterFromStorage = getStorageItem(localStorageFilterName);
@@ -82,7 +85,21 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
                     barGap={1}
                 >
                     <CartesianGrid opacity={.3} vertical={true} horizontal={false} />
-                    <Legend verticalAlign="top" height={45} />
+                    <Legend
+                        verticalAlign="top" height={45}
+                        style={{
+                            cursor: 'pointer'
+                        }}
+
+                        onClick={(e) => {
+                            updatedMetricsDisplayed(prevState => {
+                                const newState = { ...prevState }
+                                newState[e.dataKey as keyof typeof prevState] = !newState[e.dataKey as keyof typeof prevState]
+                                return newState
+                            })
+
+                        }}
+                    />
                     {/* TODO - pass the custom props down properly here.  */}
                     {/* @ts-ignore */}
                     <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
@@ -167,10 +184,10 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
                     />
 
 
-                    <Bar name="Total Profit" dataKey="total_profit" fill="var(--chart-metric2-color)" xAxisId="total_profit" fillOpacity={.8} />
-                    <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--chart-metric1-color)" />
-                    <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours" fill="var(--chart-metric3-color)" xAxisId="avg_deal_hours" />
-                    <Scatter name="Avg. Profit" dataKey="avg_profit" fill="var(--chart-metric4-color)" xAxisId="avg_profit" />
+                    <Bar name="Total Profit" dataKey="total_profit" fill="var(--chart-metric2-color)" xAxisId="total_profit" fillOpacity={.8} hide={metricsDisplayed.total_profit} />
+                    <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--chart-metric1-color)" hide={metricsDisplayed.bought_volume} />
+                    <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours" fill="var(--chart-metric3-color)" xAxisId="avg_deal_hours" hide={metricsDisplayed.avg_deal_hours} />
+                    <Scatter name="Avg. Profit" dataKey="avg_profit" fill="var(--chart-metric4-color)" xAxisId="avg_profit" hide={metricsDisplayed.avg_profit} />
 
                 </ComposedChart>
             </ResponsiveContainer>)
