@@ -137,10 +137,19 @@ Material Switch Overrides.
 
 .MuiSelect-root,
 .MuiFormLabel-root,
-.MuiInput-input,
+.MuiInputBase-input,
 .MuiSelect-icon,
-.MuiIconButton-label {
+.MuiIconButton-label,
+.MuiFormHelperText-root,
+.MuiTab-root 
+ {
   color: var(--color-text-lightbackground) !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: var(--color-text-lightbackground) !important;
+  opacity: .5;
+
 }
 
 
@@ -189,8 +198,12 @@ Material Switch Overrides.
 }
 
 
-.MuiCheckbox-colorSecondary.Mui-checked,
-.MuiButton-textPrimary  {
+// .MuiCheckbox-colorSecondary.Mui-checked,
+// .MuiButton-textPrimary  {
+//   color: var(--color-secondary) !important;
+// }
+
+.MuiCheckbox-colorSecondary.Mui-checked  {
   color: var(--color-secondary) !important;
 }
 
@@ -243,3 +256,6 @@ Material Switch Overrides.
   letter-spacing: 0;
 }
 
+// .recharts-tooltip-cursor{
+//   opacity: .3;
+// }

@@ -35,7 +35,7 @@ export default function StartDatePicker() {
 
 
   return (
-    <FormControl style={{ width: "100%",}}>
+    <FormControl style={{ width: "100%"}} className="settings-datePicker">
         <DesktopDatePicker
           label="Stats Start Date"
           views={['day']}
@@ -44,7 +44,6 @@ export default function StartDatePicker() {
           onChange={handleDateChange}
           renderInput={(params) => (
             <TextField {...params} helperText={params?.inputProps?.placeholder} />
-
           )}
           className="desktopPicker"
         />

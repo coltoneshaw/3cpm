@@ -29,7 +29,7 @@
 
     .deleteProfile{
         background-color: var(--color-red);
-        color: var(--color-text-lightbackground);
+        color: black !important;
         opacity: .9;
     }
 
@@ -75,3 +75,8 @@
     align-self: center;
 }
 
+.settings-datePicker{
+    .MuiSvgIcon-root {
+        color: var(--color-text-lightbackground) !important;
+    }
+}
