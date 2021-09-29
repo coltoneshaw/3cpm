@@ -21,10 +21,18 @@ export interface Type_Pair_Performance_Metrics {
     avg_deal_hours: number
 }
 
+export type Type_SoDistributionArray = {
+    completed_safety_orders_count: number
+    total_profit: number
+    percent_total: number
+    percent_deals: number
+}
+
 export type Type_Performance_Metrics = {
     pair_bot?: Type_Query_PerfArray[]
     bot?: Type_Bot_Performance_Metrics[]
     pair?: Type_Pair_Performance_Metrics[]
+    safety_order?: Type_SoDistributionArray[]
 }
 
 export interface Type_Bot_Performance_Metrics {

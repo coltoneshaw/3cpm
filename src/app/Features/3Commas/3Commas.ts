@@ -220,6 +220,7 @@ const fetchBotPerformanceMetrics = async (oDate?: DateRange, profileData?: Type_
     const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
 
 
+    // TODO - Need to update this so it uses the start string OR the adjusted string.
     let date = initDate(startString, oDate);
     const [fromDateStr, toDateStr] = DateRangeToSQLString(date)
     const fromSQL = `and closed_at >= '${fromDateStr}'`
@@ -515,11 +516,45 @@ const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange, profil
         result.push(subDateObject);
         currentDate.add(1, 'days');
     }
-    console.log(result)
     return result
 
 }
 
+const fetchSoData = async (currentProfile: Type_Profile, oDate?: DateRange) => {
+    const filtersQueryString = await getFiltersQueryString(currentProfile);
+    const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
+
+    const query = `
+            select 
+                completed_safety_orders_count, 
+                SUM(final_profit) as total_profit,
+                COUNT(*) as total_deals
+            from 
+                deals 
+            WHERE
+                account_id in (${accountIdString} )
+                and currency in (${currencyString} )
+                and closed_at_iso_string > ${startString}
+                and profile_id = '${currentProfileID}'
+            group by 
+                completed_safety_orders_count;`
+
+    //@ts-ignore
+    const data = await electron.database.query(query)
+
+    const sumTotalProfit = data.map((d: any) => d.total_profit).reduce((sum: number, profit: number) => sum + profit);
+    const sumTotalDeals = data.map((d: any) => d.total_deals).reduce((sum: number, count: number) => sum + count);
+
+    return data.map((deal: { completed_safety_orders_count: number, total_profit: number, total_deals: number }) => {
+
+        return {
+            ...deal,
+            percent_total: (deal.total_profit) ? deal.total_profit / sumTotalProfit : 0,
+            percent_deals: (deal.total_deals) ? deal.total_deals / sumTotalDeals : 0
+        }
+    })
+
+}
 
 
 const DateRangeToSQLString = (d: DateRange) => {
@@ -548,7 +583,8 @@ export {
     fetchPairPerformanceMetrics,
     botQuery,
     getSelectPairDataByDate,
-    getFiltersQueryString
+    getFiltersQueryString,
+    fetchSoData
 }
 
 

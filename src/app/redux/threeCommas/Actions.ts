@@ -18,7 +18,7 @@ import dotProp from 'dot-prop';
 // Utilities
 import {
     fetchDealDataFunction, fetchPerformanceDataFunction, getActiveDealsFunction,
-    fetchBotPerformanceMetrics, fetchPairPerformanceMetrics, botQuery, getAccountDataFunction, updateThreeCData
+    fetchBotPerformanceMetrics, fetchPairPerformanceMetrics, botQuery, getAccountDataFunction, updateThreeCData, fetchSoData
 } from '@/app/Features/3Commas/3Commas';
 
 /*
@@ -55,11 +55,11 @@ const fetchAndStoreBotData = async (currentProfile: Type_Profile, update: boolea
         return botQuery(currentProfile)
             .then((result: Type_Query_bots[]) => {
                 if (!result) return
-                if(update) dispatch_setBotData(result)
-                
-                const inactiveBotFunds = result.filter(b => b.is_enabled === 1).map(r => r.enabled_inactive_funds).reduce((sum, funds) => sum + funds ) ?? 0;
+                if (update) dispatch_setBotData(result)
+
+                const inactiveBotFunds = result.filter(b => b.is_enabled === 1).map(r => r.enabled_inactive_funds).reduce((sum, funds) => sum + funds) ?? 0;
                 // pull enabled_inactive_funds from the bots and add it to metrics.
-                dispatch_setMetricsData({inactiveBotFunds })
+                dispatch_setMetricsData({ inactiveBotFunds })
 
             })
     } catch (error) {
@@ -79,7 +79,7 @@ const fetchAndStoreProfitData = async (profileData: Type_Profile) => {
 
 const fetchAndStorePerformanceData = async (profileData: Type_Profile) => {
 
-    await fetchPerformanceDataFunction(undefined, profileData)
+    fetchPerformanceDataFunction(undefined, profileData)
         .then(((data: Type_Query_PerfArray[]) => {
             if (!data || data.length === 0) return
             console.log('updated Performance Data!')
@@ -96,18 +96,32 @@ const fetchAndStorePerformanceData = async (profileData: Type_Profile) => {
 
         }))
 
-    await fetchBotPerformanceMetrics(undefined, profileData)
+    fetchBotPerformanceMetrics(undefined, profileData)
         .then((data => {
             if (!data) return
             console.log('getting bot performance metrics')
             dispatch_setPerformanceData({ bot: data })
         }))
 
-    await fetchPairPerformanceMetrics(undefined, profileData)
+    fetchPairPerformanceMetrics(undefined, profileData)
         .then((data => {
             if (!data) return
             console.log('getting bot performance metrics')
             dispatch_setPerformanceData({ pair: data })
+        }))
+
+    fetchPairPerformanceMetrics(undefined, profileData)
+        .then((data => {
+            if (!data) return
+            console.log('getting bot performance metrics')
+            dispatch_setPerformanceData({ pair: data })
+        }))
+
+    fetchSoData(profileData, undefined)
+        .then((data => {
+            if (!data) return
+            console.log('getting SO performance metrics')
+            dispatch_setPerformanceData({ safety_order: data })
         }))
 }
 
@@ -126,7 +140,7 @@ const fetchAndStoreActiveDeals = async (profileData: Type_Profile) => {
 }
 
 const fetchAndStoreAccountData = async (profileData: Type_Profile) => {
-    return getAccountDataFunction(profileData)
+    getAccountDataFunction(profileData)
         .then(data => {
             if (!data || !data.accountData || data.accountData.length === 0) return
             const { accountData, balance } = data
@@ -138,6 +152,7 @@ const fetchAndStoreAccountData = async (profileData: Type_Profile) => {
 
         })
 }
+
 
 const undefToZero = (value: number | undefined) => ((value) ? value : 0)
 
@@ -195,24 +210,24 @@ const calculateMetrics = () => {
  * 
  */
 
- const preSyncCheck = (profileData: Type_Profile) => {
+const preSyncCheck = (profileData: Type_Profile) => {
 
-    if(!profileData || dotProp.has(profileData, 'profileData.apis.threeC') ||
-        dotProp.has(profileData, 'profileData.apis.threeC.key') || 
-        dotProp.has(profileData, 'profileData.apis.threeC.secret') || 
+    if (!profileData || dotProp.has(profileData, 'profileData.apis.threeC') ||
+        dotProp.has(profileData, 'profileData.apis.threeC.key') ||
+        dotProp.has(profileData, 'profileData.apis.threeC.secret') ||
         dotProp.has(profileData, 'profileData.apis.threeC.mode')
     ) {
-            console.error('missing api keys or required profile')
-            return false
-        }
+        console.error('missing api keys or required profile')
+        return false
+    }
 
     return profileData
 }
 
 const updateAllData = async (offset: number = 1000, profileData: Type_Profile, type: 'autoSync' | 'fullSync', callback?: CallableFunction) => {
 
-    if(!preSyncCheck(profileData)) return
-    
+    if (!preSyncCheck(profileData)) return
+
     const syncOptions = store.getState().threeCommas.syncOptions
     store.dispatch(setIsSyncing(true))
 
@@ -245,17 +260,19 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
     }
 }
 
-const updateAllDataQuery = (profileData: Type_Profile, type:string) => {
+const updateAllDataQuery = (profileData: Type_Profile, type: string) => {
 
     // if the type if fullSync this will store the bot data. If we store the bot data in the redux state it will overwrite any user changes. 
-    Promise.all([fetchAndStoreBotData(profileData, type ==='fullSync'),
+    Promise.all([
+        fetchAndStoreBotData(profileData, type === 'fullSync'),
         fetchAndStoreProfitData(profileData),
         fetchAndStorePerformanceData(profileData),
         fetchAndStoreActiveDeals(profileData),
-        fetchAndStoreAccountData(profileData)])
+        fetchAndStoreAccountData(profileData)
+    ])
         .then(() => calculateMetrics())
 
-    
+
 }
 
 
@@ -279,7 +296,7 @@ const refreshFunction = (method: string, offset?: number) => {
 
         case 'run':
             const profileData = preSyncCheck(store.getState().config.currentProfile)
-            if(!profileData)  {
+            if (!profileData) {
                 refreshFunction('stop')
                 return
             }

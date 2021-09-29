@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { InputLabel, MenuItem, FormControl, Select } from '@mui/material';
+// import { InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 import { currencyTooltipFormatter } from '@/app/Components/Charts/formatting'
@@ -8,53 +8,9 @@ import { useAppSelector } from '@/app/redux/hooks';
 import { parseNumber } from '@/utils/number_formatting';
 
 import type { Type_Tooltip, Type_SoDealDis } from '@/types/Charts';
-import { Type_Profile } from '@/types/config';
+import type{Type_SoDistributionArray} from '@/types/3Commas'
 
 
-interface Type_SoDistributionArray {
-    completed_safety_orders_count: number
-    total_profit: number
-    percent_total: number
-    percent_deals: number
-}
-
-
-const fetchSoData = async (currentProfile: Type_Profile, updateData: CallableFunction) => {
-    const filtersQueryString = await getFiltersQueryString(currentProfile);
-    const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
-
-    const query = `
-            select 
-                completed_safety_orders_count, 
-                SUM(final_profit) as total_profit,
-                COUNT(*) as total_deals
-            from 
-                deals 
-            WHERE
-                account_id in (${accountIdString} )
-                and currency in (${currencyString} )
-                and closed_at_iso_string > ${startString}
-                and profile_id = '${currentProfileID}'
-            group by 
-                completed_safety_orders_count;`
-
-    //@ts-ignore
-    const data = await electron.database.query(query)
-
-    const sumTotalProfit = data.map((d: any) => d.total_profit).reduce((sum: number, profit: number) => sum + profit);
-    const sumTotalDeals = data.map((d: any) => d.total_deals).reduce((sum: number, count: number) => sum + count);
-
-    const newData = data.map((deal: { completed_safety_orders_count: number, total_profit: number, total_deals: number }) => {
-
-        return {
-            ...deal,
-            percent_total: (deal.total_profit) ? deal.total_profit / sumTotalProfit : 0,
-            percent_deals: (deal.total_deals) ? deal.total_deals / sumTotalDeals : 0
-        }
-    })
-
-    updateData(newData)
-}
 
 // TODO
 // Need to add a bot filter
@@ -64,14 +20,13 @@ const fetchSoData = async (currentProfile: Type_Profile, updateData: CallableFun
 //
 const SoDealDistribution = ({ defaultCurrency }: Type_SoDealDis) => {
 
-    const currentProfile = useAppSelector(state => state.config.currentProfile)
+    const safety_order = useAppSelector(state => state.threeCommas.performanceData.safety_order)
 
-    // let dataArray: Type_SoDistributionArray[] = []
+    const [soData, updateData] = useState<Type_SoDistributionArray[]>([]);
 
-    const [soData, updateData] = useState<Type_SoDistributionArray[]>([])
     useEffect(() => {
-        fetchSoData(currentProfile, updateData)
-    }, [currentProfile])
+        updateData(safety_order ?? [])
+    }, [safety_order])
 
     const renderChart = () => {
         if (soData.length === 0) {
@@ -124,7 +79,7 @@ const SoDealDistribution = ({ defaultCurrency }: Type_SoDealDis) => {
         <div className="boxData stat-chart " >
             <div style={{ position: "relative" }}>
                 <h3 className="chartTitle">Completed SO Distribution</h3>
-                <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>
+                {/* <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>
                     <FormControl  style={{marginRight: '.5em'}}>
                         <InputLabel>Filter Bots: </InputLabel>
                         <Select
@@ -154,7 +109,7 @@ const SoDealDistribution = ({ defaultCurrency }: Type_SoDealDis) => {
                             <MenuItem value="bottom20">Bottom 20%</MenuItem>
                         </Select>
                     </FormControl>
-                </div>
+                </div> */}
 
             </div>
 

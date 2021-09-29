@@ -20,7 +20,7 @@ export const initialState = {
     botData: <Type_Query_bots[] | []>[],
     profitData: <Type_Profit[] | []>[],
     activeDeals: <Type_ActiveDeals[] | []>[],
-    performanceData: <Type_Performance_Metrics>{ pair_bot: [], bot: [] },
+    performanceData: <Type_Performance_Metrics>{ pair_bot: [], bot: [], safety_order: [] },
     balanceData: { on_orders: 0, position: 0 },
     accountData: <Type_Query_Accounts[] | []>[],
     metricsData: <Type_MetricData>{
