@@ -7,6 +7,7 @@
 - Force paper or real account directly in the settings.
 - Documentation on docs.3cpm.io along with a link in the sidebar!
 - Support for ALL 3Commas quote pairs across the entire app.
+- Added Completed SO Distribution chart.
 
 ## Enhancements
 - Enabled accounts are synced on every auto refresh, no more out of date data!
