@@ -5,7 +5,10 @@ export interface Type_SoDistribution {
     data: Type_ActiveDeals[]
     metrics: Type_MetricData
     defaultCurrency: defaultCurrency
+}
 
+export interface Type_SoDealDis {
+    defaultCurrency: defaultCurrency
 }
 
 

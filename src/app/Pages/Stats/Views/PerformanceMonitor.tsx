@@ -3,14 +3,13 @@ import { useAppSelector } from '@/app/redux/hooks';
 
 // material UI components
 import { Grid } from '@mui/material';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
-import { TextField, FormControl } from '@mui/material';
+import { TextField } from '@mui/material';
 import DateRangePicker, { DateRange } from '@mui/lab/DateRangePicker';
 import Box from '@mui/material/Box';
 
 // custom charts
 import { BotPerformanceBubble, DealPerformanceBubble } from '@/app/Components/Charts/Scatter';
-import { DealAllocationBar } from '@/app/Components/Charts/Bar';
+import { DealAllocationBar, SoDealDistribution } from '@/app/Components/Charts/Bar';
 import { PairPerformanceByDate } from '@/app/Components/Charts/Line';
 
 import {
@@ -86,19 +85,21 @@ const PerformanceMonitor = () => {
                     <DealAllocationBar data={localPerf.pair_bot} key="dealAllocationBar" defaultCurrency={currentProfile.general.defaultCurrency}/>
                 </Grid>
                 <Grid item xs={12} lg={6}>
-                    <DealPerformanceBubble  data={localPerf.pair_bot} defaultCurrency={currentProfile.general.defaultCurrency}
-                        key="dealPerformanceBubble" />
+                    <DealPerformanceBubble  data={localPerf.pair_bot} defaultCurrency={currentProfile.general.defaultCurrency} key="dealPerformanceBubble" />
 
                 </Grid>
                 <Grid item xs={12} lg={6}>
-                    <BotPerformanceBubble data={localPerf.bot} defaultCurrency={currentProfile.general.defaultCurrency}
-                        key="botPerformanceBubble" />
+                    <BotPerformanceBubble data={localPerf.bot} defaultCurrency={currentProfile.general.defaultCurrency} key="botPerformanceBubble" />
 
                 </Grid>
 
                 <Grid item xs={12}>
                     <PairPerformanceByDate key="pairPerformance" datePair={datePair} defaultCurrency={currentProfile.general.defaultCurrency} />
 
+                </Grid>
+
+                <Grid item xs={12}>
+                    <SoDealDistribution key="soDealDistribution" defaultCurrency={currentProfile.general.defaultCurrency}/>
                 </Grid>
             </Grid>
         </>

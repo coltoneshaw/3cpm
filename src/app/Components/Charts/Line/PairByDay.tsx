@@ -20,14 +20,14 @@ import type { DateRange } from "@/types/Date";
 
 import { getSelectPairDataByDate, getFiltersQueryString } from '@/app/Features/3Commas/3Commas';
 
-const colors = ['var(--chart-metric1-color)', 'var(--chart-metric2-color)','var(--chart-metric3-color)','var(--chart-metric4-color)', 'var(--chart-metric5-color)', 'var(--chart-metric6-color)', 'var(--chart-metric7-color)', 'var(--chart-metric8-color)']
+const colors = ['var(--chart-metric1-color)', 'var(--chart-metric2-color)', 'var(--chart-metric3-color)', 'var(--chart-metric4-color)', 'var(--chart-metric5-color)', 'var(--chart-metric6-color)', 'var(--chart-metric7-color)', 'var(--chart-metric8-color)']
 
 interface pairByDate {
     date: string
     pair: string
 }
 
-
+// TODO - should be moved to the redux state.
 const getPairList = async (updatePairs: Function, updatePairFilters: Function, wheres: string, currentProfile: Type_Profile) => {
 
     const filtersQueryString = await getFiltersQueryString(currentProfile);
@@ -55,25 +55,6 @@ const PairPerformanceByDate = ({ datePair, defaultCurrency }: { datePair: DateRa
     const [pairFilters, updatePairFilters] = useState<string[]>([]);
 
     const yWidth = yAxisWidth(defaultCurrency)
-
-
-    const handleChange = (event: any) => {
-
-        let filter = event.target.value;
-        // preventing more than 8 items from showing at any given time.
-        if (filter.length > 8) filter = filter.filter((pair: string, index: number) => index > 0)
-
-        updatePairFilters([...filter]);
-        setStorageItem(storageItem.charts.pairByDateFilter, [...filter])
-    };
-
-    // if any part of the current profile reserved funds changes then we clear the pairs
-    useEffect(() => {
-        updatePairFilters([]);
-        setStorageItem(storageItem.charts.pairByDateFilter, [])
-
-    }, [currentProfile.statSettings.reservedFunds])
-
     useEffect(() => {
 
         let from = ``
@@ -118,7 +99,7 @@ const PairPerformanceByDate = ({ datePair, defaultCurrency }: { datePair: DateRa
         <div className="boxData stat-chart ">
             <div style={{ position: "relative" }}>
                 <h3 className="chartTitle">Pair by Date</h3>
-                <PairSelector pairFilters={pairFilters} handleChange={handleChange} pairs={pairs} />
+                <PairSelector pairFilters={pairFilters} updatePairFilters={updatePairFilters} pairs={pairs} />
 
 
             </div>
