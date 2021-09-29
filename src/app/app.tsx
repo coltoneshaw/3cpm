@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import './App.global.scss';
 import Sidebar from './Components/Sidebar/Sidebar';
@@ -21,6 +21,8 @@ const App = () => {
 
   const themeEngine = useThemeProvidor();
   const {currentProfile} = useAppSelector(state => state.config)
+  // const [updated, updateUpdated] = useState(() => false)
+  const [profile, updateLocalProfile] = useState( () => currentProfile)
   const { styles } = themeEngine
   
   const dispatch = useAppDispatch()
@@ -29,9 +31,24 @@ const App = () => {
 
   }, [dispatch]);
 
+  // useEffect(() => {
+  //   console.log('updating profile');
+  //   console.log(currentProfile)
+  // }, [currentProfile]);
+
   useEffect(() => {
-    if(currentProfile && currentProfile.statSettings && currentProfile.statSettings.reservedFunds.filter(a => a.is_enabled).length > 0) updateAllDataQuery(currentProfile, 'update');
+    // if(updated) return
+    if(currentProfile.id == profile.id) return
+    
+    if(currentProfile && currentProfile.statSettings && currentProfile.statSettings.reservedFunds.filter(a => a.is_enabled).length > 0) {
+      updateAllDataQuery(currentProfile, 'update');
+      console.log('Changing to a new profile')
+      // updateUpdated(true)
+      updateLocalProfile(currentProfile)
+    }
+
   }, [currentProfile])
+
 
   return (
     <HashRouter>
