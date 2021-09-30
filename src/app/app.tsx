@@ -41,7 +41,7 @@ const App = () => {
     if(currentProfile.id == profile.id) return
     
     if(currentProfile && currentProfile.statSettings && currentProfile.statSettings.reservedFunds.filter(a => a.is_enabled).length > 0) {
-      updateAllDataQuery(currentProfile, 'update');
+      updateAllDataQuery(currentProfile, 'fullSync');
       console.log('Changing to a new profile')
       // updateUpdated(true)
       updateLocalProfile(currentProfile)

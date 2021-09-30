@@ -172,7 +172,8 @@ const calc_dropMetrics = (bankRoll:number, botData:Type_Query_bots[]) => {
          const dropMetrics = calc_dropCoverage(fundsAvailable, bot)
          return {
              ...bot,
-             ...dropMetrics
+             ...dropMetrics,
+             riskPercent: bot.max_funds / bankRoll
          }
      });
 }

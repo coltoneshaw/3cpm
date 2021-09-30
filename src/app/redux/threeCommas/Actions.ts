@@ -49,10 +49,10 @@ const dispatch_setBalanceData = (data: typeof initialState.balanceData) => store
 const fetchAndStoreBotData = async (currentProfile: Type_Profile, update: boolean) => {
     try {
         // @ts-ignore
-        await electron.api.updateBots(currentProfile)
+        //  await electron.api.updateBots(currentProfile)
 
         // @ts-ignore
-        return botQuery(currentProfile)
+        await botQuery(currentProfile)
             .then((result: Type_Query_bots[]) => {
                 if (!result) return
                 if (update) dispatch_setBotData(result)
@@ -79,7 +79,8 @@ const fetchAndStoreProfitData = async (profileData: Type_Profile) => {
 
 const fetchAndStorePerformanceData = async (profileData: Type_Profile) => {
 
-    fetchPerformanceDataFunction(undefined, profileData)
+
+    const pair_bot = async () => await fetchPerformanceDataFunction(undefined, profileData)
         .then(((data: Type_Query_PerfArray[]) => {
             if (!data || data.length === 0) return
             console.log('updated Performance Data!')
@@ -96,33 +97,28 @@ const fetchAndStorePerformanceData = async (profileData: Type_Profile) => {
 
         }))
 
-    fetchBotPerformanceMetrics(undefined, profileData)
+    const bot = async () => await fetchBotPerformanceMetrics(undefined, profileData)
         .then((data => {
             if (!data) return
             console.log('getting bot performance metrics')
             dispatch_setPerformanceData({ bot: data })
         }))
 
-    fetchPairPerformanceMetrics(undefined, profileData)
+    const pair = async () => await fetchPairPerformanceMetrics(undefined, profileData)
         .then((data => {
             if (!data) return
             console.log('getting bot performance metrics')
             dispatch_setPerformanceData({ pair: data })
         }))
 
-    fetchPairPerformanceMetrics(undefined, profileData)
-        .then((data => {
-            if (!data) return
-            console.log('getting bot performance metrics')
-            dispatch_setPerformanceData({ pair: data })
-        }))
-
-    fetchSoData(profileData, undefined)
+    const so = async () => await fetchSoData(profileData, undefined)
         .then((data => {
             if (!data) return
             console.log('getting SO performance metrics')
             dispatch_setPerformanceData({ safety_order: data })
         }))
+    
+    await Promise.all([pair_bot(), bot(), pair(), so()])
 }
 
 const fetchAndStoreActiveDeals = async (profileData: Type_Profile) => {
@@ -140,7 +136,7 @@ const fetchAndStoreActiveDeals = async (profileData: Type_Profile) => {
 }
 
 const fetchAndStoreAccountData = async (profileData: Type_Profile) => {
-    getAccountDataFunction(profileData)
+    await getAccountDataFunction(profileData)
         .then(data => {
             if (!data || !data.accountData || data.accountData.length === 0) return
             const { accountData, balance } = data

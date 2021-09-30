@@ -18,7 +18,7 @@ import { Type_Query_bots } from '@/types/3Commas';
 const BotPlannerPage = () => {
 
     const { metricsData: {totalBankroll}, botData} = useAppSelector(state => state.threeCommas);
-    const {config} = useAppSelector(state => state.config);
+    const {config, currentProfile} = useAppSelector(state => state.config);
     const [localBotData, updateLocalBotData] = useState<Type_Query_bots[]>([])
 
     useEffect(() => {
@@ -32,7 +32,7 @@ const BotPlannerPage = () => {
             updateLocalBotData([])
         }
 
-    }, [botData])
+    }, [botData, currentProfile, totalBankroll])
 
 
     const blankObject = {

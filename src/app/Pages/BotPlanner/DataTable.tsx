@@ -159,8 +159,6 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
 
   const { metricsData: {totalBankroll}} = useAppSelector(state => state.threeCommas);
 
-
-
   // handling this locally because it does not need to be saved yet.
   const handleOnOff = (e: any) => {
     updateLocalBotData((prevState: Type_Query_bots[]) => {
@@ -270,7 +268,6 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
           textAlign: 'center'
         },
         Cell: ({ cell }: any) => {
-
           if (cell.value.length > 20) {
             return 'Many'
           }
@@ -360,7 +357,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
       {
         Header: 'Deviation',
         accessor: 'price_deviation',
-        Cell: ({ cell }: any) => <span className="monospace-cell">{cell.value} %</span>,
+        Cell: ({ cell }: any) => <span className="monospace-cell">{cell.value}%</span>,
         style: {
           textAlign: 'center'
         }
@@ -386,7 +383,15 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
       {
         Header: 'Coverage',
         accessor: 'maxCoveragePercent',
-        Cell: ({ cell }: any) => <span className="monospace-cell">{cell.value} %</span>,
+        Cell: ({ cell }: any) => <span className="monospace-cell">{cell.value}%</span>,
+        style: {
+          textAlign: 'center'
+        }
+      },
+      {
+        Header: 'Risk %',
+        accessor: 'riskPercent',
+        Cell: ({ cell }: any) => <span className="monospace-cell">{parseNumber(cell.value * 100)}%</span>,
         style: {
           textAlign: 'center'
         }
