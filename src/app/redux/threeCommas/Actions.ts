@@ -4,8 +4,6 @@ import {
     setData,
     setIsSyncing,
     setSyncData,
-    trackAutoRefreshProgress,
-    resetAutoRefresh,
     setAutoRefresh
 } from '@/app/redux/threeCommas/threeCommasSlice'
 import { initialState } from '@/app/redux/threeCommas/initialState'
@@ -227,13 +225,14 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
     const syncOptions = store.getState().threeCommas.syncOptions
     store.dispatch(setIsSyncing(true))
 
-    let syncCount = (syncOptions.syncCount) ? syncOptions.syncCount : 0
-
+    let time = (syncOptions.time) ? syncOptions.time : 0;
+    let syncCount = (syncOptions.syncCount) ? syncOptions.syncCount : 0;
+    if(type === 'fullSync') syncCount = 0;
     const options = {
         syncCount,
         summary: (syncOptions.summary) ? syncOptions.summary : false,
         notifications: (syncOptions.notifications) ? syncOptions.notifications : false,
-        time: (syncOptions.time) ? syncOptions.time : 0,
+        time,
         offset
     }
 
@@ -242,8 +241,8 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
             .then(async () => updateAllDataQuery(profileData, type))
             .then(() => {
                 store.dispatch(setSyncData({
-                    syncCount: syncCount++,
-                    time: options.time + 15000
+                    syncCount:(type === 'autoSync') ? options.syncCount + 1 : 0,
+                    time: (type === 'autoSync') ? options.time + 15000 : 0
                 }))
             })
 
@@ -274,22 +273,15 @@ const updateAllDataQuery = (profileData: Type_Profile, type: string) => {
 
 
 const refreshFunction = (method: string, offset?: number) => {
-    const refreshRate = 50
 
-    const { active, current, max } = store.getState().threeCommas.autoRefresh
+    // updating the refresh function here to 15000 instead of 50. The update bar doesn't work anymore
+    const refreshRate = 15000
 
-    if (!active) {
-        store.dispatch(resetAutoRefresh())
-        return
-    }
-
-
-
+    if(!store.getState().threeCommas.autoRefresh) return
     switch (method) {
         case 'stop':
             store.dispatch(setAutoRefresh(false))
             break
-
         case 'run':
             const profileData = preSyncCheck(store.getState().config.currentProfile)
             if (!profileData) {
@@ -298,17 +290,9 @@ const refreshFunction = (method: string, offset?: number) => {
             }
 
             setTimeout(() => {
-                store.dispatch(trackAutoRefreshProgress(refreshRate))
-
-                if (current + refreshRate < max) {
-                    refreshFunction('run', offset)
-                    return
-                }
-
-
+                if(!store.getState().threeCommas.autoRefresh) return
                 updateAllData(offset, profileData, 'autoSync', undefined)
                     .then(() => {
-                        store.dispatch(resetAutoRefresh())
                         refreshFunction('run', offset)
                     })
             }, refreshRate);

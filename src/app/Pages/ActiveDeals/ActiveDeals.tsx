@@ -7,10 +7,11 @@ import { useAppSelector } from '@/app/redux/hooks';
 import { Card_ActiveDeals, Card_totalInDeals, Card_ActiveDealReserve, Card_TotalDayProfit, Card_TotalUnrealizedProfit, Card_TotalRoi } from '@/app/Components/Charts/DataCards';
 import { SyncToggles } from './Components/index';
 
-
 import './ActiveDeals.scss'
 
-const ActiveDealsPage = () => {
+import useRefreshState from '@/app/Components/Buttons/RefreshState';
+
+const ActiveDealsPage = ({refreshState} :{ refreshState: ReturnType<typeof useRefreshState>}) => {
 
     const { activeDeals, metricsData, profitData} = useAppSelector(state => state.threeCommas);
     const { defaultCurrency } = useAppSelector(state => state.config.currentProfile.general);
@@ -29,10 +30,6 @@ const ActiveDealsPage = () => {
     }, [activeDeals])
 
     
-
-
-
-
     return (
         <>
             <div className="flex-row headerButtonsAndKPIs">
@@ -59,7 +56,7 @@ const ActiveDealsPage = () => {
                     <SyncToggles />
 
                     <div className="filters tableButtons" >
-                    <ToggleRefreshButton style={{ width: '250px', margin: '5px', height: '38px' }} className={"ToggleRefreshButton"} />
+                    <ToggleRefreshButton style={{ width: '250px', margin: '5px', height: '38px' }} className={"ToggleRefreshButton"} refreshState={refreshState}  />
                     <UpdateDataButton className="CtaButton" style={{ margin: '5px', height: '38px' }} disabled={true} />
                     </div>
 

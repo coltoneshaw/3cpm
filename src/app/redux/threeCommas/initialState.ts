@@ -54,7 +54,7 @@ export const initialState = {
             time: 0,
             syncCount: 0
     },
-    autoRefresh: {active: false, max: 15000, current: 0, progress: 0},
+    autoRefresh: false,
 }
 
 export type typeString = 'botData' | 'profitData' | 'activeDeals' | 'performanceData' | 'metricsData' | 'accountData' | 'balanceData'
