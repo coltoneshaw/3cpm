@@ -153,8 +153,7 @@ const ProfitByDay = ({ data = [], X, defaultCurrency }: Type_ProfitChart) => {
                         }}
                     />
 
-                    <ReferenceLine y={calculateAverage()} stroke="var(--color-primary-light25)" strokeWidth={2} isFront={true}
-                                   label={{value: calculateAverage(), position: 'left'}} />
+                    <ReferenceLine y={calculateAverage()} stroke="var(--color-primary-light25)" strokeWidth={2} isFront={true} label={{value: calculateAverage(), position: 'left'}} />
                     <YAxis
                         dataKey={X}
                         tickLine={false}

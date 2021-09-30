@@ -52,6 +52,8 @@ const getPosition = (localData: Type_Bot_Performance_Metrics[]) => {
 const BotPerformanceBubble = ({ data = [], defaultCurrency }: Type_BotPerformanceCharts) => {
 
     const yWidth = yAxisWidth(defaultCurrency)
+    const labelSpacing = (0 + Number(yWidth)) / 1.5 ?? 45
+    console.log(labelSpacing)
     const [filter, setFilter] = useState('all');
 
     const defaultFilter = 'all';
@@ -68,6 +70,7 @@ const BotPerformanceBubble = ({ data = [], defaultCurrency }: Type_BotPerformanc
         setFilter(selectedFilter);
         setStorageItem(localStorageFilterName, selectedFilter)
     };
+
 
     const renderChart = () => {
         if (data.length === 0) {
@@ -120,15 +123,8 @@ const BotPerformanceBubble = ({ data = [], defaultCurrency }: Type_BotPerformanc
                     allowDecimals={true}
                     width={yWidth}
                     tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)}
+                />
 
-
-                >
-                    <Label value="Total Profit"
-                        angle={-90}
-                        dy={0}
-                        dx={-20}
-                    />
-                </YAxis>
                 {/* Range is lowest number and highest number. */}
                 <ZAxis type="number" dataKey="number_of_deals"
                     range={[Math.min(...localData.map(deal => deal.number_of_deals)) + 200, Math.max(...localData.map(deal => deal.number_of_deals)) + 200]}
@@ -150,7 +146,9 @@ const BotPerformanceBubble = ({ data = [], defaultCurrency }: Type_BotPerformanc
     }
 
     return (
-        <div className="boxData" >
+        <div className="boxData" style={{ position: "relative" }}>
+            <p style={{ position: 'absolute', left: `-1.5em`, top: '45%', margin: 0, transform: 'rotate(-90deg)' }}>Total Profit</p>
+
             <div style={{ position: "relative" }}>
                 <h3 className="chartTitle">Bot Performance Scatter</h3>
                 <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>

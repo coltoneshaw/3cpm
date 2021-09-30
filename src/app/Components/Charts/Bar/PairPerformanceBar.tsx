@@ -106,7 +106,7 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
                         fontSize=".75em"
                         minTickGap={-50}
                         axisLine={false}
-                        width={110}
+                        width={60}
 
                     />
                     <XAxis

@@ -121,13 +121,8 @@ const DealPerformanceBubble = ({ data = [], defaultCurrency }: Type_DealPerforma
                         // width={100}
                         name="Avg. Hourly Profit %"
                         allowDataOverflow={true}
-                    >
-                        <Label value="Avg. Hourly Profit %" angle={-90}
-                            dy={0}
-                            dx={-35}
-                        />
+                    />
 
-                    </YAxis>
                     {/* Range is lowest number and highest number. */}
                     <ZAxis
                         type="number"
@@ -150,7 +145,9 @@ const DealPerformanceBubble = ({ data = [], defaultCurrency }: Type_DealPerforma
     }
 
     return (
-        <div className="boxData">
+        <div className="boxData" style={{ position: "relative" }}>
+            <p style={{ position: 'absolute', left: '-2.5em', top: '45%', margin: 0, transform: 'rotate(-90deg)' }}>Avg. Hourly Profit %</p>
+
             <div style={{ position: "relative" }}>
                 <h3 className="chartTitle">Deal Performance Scatter</h3>
                 <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>

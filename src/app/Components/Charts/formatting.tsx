@@ -7,7 +7,8 @@ import { Type_Bot_Performance_Metrics, Type_Pair_Performance_Metrics } from '@/t
 const yAxisWidth = (defaultCurrency: defaultCurrency) => {
 
     const firstCurrency = defaultCurrency[0] ?? ['USD'];
-    return supportedCurrencies[firstCurrency].rounding * 10 ?? 45
+    const yWidth = supportedCurrencies[firstCurrency].rounding * 10 ?? undefined
+    return (yWidth < 50) ? undefined : yWidth
 }
 
 const currencyTickFormatter = (value: any, defaultCurrency: defaultCurrency) => {
