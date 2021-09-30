@@ -51,7 +51,7 @@ const RoiCards = ({ metricsData, currentView }: { currentView: string, metricsDa
         <div className="flex-column" style={{ alignItems: 'center' }}>
             <div className="riskDiv" style={{ paddingBottom: '32px' }}>
                 <Card_MaxDca metric={totalMaxRisk} currency={defaultCurrency}/>
-                <Card_TotalRoi additionalData={{ totalProfit, totalBankroll }} currency={defaultCurrency}  />
+                <Card_TotalRoi title="Total ROI" additionalData={{ totalProfit, totalBankroll }} currency={defaultCurrency}  />
                 {additionalMetrics(currentView)}
             </div>
         </div>

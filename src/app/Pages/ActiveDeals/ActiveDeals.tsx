@@ -43,7 +43,7 @@ const ActiveDealsPage = () => {
                         <Card_TotalDayProfit metric={todaysProfit}  currency={defaultCurrency} />
                         <Card_ActiveDealReserve metric={activeDealReserve} currency={defaultCurrency} />
                         <Card_TotalUnrealizedProfit metric={unrealizedProfitTotal} currency={defaultCurrency}  />
-                        <Card_TotalRoi additionalData={{totalBankroll, totalProfit:todaysProfit}} currency={defaultCurrency}/>
+                        <Card_TotalRoi title="Today's ROI" additionalData={{totalBankroll, totalProfit:todaysProfit}} currency={defaultCurrency}/>
                     </div>
 
                 </div>
