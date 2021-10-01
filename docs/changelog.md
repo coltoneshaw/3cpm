@@ -1,15 +1,19 @@
 # Changelog
 
+## v1.0.0
 
-
-## v0.5.0
+This is the largest release of the 3C Portfolio Manager to date! It includes a huge amount of fixes, a completely rebuild application state, improved performance and so much more. Be sure to read the full changelog to for all the new changes, including the one breaking change.
 
 #### New Features
 
 * Save settings into a custom profile and fast swap between! Even supports multiple 3 Commas accounts.
-* Auto-refresh bar has a built in loading indicator
-* DCA calculator and order details built into every active deal!
+* Auto-refresh bar has a built in loading indicator in seconds.
+* DCA calculator, order details, and order timeline built into every active deal.
 * Force paper or real account directly in the settings.
+* Documentation on docs.3cpm.io along with a link in the sidebar!
+* Support for ALL 3Commas quote pairs across the entire app.
+* Added Completed SO Distribution chart.
+* Added bot risk % to the bot planner to show how much risk that bot accounts for.
 
 #### Enhancements
 
@@ -19,10 +23,33 @@
 * Active deals with an error have the `Active SO` and `# SO` in bold red with a tooltip hover to see the specific error message.
 * Adjusted wording on deal notifications if you lost money.
 * Reset all data is moved under Menu &gt; Help &gt; Delete All
+* Added a clear all local storage under Menu &gt; Edit
+* Adjusted metrics to be ordered the same across stats.
+* Dynamic chart height for bot / pair performance based on the number of data points.
+* Improved overall chart formatting \(highlighting, colors, bar width, etc.\)
+* Adjusted tooltips and headers for better clarity.
+
+#### Bugs
+
+* Fixed a few spelling mistakes across the app
+* Fixed the max risk bar from overflowing if over 400% risk.
+* Updated unnecessary scroll bars across the app
+
+#### Breaking Changes
+
+* You can no longer select more than currency unless it's a USD base. This will be improved in the future.
 
 #### Backend Changes
 
 * Entire data handling has been moved from React context API to Redux
+* Included a logging module to log any issues with the application backend. These are locally stored **only.**
+  * **Windows:** `%USERPROFILE%\AppData\Roaming\{app name}\logs\{process type}.log`
+  * **Mac**: `~/Library/Logs/3C Portfolio Manager/main.log`
+  * **Linux**:  `~/.config/3C Portfolio Manager/logs/main.log`
+
+#### Known Issues
+
+* Migrating to profiles can create an issue where you're unable to sync with 3Commas. If you have this issue use the help article [here](profiles.md#profiles-help).
 
 ## v0.4.1
 
