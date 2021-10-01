@@ -1,13 +1,15 @@
-# v0.5.0
+# v1.0.0
 
 ## New Features
 - Save settings into a custom profile and fast swap between! Even supports multiple 3 Commas accounts.
-- Auto-refresh bar has a built in loading indicator
+- Auto-refresh bar has a built in loading indicator in seconds.
 - DCA calculator, order details, and order timeline built into every active deal.
 - Force paper or real account directly in the settings.
 - Documentation on docs.3cpm.io along with a link in the sidebar!
 - Support for ALL 3Commas quote pairs across the entire app.
 - Added Completed SO Distribution chart.
+- Added bot risk % to the bot planner to show how much risk that bot accounts for.
+
 
 ## Enhancements
 - Enabled accounts are synced on every auto refresh, no more out of date data!
@@ -20,6 +22,7 @@
 - Adjusted metrics to be ordered the same across stats.
 - Dynamic chart height for bot / pair performance based on the number of data points.
 - Improved overall chart formatting (highlighting, colors, bar width, etc.)
+- Adjusted tooltips and headers for better clarity.
 
 ## Bugs
 - Fixed a few spelling mistakes across the app
