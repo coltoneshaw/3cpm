@@ -20,9 +20,10 @@ const migrationToProfiles = (config:any) => {
     const id = uuidv4()
     config.delete('general.version')
     const { apis, general, syncStatus, statSettings } = config.store
+
     config.store = {
         profiles: {
-            [id]: { "name": "default", id, apis: {...apis, mode: "real"}, general, syncStatus, statSettings }
+            [id]: { "name": "default", id, apis: {...apis, mode: "real"}, general : {...general, defaultCurrency: [...general.defaultConfig] }, syncStatus, statSettings }
         },
         general: {
             version: 'v0.5.0'
