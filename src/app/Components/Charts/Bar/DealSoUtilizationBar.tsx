@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { formatPercent } from '@/utils/number_formatting';
+import { formatPercent, parseNumber } from '@/utils/number_formatting';
 import { dynamicSort } from '@/utils/helperFunctions';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
@@ -48,7 +48,7 @@ const DealSoUtilizationBar = ({ data = [], defaultCurrency }: Type_ActiveDealCha
                         height={75}
 
                     />
-                    <YAxis tickFormatter={tick => tick * 100 + "%"} />
+                    <YAxis tickFormatter={tick => parseNumber(tick * 100, 0) + "%"} />
 
 
                     <Bar dataKey="bought_volume" stackId="a" fill="var(--chart-metric3-color)" opacity={.8} name="% Bought Volume"/>

@@ -65,7 +65,7 @@ const SoDealDistribution = ({ defaultCurrency }: Type_SoDealDis) => {
                         height={45}
                     />
 
-                    <YAxis tickFormatter={tick => parseNumber((tick * 100), 0) + "%"} />
+                    <YAxis tickFormatter={tick => parseNumber(tick * 100, 0) + "%"} />
 
 
                     <Bar dataKey="percent_deals" fill="var(--chart-metric1-color)" name='% of total deals' />

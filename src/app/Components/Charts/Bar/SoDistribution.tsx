@@ -75,7 +75,7 @@ const SoDistribution = ({ data = [], metrics, defaultCurrency }: Type_SoDistribu
                     />
 
                     <YAxis
-                        tickFormatter={tick => tick * 100 + "%"}
+                        tickFormatter={tick => parseNumber(tick * 100, 0) + "%"}
                     />
 
 
