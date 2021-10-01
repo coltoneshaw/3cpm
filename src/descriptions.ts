@@ -3,7 +3,7 @@ import {formatCurrency, supportedCurrencies} from'@/utils/granularity'
 
 const descriptions = {
     calculations: {
-        dropCoverage: `is essentially the average % drop that your deals can take before you're out of funds. This is calculated by taking your total bankroll and dividing it by total active deals. Each deal is then given those funds to drop and it calculates how much of a drop that the deal can handle.`,
+        dropCoverage: `is an approximation of the average % drop that your deals can take before you're out of funds. This is calculated by taking your total bankroll and dividing it by total active deals. Each deal is then given those funds to drop and it calculates how much of a drop that the deal can handle.`,
         maxDca: ` factors in each active deal's max possible funds plus any manual safety orders you've made on that deal.`,
         activeBots: ` are the bots that you have enabled on this table below. It will not match 3C if you've added custom bots to be enabled.`,
         risk: (maxDCA:number, totalBankroll:number, inactiveBotFunds:number, currency: (keyof typeof supportedCurrencies)[]) => ` is calculated by dividing your total DCA max risk of ${formatCurrency(currency, maxDCA + inactiveBotFunds).metric} by your current bankroll of ${formatCurrency(currency, totalBankroll).metric}. ${(inactiveBotFunds) ? 'This includes your bots that have the ability to open additional deals worth ' + formatCurrency(currency, inactiveBotFunds).metric +'.': ''}`,
@@ -20,7 +20,7 @@ const descriptions = {
         totalBoughtVolume: ` is the total that your bots have put into a deal.`,
         totalDeals: ` is the total amount of deals closed during the filtered period.`,
         averageDailyProfit: ` is the amount of total profit you've made divided by the total number of days included in your filter.`,
-        todaysProfit: ` is the sum of the profit you've made in UTC today. Note this does not always reset at midnight, depending on your timezone`,
+        todaysProfit: ` is the sum of the profit you've made today (in UTC time). Note this does not always reset at midnight, depending on your timezone`,
         activeDealReserves: ` is the sum of all your deals current profit. This number can be positive / negative based on where all your deals are currently.`,
         totalUnrealizedProfit: ` is the total you would make if all your deals closed at their current settings.`
     }
