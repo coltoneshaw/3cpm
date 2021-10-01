@@ -2,8 +2,8 @@
 
 div.changelogModal {
     background-color: var(--color-background);
-    height: 40vh;
-    width: 50vw;
+    height: 60vh;
+    width: 60vw;
     position: relative;
 
     .closeIcon{
@@ -29,8 +29,8 @@ div.changelogModal {
         flex-basis: 25%;
         background-color: var(--color-primary);
         text-align: center;
-        overflow-x: visible;
         overflow-y: scroll;
+        overflow-x: hidden;
         
 
 
@@ -55,7 +55,8 @@ div.changelogModal {
     .changesDiv {
         flex-basis: 75%;
         padding-left: 1em;
-        overflow-x: scroll;
+        overflow-x: auto;
+        
 
         h3{ 
             padding-left: 0;
@@ -66,8 +67,13 @@ div.changelogModal {
         }
 
         li {
-            font-weight: 300;
+            font-weight: 400;
             letter-spacing: .2px;
+        }
+
+        a {
+            padding-bottom: .5em;
+            color: var(--color-text-light)
         }
     }
 }
