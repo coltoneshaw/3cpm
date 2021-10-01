@@ -29,13 +29,23 @@ const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
             setLoaderIcon(true)
             try {
                 dispatch(storeEditingProfileData())
+
+                //updating the editing profile's data
+                await updateAllData(1000, editingProfile, 'fullSync')
+
+                // Saving and confirming that this saved
                 const cfg = await storeConfigInFile()
                 if (cfg) {
-                    await updateAllData(1000, editingProfile, 'fullSync')
+                    callback()
                 }
                 return
             } catch (error) {
+
+                // if there is an error storing the editing profile, the data from the database gets deleted.
+                //@ts-ignore
+                await electron.database.deleteAllData(editingProfile.id)
                 console.error(error)
+                alert('There was an error storing your profile data. Please try again. If the issue persists look at the documentation for additional guidance.')
             } finally {
                 setLoaderIcon(false)
             }
