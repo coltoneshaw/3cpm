@@ -52,8 +52,7 @@ const getPosition = (localData: Type_Bot_Performance_Metrics[]) => {
 const BotPerformanceBubble = ({ data = [], defaultCurrency }: Type_BotPerformanceCharts) => {
 
     const yWidth = yAxisWidth(defaultCurrency)
-    const labelSpacing = (0 + Number(yWidth)) / 1.5 ?? 45
-    console.log(labelSpacing)
+    // const labelSpacing = (0 + Number(yWidth)) / 1.5 ?? 45
     const [filter, setFilter] = useState('all');
 
     const defaultFilter = 'all';
@@ -135,11 +134,7 @@ const BotPerformanceBubble = ({ data = [], defaultCurrency }: Type_BotPerformanc
                 {/* @ts-ignore */}
                 <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
                 <Scatter name="Deal Performance" data={localData}>
-                    {/* <LabelList dataKey="pair" /> */}
-
-                    {
-                        getPosition(localData)
-                    }
+                    {  getPosition(localData)  }
                 </Scatter>
             </ScatterChart>
         </ResponsiveContainer>)

@@ -22,10 +22,11 @@ export interface Type_Pair_Performance_Metrics {
 }
 
 export type Type_SoDistributionArray = {
-    completed_safety_orders_count: number
-    total_profit: number
-    percent_total: number
-    percent_deals: number
+    completed_safety_orders_count: number // the actual SO level. 0 = BO.
+    total_profit: number 
+    percent_total: number // percent of total profit at that SO level
+    percent_deals: number // percent of deals against the total filtered at that SO level
+    total_deals: number // total count of completed deals at that SO level
 }
 
 export type Type_Performance_Metrics = {

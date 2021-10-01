@@ -128,13 +128,13 @@ function CustomTooltip({ active, payload, label, formatter }: Type_Tooltip) {
 
     const data: Type_SoDistributionArray = payload[0].payload
 
-    const { completed_safety_orders_count, percent_total, total_profit, percent_deals } = data
+    const { completed_safety_orders_count, percent_total, total_profit, percent_deals, total_deals } = data
     return (
         <div className="tooltip">
             <h4>SO # {completed_safety_orders_count}</h4>
+            <p><strong>Total Deals:</strong> {total_deals}</p>
             <p><strong>Percent Total Profit: </strong> {parseNumber((percent_total * 100), 2)} %</p>
             <p><strong>Percent Total Deals: </strong> {parseNumber((percent_deals * 100), 2)} %</p>
-
             <p><strong>Total Profit:</strong> {formatter(total_profit)}</p>
         </div>
     )

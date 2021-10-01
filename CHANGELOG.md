@@ -26,6 +26,9 @@
 - Fixed the max risk bar from overflowing if over 400% risk.
 - Updated unnecessary scroll bars across the app
 
+## Breaking Changes
+- You can no longer select more than currency unless it's a USD base. This will be improved in the future.
+
 
 ## Backend Changes
 - Entire data handling has been moved from React context API to Redux
