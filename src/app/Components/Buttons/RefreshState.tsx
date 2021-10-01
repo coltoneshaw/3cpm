@@ -20,13 +20,10 @@ const useRefreshState = () => {
 
     useEffect(() => {
         if (syncOptions.time && syncOptions.time > 0) setCounter(15);
-        console.log(syncOptions.time)
     }, [syncOptions.time])
 
     useEffect(() => {
         if (counter > 0 && localRefresh) setTimeout(() => setCounter(prevState => prevState - 1), 1000);
-        console.log(counter)
-        console.log(localRefresh)
     }, [counter]);
 
     const onClick = () => {
