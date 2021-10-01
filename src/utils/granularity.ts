@@ -42,7 +42,7 @@ const supportedCurrencies = {
         symbol: "$",
         value: "BUSD",
         // pegged to USD
-        type: "stablecoin",
+        type: "usd",
         rounding: 2
     },
     'BVND' : {
@@ -56,7 +56,7 @@ const supportedCurrencies = {
         name: "Binance VND",
         symbol: "DAI",
         value: "DAI",
-        type: "stablecoin",
+        type: "usd",
         // pegged to USD
         rounding: 3
     },
@@ -64,14 +64,14 @@ const supportedCurrencies = {
         name: "US Dollar",
         symbol: "$",
         value: "USD",
-        type: "fiat",
+        type: "usd",
         rounding: 2
     },
     'USDT' : {
         name: "Tether",
         symbol: "$",
         value: "USDT",
-        type: "stablecoin",
+        type: "usd",
         // pegged to USD
         rounding: 2
     },
@@ -79,7 +79,7 @@ const supportedCurrencies = {
         name: "USD Coin",
         symbol: "$",
         value: "USDC",
-        type: "stablecoin",
+        type: "usd",
         // pegged to USD
         rounding: 2
     },
@@ -143,7 +143,7 @@ const supportedCurrencies = {
         name: "TrueUSD",
         symbol: "$",
         value: "TUSD",
-        type: "stablecoin",
+        type: "usd",
         rounding: 2
     },
     'UAH' : {
@@ -171,7 +171,7 @@ const supportedCurrencies = {
         name: "Pax Dollar",
         symbol: "$",
         value: "USDP",
-        type: "stablecoin",
+        type: "usd",
         rounding: 2
     },
 }

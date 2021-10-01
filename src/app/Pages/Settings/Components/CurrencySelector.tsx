@@ -12,7 +12,8 @@ import {
     Select,
     ListItemText,
     Checkbox,
-    Input
+    Input,
+    ListSubheader
 } from '@mui/material';
 
 // initializing a state for each of the two props that we are using.
@@ -27,6 +28,26 @@ const MenuProps = {
     },
 };
 
+const returnCurrencyMenuItems = (currencyArray: typeof supportedCurrencies) => {
+    const usd: (typeof supportedCurrencies.USD)[] = [];
+    const crypto: (typeof supportedCurrencies.USD)[] = [];
+
+    for (const currency in currencyArray) {
+        let tempCurrency = currencyArray[currency as keyof typeof supportedCurrencies]
+        if (tempCurrency.type === 'usd') {
+            usd.push(tempCurrency)
+        } else {
+            crypto.push(tempCurrency)
+        }
+    }
+
+    return {
+        usd,
+        crypto
+    }
+
+}
+
 const CurrencySelector = () => {
 
     const profile = useAppSelector(state => state.config.editingProfile);
@@ -35,15 +56,33 @@ const CurrencySelector = () => {
         if (profile.general.defaultCurrency) updateCurrency(profile.general.defaultCurrency)
     }, [profile])
 
-
+    const { usd, crypto } = returnCurrencyMenuItems(supportedCurrencies)
+    const usdNames = usd.map(c => c.value)
     const onChange = (e: any) => {
-        if( e.target.value.some( (cur:string) => !Object.keys(supportedCurrencies).includes(cur) )){
+        if (e.target.value.some((cur: string) => !Object.keys(supportedCurrencies).includes(cur))) {
             console.error('No matching currency code found.')
             return false
         }
-        updateCurrency([...e.target.value])
-        updateNestedEditingProfile([...e.target.value], configPaths.general.defaultCurrency)
+
+        const isUSD = e.target.value.some((r:string)=> usdNames.includes(r))
+        if(isUSD){
+            const isAllUsd = e.target.value.every((v:string) => usdNames.includes(v));
+            if(!isAllUsd) {
+                updateCurrency([])
+                updateNestedEditingProfile([], configPaths.general.defaultCurrency)
+                return alert('Warning. You cannot mix currencies that are not USD based.')
+            }
+            updateCurrency([...e.target.value])
+            updateNestedEditingProfile([...e.target.value], configPaths.general.defaultCurrency)
+            return
+        }
+
+        // selecting only the last value so there are not multiple crypto currencies selected at a time.
+        const selected = (e.target.value.length > 1) ? [e.target.value.pop()] : [...e.target.value];
+        updateCurrency(selected)
+        updateNestedEditingProfile(selected, configPaths.general.defaultCurrency)
     }
+
 
     return (
         <FormControl style={{ width: '100%', marginBottom: '25px' }} fullWidth>
@@ -62,25 +101,34 @@ const CurrencySelector = () => {
                     width: '100%'
                 }}
             >
-                {Object.keys(supportedCurrencies).sort().map((c: string) => {
-                    const currencyOption = supportedCurrencies[c as keyof typeof supportedCurrencies]
-                    return (
-                        <MenuItem value={currencyOption.value} key={currencyOption.value}>
+                < ListSubheader > USD</ListSubheader>
 
-                            {/* 
-                                TODO - need to fix the type below
-                            */}
-                            {/*  @ts-ignore */}
-                            <Checkbox checked={currency.indexOf(currencyOption.value) > - 1} />
-                            <ListItemText primary={currencyOption.value + ` (${currencyOption.name} - ${currencyOption.type})`} />
+
+                {usd.map(c => {
+                    return (
+                        <MenuItem value={c.value} key={c.value}>
+                            <Checkbox checked={currency.indexOf(c.value as keyof typeof supportedCurrencies) > - 1} />
+                            <ListItemText primary={c.value + ` (${c.name})`} />
                         </MenuItem>
                     )
+                })}
+                
+                <ListSubheader>Crypto</ListSubheader>
+                {crypto.map(c => {
+                    return (
+                        <MenuItem value={c.value} key={c.value} style={{height: '54px'}}>
+                            <ListItemText primary={c.value + ` (${c.name})`} />
+                        </MenuItem>
+                    )
+                })}
 
-                }
 
-                )}
+
+
+
+
             </Select>
-        </FormControl>
+        </FormControl >
     )
 
 }
