@@ -19,10 +19,7 @@ const updateConfig = async () => {
 }
 
 const storeConfigInFile = async () => {
-
     try {
-        // store.dispatch(storeEditingProfileData());
-
         //@ts-ignore
         await electron.config.set(null, store.getState().config.config)
         updateConfig()
@@ -31,7 +28,17 @@ const storeConfigInFile = async () => {
         console.error(e)
         return false
     }
+}
 
+const saveEditingToConfigFile = async () => {
+    try {
+        //@ts-ignore
+        await electron.config.set(null, store.getState().config.config)
+        return true
+    } catch (e) {
+        console.error(e)
+        return false
+    }
 }
 
 const updateCurrentProfile = (profileData: Type_Profile) => {
@@ -164,5 +171,6 @@ export {
     updateNestedEditingProfile,
     storeConfigInFile,
     checkProfileIsValid,
-    deleteProfileByIdGlobal
+    deleteProfileByIdGlobal,
+    saveEditingToConfigFile
 }

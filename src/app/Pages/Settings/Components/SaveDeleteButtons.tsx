@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
-import { storeConfigInFile, checkProfileIsValid, deleteProfileByIdGlobal } from '@/app/redux/configActions'
-import { storeEditingProfileData, deleteProfileById } from '@/app/redux/configSlice'
-import {updateAllData} from '@/app/redux/threeCommas/Actions'
+import { updateConfig, checkProfileIsValid, deleteProfileByIdGlobal, saveEditingToConfigFile } from '@/app/redux/configActions'
+import { storeEditingProfileData } from '@/app/redux/configSlice'
+import {syncNewProfileData} from '@/app/redux/threeCommas/Actions'
 
 
 import { Button } from '@mui/material';
@@ -30,15 +30,19 @@ const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
             try {
                 dispatch(storeEditingProfileData())
 
+                // saving the config here so the update function below can work properly.
+                const saveEditing = await saveEditingToConfigFile()
+                if(!saveEditing) throw  Error('Error saving profile to the config.')
+                
                 //updating the editing profile's data
-                await updateAllData(1000, editingProfile, 'fullSync')
+                const update = await syncNewProfileData(1000, editingProfile);
 
                 // Saving and confirming that this saved
-                const cfg = await storeConfigInFile()
-                if (cfg) {
+                // const cfg = await storeConfigInFile()
+                if (update) {
+                    updateConfig();
                     callback()
                 }
-                return
             } catch (error) {
 
                 // if there is an error storing the editing profile, the data from the database gets deleted.

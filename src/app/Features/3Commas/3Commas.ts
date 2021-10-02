@@ -542,6 +542,11 @@ const fetchSoData = async (currentProfile: Type_Profile, oDate?: DateRange) => {
     //@ts-ignore
     const data = await electron.database.query(query)
 
+    if(!data || data.length == 0){
+        return []
+
+    }
+
     const sumTotalProfit = data.map((d: any) => d.total_profit).reduce((sum: number, profit: number) => sum + profit);
     const sumTotalDeals = data.map((d: any) => d.total_deals).reduce((sum: number, count: number) => sum + count);
 

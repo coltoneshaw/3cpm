@@ -55,9 +55,9 @@ const fetchAndStoreBotData = async (currentProfile: Type_Profile, update: boolea
                 if (!result) return
                 if (update) dispatch_setBotData(result)
 
-                const inactiveBotFunds = result.filter(b => b.is_enabled === 1).map(r => r.enabled_inactive_funds).reduce((sum, funds) => sum + funds) ?? 0;
+                const inactiveBotFunds = result.filter(b => b.is_enabled === 1).map(r => r.enabled_inactive_funds)
                 // pull enabled_inactive_funds from the bots and add it to metrics.
-                dispatch_setMetricsData({ inactiveBotFunds })
+                dispatch_setMetricsData({ inactiveBotFunds: (inactiveBotFunds.length > 0) ? inactiveBotFunds.reduce((sum, funds) => sum + funds) : 0})
 
             })
     } catch (error) {
@@ -255,6 +255,28 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
     }
 }
 
+
+const syncNewProfileData = async (offset: number = 1000, profileData: Type_Profile) => {
+    if (!preSyncCheck(profileData)) return
+
+    store.dispatch(setIsSyncing(true))
+
+    const options = { syncCount: 0, summary: false, notifications: false, time: 0, offset }
+    let success;
+
+    try {
+        await updateThreeCData('newProfile', options, profileData)
+            .then(async () => updateAllDataQuery(profileData, 'newProfile'))
+        success = true;
+    } catch (error) {
+        console.error(error)
+        alert('Error updating your data. Check the console for more information.')
+        success = false;
+    } finally {
+        store.dispatch(setIsSyncing(false))
+        return success;
+    }
+}
 const updateAllDataQuery = (profileData: Type_Profile, type: string) => {
 
     // if the type if fullSync this will store the bot data. If we store the bot data in the redux state it will overwrite any user changes. 
@@ -310,5 +332,6 @@ export {
     fetchAndStoreAccountData,
     updateAllData,
     refreshFunction,
-    updateAllDataQuery
+    updateAllDataQuery,
+    syncNewProfileData
 }

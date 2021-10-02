@@ -122,7 +122,10 @@ const getProfileConfigAll = (profileId?: string) => {
 
 const setProfileConfig = (key: string, value: any, profileId:string) => {
     // if(!profileId) profileId = config.get('current')
-    console.log(profileId)
+    if(!profileId) {
+        log.error('No profile ID to set the config' + key + ' - ' + value);
+        return
+    }
     return config.set('profiles.' + profileId + '.' + key, value)
 }
 
