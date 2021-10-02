@@ -17,18 +17,31 @@ const RiskMonitor = () => {
 
     return (
         <>
-            <SpeedometerDiv
-                metrics={metricsData}
-                defaultCurrency={defaultCurrency}
-            />
-            <Grid container spacing={4}>
-                <Grid item sm={12} lg={12} xl={6}>
-                    <DealSoUtilizationBar data={activeDeals} defaultCurrency={defaultCurrency}/>
-                </Grid>
-                <Grid item sm={12} lg={12} xl={6}>
-                    <SoDistribution data={activeDeals}  metrics={metricsData} defaultCurrency={defaultCurrency}/>
-                </Grid>
-            </Grid>
+            <div className="riskMonitorDiv">
+                <SpeedometerDiv
+                    metrics={metricsData}
+                    defaultCurrency={defaultCurrency}
+                />
+
+                <div className="chartDiv">
+
+                    <DealSoUtilizationBar data={activeDeals} defaultCurrency={defaultCurrency} />
+                    <SoDistribution data={activeDeals} metrics={metricsData} defaultCurrency={defaultCurrency} />
+
+
+                    {/* <Grid container spacing={4}>
+                        <Grid item sm={12} lg={12}>
+                            <DealSoUtilizationBar data={activeDeals} defaultCurrency={defaultCurrency} />
+                        </Grid>
+                        <Grid item sm={12} lg={12}>
+                            <SoDistribution data={activeDeals} metrics={metricsData} defaultCurrency={defaultCurrency} />
+                        </Grid>
+                    </Grid> */}
+                </div>
+
+            </div>
+
+
         </>
 
     )
