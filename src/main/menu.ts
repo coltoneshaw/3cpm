@@ -152,10 +152,12 @@ const template = [
         
 
           const data = await dialog.showMessageBoxSync(win, options )
+          log
           if(data === 1) {
+            deleteAllData()
+              .then(setDefaultConfig())
             log.info('deleting all data as selected by the menu bar')
-            await deleteAllData();
-            await setDefaultConfig();
+            
             BrowserWindow.getAllWindows().forEach(window => window.reload())
           }
           

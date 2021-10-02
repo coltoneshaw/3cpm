@@ -23,7 +23,7 @@ const migrationToProfiles = (config:any) => {
 
     config.store = {
         profiles: {
-            [id]: { "name": "default", id, apis: {...apis, mode: "real"}, general : {...general, defaultCurrency: [...general.defaultConfig] }, syncStatus, statSettings }
+            [id]: { "name": "default", id, apis: {...apis, threeC: { ...apis.threeC, mode: "real"}}, general, syncStatus, statSettings }
         },
         general: {
             version: 'v0.5.0'
