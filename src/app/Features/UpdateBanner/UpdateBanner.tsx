@@ -39,7 +39,7 @@ const UpdateBanner = () => {
                 latestLink = currentVersion.html_url
                 console.log(latestLink)
 
-                if(version != currentVersion.tag_name) changeShow(true)
+                if("v" + version != currentVersion.tag_name) changeShow(true)
 
             })
     }, []) 

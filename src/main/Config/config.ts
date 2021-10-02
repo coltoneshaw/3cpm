@@ -1,6 +1,8 @@
 import { TconfigValues, Type_Profile } from "@/types/config";
 const log = require('electron-log');
 
+//@ts-ignore
+import { version } from '#/package.json';
 const Store = require('electron-store');
 const { run } = require('@/main/Database/database')
 import { v4 as uuidv4 } from 'uuid';
@@ -20,13 +22,26 @@ const migrationToProfiles = (config:any) => {
     const id = uuidv4()
     config.delete('general.version')
     const { apis, general, syncStatus, statSettings } = config.store
+    if (!apis || !general || !syncStatus || statSettings) return
 
     config.store = {
         profiles: {
-            [id]: { "name": "default", id, apis: {...apis, threeC: { ...apis.threeC, mode: "real"}}, general, syncStatus, statSettings }
+            [id]: { 
+                "name": "default", 
+                id, 
+                "apis": { 
+                    "threeC": { 
+                        ...apis.threeC, 
+                        "mode": "real"
+                    }
+                }, 
+                general, 
+                syncStatus, 
+                statSettings 
+            }
         },
         general: {
-            version: 'v0.5.0'
+            version: 'v1.0.0'
         },
         current: id
     }
@@ -76,17 +91,18 @@ const config = new Store({
             run('ALTER TABLE bots ADD COLUMN hide boolean;')
             run("delete from deals where status in ('failed', 'cancelled') ")
         },
-        'v0.5.0': (store: any) => {
-            log.info('migrating the config store to 0.5.0')
-            
+        '<1.0.0': (store: any) => {
+            log.info('migrating the config store to 1.0.0')
+            console.log('migrating!!')
+            // if(version === 'v1.0.0') {
+            //     console.log('already on the latest version!')
+            // }
             migrationToProfiles(store)
 
 
         }
     },
-    defaults: <TconfigValues>defaultConfig,
-    projectVersion: 'v0.5.0'
-
+    defaults: <TconfigValues>defaultConfig
 });
 
 const getProfileConfig = (key: string) => {
@@ -104,8 +120,9 @@ const getProfileConfigAll = (profileId?: string) => {
 }
 
 
-const setProfileConfig = (key: string, value: any, profileId?:string) => {
-    if(!profileId) profileId = config.get('current')
+const setProfileConfig = (key: string, value: any, profileId:string) => {
+    // if(!profileId) profileId = config.get('current')
+    console.log(profileId)
     return config.set('profiles.' + profileId + '.' + key, value)
 }
 

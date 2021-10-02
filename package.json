@@ -1,7 +1,7 @@
 {
   "name": "3c-portfolio-manager",
   "productName": "3C Portfolio Manager",
-  "version": "v1.0.0",
+  "version": "1.0.0",
   "description": "An application to manage your 3Commas portfolio.",
   "private": true,
   "main": "./dist/main.js",
