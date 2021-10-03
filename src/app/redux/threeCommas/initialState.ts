@@ -48,6 +48,7 @@ export const initialState = {
     },
     additionalData: [],
     isSyncing: false,
+    isSyncingTime: 0,
     syncOptions: <Type_SyncData>{
             summary: false,
             notifications: true,

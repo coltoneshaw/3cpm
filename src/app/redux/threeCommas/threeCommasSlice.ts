@@ -21,6 +21,7 @@ export const threeCommasSlice = createSlice({
     reducers: {
         setIsSyncing: (state, action) => {
             state.isSyncing = Boolean(action.payload)
+            state.isSyncingTime = Date.now()
         },
         setSyncData: (state, action: PayloadAction<Type_SyncData>) => {
             // TODO - need to figure out a way to handle this better when multiple things are syncing at the same time

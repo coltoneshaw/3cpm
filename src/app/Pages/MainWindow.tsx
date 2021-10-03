@@ -15,12 +15,10 @@ import CoinPriceHeader from '@/app/Features/CoinPriceHeader/CoinPriceHeader';
 import { useAppSelector } from '@/app/redux/hooks';
 import { ChangelogModal } from '@/app/Features/Index';
 import { getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
-import useRefreshState from '@/app/Components/Buttons/RefreshState'
 
 const MainWindow = () => {
 
     const { currentProfile } = useAppSelector(state => state.config);
-    const refreshState = useRefreshState()
 
 
     const [homePage, updateHomePage] = useState<string>('/activeDeals')
@@ -72,7 +70,7 @@ const MainWindow = () => {
             <Route exact path="/botplanner" render={() => <BotPlannerPage key="botPlannerPage" />} />
             <Route exact path="/stats" render={() => <StatsPage key="statsPage" />} />
             <Route exact path="/settings" render={() => <SettingsPage key="settingsPage" />} />
-            <Route exact path="/activeDeals" render={() => <ActiveDealsPage key="activeDealsPage" refreshState={refreshState} />} />
+            <Route exact path="/activeDeals" render={() => <ActiveDealsPage key="activeDealsPage" />} />
 
             <Route exact path="/backtesting" render={() => <TradingViewPage key="tradingViewPage" />} />
 
