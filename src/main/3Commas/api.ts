@@ -214,14 +214,11 @@ async function getDealOrders(profileData: Type_Profile, deal_id: number) {
 async function getActiveDeals(profileData?: Type_Profile) {
   const api = threeCapi(profileData)
   if (!api) return []
-
   const response: Type_Deals_API[] = await api.getDeals({ limit: 500, scope: 'active' })
-
   return response
-
-
 }
 
+// This may need to be looked at a bit. But for now it's just an array that runs and stores the active deals.
 let activeDealIDs = <number[]>[]
 
 
@@ -232,28 +229,41 @@ let activeDealIDs = <number[]>[]
  */
 async function getDealsUpdate(perSyncOffset: number, type: string, profileData: Type_Profile) {
   const api = threeCapi(profileData)
-  if (!api) return []
-
-  if (type === 'autoSync') {
-    const activeDeals = await getActiveDeals()
-    const newActiveDealIds = activeDeals.map(deal => deal.id)
-
-    if (activeDealIDs === newActiveDealIds) {
-      return activeDeals
-    }
-
-    const updatedDeals = await getDealsThatAreUpdated(perSyncOffset, profileData)
-    return [...activeDeals, ...updatedDeals]
+  if (!api) return {
+    deals: [],
+    lastSyncTime: profileData.syncStatus.deals.lastSyncTime
   }
 
-  return await getDealsThatAreUpdated(perSyncOffset, profileData)
+  let activeDeals = <[] | Type_Deals_API[]>[]
+
+  if (type === 'autoSync') {
+    activeDeals = await getActiveDeals()
+    const newActiveDealIds = activeDeals.map(deal => deal.id)
+    if (activeDealIDs === newActiveDealIds) {
+      return {
+        deals: [...activeDeals],
+        lastSyncTime: profileData.syncStatus.deals.lastSyncTime
+      }
+    }
+    activeDealIDs = newActiveDealIds;
+  }
+
+  const updatedDeals = await getDealsThatAreUpdated(perSyncOffset, profileData)
+
+  return {
+    deals: [...activeDeals, ...updatedDeals.deals],
+    lastSyncTime: updatedDeals.lastSyncTime
+  }
 }
 
 
 // TODO - refactor to not create it's own API instance here.
 async function getDealsThatAreUpdated(perSyncOffset: number, profileData: Type_Profile) {
   const api = threeCapi(profileData)
-  if (!api) return []
+  if (!api) return {
+    deals: [],
+    lastSyncTime: null
+  }
 
   let responseArray = [];
   let response: Type_Deals_API[];
@@ -308,13 +318,23 @@ async function getDealsThatAreUpdated(perSyncOffset: number, profileData: Type_P
   // updating the last sync time if it's actually changed.
   if (lastSyncTime != newLastSyncTime) { setProfileConfig('syncStatus.deals.lastSyncTime', newLastSyncTime, profileData.id) }
 
-  return responseArray
+  return {
+    deals: responseArray,
+    lastSyncTime: (lastSyncTime != newLastSyncTime) ? newLastSyncTime : lastSyncTime
+  }
 }
 
 
 async function deals(offset: number, type: string, profileData: Type_Profile) {
-  let deals = await getDealsUpdate(offset, type, profileData);
+  let {deals, lastSyncTime} = await getDealsUpdate(offset, type, profileData);
   let dealArray = [];
+
+  if(!deals || deals.length === 0){
+    return {
+      deals,
+      lastSyncTime
+    }
+  }
 
   for (let deal of deals) {
     const {
@@ -372,7 +392,10 @@ async function deals(offset: number, type: string, profileData: Type_Profile) {
 
   }
 
-  return dealArray
+  return {
+    deals: dealArray,
+    lastSyncTime
+  }
 }
 
 

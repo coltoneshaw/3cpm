@@ -130,9 +130,9 @@ ipcMain.handle('database-checkOrMakeTables', () => {
  const { updateAPI, getAndStoreBotData, getAccountSummary, getDealOrders } = require('@/main/3Commas/index')
  import {Type_Profile} from '@/types/config'
 
- ipcMain.handle('api-updateData', async (event, type, options, profileData?:Type_Profile) => {
-   await updateAPI(type, options, profileData)
- });
+ipcMain.handle('api-updateData', async (event, type, options, profileData?:Type_Profile) => {
+  return await updateAPI(type, options, profileData)
+});
 
  ipcMain.handle('api-getAccountData', async (event, profileData: Type_Profile, key?:string, secret?:string, mode?:string) => {
   return await getAccountSummary(profileData, key, secret, mode)
@@ -143,18 +143,18 @@ ipcMain.handle('api-getDealOrders', async (event, profileData: Type_Profile, dea
 });
 
 
- ipcMain.handle('api-getBots', async (event, profileData:Type_Profile) => {
-   await getAndStoreBotData(profileData)
- });
+ipcMain.handle('api-getBots', async (event, profileData:Type_Profile) => {
+  await getAndStoreBotData(profileData)
+});
 
 
  /************************************************************************
   * 
+ *
+ *                     Binance API
   * 
-  *                     Binance API
-  * 
-  * 
-  *************************************************************************/
+ *
+ *************************************************************************/
 
  import { fetchCoinPricesBinance } from '@/app/Features/CoinPriceHeader/BinanceApi';
 

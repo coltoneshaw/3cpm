@@ -16,26 +16,29 @@ import { Type_Profile } from '@/types/config'
  * the code for threeC
  */
 async function updateAPI(type: string, options: Type_UpdateFunction, profileData: Type_Profile) {
+
   if (!profileData) {
     log.error(' No profile was provided to the updateAPI call');
     return false
   }
 
 
-  await deals(options.offset, type, profileData)
-    .then((data: Type_Deals_API[]) => {
+  const lastSyncTime = await deals(options.offset, type, profileData)
+    .then((data: {deals: any[], lastSyncTime: number}) => {
+
+      let {deals, lastSyncTime} = data
 
       // if notifications need to be enabled for the fullSync then the type below needs to be updated.
-      if (type === 'autoSync' && options.notifications && options.time != undefined || options.syncCount != 0) findAndNotifyNewDeals(data, options.time, options.summary)
-      update('deals', data, profileData.id)
+      if (type === 'autoSync' && options.notifications && options.time != undefined || options.syncCount != 0) findAndNotifyNewDeals(deals, options.time, options.summary)
+      update('deals', deals, profileData.id)
       // log.info(data)
+
+      return lastSyncTime
     })
 
-  // if (type !== 'autoSync' || options.syncCount === 20) {
-  //   log.info('updating the accounts!')
     await getAccountData(profileData)
-  // }
 
+    return lastSyncTime;
 }
 
 async function getAccountData(profileData: Type_Profile) {

@@ -8,7 +8,7 @@ async function setupContextBridge() {
     api: {
       async update( type: string, options: Type_UpdateFunction, profileData:Type_Profile ) {
         console.log('Updating 3Commas data.')
-        await ipcRenderer.invoke('api-updateData', type, options, profileData);
+        return await ipcRenderer.invoke('api-updateData', type, options, profileData);
       },
       async updateBots(profileData:Type_Profile) {
         console.log('Fetching Bot Data')

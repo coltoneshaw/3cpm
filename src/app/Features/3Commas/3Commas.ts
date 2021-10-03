@@ -49,12 +49,11 @@ const getFiltersQueryString = async (profileData?: Type_Profile) => {
  * @params - type 'autoSync'
  * @params {options} - option string
  */
-const updateThreeCData = async (type: string, options: Type_UpdateFunction, profileData: Type_Profile) => {
+const updateThreeCData = async (type: string, options: Type_UpdateFunction, profileData: Type_Profile): Promise<{lastSyncTime : number}>  => {
 
     console.info({ options })
-
     // @ts-ignore
-    await electron.api.update(type, options, profileData);
+    return await electron.api.update(type, options, profileData);
 }
 
 

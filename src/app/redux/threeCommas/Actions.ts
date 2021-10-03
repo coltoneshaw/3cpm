@@ -8,6 +8,8 @@ import {
 } from '@/app/redux/threeCommas/threeCommasSlice'
 import { initialState } from '@/app/redux/threeCommas/initialState'
 
+import { updateLastSyncTime } from '@/app/redux/configSlice'
+
 import type { Type_Profile, Type_ReservedFunds } from '@/types/config';
 import type { Type_Query_bots, Type_Query_PerfArray } from '@/types/3Commas'
 import dotProp from 'dot-prop';
@@ -238,12 +240,20 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
 
     try {
         await updateThreeCData(type, options, profileData)
-            .then(async () => updateAllDataQuery(profileData, type))
-            .then(() => {
+            .then(async (lastSyncTime) => {
+                await updateAllDataQuery(profileData, type)
+
+                return lastSyncTime;
+            })
+            .then((lastSyncTime) => {
                 store.dispatch(setSyncData({
                     syncCount:(type === 'autoSync') ? options.syncCount + 1 : 0,
                     time: (type === 'autoSync') ? options.time + 15000 : 0
                 }))
+
+                console.error({lastSyncTime})
+                store.dispatch(updateLastSyncTime({data: lastSyncTime }))
+
             })
 
     } catch (error) {
@@ -257,12 +267,15 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
 
 
 const syncNewProfileData = async (offset: number = 1000, profileData: Type_Profile) => {
+    // const updatedProfile = {...profileData, syncStatus: { deals: {lastSyncTime: null}}}
+
     if (!preSyncCheck(profileData)) return
 
     store.dispatch(setIsSyncing(true))
 
     const options = { syncCount: 0, summary: false, notifications: false, time: 0, offset }
     let success;
+
 
     try {
         await updateThreeCData('newProfile', options, profileData)
