@@ -23,6 +23,7 @@
 - Dynamic chart height for bot / pair performance based on the number of data points.
 - Improved overall chart formatting (highlighting, colors, bar width, etc.)
 - Adjusted tooltips and headers for better clarity.
+- Improved the Risk Monitor view for larger screens. Thanks @GD_NL.
 
 ## Bugs
 - Fixed a few spelling mistakes across the app
