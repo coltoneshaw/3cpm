@@ -312,13 +312,13 @@ const refreshFunction = (method: string, offset?: number) => {
             store.dispatch(setAutoRefresh(false))
             break
         case 'run':
-            const profileData = preSyncCheck(store.getState().config.currentProfile)
-            if (!profileData) {
-                refreshFunction('stop')
-                return
-            }
-
             setTimeout(() => {
+                const profileData = preSyncCheck(store.getState().config.currentProfile)
+                if (!profileData) {
+                    refreshFunction('stop')
+                    return
+                }
+
                 if(!store.getState().threeCommas.autoRefresh) return
                 updateAllData(offset, profileData, 'autoSync', undefined)
                     .then(() => {
