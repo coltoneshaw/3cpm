@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { useAppSelector } from '@/app/redux/hooks';
 import { configPaths } from '@/app/redux/configSlice'
-import { updateNestedEditingProfile } from '@/app/redux/configActions';
+import { updateNestedCurrentProfile } from '@/app/redux/configActions';
 import { formatCurrency, supportedCurrencies } from '@/utils/granularity'
 
 import {
@@ -38,7 +38,7 @@ const returnCurrencyMenuItems = (currencyArray: typeof supportedCurrencies) => {
 
 const CurrencySelector = () => {
 
-    const profile = useAppSelector(state => state.config.editingProfile);
+    const profile = useAppSelector(state => state.config.currentProfile);
     const [currency, updateCurrency] = useState<(keyof typeof supportedCurrencies)[]>([])
     useEffect(() => {
         if (profile.general.defaultCurrency) updateCurrency(profile.general.defaultCurrency)
@@ -57,18 +57,18 @@ const CurrencySelector = () => {
             const isAllUsd = e.target.value.every((v:string) => usdNames.includes(v));
             if(!isAllUsd) {
                 updateCurrency([])
-                updateNestedEditingProfile([], configPaths.general.defaultCurrency)
+                updateNestedCurrentProfile([], configPaths.general.defaultCurrency)
                 return alert('Warning. You cannot mix currencies that are not USD based.')
             }
             updateCurrency([...e.target.value])
-            updateNestedEditingProfile([...e.target.value], configPaths.general.defaultCurrency)
+            updateNestedCurrentProfile([...e.target.value], configPaths.general.defaultCurrency)
             return
         }
 
         // selecting only the last value so there are not multiple crypto currencies selected at a time.
         const selected = (e.target.value.length > 1) ? [e.target.value.pop()] : [...e.target.value];
         updateCurrency(selected)
-        updateNestedEditingProfile(selected, configPaths.general.defaultCurrency)
+        updateNestedCurrentProfile(selected, configPaths.general.defaultCurrency)
     }
 
 

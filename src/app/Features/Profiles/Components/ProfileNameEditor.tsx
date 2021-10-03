@@ -3,16 +3,16 @@ import { TextField } from '@mui/material';
 import { useAppSelector } from '@/app/redux/hooks';
 import {configPaths } from "@/app/redux/configSlice";
 
-import { updateNestedEditingProfile } from "@/app/redux/configActions";
+import { updateNestedCurrentProfile } from "@/app/redux/configActions";
 
 
 const ProfileNameEditor = () => {
-    const profile = useAppSelector(state => state.config.editingProfile)
+    const profile = useAppSelector(state => state.config.currentProfile)
     const [name, updateName] = useState('')
 
     const handleChange = (e: any) => {
         updateName(e.target.value)
-        updateNestedEditingProfile(e.target.value, configPaths.name)
+        updateNestedCurrentProfile(e.target.value, configPaths.name)
     }
 
     useEffect(() => {

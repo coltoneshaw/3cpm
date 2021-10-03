@@ -16,9 +16,8 @@ const defaultReservedFunds = {
 
 // Define the initial state using that type
 const initialState = {
-    config: <TconfigValues> defaultConfig,
-    currentProfile: <Type_Profile> defaultProfile,
-    editingProfile: <Type_Profile>defaultProfile,
+    config: <TconfigValues>defaultConfig,
+    currentProfile: <Type_Profile>defaultProfile,
     reservedFunds: <Type_ReservedFunds[]>[defaultReservedFunds]
 }
 
@@ -29,6 +28,11 @@ const configPaths = {
             key: 'apis.threeC.key',
             secret: 'apis.threeC.secret',
             mode: 'apis.threeC.mode'
+        }
+    },
+    syncStatus: {
+        deals: {
+            lastSyncTime: 'syncStatus.deals.lastSyncTime'
         }
     },
     statSettings: {
@@ -54,31 +58,27 @@ export const configSlice = createSlice({
             state.currentProfile = action.payload
         },
         setCurrentProfileById: (state, action) => {
-            const {profileId} = action.payload
-            console.log({profileId})
-            const newConfig = {...state.config}
-            state.currentProfile = {...newConfig.profiles[profileId]}
-            state.config = {...newConfig, current: profileId}
-            state.editingProfile = {...newConfig.profiles[profileId]}
-            // state.editingProfileId = profileId
-        },
-        setEditingProfile: (state, action) => {
-            state.editingProfile = action.payload
-        },
-        // setEditingProfileId: (state, action) => {
-        //     state.editingProfileId = action.payload
-        // },
-        storeEditingProfileData: state => {
+            const { profileId } = action.payload
+            console.log({ profileId })
             const newConfig = { ...state.config }
-            const editingProfile = state.editingProfile
-            newConfig.profiles[editingProfile.id] = { ...editingProfile, ...state.editingProfile }
-
+            state.currentProfile = { ...newConfig.profiles[profileId] }
+            state.config = { ...newConfig, current: profileId }
+        },
+        storeCurrentProfile: state => {
+            const newConfig = { ...state.config }
+            const currentProfile = state.currentProfile
+            newConfig.profiles[currentProfile.id] = currentProfile
             state.config = newConfig
         },
-
-        updateOnEditingProfile: (state, action) => {
-            const { data, path } = action.payload
-            let newProfile = Object.assign({}, { ...state.editingProfile })
+        updateLastSyncTime: (state, action) => {
+            const { data } = action.payload
+            let newProfile = Object.assign({}, { ...state.currentProfile })
+            newProfile.syncStatus.deals.lastSyncTime = data
+            state.currentProfile = newProfile
+        },
+        updateCurrentProfileByPath: (state, action) => {
+            const { data, path} = action.payload
+            let newProfile = Object.assign({}, { ...state.currentProfile })
             switch (path) {
                 case configPaths.apis.threeC.main: // update all the api data.
                     newProfile.apis.threeC = data
@@ -95,15 +95,20 @@ export const configSlice = createSlice({
                 case configPaths.statSettings.startDate: // update all the api data.
                     newProfile.statSettings.startDate = data
                     break
+                case configPaths.syncStatus.deals.lastSyncTime: 
+                    newProfile.statSettings.startDate = data
+                    break
                 default:
                     newProfile = newProfile
             }
 
-            state.editingProfile = newProfile
+            const newConfig = { ...state.config }
+            newConfig.profiles[newProfile.id] = newProfile
+            state.config = newConfig
+            state.currentProfile = newProfile
         },
         deleteProfileById: (state, action) => {
-            const {profileId} = action.payload
-
+            const { profileId } = action.payload
             const profileKeys = Object.keys(state.config.profiles)
             if (profileKeys.length > 1) {
                 const newConfig = { ...state.config }
@@ -115,23 +120,19 @@ export const configSlice = createSlice({
             } else {
                 console.error('You cannot delete all your profiles. It looks like your down to the last one.')
             }
-
-
-
         },
-        addEditingProfile: state => {
-            // state.editingProfileId = uuidv4()
-            state.editingProfile = {...defaultProfile, id: uuidv4()}
+        addConfigProfile: state => {
+            state.currentProfile = { ...defaultProfile, id: uuidv4() }
         }
     }
 })
 
-export const { 
-    setConfig, setCurrentProfile, setEditingProfile, storeEditingProfileData, 
-    updateOnEditingProfile, deleteProfileById, addEditingProfile,
-    setCurrentProfileById
+export const {
+    setConfig, setCurrentProfile, 
+    updateCurrentProfileByPath, deleteProfileById, addConfigProfile,
+    setCurrentProfileById,
+    updateLastSyncTime
 } = configSlice.actions;
 export { configPaths }
-// export const selectCount = (state: RootState) => state.config.config
 
 export default configSlice.reducer

@@ -24,9 +24,6 @@ import { ProfileNameEditor } from '@/app/Features/Profiles/Components/Index'
 import { ChangelogModal, ToastNotifcations } from '@/app/Features/Index';
 
 
-
-// Need to create an 'editing profile' state
-// this state is either the current profile active, or the profile that was selected to be edited in the modal.
 const SettingsPage = () => {
 
 

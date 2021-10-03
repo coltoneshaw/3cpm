@@ -69,9 +69,6 @@ export interface Type_ConfigContext {
         updateReservedFunds: any
         currentProfileId: string
         updateCurrentProfileId: any
-        currentlyEditingProfileId: string
-        updateCurrentlyEditingProfileId: any
-        editingProfileData: any
     },
     actions: {
         fetchAccountsForRequiredFunds: any

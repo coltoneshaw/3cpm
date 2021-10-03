@@ -1,4 +1,4 @@
-import { setConfig, setCurrentProfile, setEditingProfile, updateOnEditingProfile, deleteProfileById } from '@/app/redux/configSlice'
+import { setConfig, setCurrentProfile, updateCurrentProfileByPath, deleteProfileById } from '@/app/redux/configSlice'
 import {setSyncData} from '@/app/redux/threeCommas/threeCommasSlice'
 
 import { TconfigValues, Type_Profile, Type_ReservedFunds } from '@/types/config';
@@ -14,26 +14,16 @@ const updateConfig = async () => {
         .then((config: any) => {
             store.dispatch(setConfig(config));
             updateCurrentProfile(config.profiles[config.current])
-            updateEditingProfile(config.profiles[config.current], config.current)
         })
 }
 
 const storeConfigInFile = async () => {
+
+
     try {
         //@ts-ignore
         await electron.config.set(null, store.getState().config.config)
         updateConfig()
-        return true
-    } catch (e) {
-        console.error(e)
-        return false
-    }
-}
-
-const saveEditingToConfigFile = async () => {
-    try {
-        //@ts-ignore
-        await electron.config.set(null, store.getState().config.config)
         return true
     } catch (e) {
         console.error(e)
@@ -48,21 +38,13 @@ const updateCurrentProfile = (profileData: Type_Profile) => {
     store.dispatch(setSyncData({syncCount: 0, time: 0}))
 }
 
-const updateEditingProfile = (profileData: Type_Profile, profileId: string) => {
-    store.dispatch(setEditingProfile(profileData));
-    // store.dispatch(setEditingProfileId(profileId));
-}
-
 /**
  * 
- * @param data data to be stored on the editing profile
+ * @param data data to be stored on the current profile
  * @param path string path to represent where to store the data.
  */
-const updateNestedEditingProfile = (data: string | {} | [], path: string) => {
-
-    store.dispatch(updateOnEditingProfile({ data, path }))
-    // store.dispatch(storeEditingProfileData());
-
+const updateNestedCurrentProfile = (data: string | {} | [], path: string) => {
+    store.dispatch(updateCurrentProfileByPath({ data, path }))
 }
 
 const updateReservedFundsArray = async (key: string, secret: string, mode: string, updateReservedFunds: CallableFunction, reservedFunds: Type_ReservedFunds[]) => {
@@ -122,9 +104,9 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
 
 }
 
-const checkProfileIsValid = (editingProfile: Type_Profile) => {
+const checkProfileIsValid = (profile: Type_Profile) => {
     try {
-        const { apis: { threeC }, name, statSettings: { reservedFunds, startDate } } = editingProfile
+        const { apis: { threeC }, name, statSettings: { reservedFunds, startDate } } = profile
         if (!threeC.key || !threeC.mode || !threeC.secret) return { status: false, message: 'Missing 3Commas API information' }
         if (!name) return { status: false, message: 'Missing a valid profile name' }
         if (!reservedFunds) return { status: false, message: 'Missing accounts. Make sure to click "Test API Keys" and enable an account.' }
@@ -168,9 +150,8 @@ const deleteProfileByIdGlobal = (config: TconfigValues, profileId:string, setOpe
 export {
     updateConfig,
     updateReservedFundsArray,
-    updateNestedEditingProfile,
+    updateNestedCurrentProfile,
     storeConfigInFile,
     checkProfileIsValid,
-    deleteProfileByIdGlobal,
-    saveEditingToConfigFile
+    deleteProfileByIdGlobal
 }

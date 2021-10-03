@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
-import { addEditingProfile,
-    setCurrentProfileById} from '@/app/redux/configSlice'
+import { addConfigProfile, setCurrentProfileById} from '@/app/redux/configSlice'
 import { useHistory } from 'react-router-dom'
 
 import PersonIcon from '@mui/icons-material/Person';
@@ -36,7 +35,7 @@ const ProfileSwitcher = () => {
     const addNewProfile = () => {
         // navigate to settings
         // add a profile to the store.
-        dispatch(addEditingProfile())
+        dispatch(addConfigProfile())
         history.push('/settings')
     }
 

@@ -8,11 +8,11 @@ import { TextField, FormControl } from '@mui/material';
 
 import { useAppSelector } from '@/app/redux/hooks';
 import { configPaths } from '@/app/redux/configSlice'
-import { updateNestedEditingProfile } from '@/app/redux/configActions';
+import { updateNestedCurrentProfile } from '@/app/redux/configActions';
 
 
 export default function StartDatePicker() {
-  const profile = useAppSelector(state => state.config.editingProfile)
+  const profile = useAppSelector(state => state.config.currentProfile)
   const [date, updateDate] = useState(() => 0)
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function StartDatePicker() {
     if (date != undefined && isValid(new Date(date))) {
       const newDate = startOfDay(addMinutes(new Date(date), new Date().getTimezoneOffset())).getTime();
       updateDate(newDate)
-      updateNestedEditingProfile(newDate, configPaths.statSettings.startDate)
+      updateNestedCurrentProfile(newDate, configPaths.statSettings.startDate)
     }
   };
 

@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { useAppSelector } from '@/app/redux/hooks';
 
 import { configPaths } from '@/app/redux/configSlice'
-import { updateNestedEditingProfile } from '@/app/redux/configActions';
+import { updateNestedCurrentProfile } from '@/app/redux/configActions';
 import { Type_ReservedFunds } from '@/types/config';
 
 
@@ -117,7 +117,7 @@ const EditableCell = ({
 
 const ReservedBankroll = () => {
 
-  const profile = useAppSelector(state => state.config.editingProfile);
+  const profile = useAppSelector(state => state.config.currentProfile);
   const [reservedFunds, updateReservedFunds] = useState<Type_ReservedFunds[]>([])
 
   useEffect(() => {
@@ -130,7 +130,7 @@ const ReservedBankroll = () => {
   }, [reservedFunds])
 
   const updateData = (data:Type_ReservedFunds[]) => {
-    updateNestedEditingProfile(data, configPaths.statSettings.reservedFunds)
+    updateNestedCurrentProfile(data, configPaths.statSettings.reservedFunds)
     return data
   }
 

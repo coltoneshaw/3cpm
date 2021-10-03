@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import {  useAppSelector } from '@/app/redux/hooks';
 import {  configPaths } from '@/app/redux/configSlice'
-import { updateReservedFundsArray, updateNestedEditingProfile } from '@/app/redux/configActions';
+import { updateReservedFundsArray, updateNestedCurrentProfile } from '@/app/redux/configActions';
 
 import { TextField, Button, InputLabel, FormControl, MenuItem, Select } from '@mui/material';
 
@@ -10,12 +10,12 @@ import { Type_Profile, Type_ReservedFunds } from '@/types/config'
 
 
 const ApiSettings = () => {
-    const {editingProfile, reservedFunds} = useAppSelector(state => state.config);
+    const {currentProfile, reservedFunds} = useAppSelector(state => state.config);
     const [apiData, updateApiData] = useState(() => ({ key: "", mode: "", secret: "" }))
 
     useEffect(() => {
-        updateApiData(editingProfile.apis.threeC)
-    }, [editingProfile])
+        updateApiData(currentProfile.apis.threeC)
+    }, [currentProfile])
 
     const handleChange = (e: any) => {
         const validKeys = ["key", 'secret', 'mode']
@@ -30,13 +30,13 @@ const ApiSettings = () => {
             //@ts-ignore
             newState[e.target.name as keyof Type_Profile] = e.target.value
 
-            updateNestedEditingProfile(newState, configPaths.apis.threeC.main)
+            updateNestedCurrentProfile(newState, configPaths.apis.threeC.main)
             return newState
         })
     }
 
     const handleUpdatingReservedFunds = (reservedFunds: Type_ReservedFunds[]) => {
-        updateNestedEditingProfile(reservedFunds, configPaths.statSettings.reservedFunds)
+        updateNestedCurrentProfile(reservedFunds, configPaths.statSettings.reservedFunds)
     }
 
 
