@@ -237,8 +237,6 @@ const fetchBotPerformanceMetrics = async (profileData: Type_Profile, oDate?: Dat
                 GROUP BY
                     bot_id;`
 
-    // console.log(queryString)
-
     // @ts-ignore
     let databaseQuery = await electron.database.query(queryString);
 
@@ -304,8 +302,6 @@ const fetchPairPerformanceMetrics = async (profileData: Type_Profile, oDate?: Da
             ${fromSQL} ${toSQL}
         GROUP BY
             pair;`
-
-    // console.log(queryString)
 
     // @ts-ignore
     let databaseQuery = await electron.database.query(queryString);
@@ -385,8 +381,6 @@ const getAccountDataFunction = async (profileData: Type_Profile) => {
                     and currency_code IN ( ${currencyString} )
                     and profile_id = '${currentProfileID}';
     `
-    console.log(query)
-
     // @ts-ignore
     let accountData: Array<Type_Query_Accounts> = await electron.database.query(query)
 
@@ -403,8 +397,6 @@ const getAccountDataFunction = async (profileData: Type_Profile) => {
             positionTotal += position;
 
         }
-
-        // console.log({ on_ordersTotal, positionTotal })
         return {
             accountData,
             balance: {

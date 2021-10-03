@@ -246,8 +246,6 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
                     syncCount:(type === 'autoSync') ? options.syncCount + 1 : 0,
                     time: (type === 'autoSync') ? options.time + 15000 : 0
                 }))
-
-                console.error({lastSyncTime})
                 store.dispatch(updateLastSyncTime({data: lastSyncTime }))
 
             })

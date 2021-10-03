@@ -73,7 +73,6 @@ const BotPlannerPage = () => {
 
     const addToTable = () => {
         updateLocalBotData((prevState: Type_Query_bots[]) => {
-            console.log(blankObject)
             return [
                 blankObject,
                 ...prevState

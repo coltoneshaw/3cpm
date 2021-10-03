@@ -59,7 +59,6 @@ export const configSlice = createSlice({
         },
         setCurrentProfileById: (state, action) => {
             const { profileId } = action.payload
-            console.log({ profileId })
             const newConfig = { ...state.config }
             state.currentProfile = { ...newConfig.profiles[profileId] }
             state.config = { ...newConfig, current: profileId }

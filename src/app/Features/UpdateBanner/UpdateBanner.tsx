@@ -37,8 +37,6 @@ const UpdateBanner = () => {
                 const currentVersion = versionData.filter((release:any) => !release.prerelease)[0]
                 updateLatestVersion(currentVersion.tag_name)
                 latestLink = currentVersion.html_url
-                console.log(latestLink)
-
                 if("v" + version != currentVersion.tag_name) changeShow(true)
 
             })

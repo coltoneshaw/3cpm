@@ -58,7 +58,6 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
 
         // new data coming in, removing the dups from the array
         const filteredAccountData = removeDuplicatesInArray(accountSummary, 'id')
-        // console.log(filteredAccountData)
 
         // checking to see if any reserved funds exist
         if (reservedFunds.length === 0 || reservedFunds === []) {

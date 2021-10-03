@@ -85,7 +85,6 @@ const calc_dropCoverage = (totalFundsAvailable:number, bot:Type_Query_bots ) => 
     const maxSoReached = calc_maxSOReached(+totalFundsAvailable, +max_safety_orders, +base_order_volume, +safety_order_volume, +martingale_volume_coefficient)
 
     const maxCoveragePercent = calc_deviation(+maxSoReached, +safety_order_step_percentage, +martingale_step_coefficient)
-    // console.log({ maxCoveragePercent, maxSoReached, totalFundsAvailable })
 
     return {
         maxCoveragePercent,

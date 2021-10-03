@@ -33,61 +33,12 @@ const ManageProfileModal = ({ open, setOpen, profiles }:Type_profileModal ) => {
     // - add a set Current Profile button that controls the state in the back.
 
     
-    // const [inputValue, changeInputValue] = useState('')
-
     const handleClose = () => {
         setOpen(false);
     };
 
     const theme = useThemeProvidor()
     const { styles } = theme
-
-    const handleChange = (e: any) => {
-        if(!e.target.name) {
-            console.debug('Nothing is currently set.')
-            console.debug(e)
-            return
-        }
-
-        console.log({
-            name: e.target.name,
-            value: e.target.value
-        })
-
-
-
-    }
-
-    // const addProfileDiv = () => {
-    //     // if (selectedCoins.length >= 5) return <p style={{ fontWeight: 300, margin: 'auto' }}>Remove a coin to add another.</p>
-
-    //     return (
-    //         <>
-    //             <TextField
-    //                 id="key"
-    //                 label="Add Profile"
-    //                 name="key"
-    //                 value={inputValue}
-    //                 onChange={handleChange}
-    //                 className="settings-left"
-    //                 style={{
-    //                     flexBasis: '90%', paddingRight: '2em', color: 'var(--color-text-lightbackground)'
-    //                 }}
-    //             />
-
-    //             <AddIcon
-    //                 style={{
-    //                     flexBasis: '10%',
-    //                     cursor: 'pointer'
-
-    //                 }}
-    //                 onClick={() => {
-    //                     // addCoin()
-    //                 }}
-    //             />
-    //         </>
-    //     )
-    // }
 
     const returnProfilesMapped = () => {
 
@@ -143,15 +94,6 @@ const ManageProfileModal = ({ open, setOpen, profiles }:Type_profileModal ) => {
                         <h2 style={{ textAlign: 'center' }}>Profiles</h2>
 
                         { returnProfilesMapped() }
-
-                        {/* <div className="addCoinDiv flex-row">
-
-                            { addProfileDiv() }
-
-                        </div> */}
-
-
-
 
                     </div>
 

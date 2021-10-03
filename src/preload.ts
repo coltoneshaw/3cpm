@@ -15,7 +15,6 @@ async function setupContextBridge() {
         return await ipcRenderer.invoke('api-getBots', profileData);
       },
       async getAccountData(profileData:Type_Profile, key?:string , secret?:string, mode?:string) {
-        // console.log('updating the database.')
         return await ipcRenderer.invoke('api-getAccountData', profileData, key , secret, mode);
       },
       async getDealOrders(profileData:Type_Profile, dealID: number) {

@@ -139,7 +139,6 @@ const EditableCell = ({
 
   useEffect(() => {
     setSize(String(value).length * 1.5)
-    // console.log({initialValue, value, il: initialValue.length, valuel: value.length})
   }, [value, initialValue])
 
   // If the initialValue is changed external, sync it up with our state

@@ -25,8 +25,6 @@ const CoinPriceHeader = () => {
         // @ts-ignore
         electron.binance.coinData()
             .then((data: any) => {
-                // console.log(data)
-
                 if (data == undefined || data.length == 0) return
 
                 //@ts-ignore
