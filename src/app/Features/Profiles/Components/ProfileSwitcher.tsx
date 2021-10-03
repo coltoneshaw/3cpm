@@ -15,6 +15,7 @@ import {
     bindHover,
     bindMenu,
 } from 'material-ui-popup-state/hooks'
+import {Divider} from "@mui/material";
 
 const ProfileSwitcher = () => {
     const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' })
@@ -79,6 +80,9 @@ const ProfileSwitcher = () => {
             >
 
                 {returnMenuOptions()}
+
+                <Divider  />
+
                 <MenuItem onClick={() => { addNewProfile()}}>Add new profile</MenuItem>
                 <MenuItem onClick={() => { setOpen(prevState => !prevState) }}>Manage profiles</MenuItem>
 
