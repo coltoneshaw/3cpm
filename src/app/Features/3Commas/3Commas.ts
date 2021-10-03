@@ -15,23 +15,12 @@ import { DateRange } from "@/types/Date";
 import moment from "moment";
 
 
-const getFiltersQueryString = async (profileData?: Type_Profile) => {
-
-    if (!profileData) {
-        // @ts-ignore
-        const currentProfileID = await electron.config.get('current');
-
-        // @ts-ignore
-        profileData = await <Type_Profile>electron.config.get('profile.' + currentProfileID)
-
-    }
-
+const getFiltersQueryString = async (profileData: Type_Profile) => {
     const { general: { defaultCurrency }, statSettings: { reservedFunds, startDate }, id } = profileData
 
     const currencyString = (defaultCurrency) ? defaultCurrency.map((b: string) => "'" + b + "'") : ""
     const startString = startDate
     const accountIdString = reservedFunds.filter((account: Type_ReservedFunds) => account.is_enabled).map((account: Type_ReservedFunds) => account.id)
-
 
     return {
         currencyString,
@@ -59,7 +48,7 @@ const updateThreeCData = async (type: string, options: Type_UpdateFunction, prof
 
 // Filtering by only closed.
 // This can most likely be moved to the performance dashboard or upwards to the app header.
-const fetchDealDataFunction = async (profileData?: Type_Profile) => {
+const fetchDealDataFunction = async (profileData: Type_Profile) => {
     const filtersQueryString = await getFiltersQueryString(profileData);
     const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
     const query = `
@@ -144,7 +133,7 @@ const fetchDealDataFunction = async (profileData?: Type_Profile) => {
 
 }
 
-const fetchPerformanceDataFunction = async (oDate?: DateRange, profileData?: Type_Profile) => {
+const fetchPerformanceDataFunction = async (profileData: Type_Profile, oDate?: DateRange ) => {
     const filtersQueryString = await getFiltersQueryString(profileData);
     const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
 
@@ -214,7 +203,7 @@ const fetchPerformanceDataFunction = async (oDate?: DateRange, profileData?: Typ
  *
  */
 
-const fetchBotPerformanceMetrics = async (oDate?: DateRange, profileData?: Type_Profile) => {
+const fetchBotPerformanceMetrics = async (profileData: Type_Profile, oDate?: DateRange) => {
     const filtersQueryString = await getFiltersQueryString(profileData);
     const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
 
@@ -261,7 +250,7 @@ const fetchBotPerformanceMetrics = async (oDate?: DateRange, profileData?: Type_
 
 }
 
-const botQuery = async (currentProfile?: Type_Profile) => {
+const botQuery = async (currentProfile: Type_Profile) => {
     const filtersQueryString = await getFiltersQueryString(currentProfile);
     const { accountIdString, currentProfileID, currencyString } = filtersQueryString;
 
@@ -279,7 +268,7 @@ const botQuery = async (currentProfile?: Type_Profile) => {
     // @ts-ignore
     let databaseQuery = await electron.database.query(queryString);
 
-    if (databaseQuery == null || databaseQuery.length > 0) {
+    if (databaseQuery != null || databaseQuery.length > 0) {
         return databaseQuery
     }
     return []
@@ -290,7 +279,7 @@ const botQuery = async (currentProfile?: Type_Profile) => {
  *
  * @returns An array containing the data for specific bot metrics.
  */
-const fetchPairPerformanceMetrics = async (oDate?: DateRange, profileData?: Type_Profile) => {
+const fetchPairPerformanceMetrics = async (profileData: Type_Profile, oDate?: DateRange) => {
     const filtersQueryString = await getFiltersQueryString(profileData);
     const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
 
@@ -382,7 +371,7 @@ const getActiveDealsFunction = async (profileData: Type_Profile) => {
  * @param {string} defaultCurrency This is the default currency configured in settings and used as a filter
  * @returns
  */
-const getAccountDataFunction = async (profileData?: Type_Profile) => {
+const getAccountDataFunction = async (profileData: Type_Profile) => {
     const filtersQueryString = await getFiltersQueryString(profileData);
     const { currencyString, accountIdString, currentProfileID } = filtersQueryString;
 
@@ -460,7 +449,7 @@ function initDate(startString: number, oDate?: DateRange) {
  *
  * @description This is used to see pairs on a per date bases in charts. This is not used in the DataContext state. This reports based on the usd_final_profit only
  */
-const getSelectPairDataByDate = async (pairs: string[], oDate: DateRange, profileData?: Type_Profile) => {
+const getSelectPairDataByDate = async (profileData: Type_Profile, pairs: string[], oDate: DateRange, ) => {
     const filtersQueryString = await getFiltersQueryString(profileData);
     const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
 

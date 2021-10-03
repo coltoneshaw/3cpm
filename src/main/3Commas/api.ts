@@ -52,9 +52,9 @@ const threeCapi = (profileData?: Type_Profile, key?: string, secret?: string, mo
 }
 
 
-async function bots(profileData?: Type_Profile) {
+async function bots(profileData: Type_Profile) {
   const api = threeCapi(profileData)
-  if (!api) return []
+  if (!api) return [];
 
   let responseArray = [];
   let response: Type_API_bots[];

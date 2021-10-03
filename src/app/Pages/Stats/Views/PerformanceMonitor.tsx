@@ -32,9 +32,9 @@ const PerformanceMonitor = () => {
     useEffect(() => {
 
         Promise.all([
-            fetchPerformanceDataFunction(datePair, currentProfile),
-            fetchBotPerformanceMetrics(datePair, currentProfile),
-            fetchPairPerformanceMetrics(datePair, currentProfile),
+            fetchPerformanceDataFunction(currentProfile, datePair),
+            fetchBotPerformanceMetrics(currentProfile, datePair),
+            fetchPairPerformanceMetrics(currentProfile, datePair),
         ]).then(([perfData, botPerfData, pairPerfData]) => {
             updateLocalPerf((prevState) => {
                 return {

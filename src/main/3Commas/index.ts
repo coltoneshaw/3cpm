@@ -22,11 +22,20 @@ async function updateAPI(type: string, options: Type_UpdateFunction, profileData
     return false
   }
 
+  // TODO - This can probably be moved into a promise.all function
+  const lastSyncTime = await getDealData(type, options, profileData)
+  await getAccountData(profileData)
+  await getAndStoreBotData(profileData)
 
-  const lastSyncTime = await deals(options.offset, type, profileData)
-    .then((data: {deals: any[], lastSyncTime: number}) => {
+  return lastSyncTime;
+}
 
-      let {deals, lastSyncTime} = data
+async function getDealData(type: string, options: Type_UpdateFunction, profileData: Type_Profile) {
+
+  return await deals(options.offset, type, profileData)
+    .then((data: { deals: any[], lastSyncTime: number }) => {
+
+      let { deals, lastSyncTime } = data
 
       // if notifications need to be enabled for the fullSync then the type below needs to be updated.
       if (type === 'autoSync' && options.notifications && options.time != undefined || options.syncCount != 0) findAndNotifyNewDeals(deals, options.time, options.summary)
@@ -36,15 +45,12 @@ async function updateAPI(type: string, options: Type_UpdateFunction, profileData
       return lastSyncTime
     })
 
-    await getAccountData(profileData)
-
-    return lastSyncTime;
 }
-
 async function getAccountData(profileData: Type_Profile) {
 
   if (!profileData) {
-    profileData = getProfileConfigAll()
+    log.error(' No profile was provided to the updateAPI call');
+    return false
   }
 
   // 1. Fetch data from the API
@@ -65,15 +71,15 @@ async function getAccountData(profileData: Type_Profile) {
  * @param profileData if not sent, this will use the current profile saved to the config.
  */
 async function getAndStoreBotData(profileData: Type_Profile) {
-
   if (!profileData) {
-    profileData = getProfileConfigAll()
+    log.error(' No profile was provided to the updateAPI call');
+    return false
   }
+  
   try {
     await bots(profileData)
       .then(async (data: Type_API_bots[]) => {
         if (data != null && data.length > 0) {
-
 
           // deleting the bots that do not exist in the sync
           // this helps to keep the database clean since bots can be removed from 3C but there is no `deleted_at` flag in the APO
@@ -94,7 +100,6 @@ async function getAndStoreBotData(profileData: Type_Profile) {
               hide
             }
           })
-
           update('bots', data, id)
         }
 

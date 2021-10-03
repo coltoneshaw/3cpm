@@ -87,7 +87,7 @@ const PairPerformanceByDate = ({ datePair, defaultCurrency }: { datePair: DateRa
 
     useEffect(() => {
 
-        getSelectPairDataByDate(pairFilters, datePair, currentProfile)
+        getSelectPairDataByDate(currentProfile, pairFilters, datePair)
             .then(data => {
                 if (!data) return
                 updateLocalData(data)

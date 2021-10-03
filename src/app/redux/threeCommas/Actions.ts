@@ -49,14 +49,10 @@ const dispatch_setBalanceData = (data: typeof initialState.balanceData) => store
 const fetchAndStoreBotData = async (currentProfile: Type_Profile, update: boolean) => {
     try {
         // @ts-ignore
-        //  await electron.api.updateBots(currentProfile)
-
-        // @ts-ignore
         await botQuery(currentProfile)
             .then((result: Type_Query_bots[]) => {
-                if (!result) return
+                // if (!result) return
                 if (update) dispatch_setBotData(result)
-
                 const inactiveBotFunds = result.filter(b => b.is_enabled === 1).map(r => r.enabled_inactive_funds)
                 // pull enabled_inactive_funds from the bots and add it to metrics.
                 dispatch_setMetricsData({ inactiveBotFunds: (inactiveBotFunds.length > 0) ? inactiveBotFunds.reduce((sum, funds) => sum + funds) : 0})
@@ -80,7 +76,7 @@ const fetchAndStoreProfitData = async (profileData: Type_Profile) => {
 const fetchAndStorePerformanceData = async (profileData: Type_Profile) => {
 
 
-    const pair_bot = async () => await fetchPerformanceDataFunction(undefined, profileData)
+    const pair_bot = async () => await fetchPerformanceDataFunction(profileData, undefined)
         .then(((data: Type_Query_PerfArray[]) => {
             if (!data || data.length === 0) return
             console.log('updated Performance Data!')
@@ -97,14 +93,14 @@ const fetchAndStorePerformanceData = async (profileData: Type_Profile) => {
 
         }))
 
-    const bot = async () => await fetchBotPerformanceMetrics(undefined, profileData)
+    const bot = async () => await fetchBotPerformanceMetrics(profileData, undefined)
         .then((data => {
             if (!data) return
             console.log('getting bot performance metrics')
             dispatch_setPerformanceData({ bot: data })
         }))
 
-    const pair = async () => await fetchPairPerformanceMetrics(undefined, profileData)
+    const pair = async () => await fetchPairPerformanceMetrics(profileData, undefined)
         .then((data => {
             if (!data) return
             console.log('getting bot performance metrics')
@@ -279,7 +275,7 @@ const syncNewProfileData = async (offset: number = 1000, profileData: Type_Profi
 
     try {
         await updateThreeCData('newProfile', options, profileData)
-            .then(async () => updateAllDataQuery(profileData, 'newProfile'))
+            .then(async () => updateAllDataQuery(profileData, 'fullSync'))
         success = true;
     } catch (error) {
         console.error(error)
