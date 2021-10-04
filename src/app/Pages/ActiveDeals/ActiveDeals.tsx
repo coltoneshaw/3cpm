@@ -9,9 +9,7 @@ import { SyncToggles } from './Components/index';
 
 import './ActiveDeals.scss'
 
-import useRefreshState from '@/app/Components/Buttons/RefreshState';
-
-const ActiveDealsPage = ({refreshState} :{ refreshState: ReturnType<typeof useRefreshState>}) => {
+const ActiveDealsPage = () => {
 
     const { activeDeals, metricsData, profitData} = useAppSelector(state => state.threeCommas);
     const { defaultCurrency } = useAppSelector(state => state.config.currentProfile.general);
@@ -56,7 +54,7 @@ const ActiveDealsPage = ({refreshState} :{ refreshState: ReturnType<typeof useRe
                     <SyncToggles />
 
                     <div className="filters tableButtons" >
-                    <ToggleRefreshButton style={{ width: '250px', margin: '5px', height: '38px' }} className={"ToggleRefreshButton"} refreshState={refreshState}  />
+                    <ToggleRefreshButton style={{ width: '250px', margin: '5px', height: '38px' }} className={"ToggleRefreshButton"}  />
                     <UpdateDataButton className="CtaButton" style={{ margin: '5px', height: '38px' }} disabled={true} />
                     </div>
 
