@@ -111,7 +111,7 @@ function DealsTable({ data }: { data: object[] }) {
                 accessor: 'bought_volume',
                 style: { textAlign: 'right' },
                 Cell: ({ cell }: any) => {
-                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
+                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, false).metric}</span>
                 }
             },
             {
@@ -121,7 +121,7 @@ function DealsTable({ data }: { data: object[] }) {
                 className: '',
                 sortable: false,
                 Cell: ({ cell }: any) => {
-                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
+                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, false).metric}</span>
                 },
             },
             {
@@ -184,7 +184,7 @@ function DealsTable({ data }: { data: object[] }) {
                 style: { textAlign: 'right' },
                 sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                 Cell: ({ cell }: any) => {
-                    return < span className=" monospace-cell" style={{ paddingLeft: '1em' }}>{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
+                    return < span className=" monospace-cell" style={{ paddingLeft: '1em' }}>{formatCurrency( [cell.row.original.from_currency], cell.value, false).metric}</span>
                 }
             },
             {

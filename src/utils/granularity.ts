@@ -177,7 +177,7 @@ const supportedCurrencies = {
 }
 
 
-const formatCurrency = (currencyCode:(keyof typeof supportedCurrencies)[], value:number, maxSize?:boolean) =>{
+const formatCurrency = (currencyCode:(keyof typeof supportedCurrencies)[], value:number, activeDeals?:boolean) =>{
 
     // checking if an invalid currency exists in the array and not moving forward
     if(currencyCode.length === 0 || currencyCode.some( (cur:string) => !Object.keys(supportedCurrencies).includes(cur) )){
@@ -190,7 +190,7 @@ const formatCurrency = (currencyCode:(keyof typeof supportedCurrencies)[], value
     const currencyValues = supportedCurrencies[currencyCode[0]];
 
     return {
-        metric: parseNumber(value, currencyValues.rounding, maxSize ),
+        metric: parseNumber(value, currencyValues.rounding, activeDeals ),
         symbol: currencyValues.symbol
     }
 }

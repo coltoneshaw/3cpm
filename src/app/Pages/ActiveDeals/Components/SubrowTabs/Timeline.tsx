@@ -95,9 +95,9 @@ const OrderTimeline = ({ row, ordersData }: { row: { original: Type_Deals }, ord
                             <td>{r.order_type}</td>
                             <td>{r.deal_order_type}</td>
                             <td>{r.status_string}</td>
-                            <td className="monospace-cell">{(r.rate) ? formatCurrencyLocally(r.rate) : formatCurrencyLocally(r.average_price)}</td>
-                            <td className="monospace-cell">{(r.quantity) ? formatCurrencyLocally(+r.quantity) : '-'}</td>
-                            <td className="monospace-cell">{(r.total) ? formatCurrencyLocally(r.total) : '-'}</td>
+                            <td className="monospace-cell">{(r.rate) ? parseNumber(r.rate, 6) : parseNumber(r.average_price, 6)}</td>
+                            <td className="monospace-cell">{(r.quantity) ? parseNumber(+r.quantity, 4) : '-'}</td>
+                            <td className="monospace-cell">{(r.total) ? parseNumber(r.total, 6) : '-'}</td>
                             <td>{(r.created_at) ? dateFormatter(r.created_at) : '-'}</td>
                         </tr>)
                     )}
