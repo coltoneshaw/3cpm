@@ -52,10 +52,10 @@ const CurrencySelector = () => {
             return false
         }
 
-        const isUSD = e.target.value.some((r:string)=> usdNames.includes(r))
-        if(isUSD){
-            const isAllUsd = e.target.value.every((v:string) => usdNames.includes(v));
-            if(!isAllUsd) {
+        const isUSD = e.target.value.some((r: string) => usdNames.includes(r))
+        if (isUSD) {
+            const isAllUsd = e.target.value.every((v: string) => usdNames.includes(v));
+            if (!isAllUsd) {
                 updateCurrency([])
                 updateNestedCurrentProfile([], configPaths.general.defaultCurrency)
                 return alert('Warning. You cannot mix currencies that are not USD based.')
@@ -71,6 +71,9 @@ const CurrencySelector = () => {
         updateNestedCurrentProfile(selected, configPaths.general.defaultCurrency)
     }
 
+    const [open, setOpen] = useState(false);
+    const handleClose = () =>  setOpen(false);
+    const handleOpen = () =>  setOpen(true);
 
     return (
         <FormControl style={{ width: '100%', marginBottom: '25px' }} fullWidth>
@@ -88,6 +91,11 @@ const CurrencySelector = () => {
                     marginRight: '15px',
                     width: '100%'
                 }}
+                open={open}
+                onClose={handleClose}
+                onOpen={handleOpen}
+
+
             >
                 < ListSubheader > USD</ListSubheader>
 
@@ -100,11 +108,11 @@ const CurrencySelector = () => {
                         </MenuItem>
                     )
                 })}
-                
+
                 <ListSubheader>Crypto</ListSubheader>
                 {crypto.map(c => {
                     return (
-                        <MenuItem value={c.value} key={c.value} style={{height: '54px'}}>
+                        <MenuItem value={c.value} key={c.value} style={{ height: '54px' }} onClick={() => handleClose()}>
                             <ListItemText primary={c.value + ` (${c.name})`} />
                         </MenuItem>
                     )
