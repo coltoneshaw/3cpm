@@ -17,8 +17,8 @@ exports.default = async function notarizing(context) {
     return await notarize({
       appBundleId: 'com.savvytoolbelt.3cportfoliomanager',
       appPath: `${appOutDir}/${appName}.app`,
-      appleId: 'coltoneshaw@gmail.com',
-      appleIdPassword: 'cyuj-jlos-zcjw-lkoy',
+      appleId: process.env.APPLEID,
+      appleIdPassword: process.env.APPLEIDPASS,
       tool: 'notarytool',
       teamId: '4UHVHSRL22'
     });
