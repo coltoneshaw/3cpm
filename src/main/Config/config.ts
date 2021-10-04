@@ -58,7 +58,7 @@ const migrationToProfiles = (config:any) => {
         })
     } catch (e) {
         log.error(e)
-        log.error('error migrating to v0.5 ')
+        log.error('error migrating to v1.0.0 ')
     }
     
 }

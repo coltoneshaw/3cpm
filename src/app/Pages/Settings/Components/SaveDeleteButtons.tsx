@@ -34,6 +34,10 @@ const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
                 //updating the current profile's data
                 const update = await syncNewProfileData(1000, currentProfile);
                 if (update) {
+
+                    //@ts-ignore
+                    await electron.config.set('current', currentProfile.id)
+
                     updateConfig();
                     callback()
                 }

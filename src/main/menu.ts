@@ -3,10 +3,10 @@ const { app, Menu, dialog, BrowserWindow } = require('electron')
 const isMac = process.platform === 'darwin'
 const log = require('electron-log');
 
-const {deleteAllData} = require('@/main/Database/database');
-const {setDefaultConfig} = require('@/main/Config/config')
+const { deleteAllData } = require('@/main/Database/database');
+const { setDefaultConfig, getProfileConfigAll, setProfileConfig } = require('@/main/Config/config')
 
-const {win} = require('@/main/main')
+const { win } = require('@/main/main')
 
 
 const template = [
@@ -70,16 +70,16 @@ const template = [
       {
         label: 'Clear Local Storage',
         click() {
-          BrowserWindow.getAllWindows().forEach(window =>{
+          BrowserWindow.getAllWindows().forEach(window => {
             window.webContents
-            .executeJavaScript('localStorage.clear();', true)
-            .then(() => {
-              window.reload()
-            });
+              .executeJavaScript('localStorage.clear();', true)
+              .then(() => {
+                window.reload()
+              });
 
-          } )
+          })
         },
-    },
+      },
       { role: 'toggleDevTools' },
       { type: 'separator' },
       { role: 'resetZoom' },
@@ -149,20 +149,50 @@ const template = [
             message: 'Would you like to delete all data?',
             detail: 'Clearing your config here will delete all the data, settings, API keys, etc. Click accept to move forward.'
           };
-        
 
-          const data = await dialog.showMessageBoxSync(win, options )
-          log
-          if(data === 1) {
+
+          const data = await dialog.showMessageBoxSync(win, options)
+          if (data === 1) {
             deleteAllData()
               .then(setDefaultConfig())
             log.info('deleting all data as selected by the menu bar')
-            
+
             BrowserWindow.getAllWindows().forEach(window => window.reload())
           }
-          
+
         }
       },
+      {
+        label: 'Reset Current Profile',
+        click: async () => {
+          const currentProfileConfig = await getProfileConfigAll();
+          console.log(currentProfileConfig)
+
+          // 1. reset the lastSyncTime in the current profile
+          await setProfileConfig('syncStatus.deals.lastSyncTime', null, currentProfileConfig.id)
+
+          // 2. Delete the database for everything pertaining to that profile
+          await deleteAllData(currentProfileConfig.id)
+          // 3. resync the database for the profile
+          // updateAPI('fullSync', 1000, currentProfileConfig)
+
+          const options = {
+            type: 'question',
+            buttons: ['Ok'],
+            defaultId: 0,
+            title: 'Profile Reset Complete',
+            message: '',
+            detail: 'Profile reset is complete. The page will refresh once you hit okay. You will need to then click the refresh button to download all of your data again. This can take a minute or two.'
+          };
+          await dialog.showMessageBoxSync(win, options)
+
+          // 4. refresh the page.
+          await BrowserWindow.getAllWindows().forEach(window => window.reload())
+
+
+        }
+      },
+
     ]
   }
 ]
@@ -171,4 +201,4 @@ const template = [
 const menu = Menu.buildFromTemplate(template)
 // Menu.setApplicationMenu(menu)
 
-export {menu}
+export { menu }

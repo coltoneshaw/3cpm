@@ -284,6 +284,11 @@ const syncNewProfileData = async (offset: number = 1000, profileData: Type_Profi
         return success;
     }
 }
+
+
+
+
+
 const updateAllDataQuery = (profileData: Type_Profile, type: string) => {
 
     // if the type if fullSync this will store the bot data. If we store the bot data in the redux state it will overwrite any user changes. 
