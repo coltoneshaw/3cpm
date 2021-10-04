@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 
 import './App.global.scss';
 import Sidebar from './Components/Sidebar/Sidebar';
@@ -31,7 +31,7 @@ const App = () => {
 
   }, [dispatch]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // if(updated) return
     if(currentProfile.id == profile.id) return
     

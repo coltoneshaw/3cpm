@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 
 import {yAxisWidth, currencyTickFormatter, currencyTooltipFormatter} from '@/app/Components/Charts/formatting'
 
@@ -79,7 +79,7 @@ const ProfitByDay = ({ data = [], X, defaultCurrency }: Type_ProfitChart) => {
     }, [dateType])
 
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const getSortFromStorage = getStorageItem(localStorageSortName);
         setDateType((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
     }, [])

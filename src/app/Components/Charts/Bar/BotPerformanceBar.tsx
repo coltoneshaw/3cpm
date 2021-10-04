@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useLayoutEffect } from 'react';
 import { InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Scatter } from 'recharts';
 import NoData from '@/app/Pages/Stats/Components/NoData';
@@ -30,7 +30,7 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
 
 
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const getFilterFromStorage = getStorageItem(localStorageFilterName);
         setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
 

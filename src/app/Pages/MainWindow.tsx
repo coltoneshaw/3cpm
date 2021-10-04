@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState , useLayoutEffect} from 'react';
 import { Route, Redirect } from 'react-router-dom'
 import {
     BotPlannerPage,
@@ -23,7 +23,7 @@ const MainWindow = () => {
 
     const [homePage, updateHomePage] = useState<string>('/activeDeals')
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (currentProfile.apis.threeC.key !== "" && currentProfile.apis.threeC.secret !== "") {
             updateHomePage(getStorageItem(storageItem.navigation.homePage) ?? '/activeDeals')
             return

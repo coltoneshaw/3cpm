@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Scatter, Legend, ResponsiveContainer, Line, Label } from 'recharts';
 import { InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 
@@ -29,7 +29,7 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
     const [metricsDisplayed, updatedMetricsDisplayed] = useState(() => ({ 'total_profit': false, 'bought_volume': false, 'avg_deal_hours': false }))
 
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const getFilterFromStorage = getStorageItem(localStorageFilterName);
         setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
 
