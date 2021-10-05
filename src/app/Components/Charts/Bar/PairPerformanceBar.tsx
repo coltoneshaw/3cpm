@@ -57,22 +57,20 @@ const PairPerformanceBar = ({ data = [], defaultCurrency }: Type_Pair_Performanc
 
 
     const [localData, updateLocalData] = useState<any[]>(() => data)
-    useEffect(() => {
-        if (data && data != []) updateLocalData(data)
-    }, [data])
-
-    // const [newData, updateNewData] = useState<any[]>([])
     const [chartHeight, updateChartHeight] = useState<number>(300)
     const [newData, updateNewData] = useState<any[]>([])
-
     useEffect(() => {
-        if (data && data != []) updateNewData(filterData(localData, filter).sort(dynamicSort(sort)))
+        if (data && data != []) updateLocalData(data)
+    }, [data])   
+
+    // useLayoutEffect here works only for the bot perf bar. Runs into rerender issues with pair performance
+    useEffect(() => {
+        if (data && data != []) updateNewData(() => {
+            const newData = filterData(localData, filter).sort(dynamicSort(sort))
+            updateChartHeight((newData.length * 15) + 250)
+            return newData
+        })
     }, [filter, sort, localData])
-
-
-    useEffect(() => {
-        updateChartHeight((newData.length * 15) + 250)
-    }, [newData])
 
     return (
         <div className="boxData stat-chart ">

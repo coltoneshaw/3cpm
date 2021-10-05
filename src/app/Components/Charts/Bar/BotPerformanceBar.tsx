@@ -57,19 +57,20 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
     }
 
     const [localData, updateLocalData] = useState(data)
-    useEffect(() => {
-        updateLocalData(data)
-    }, [data])
-
     const [newData, updateNewData] = useState<any[]>([])
     const [chartHeight, updateChartHeight] = useState<number>(300)
-    useLayoutEffect(() => {
+
+    useEffect(() => {
+        if (data && data != []) updateLocalData(data)
+    }, [data])
+
+
+    useEffect(() => {
         if (localData) updateNewData(() =>{
             const newData = filterData(localData, filter).sort(dynamicSort(sort))
             updateChartHeight((newData.length * 15) + 250)
             return newData
         })
-        console.log('rerendered bots')
 
         // adjusting the chart height based on the number of data points include.d 15px is rougly the width required, 200px is for the other chart elements.
     }, [localData, filter, sort])
