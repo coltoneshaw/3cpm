@@ -19,7 +19,6 @@ export interface Type_ProfitChart {
 }
 
 export interface Type_Pair_Performance {
-    title: string
     data: Type_Pair_Performance_Metrics[] | undefined | []
     defaultCurrency: defaultCurrency
 

@@ -15,7 +15,7 @@ import { currencyTickFormatter, currencyTooltipFormatter } from '@/app/Component
 
 
 
-const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Performance) => {
+const PairPerformanceBar = ({ data = [], defaultCurrency }: Type_Pair_Performance) => {
 
     const defaultFilter = 'all';
     const defaultSort = '-total_profit';
@@ -55,22 +55,76 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
         return id != sort
     }
 
-    const renderChart = () => {
-        if (data.length === 0) {
-            return (<NoData />)
-        }
 
-        let newData = filterData(data, filter).sort(dynamicSort(sort))
+    const [localData, updateLocalData] = useState<any[]>(() => data)
+    useEffect(() => {
+        if (data && data != []) updateLocalData(data)
+    }, [data])
 
-        // adjusting the chart height based on the number of data points include.d 15px is rougly the width required, 200px is for the other chart elements.
-        let chartHeight = `${(newData.length * 15) + 200}px`
-        return (
-            <ResponsiveContainer width="100%" height="90%" minHeight={chartHeight}>
+    // const [newData, updateNewData] = useState<any[]>([])
+    const [chartHeight, updateChartHeight] = useState<number>(300)
+    const [newData, updateNewData] = useState<any[]>([])
+
+    useEffect(() => {
+        if (data && data != []) updateNewData(filterData(localData, filter).sort(dynamicSort(sort)))
+    }, [filter, sort, localData])
+
+
+    useEffect(() => {
+        updateChartHeight((newData.length * 15) + 250)
+    }, [newData])
+
+    return (
+        <div className="boxData stat-chart ">
+            <div style={{ position: "relative" }}>
+                <h3 className="chartTitle">Pair Performance</h3>
+                <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>
+                    <FormControl  >
+                        <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
+                        <Select
+                            variant="standard"
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={sort}
+                            onChange={handleSortChange}
+                            style={{ width: "150px" }}
+                        >
+                            <MenuItem value="-total_profit">Profit</MenuItem>
+                            <MenuItem value="-bought_volume">Bought Volume</MenuItem>
+                            <MenuItem value="-avg_deal_hours">Avg. Deal Hours</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
+                <div style={{ position: "absolute", left: 0, top: 0, height: "50px", zIndex: 5 }}>
+                    <FormControl  >
+                        <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
+                        <Select
+                            variant="standard"
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={filter}
+                            onChange={handleFilterChange}
+                            style={{ width: "150px" }}
+                        >
+                            <MenuItem value="all">All</MenuItem>
+                            <MenuItem value="top20">Top 20%</MenuItem>
+                            <MenuItem value="top50">Top 50%</MenuItem>
+                            <MenuItem value="bottom50">Bottom 50%</MenuItem>
+                            <MenuItem value="bottom20">Bottom 20%</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
+
+
+
+
+            </div>
+            <ResponsiveContainer width="100%" height="100%" maxHeight={chartHeight} minHeight={chartHeight}>
                 <ComposedChart
 
-                    data={newData}
+                    data={(newData.length > 0) ? newData : undefined}
                     margin={{
-                        top: 25,
+                        top: 40,
                         right: 0,
                         left: 0,
                         bottom: 5,
@@ -80,22 +134,25 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
                     maxBarSize={50}
                     barGap={1}
                 >
-                    <CartesianGrid opacity={.3} vertical={true} horizontal={false} />
                     <Legend
-                        verticalAlign="top" height={45}
+                        verticalAlign="top"
+                        height={50}
                         style={{
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            margin: '1em'
                         }}
 
                         onClick={(e) => {
                             updatedMetricsDisplayed(prevState => {
-                                const newState = {...prevState}
+                                const newState = { ...prevState }
                                 newState[e.dataKey as keyof typeof prevState] = !newState[e.dataKey as keyof typeof prevState]
                                 return newState
                             })
 
                         }}
                     />
+                    <CartesianGrid opacity={.3} vertical={true} horizontal={false} />
+
                     {/* TODO - pass the custom props down properly here.  */}
                     {/* @ts-ignore */}
                     <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
@@ -125,7 +182,7 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
                             dx: 0,
                             dy: 20
                         }}
-                        
+
                         tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)}
 
                     />
@@ -171,62 +228,14 @@ const PairPerformanceBar = ({ title, data = [], defaultCurrency }: Type_Pair_Per
                     <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours" fill="var(--chart-metric3-color)" xAxisId="avg_deal_hours" hide={metricsDisplayed.avg_deal_hours} />
 
                 </ComposedChart>
-            </ResponsiveContainer>)
-    }
-
-    return (
-        <div className="boxData stat-chart ">
-            <div style={{ position: "relative" }}>
-                <h3 className="chartTitle">{title}</h3>
-                <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>
-                    <FormControl  >
-                        <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
-                        <Select
-                            variant="standard"
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={sort}
-                            onChange={handleSortChange}
-                            style={{ width: "150px" }}
-                        >
-                            <MenuItem value="-total_profit">Profit</MenuItem>
-                            <MenuItem value="-bought_volume">Bought Volume</MenuItem>
-                            <MenuItem value="-avg_deal_hours">Avg. Deal Hours</MenuItem>
-                        </Select>
-                    </FormControl>
-                </div>
-                <div style={{ position: "absolute", left: 0, top: 0, height: "50px", zIndex: 5 }}>
-                    <FormControl  >
-                        <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
-                        <Select
-                            variant="standard"
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={filter}
-                            onChange={handleFilterChange}
-                            style={{ width: "150px" }}
-                        >
-                            <MenuItem value="all">All</MenuItem>
-                            <MenuItem value="top20">Top 20%</MenuItem>
-                            <MenuItem value="top50">Top 50%</MenuItem>
-                            <MenuItem value="bottom50">Bottom 50%</MenuItem>
-                            <MenuItem value="bottom20">Bottom 20%</MenuItem>
-                        </Select>
-                    </FormControl>
-                </div>
-
-
-
-
-            </div>
-            {renderChart()}
+            </ResponsiveContainer>
         </div>
     )
 }
 
 
 function CustomTooltip({ active, payload, formatter }: Type_Tooltip) {
-    if (!active || payload.length == 0 || payload[0] == undefined) {
+    if (!active || !payload || payload[0] == undefined) {
         return null
     }
     const data: Type_Pair_Performance_Metrics = payload[0].payload

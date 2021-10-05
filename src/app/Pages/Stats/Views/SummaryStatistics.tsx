@@ -24,7 +24,7 @@ const SummaryStatistics = () => {
                     <SummaryProfitByDay data={profitData} X="runningSum"  defaultCurrency={defaultCurrency}/>
                 </Grid>
                 <Grid item xs={6} xl={6}>
-                    <PairPerformanceBar title="Pair Performance" data={performanceData.pair}  defaultCurrency={defaultCurrency}/>
+                    <PairPerformanceBar data={performanceData.pair}  defaultCurrency={defaultCurrency}/>
                 </Grid>
                 <Grid item xs={6} xl={6}>
                     <BotPerformanceBar  data={performanceData.bot}  defaultCurrency={defaultCurrency}/>

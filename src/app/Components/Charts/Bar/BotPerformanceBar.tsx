@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useLayoutEffect } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Scatter } from 'recharts';
 import NoData from '@/app/Pages/Stats/Components/NoData';
@@ -26,7 +26,7 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
 
     const [sort, setSort] = useState(defaultSort);
     const [filter, setFilter] = useState(defaultFilter);
-    const [metricsDisplayed, updatedMetricsDisplayed] = useState(() => ({ 'total_profit': false, 'bought_volume': false, 'avg_deal_hours': false, 'avg_profit' : false }))
+    const [metricsDisplayed, updatedMetricsDisplayed] = useState(() => ({ 'total_profit': false, 'bought_volume': false, 'avg_deal_hours': false, 'avg_profit': false }))
 
 
 
@@ -56,39 +56,93 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
         return id != sort
     }
 
+    const [localData, updateLocalData] = useState(data)
+    useEffect(() => {
+        updateLocalData(data)
+    }, [data])
 
-
-    const renderChart = () => {
-        if (data.length === 0) {
-            return (<NoData />)
-        }
-
-        let newData = filterData(data, filter).sort(dynamicSort(sort))
+    const [newData, updateNewData] = useState<any[]>([])
+    const [chartHeight, updateChartHeight] = useState<number>(300)
+    useLayoutEffect(() => {
+        if (localData) updateNewData(() =>{
+            const newData = filterData(localData, filter).sort(dynamicSort(sort))
+            updateChartHeight((newData.length * 15) + 250)
+            return newData
+        })
+        console.log('rerendered bots')
 
         // adjusting the chart height based on the number of data points include.d 15px is rougly the width required, 200px is for the other chart elements.
+    }, [localData, filter, sort])
 
-        let chartHeight = `${(newData.length * 15) + 200}px`
-        return (
-            <ResponsiveContainer width="100%" height="90%" minHeight={chartHeight}>
+
+    return (
+        <div className="boxData stat-chart  ">
+            <div style={{ position: "relative" }}>
+                <h3 className="chartTitle">Bot Performance</h3>
+                <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>
+                    <FormControl  >
+                        <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
+                        <Select
+                            variant="standard"
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={sort}
+                            onChange={handleSortChange}
+                            style={{ width: "150px" }}
+                        >
+                            <MenuItem value="-total_profit">Profit</MenuItem>
+                            <MenuItem value="-bought_volume">Bought Volume</MenuItem>
+                            <MenuItem value="-avg_deal_hours">Avg. Deal Hours</MenuItem>
+                            <MenuItem value="-avg_profit">Avg. Profit</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
+
+                <div style={{ position: "absolute", left: 0, top: 0, height: "50px", zIndex: 5 }}>
+                    <FormControl  >
+                        <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
+                        <Select
+                            variant="standard"
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={filter}
+                            onChange={handleFilterChange}
+                            style={{ width: "150px" }}
+                        >
+                            <MenuItem value="all">All</MenuItem>
+                            <MenuItem value="top20">Top 20%</MenuItem>
+                            <MenuItem value="top50">Top 50%</MenuItem>
+                            <MenuItem value="bottom50">Bottom 50%</MenuItem>
+                            <MenuItem value="bottom20">Bottom 20%</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
+
+
+
+
+            </div>
+            <ResponsiveContainer width="100%" height="100%" maxHeight={chartHeight} minHeight={chartHeight}>
+
                 <ComposedChart
-
-                    data={newData}
+                    data={(newData.length > 0) ? newData : undefined}
                     margin={{
-                        top: 25,
+                        top: 40,
                         right: 0,
                         left: 0,
                         bottom: 5,
                     }}
                     layout="vertical"
                     // stackOffset="expand"
-                    maxBarSize={50}
+                    maxBarSize={30}
                     barGap={1}
                 >
-                    <CartesianGrid opacity={.3} vertical={true} horizontal={false} />
                     <Legend
-                        verticalAlign="top" height={45}
+                        verticalAlign="top"
+                        height={50}
                         style={{
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            margin: '1em'
                         }}
 
                         onClick={(e) => {
@@ -100,6 +154,8 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
 
                         }}
                     />
+                    <CartesianGrid opacity={.3} vertical={true} horizontal={false} />
+
                     {/* TODO - pass the custom props down properly here.  */}
                     {/* @ts-ignore */}
                     <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
@@ -190,64 +246,14 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
                     <Scatter name="Avg. Profit" dataKey="avg_profit" fill="var(--chart-metric4-color)" xAxisId="avg_profit" hide={metricsDisplayed.avg_profit} />
 
                 </ComposedChart>
-            </ResponsiveContainer>)
-    }
-
-    return (
-        <div className="boxData stat-chart  ">
-            <div style={{ position: "relative" }}>
-                <h3 className="chartTitle">Bot Performance</h3>
-                <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>
-                    <FormControl  >
-                        <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
-                        <Select
-                            variant="standard"
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={sort}
-                            onChange={handleSortChange}
-                            style={{ width: "150px" }}
-                        >
-                            <MenuItem value="-total_profit">Profit</MenuItem>
-                            <MenuItem value="-bought_volume">Bought Volume</MenuItem>
-                            <MenuItem value="-avg_deal_hours">Avg. Deal Hours</MenuItem>
-                            <MenuItem value="-avg_profit">Avg. Profit</MenuItem>
-                        </Select>
-                    </FormControl>
-                </div>
-
-                <div style={{ position: "absolute", left: 0, top: 0, height: "50px", zIndex: 5 }}>
-                    <FormControl  >
-                        <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
-                        <Select
-                            variant="standard"
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={filter}
-                            onChange={handleFilterChange}
-                            style={{ width: "150px" }}
-                        >
-                            <MenuItem value="all">All</MenuItem>
-                            <MenuItem value="top20">Top 20%</MenuItem>
-                            <MenuItem value="top50">Top 50%</MenuItem>
-                            <MenuItem value="bottom50">Bottom 50%</MenuItem>
-                            <MenuItem value="bottom20">Bottom 20%</MenuItem>
-                        </Select>
-                    </FormControl>
-                </div>
-
-
-
-
-            </div>
-            {renderChart()}
+            </ResponsiveContainer>
         </div>
     )
 }
 
 
 function CustomTooltip({ active, payload, formatter }: Type_Tooltip) {
-    if (!active || payload.length == 0 || payload[0] == undefined) {
+    if (!active || !payload || payload[0] == undefined) {
         return null
     }
 
