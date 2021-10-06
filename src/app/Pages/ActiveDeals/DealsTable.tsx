@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {formatCurrency} from'@/utils/granularity'
+import { formatCurrency } from '@/utils/granularity'
 
 
 import { CustomTable } from '@/app/Components/DataTable/Index'
@@ -7,7 +7,7 @@ import { getDateString } from '@/utils/helperFunctions';
 import { parseNumber } from '@/utils/number_formatting';
 import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 import CardTooltip from '@/app/Components/Charts/DataCards/CustomToolTip';
-import {SubRowAsync} from './Components/index'
+import { SubRowAsync } from './Components/index'
 
 import Styles from './StyledDiv'
 
@@ -39,27 +39,29 @@ function DealsTable({ data }: { data: object[] }) {
         () => [
             {
                 accessor: 'id',
-                Header: ({ toggleAllRowsExpanded, rows}: { toggleAllRowsExpanded: any, rows: any[] }) => {
+                Header: ({ toggleAllRowsExpanded, rows }: { toggleAllRowsExpanded: any, rows: any[] }) => {
                     return (
-                    <span onClick={() => toggleAllRowsExpanded(false)} style={{cursor: 'pointer'}}>
-                        X
-                    </span>
-                )},
+                        <span onClick={() => toggleAllRowsExpanded(false)} style={{ cursor: 'pointer' }}>
+                            X
+                        </span>
+                    )
+                },
                 Cell: ({ row }: any) => (
                     <span {...row.getToggleRowExpandedProps()}>
                         {row.isExpanded ? '🔽' : '▶️'}
                     </span>
                 ),
-                disableSortBy: true
+                disableSortBy: true,
+                width: 30
             },
             {
                 Header: 'Bot Name',
                 accessor: 'bot_name', // accessor is the "key" in the data,
                 style: {
                     textAlign: 'left',
-                    paddingLeft: '1em',
-                    width: '150px'
+                    paddingLeft: '1em'
                 },
+                width: 150,
 
                 Cell: ({ cell }: any) => {
                     return (
@@ -74,13 +76,14 @@ function DealsTable({ data }: { data: object[] }) {
             {
                 Header: 'Pair',
                 accessor: 'pair',
-
-                style: { textAlign: 'left', width: '120px' },
+                style: { textAlign: 'left' },
+                width: 100,
             },
             {
                 Header: 'Duration',
                 id: 'created_at',
                 accessor: 'created_at',
+                width: 100,
                 style: {
                     textAlign: 'right'
                 },
@@ -94,7 +97,7 @@ function DealsTable({ data }: { data: object[] }) {
                 style: { textAlign: 'right' },
                 sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                 Cell: ({ cell }: any) => {
-                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
+                    return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>
                 }
             },
             {
@@ -103,7 +106,7 @@ function DealsTable({ data }: { data: object[] }) {
                 style: { textAlign: 'right' },
                 sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                 Cell: ({ cell }: any) => {
-                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
+                    return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>
                 }
             },
             {
@@ -111,7 +114,7 @@ function DealsTable({ data }: { data: object[] }) {
                 accessor: 'bought_volume',
                 style: { textAlign: 'right' },
                 Cell: ({ cell }: any) => {
-                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, false).metric}</span>
+                    return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>
                 }
             },
             {
@@ -121,7 +124,7 @@ function DealsTable({ data }: { data: object[] }) {
                 className: '',
                 sortable: false,
                 Cell: ({ cell }: any) => {
-                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, false).metric}</span>
+                    return < span className=" monospace-cell">{cell.value}</span>
                 },
             },
             {
@@ -152,30 +155,29 @@ function DealsTable({ data }: { data: object[] }) {
                 id: 'actual_usd_profit',
                 accessor: 'actual_usd_profit',
                 className: 'text-center',
+                width: 80,
                 sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                 Cell: ({ cell }: any) => {
-
                     const in_profit = (cell.row.original.actual_profit_percentage > 0) ? 'green' : 'red'
                     // leaving this as USD for now because 3C only displays this value in a USD quote.
-                    return < span className={"pill pill-left monospace-cell " + in_profit} >{formatCurrency( ['USD'], cell.value, false).metric}</span>
+                    return < span className={"pill pill-left monospace-cell " + in_profit} >{formatCurrency(['USD'], cell.value, false).metric}</span>
                 },
                 style: {
-                    paddingRight: 0,
-                    maxWidth: '6em'
+                    paddingRight: 0
                 }
             },
             {
                 Header: '% Profit',
                 accessor: 'actual_profit_percentage',
                 className: 'text-center',
+                width: 80,
                 sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                 Cell: ({ cell }: any) => {
                     const in_profit = (cell.row.original.actual_profit_percentage > 0) ? 'green' : 'red'
-                    return <span className={"pill pill-right monospace-cell " + in_profit}>{parseNumber(cell.value, 2)} %</span>
+                    return <span className={"pill pill-right monospace-cell " + in_profit}>{parseNumber(cell.value, 2)}%</span>
                 },
                 style: {
-                    paddingLeft: 0,
-                    maxWidth: '6em'
+                    paddingLeft: 0
                 }
             },
             {
@@ -184,7 +186,7 @@ function DealsTable({ data }: { data: object[] }) {
                 style: { textAlign: 'right' },
                 sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                 Cell: ({ cell }: any) => {
-                    return < span className=" monospace-cell" style={{ paddingLeft: '1em' }}>{formatCurrency( [cell.row.original.from_currency], cell.value, false).metric}</span>
+                    return < span className=" monospace-cell" style={{ paddingLeft: '1em' }}>{formatCurrency([cell.row.original.from_currency], cell.value, false).metric}</span>
                 }
             },
             {
@@ -192,7 +194,7 @@ function DealsTable({ data }: { data: object[] }) {
                 accessor: 'max_deal_funds',
                 style: { textAlign: 'right' },
                 Cell: ({ cell }: any) => {
-                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
+                    return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>
                 },
             },
             {
@@ -232,31 +234,28 @@ function DealsTable({ data }: { data: object[] }) {
                 localStorageSortName={localStorageSortName}
                 //@ts-ignore
                 getHeaderProps={() => ({
-                    // onClick: () => setSort(column.id),
                     style: {
-                        height: '44px',
                         backgroundColor: 'var(--color-secondary-light87)',
-                        zIndex: '1000'
                     },
 
                 })}
+            //@ts-ignore
+            getColumnProps={column => ({
+
+            })}
                 //@ts-ignore
-                getColumnProps={column => ({
+            getRowProps={row => ({
 
-                })}
+            })}
                 //@ts-ignore
-                getRowProps={row => ({
+            getCellProps={cellInfo => ({
 
-                })}
-                //@ts-ignore
-                getCellProps={cellInfo => ({
+                // style: {
+                //     color: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? (cellInfo.row.original.in_profit) ? 'var(--color-green)' : 'var(--color-red)': null,
+                //     fontWeight: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? '700' : null
+                // }
 
-                    // style: {
-                    //     color: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? (cellInfo.row.original.in_profit) ? 'var(--color-green)' : 'var(--color-red)': null,
-                    //     fontWeight: (cellInfo.column.id === 'actual_usd_profit' || cellInfo.column.id === 'actual_profit_percentage') ? '700' : null
-                    // }
-
-                })}
+            })}
             />
         </Styles>
     )

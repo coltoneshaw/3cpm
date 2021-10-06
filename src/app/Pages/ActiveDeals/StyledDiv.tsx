@@ -4,24 +4,21 @@ export default styled.div`
     overflow: auto;
 
 
-  table {
+  .table {
     border-spacing: 0;
     background-color: var(--color-background-light);
     color: var(--color-text-lightbackground);
     font-size: .9em;
-    min-width: 1200px;
-    width: 100%;
-    
-    .test {
-    }
+    display: block;
+    overflow: auto;
 
-    th,
-    td {
+    .th,
+    .td {
       margin: 0;
       padding: 0.3rem .2rem .3rem .2rem;
     }
 
-    thead tr:nth-child(1) th {
+    .thead .tr:nth-child(1) {
         position: sticky;
         top: 0;
         z-index: 100;
@@ -29,10 +26,13 @@ export default styled.div`
         text-align: center !important;
     }
 
-    
-    tbody{
 
-        tr[role=row] {
+    
+    .tbody{
+
+
+
+        .tr[role=row] {
             :nth-child(2n+2) {
                 background-color: var(--color-secondary-light87);
             }
@@ -51,6 +51,7 @@ export default styled.div`
             color: white;
             font-weight: 600;
             white-space: nowrap;
+            width: 90%;
         }
 
 
@@ -76,7 +77,6 @@ export default styled.div`
             border-radius: 0px 10px 10px 0px;
             text-align: left;
             padding-left: 1em;
-            height: 100%;
         }
     }
 
