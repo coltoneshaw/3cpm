@@ -429,7 +429,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
 
   return (
 
-      <div className="boxData flex-column" style={{padding: '2em 2em 2em 2em', overflow: 'hidden'}}>      {/* <div className="dataTable"  > */}
+      <div className="boxData flex-column" style={{padding: '1em', overflow: 'hidden'}}>
         <Styles>
           <CustomTable
             columns={columns}

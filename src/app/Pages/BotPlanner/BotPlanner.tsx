@@ -125,7 +125,7 @@ const BotPlannerPage = () => {
             <div className="flex-row headerButtonsAndKPIs">
                 <Risk localBotData={localBotData}/>
 
-                <div className="flex-row headerButtons" style={{ justifyContent: "flex-end" }}>
+                <div className="flex-row headerButtons" style={{ justifyContent: "flex-end"}}>
                 <UpdateDataButton className="button-botPlanner updatebutton CtaButton" style={{ margin: '5px', height: '38px' }} disabled={true} />
 
                     <SaveButton

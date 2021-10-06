@@ -24,6 +24,8 @@
 - Improved overall chart formatting (highlighting, colors, bar width, etc.)
 - Adjusted tooltips and headers for better clarity.
 - Improved the Risk Monitor view for larger screens. Thanks @GD_NL.
+- Improved chart loading performance
+- Updating TradingView Icon
 
 ## Bugs
 - Fixed a few spelling mistakes across the app

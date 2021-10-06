@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './Sidebar.scss';
 
 
-import { ActiveDealsIcon, BackwardClock, BotPlannerIcon, Coffee, Cog, PieChart } from '@/app/Components/icons/Index';
+import { ActiveDealsIcon, TradingViewLogo, BotPlannerIcon, Coffee, Cog, PieChart } from '@/app/Components/icons/Index';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { SidebarNav, SidebarLink } from './Components';
 import { ProfileSwitcher } from '@/app/Features/Profiles/Components/Index'
@@ -24,7 +24,7 @@ class Sidebar extends Component {
                     <SidebarNav Icon={ActiveDealsIcon} name="Active Deals" link="/activeDeals" />
                     <SidebarNav Icon={PieChart} name="Stats" link="/stats" />
                     <SidebarNav Icon={BotPlannerIcon} name="Bot Planner" link="/botplanner" />
-                    <SidebarNav Icon={BackwardClock} name="Trading View" link="/backtesting" />
+                    <SidebarNav Icon={TradingViewLogo} name="Trading View" link="/backtesting" />
                 </div>
                 <div className="flex-column sidebar-column" style={{ justifyContent: 'flex-end' }}>
                     {/*  @ts-ignore */}
