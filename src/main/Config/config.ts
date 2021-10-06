@@ -9,20 +9,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { defaultConfig } from '@/utils/defaultConfig';
 
 
-const migrateCurrencyToArray = (store: any) => {
-    const currentCurrency = store.get('general.defaultCurrency');
-    (currentCurrency?.length > 0) ? store.set('general.defaultCurrency', [currentCurrency]) : store.set('general.defaultCurrency', [])
-}
-
-const migrationToProfiles = (config:any) => {
-    if(config.get('general.version') === 'v0.5.0') {
-        log.debug('looks like this is already on the latest version.')
-        return false
-    }
+const migrationToProfiles = async (config:any) => {
+    // if(config.get('general.version') === 'v0.5.0') {
+    //     log.debug('looks like this is already on the latest version.')
+    //     return false
+    // }
     const id = uuidv4()
     config.delete('general.version')
     const { apis, general, syncStatus, statSettings } = config.store
-    if (!apis || !general || !syncStatus || statSettings) return
+    if (!apis || !general || !syncStatus || !statSettings) return
 
     config.store = {
         profiles: {
@@ -47,7 +42,7 @@ const migrationToProfiles = (config:any) => {
     }
 
     try {
-        Promise.all([
+        await Promise.all([
             run(`ALTER TABLE accountData ADD profile_id VARCHAR(36)`),
             run(`ALTER TABLE bots ADD profile_id VARCHAR(36)`),
             run(`ALTER TABLE deals ADD profile_id VARCHAR(36)`),
@@ -60,6 +55,8 @@ const migrationToProfiles = (config:any) => {
         log.error(e)
         log.error('error migrating to v1.0.0 ')
     }
+
+    log.info('completed migration to v1.0.0')
     
 }
 
@@ -86,20 +83,13 @@ const config = new Store({
         //     store.set('general.updated', true)
         // },
         '<=0.2.0': () => {
-            log.log('running the v0.2 migration!!!!!!!!!!!!!!!!!!!!')
             // removing the bots that have been synced so they can be resynced and a new column added
             run('ALTER TABLE bots ADD COLUMN hide boolean;')
             run("delete from deals where status in ('failed', 'cancelled') ")
         },
-        '<1.0.0': (store: any) => {
+        '1.0.0': async (store: any) => {
             log.info('migrating the config store to 1.0.0')
-            console.log('migrating!!')
-            // if(version === 'v1.0.0') {
-            //     console.log('already on the latest version!')
-            // }
-            migrationToProfiles(store)
-
-
+            await migrationToProfiles(store);
         }
     },
     defaults: <TconfigValues>defaultConfig
