@@ -104,19 +104,16 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
 }
 
 const checkProfileIsValid = (profile: Type_Profile) => {
-    try {
-        const { apis: { threeC }, name, statSettings: { reservedFunds, startDate } } = profile
+        const { apis: { threeC }, name, statSettings: { reservedFunds, startDate }, general: {defaultCurrency} } = profile
         if (!threeC.key || !threeC.mode || !threeC.secret) return { status: false, message: 'Missing 3Commas API information' }
         if (!name) return { status: false, message: 'Missing a valid profile name' }
         if (!reservedFunds) return { status: false, message: 'Missing accounts. Make sure to click "Test API Keys" and enable an account.' }
         if (reservedFunds.filter(account => account.is_enabled).length == 0) return { status: false, message: 'Missing an enabled account under reserved funds.' }
         if (!startDate) return { status: false, message: 'Missing a start date' }
+        if (!defaultCurrency || defaultCurrency.length === 0) return { status: false, message: 'Missing a valid currency. Please select one before you can continue.' }
 
-        return { status: true, }
-    } catch (e) {
-        console.error(e)
-        return { status: false, message: 'an error occured when saving. Check the Javascript Console for more details.' }
-    }
+        return { status: true}
+
 }
 
 const deleteProfileByIdGlobal = (config: TconfigValues, profileId:string, setOpen?:CallableFunction | undefined) => {

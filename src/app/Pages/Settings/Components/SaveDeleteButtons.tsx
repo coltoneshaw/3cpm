@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
 import { updateConfig, checkProfileIsValid, deleteProfileByIdGlobal, storeConfigInFile } from '@/app/redux/configActions'
-import {syncNewProfileData} from '@/app/redux/threeCommas/Actions'
+import { syncNewProfileData } from '@/app/redux/threeCommas/Actions'
 
 
 import { Button } from '@mui/material';
@@ -23,18 +23,17 @@ const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
 
     const setProfileConfig = async () => {
         const { status, message } = checkProfileIsValid(currentProfile)
-
         if (status) {
             setLoaderIcon(true)
             try {
 
                 // saving the config here so the update function below can work properly.
                 await storeConfigInFile()
-                
+
                 //updating the current profile's data
                 const update = await syncNewProfileData(1000, currentProfile);
                 if (update) {
-
+                    console.log(currentProfile.general.defaultCurrency)
                     //@ts-ignore
                     await electron.config.set('current', currentProfile.id)
 
@@ -75,9 +74,7 @@ const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
                 // variant="contained"
                 // color="primary"
                 className="CtaButton"
-                onClick={() => {
-                    setProfileConfig()
-                }}
+                onClick={() =>  setProfileConfig()}
                 disableElevation
             >
                 {(isSyncing) ? <> Syncing... <LoaderIcon /> </> : "Save Profile"}
