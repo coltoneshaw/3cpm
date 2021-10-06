@@ -223,7 +223,7 @@ const PairPerformanceBar = ({ data = [], defaultCurrency }: Type_Pair_Performanc
 
                     <Bar name="Total Profit" dataKey="total_profit" fill="var(--chart-metric2-color)" xAxisId="total_profit" fillOpacity={.8} hide={metricsDisplayed.total_profit} />
                     <Scatter name="Bought Volume" xAxisId="bought_volume" dataKey="bought_volume" fillOpacity={.9} fill="var(--chart-metric1-color)" hide={metricsDisplayed.bought_volume} />
-                    <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours" fill="var(--chart-metric3-color)" xAxisId="avg_deal_hours" hide={metricsDisplayed.avg_deal_hours} />
+                    <Scatter name="Avg. Deal Hours" dataKey="avg_deal_hours" fill="var(--chart-metric6-color)" xAxisId="avg_deal_hours" hide={metricsDisplayed.avg_deal_hours} />
 
                 </ComposedChart>
             </ResponsiveContainer>

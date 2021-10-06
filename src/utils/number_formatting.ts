@@ -19,6 +19,7 @@ const parseNumber = (number: number | string, digits:number = 0, activeDeals?: b
     let numberFormatter:any = {'minimumFractionDigits': (digits > 4) ? 4 : digits,  'maximumFractionDigits': digits}
 
     if(activeDeals){
+        if(number >= 1000) numberFormatter = { 'minimumFractionDigits': 0, 'maximumFractionDigits': 0, "useGrouping": false}
         if(number >= 10) numberFormatter = { 'minimumFractionDigits': digits, 'maximumFractionDigits': digits, "useGrouping": false}
         if(number < 10) numberFormatter = { 'minimumFractionDigits': (digits > 4) ? digits : 4, 'maximumFractionDigits' : 8}
     }
