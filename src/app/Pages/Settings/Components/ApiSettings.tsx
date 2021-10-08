@@ -97,7 +97,8 @@ const ApiSettings = ({tempProfile, updateTempProfile}: {tempProfile: typeof defa
                         let secret = tempProfile.secret
                         let mode = tempProfile.mode
                         try {
-                            await updateReservedFundsArray(key, secret, mode, handleUpdatingReservedFunds, tempProfile.reservedFunds)
+                            const reservedFunds = await updateReservedFundsArray(key, secret, mode, tempProfile.reservedFunds)
+                            handleUpdatingReservedFunds(reservedFunds ?? [])
                         } catch (error) {
                             alert('there was an error testing the API keys. Check the console for more information.')
                         }
