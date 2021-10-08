@@ -44,7 +44,7 @@ const updateNestedCurrentProfile = (data: string | {} | [], path: string) => {
     store.dispatch(updateCurrentProfileByPath({ data, path }))
 }
 
-const updateReservedFundsArray = async (key: string, secret: string, mode: string, updateReservedFunds: CallableFunction, reservedFunds: Type_ReservedFunds[]) => {
+const updateReservedFundsArray = async (key: string, secret: string, mode: string, handleUpdatingReservedFunds: CallableFunction, reservedFunds: Type_ReservedFunds[]) => {
 
     // @ts-ignore
     const accountSummary = await electron.api.getAccountData(undefined, key, secret, mode)
@@ -94,22 +94,11 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
                 }
             })
 
-        updateReservedFunds(reservedFundsArray)
+        // updateReservedFunds(reservedFundsArray)
+
+        handleUpdatingReservedFunds(reservedFundsArray)
 
     }
-
-}
-
-const checkProfileIsValid = (profile: Type_Profile) => {
-        const { apis: { threeC }, name, statSettings: { reservedFunds, startDate }, general: {defaultCurrency} } = profile
-        if (!threeC.key || !threeC.mode || !threeC.secret) return { status: false, message: 'Missing 3Commas API information' }
-        if (!name) return { status: false, message: 'Missing a valid profile name' }
-        if (!reservedFunds) return { status: false, message: 'Missing accounts. Make sure to click "Test API Keys" and enable an account.' }
-        if (reservedFunds.filter(account => account.is_enabled).length == 0) return { status: false, message: 'Missing an enabled account under reserved funds.' }
-        if (!startDate) return { status: false, message: 'Missing a start date' }
-        if (!defaultCurrency || defaultCurrency.length === 0) return { status: false, message: 'Missing a valid currency. Please select one before you can continue.' }
-
-        return { status: true}
 
 }
 
@@ -145,6 +134,5 @@ export {
     updateReservedFundsArray,
     updateNestedCurrentProfile,
     storeConfigInFile,
-    checkProfileIsValid,
     deleteProfileByIdGlobal
 }

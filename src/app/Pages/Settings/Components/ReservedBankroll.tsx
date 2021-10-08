@@ -1,13 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
-// import { DataGrid } from '@material-ui/data-grid';
 import { Switch } from '@mui/material';
 
 import { CustomTable } from '@/app/Components/DataTable/Index'
 import styled from 'styled-components'
-import { useAppSelector } from '@/app/redux/hooks';
-
-import { configPaths } from '@/app/redux/configSlice'
-import { updateNestedCurrentProfile } from '@/app/redux/configActions';
 import { Type_ReservedFunds } from '@/types/config';
 
 
@@ -115,24 +110,23 @@ const EditableCell = ({
   return <input value={value} onChange={onChange} onBlur={onBlur} style={{ textAlign: 'center', color: 'var(--color-text-lightbackground)' }} />
 }
 
-const ReservedBankroll = () => {
+import type { defaultTempProfile } from '@/app/Pages/Settings/Settings'
+const ReservedBankroll = ({ tempProfile, updateTempProfile }: { tempProfile: typeof defaultTempProfile, updateTempProfile: CallableFunction }) => {
 
-  const profile = useAppSelector(state => state.config.currentProfile);
-  const [reservedFunds, updateReservedFunds] = useState<Type_ReservedFunds[]>([])
-
-  useEffect(() => {
-    if (profile.statSettings.reservedFunds) updateReservedFunds(profile.statSettings.reservedFunds)
-
-  }, [profile])
+  const [reservedFunds, updateReservedFunds] = useState<Type_ReservedFunds[]>(() => tempProfile.reservedFunds)
 
   useEffect(() => {
-    
+    if(tempProfile.reservedFunds != reservedFunds) updateReservedFunds(tempProfile.reservedFunds)
+  }, [tempProfile.reservedFunds])
+
+  useEffect(() => {
+    updateTempProfile((prevState: typeof defaultTempProfile) => {
+      let newState = { ...prevState }
+      newState.reservedFunds = reservedFunds
+      return newState
+    })
+
   }, [reservedFunds])
-
-  const updateData = (data:Type_ReservedFunds[]) => {
-    updateNestedCurrentProfile(data, configPaths.statSettings.reservedFunds)
-    return data
-  }
 
 
   const columns = useMemo(
@@ -164,22 +158,23 @@ const ReservedBankroll = () => {
 
 
   const handleOnOff = (e: any) => {
+
     updateReservedFunds(prevState => (
-      updateData(prevState.map(row => {
-        let newRow = {...row}
+      prevState.map(row => {
+        let newRow = { ...row }
         if (e.target.name == newRow.id) {
           newRow.is_enabled = !newRow.is_enabled
         }
         return newRow
       })
-    )))
+    ))
   }
 
   const handleEditCellChangeCommitted = (id: number, column: string, value: string) => {
 
     updateReservedFunds(prevState => (
-      updateData(prevState.map(row => {
-        const newRow = {...row}
+      prevState.map(row => {
+        const newRow = { ...row }
         if (id == newRow.id) {
           //@ts-ignore
           newRow[column] = value
@@ -187,7 +182,7 @@ const ReservedBankroll = () => {
         }
         return newRow
       })
-    )))
+    ))
   }
 
   return (

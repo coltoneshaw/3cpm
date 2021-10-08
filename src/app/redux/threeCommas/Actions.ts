@@ -260,8 +260,9 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
 }
 
 
-const syncNewProfileData = async (offset: number = 1000, profileData: Type_Profile) => {
+const syncNewProfileData = async (offset: number = 1000) => {
     // const updatedProfile = {...profileData, syncStatus: { deals: {lastSyncTime: null}}}
+    const profileData = store.getState().config.currentProfile
 
     if (!preSyncCheck(profileData)) return
 

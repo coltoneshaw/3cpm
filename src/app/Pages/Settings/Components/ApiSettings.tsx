@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
-import {  useAppSelector } from '@/app/redux/hooks';
-import {  configPaths } from '@/app/redux/configSlice'
 import { updateReservedFundsArray, updateNestedCurrentProfile } from '@/app/redux/configActions';
 
 import { TextField, Button, InputLabel, FormControl, MenuItem, Select } from '@mui/material';
 
-import { Type_Profile, Type_ReservedFunds } from '@/types/config'
+import { Type_ReservedFunds } from '@/types/config'
+import type {defaultTempProfile} from '@/app/Pages/Settings/Settings'
 
+const ApiSettings = ({tempProfile, updateTempProfile}: {tempProfile: typeof defaultTempProfile, updateTempProfile: CallableFunction}) => {
 
-const ApiSettings = () => {
-    const {currentProfile, reservedFunds} = useAppSelector(state => state.config);
-    const [apiData, updateApiData] = useState(() => ({ key: "", mode: "", secret: "" }))
-
-    useEffect(() => {
-        updateApiData(currentProfile.apis.threeC)
-    }, [currentProfile])
 
     const handleChange = (e: any) => {
         const validKeys = ["key", 'secret', 'mode']
@@ -25,18 +18,21 @@ const ApiSettings = () => {
             console.debug(e)
             return
         }
-        updateApiData((prevState) => {
+        updateTempProfile((prevState: typeof defaultTempProfile) => {
             let newState = { ...prevState }
-            //@ts-ignore
-            newState[e.target.name as keyof Type_Profile] = e.target.value
 
-            updateNestedCurrentProfile(newState, configPaths.apis.threeC.main)
+            //@ts-ignore
+            newState[e.target.name as keyof typeof prevState] = e.target.value
             return newState
         })
     }
 
     const handleUpdatingReservedFunds = (reservedFunds: Type_ReservedFunds[]) => {
-        updateNestedCurrentProfile(reservedFunds, configPaths.statSettings.reservedFunds)
+        updateTempProfile((prevState: typeof defaultTempProfile) => {
+            let newState = { ...prevState }
+            newState.reservedFunds = reservedFunds
+            return newState
+        })
     }
 
 
@@ -49,7 +45,7 @@ const ApiSettings = () => {
                     id="key"
                     label="Key"
                     name="key"
-                    value={apiData.key}
+                    value={tempProfile.key}
                     onChange={handleChange}
                     className="settings-left"
                     style={{
@@ -61,7 +57,7 @@ const ApiSettings = () => {
                     id="secret"
                     label="Secret"
                     name="secret"
-                    value={apiData.secret}
+                    value={tempProfile.secret}
                     onChange={handleChange}
                     type="password"
                     style={{
@@ -79,7 +75,7 @@ const ApiSettings = () => {
                         id="mode"
                         name="mode"
                         label="Mode"
-                        value={apiData.mode}
+                        value={tempProfile.mode}
                         onChange={handleChange}
                         style={{
                             marginRight: '15px'
@@ -97,11 +93,11 @@ const ApiSettings = () => {
                 onClick={
                     async () => {
                         // @ts-ignore
-                        let key = apiData.key
-                        let secret = apiData.secret
-                        let mode = apiData.mode
+                        let key = tempProfile.key
+                        let secret = tempProfile.secret
+                        let mode = tempProfile.mode
                         try {
-                            await updateReservedFundsArray(key, secret, mode, handleUpdatingReservedFunds, reservedFunds)
+                            await updateReservedFundsArray(key, secret, mode, handleUpdatingReservedFunds, tempProfile.reservedFunds)
                         } catch (error) {
                             alert('there was an error testing the API keys. Check the console for more information.')
                         }

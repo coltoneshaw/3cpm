@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-import { useAppSelector } from '@/app/redux/hooks';
-import { configPaths } from '@/app/redux/configSlice'
-import { updateNestedCurrentProfile } from '@/app/redux/configActions';
 import { formatCurrency, supportedCurrencies } from '@/utils/granularity'
 
 import {
@@ -36,13 +33,18 @@ const returnCurrencyMenuItems = (currencyArray: typeof supportedCurrencies) => {
 
 }
 
-const CurrencySelector = () => {
+import type { defaultTempProfile } from '@/app/Pages/Settings/Settings'
 
-    const profile = useAppSelector(state => state.config.currentProfile);
-    const [currency, updateCurrency] = useState<(keyof typeof supportedCurrencies)[]>([])
-    useEffect(() => {
-        if (profile.general.defaultCurrency) updateCurrency(profile.general.defaultCurrency)
-    }, [profile])
+const CurrencySelector = ({ tempProfile, updateTempProfile }: { tempProfile: typeof defaultTempProfile, updateTempProfile: CallableFunction }) => {
+
+
+    const updateTempCurrency = (newCurrency: any[]) => {
+        updateTempProfile((prevState: typeof defaultTempProfile) => {
+            let newState = { ...prevState }
+            newState.defaultCurrency = newCurrency
+            return newState
+        })
+    }
 
     const { usd, crypto } = returnCurrencyMenuItems(supportedCurrencies)
     const usdNames = usd.map(c => c.value)
@@ -56,24 +58,21 @@ const CurrencySelector = () => {
         if (isUSD) {
             const isAllUsd = e.target.value.every((v: string) => usdNames.includes(v));
             if (!isAllUsd) {
-                updateCurrency([])
-                updateNestedCurrentProfile([], configPaths.general.defaultCurrency)
+                updateTempCurrency([])
                 return alert('Warning. You cannot mix currencies that are not USD based.')
             }
-            updateCurrency([...e.target.value])
-            updateNestedCurrentProfile([...e.target.value], configPaths.general.defaultCurrency)
+            updateTempCurrency([...e.target.value])
             return
         }
 
         // selecting only the last value so there are not multiple crypto currencies selected at a time.
         const selected = (e.target.value.length > 1) ? [e.target.value.pop()] : [...e.target.value];
-        updateCurrency(selected)
-        updateNestedCurrentProfile(selected, configPaths.general.defaultCurrency)
+        updateTempCurrency(selected)
     }
 
     const [open, setOpen] = useState(false);
-    const handleClose = () =>  setOpen(false);
-    const handleOpen = () =>  setOpen(true);
+    const handleClose = () => setOpen(false);
+    const handleOpen = () => setOpen(true);
 
     return (
         <FormControl style={{ width: '100%', marginBottom: '25px' }} fullWidth>
@@ -84,9 +83,9 @@ const CurrencySelector = () => {
                 id="currency"
                 name="currency"
                 label="Stat / Metric Currency"
-                value={currency}
+                value={tempProfile.defaultCurrency}
                 onChange={onChange}
-                renderValue={() => (currency.length > 0) ? currency.join(', ') : ""}
+                renderValue={() => (tempProfile.defaultCurrency.length > 0) ? tempProfile.defaultCurrency.join(', ') : ""}
                 style={{
                     marginRight: '15px',
                     width: '100%'
@@ -94,8 +93,6 @@ const CurrencySelector = () => {
                 open={open}
                 onClose={handleClose}
                 onOpen={handleOpen}
-
-
             >
                 < ListSubheader > USD</ListSubheader>
 
@@ -103,7 +100,7 @@ const CurrencySelector = () => {
                 {usd.map(c => {
                     return (
                         <MenuItem value={c.value} key={c.value}>
-                            <Checkbox checked={currency.indexOf(c.value as keyof typeof supportedCurrencies) > - 1} />
+                            <Checkbox checked={tempProfile.defaultCurrency.indexOf(c.value as keyof typeof supportedCurrencies) > - 1} />
                             <ListItemText primary={c.value + ` (${c.name})`} />
                         </MenuItem>
                     )
@@ -117,16 +114,9 @@ const CurrencySelector = () => {
                         </MenuItem>
                     )
                 })}
-
-
-
-
-
-
             </Select>
         </FormControl >
     )
-
 }
 
 export default CurrencySelector
