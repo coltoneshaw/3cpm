@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import {
     Dialog,
     DialogContent,
-} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import Delete from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import Delete from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 import { useThemeProvidor } from "@/app/Context/ThemeEngine";
@@ -69,14 +69,11 @@ const AddCoinModal = ({ open, setOpen, coinNames, currentCoins }: { open: boolea
             <>
                 <Autocomplete
                     options={['', ...coinNames]}
-                    // getOptionLabel={(option) => option.title}
-                    style={{ flexBasis: '90%', paddingRight: '2em', color: 'var(--color-text-lightbackground)' }}
+                    style={{ flexBasis: '90%', marginRight: '2em', color: 'var(--color-text-lightbackground)' }}
                     value={inputValue}
                     //@ts-ignore
                     onChange={(e) => changeInputValue(e.target.innerText)}
-                    renderInput={(params) => <TextField {...params} label="Add Coin" variant="outlined"
-
-                    />}
+                    renderInput={(params) => <TextField {...params} label="Add Coin" variant="outlined"/>}
                 />
                 <AddIcon
                     style={{

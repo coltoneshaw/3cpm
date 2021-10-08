@@ -1,3 +1,43 @@
+# v1.0.0
+
+## New Features
+- Save settings into a custom profile and fast swap between! Even supports multiple 3 Commas accounts.
+- Auto-refresh bar has a built-in loading indicator in seconds.
+- DCA calculator, order details, and order timeline built into every active deal.
+- Force paper or real account directly in the settings.
+- Documentation on docs.3cpm.io along with a link in the sidebar!
+- Support for ALL 3Commas quote pairs across the entire app.
+- Added Completed SO Distribution chart.
+- Added bot risk % to the bot planner to show how much risk that bot accounts for.
+
+
+## Enhancements
+- Enabled accounts are synced on every auto-refresh, no more out-of-date data!
+- Update banner now differentiates between beta and general releases.
+- TTP has been added to the active deals bot name hover.
+- Active deals with an error have the `Active SO` and `# SO` in bold red with a tooltip hover to see the specific error message.
+- Adjusted wording on deal notifications if you lost money.
+- Reset all data is moved under Menu > Help > Delete All
+- Added a clear all local storage under Menu > Edit
+- Adjusted metrics to be ordered the same across stats.
+- Dynamic chart height for bot/pair performance based on the number of data points.
+- Improved overall chart formatting (highlighting, colors, bar width, etc.)
+- Adjusted tooltips and headers for better clarity.
+- Improved the Risk Monitor view for larger screens. 
+- Improved chart loading performance
+- Updating TradingView Icon
+
+## Bugs
+- Fixed a few spelling mistakes across the app
+- Fixed the max risk bar from overflowing if over 400% risk.
+- Updated unnecessary scroll bars across the app
+
+## Breaking Changes
+- You can no longer select more than currency unless it's a USD base. This will be improved in the future.
+
+
+## Backend Changes
+- Entire data handling has been moved from React context API to Redux
 # v0.4.1
 
 ## New Features
@@ -12,8 +52,6 @@
 - Fixed bug in the Manual SO count metric showing cancelled deals counted.
 - Fixed hovering on the darkmode icon.
 - Fixed the labels incorrectly wrapping on the bot performance charts
-
-
 
 
 # v0.4.0

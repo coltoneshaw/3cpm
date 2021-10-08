@@ -21,10 +21,19 @@ export interface Type_Pair_Performance_Metrics {
     avg_deal_hours: number
 }
 
-export interface Type_Performance_Metrics {
+export type Type_SoDistributionArray = {
+    completed_safety_orders_count: number // the actual SO level. 0 = BO.
+    total_profit: number 
+    percent_total: number // percent of total profit at that SO level
+    percent_deals: number // percent of deals against the total filtered at that SO level
+    total_deals: number // total count of completed deals at that SO level
+}
+
+export type Type_Performance_Metrics = {
     pair_bot?: Type_Query_PerfArray[]
     bot?: Type_Bot_Performance_Metrics[]
     pair?: Type_Pair_Performance_Metrics[]
+    safety_order?: Type_SoDistributionArray[]
 }
 
 export interface Type_Bot_Performance_Metrics {
@@ -39,7 +48,7 @@ export interface Type_Bot_Performance_Metrics {
     type: string
 }
 
-export interface Type_Query_DealData {
+export type Type_Query_DealData = {
     final_profit: number,
     closed_at: string
     id: number
@@ -57,7 +66,7 @@ export type Type_Profit = {
 
 
 
-export interface Type_Deals {
+export type Type_Deals = {
     id: number // in use
     type: string // in use
     bot_id: number // in use
@@ -110,7 +119,7 @@ export interface Type_Deals {
     stop_loss_type: string
     safety_order_volume_type: string
     base_order_volume_type: string
-    from_currency: string
+    from_currency: "AUD" | "BIDR" | "BNB" | "BRL" | "BTC" | "BUSD" | "BVND" | "DAI" | "ETH" | "EUR" | "GBP" | "IDRT" | "NGN" | "RUB" | "TRX" | "TRY" | "TUSD" | "UAH" | "USD" | "USDC" | "USDT" | "USDP" | "VAI" | "XRP"
     to_currency: string
     current_price: number
     take_profit_price: number
@@ -140,13 +149,13 @@ export interface Type_Deals {
 }
 
 
-export interface Type_ActiveDeals extends Type_Deals {
+export type Type_ActiveDeals = Type_Deals & {
     max_deal_funds: number
     bought_volume: number
     so_volume_remaining: number
 }
 
-export interface Type_Query_Accounts {
+export type Type_Query_Accounts = {
     currency_code: string
     id: number
     account_id: number
@@ -160,13 +169,13 @@ export interface Type_Query_Accounts {
     market_code: number
 }
 
-export interface Type_Pair_By_Date {
+export type Type_Pair_By_Date = {
     date: string
     pair: string
     profit: number
 }
 
-export interface Type_bots {
+export type Type_bots ={
     id: number | string
     origin: string
     account_id: number
@@ -180,7 +189,7 @@ export interface Type_bots {
     created_at?: string
     updated_at?: string
     enabled_active_funds?: number
-    enabled_inactive_funds?: number
+    enabled_inactive_funds: number
     finished_deals_count?: number
     finished_deals_profit_usd?: number
     from_currency: string
@@ -215,7 +224,7 @@ export interface Type_bots {
     hide: boolean
 }
 
-export interface Type_Query_bots extends Type_bots {
+export type Type_Query_bots = Type_bots & {
     pairs: string
 }
 
@@ -223,7 +232,7 @@ export interface Type_API_bots extends Type_bots {
     pairs: string[]
 }
 
-export interface Type_MetricData {
+export type Type_MetricData = {
     activeDealCount: number
     totalProfit_perf: number
     totalDeals: number
@@ -243,16 +252,24 @@ export interface Type_MetricData {
     reservedFundsTotal: number,
     totalClosedDeals: number, // total number of deals closed for the filtered time
     totalDealHours: number // this is the total hours in deals you have for the filtered time
+    inactiveBotFunds: number // this is active bots that have an open deal (inactive funds).
+    totalMaxRisk: number // adding maxRisk and inactiveBotFunds together.
 }
 
-export interface Type_MarketOrders {
-    deal_order_type: any;
-    status_string: any;
+export type Type_MarketOrders = {
+    order_id: string
+    deal_order_type: string;
+    order_type: string // buy / sell
+    status_string: string;
     quantity: number;
     quantity_remaining: number;
     total: number;
     rate: number;
     average_price: number;
+    cancellable: boolean
+    created_at: string // ISO string
+    updated_at: string // ISO string
+
 }
 export interface Type_UpdateFunction{
     offset: number

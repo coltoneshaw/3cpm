@@ -32,7 +32,7 @@ export default styled.div`
     
     tbody{
 
-        tr {
+        tr[role=row] {
             :nth-child(2n+2) {
                 background-color: var(--color-secondary-light87);
             }

@@ -1,19 +1,31 @@
 import React, { useEffect, useState } from 'react'
+import {formatCurrency} from'@/utils/granularity'
+
+
 import { CustomTable } from '@/app/Components/DataTable/Index'
 import { getDateString } from '@/utils/helperFunctions';
 import { parseNumber } from '@/utils/number_formatting';
 import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
-
+import CardTooltip from '@/app/Components/Charts/DataCards/CustomToolTip';
+import {SubRowAsync} from './Components/index'
 
 import Styles from './StyledDiv'
 
+const returnErrorTooltip = (errorMessage: string, value: string) => {
+
+    return (
+        <CardTooltip title={<> <strong>Error: </strong>{errorMessage} </>} >
+            < span className=" monospace-cell" style={{ color: 'var(--color-red)', fontWeight: 700 }}>{value}</span>
+        </CardTooltip>
+    )
+}
 
 
 function DealsTable({ data }: { data: object[] }) {
+
     const localStorageSortName = storageItem.tables.DealsTable.sort;
 
-    const [localData, updateLocalData] = useState<object[]>([])
-
+    const [localData, updateLocalData] = useState<object[]>([]);
 
     useEffect(() => {
         updateLocalData(data)
@@ -25,6 +37,21 @@ function DealsTable({ data }: { data: object[] }) {
 
     const columns = React.useMemo(
         () => [
+            {
+                accessor: 'id',
+                Header: ({ toggleAllRowsExpanded, rows}: { toggleAllRowsExpanded: any, rows: any[] }) => {
+                    return (
+                    <span onClick={() => toggleAllRowsExpanded(false)} style={{cursor: 'pointer'}}>
+                        X
+                    </span>
+                )},
+                Cell: ({ row }: any) => (
+                    <span {...row.getToggleRowExpandedProps()}>
+                        {row.isExpanded ? '🔽' : '▶️'}
+                    </span>
+                ),
+                disableSortBy: true
+            },
             {
                 Header: 'Bot Name',
                 accessor: 'bot_name', // accessor is the "key" in the data,
@@ -67,9 +94,7 @@ function DealsTable({ data }: { data: object[] }) {
                 style: { textAlign: 'right' },
                 sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                 Cell: ({ cell }: any) => {
-                    // let digits = 5;
-                    // if(cell.value < 1) digits = 4
-                    return < span className=" monospace-cell">{parseNumber(cell.value, 5, true)}</span>
+                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
                 }
             },
             {
@@ -78,9 +103,7 @@ function DealsTable({ data }: { data: object[] }) {
                 style: { textAlign: 'right' },
                 sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                 Cell: ({ cell }: any) => {
-                    // let digits = 5;
-                    // if(cell.value < 1) digits = 4
-                    return < span className=" monospace-cell">{parseNumber(cell.value, 5, true)}</span>
+                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
                 }
             },
             {
@@ -88,8 +111,7 @@ function DealsTable({ data }: { data: object[] }) {
                 accessor: 'bought_volume',
                 style: { textAlign: 'right' },
                 Cell: ({ cell }: any) => {
-                    // let digits = 5;
-                    return < span className=" monospace-cell">{parseNumber(cell.value, 5, true)}</span>
+                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, false).metric}</span>
                 }
             },
             {
@@ -99,20 +121,32 @@ function DealsTable({ data }: { data: object[] }) {
                 className: '',
                 sortable: false,
                 Cell: ({ cell }: any) => {
-                    return < span className=" monospace-cell">{parseNumber(cell.value, 5, true)}</span>
+                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, false).metric}</span>
                 },
             },
             {
                 Header: 'Active SO',
                 accessor: 'current_active_safety_orders',
-                style: { textAlign: 'center' },
+                style: {
+                    textAlign: 'center',
+                },
+                Cell: ({ cell }: any) => {
+                    if (cell.row.original.deal_has_error == 1) return returnErrorTooltip(cell.row.original.error_message, cell.value);
+                    return < span className=" monospace-cell">{cell.value}</span>
+                },
             },
             {
                 Header: '# SO',
                 accessor: 'safetyOrderString',
-                style: { textAlign: 'center' },
+                style: {
+                    textAlign: 'center'
+                },
+                Cell: ({ cell }: any) => {
+                    if (cell.row.original.deal_has_error == 1) return returnErrorTooltip(cell.row.original.error_message, cell.value);
+                    return < span className=" monospace-cell">{cell.value}</span>
+                },
             },
-            
+
             {
                 Header: '$ Profit',
                 id: 'actual_usd_profit',
@@ -122,7 +156,8 @@ function DealsTable({ data }: { data: object[] }) {
                 Cell: ({ cell }: any) => {
 
                     const in_profit = (cell.row.original.actual_profit_percentage > 0) ? 'green' : 'red'
-                    return <span className={"pill pill-left monospace-cell " + in_profit} >{parseNumber(cell.value, 2)}</span>
+                    // leaving this as USD for now because 3C only displays this value in a USD quote.
+                    return < span className={"pill pill-left monospace-cell " + in_profit} >{formatCurrency( ['USD'], cell.value, false).metric}</span>
                 },
                 style: {
                     paddingRight: 0,
@@ -149,7 +184,7 @@ function DealsTable({ data }: { data: object[] }) {
                 style: { textAlign: 'right' },
                 sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
                 Cell: ({ cell }: any) => {
-                    return <span className=" monospace-cell" style={{ paddingLeft: '1em' }}>{parseNumber(cell.value, 4, true)}</span>
+                    return < span className=" monospace-cell" style={{ paddingLeft: '1em' }}>{formatCurrency( [cell.row.original.from_currency], cell.value, false).metric}</span>
                 }
             },
             {
@@ -157,7 +192,7 @@ function DealsTable({ data }: { data: object[] }) {
                 accessor: 'max_deal_funds',
                 style: { textAlign: 'right' },
                 Cell: ({ cell }: any) => {
-                    return < span className=" monospace-cell">{cell.value}</span>
+                    return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
                 },
             },
             {
@@ -168,9 +203,21 @@ function DealsTable({ data }: { data: object[] }) {
                     return < span className=" monospace-cell">{cell.value}%</span>
                 },
             }
-
-
         ], [])
+
+
+
+    // Create a function that will render our row sub components
+    const renderRowSubComponent = React.useCallback(
+        ({ row, visibleColumns }) => (
+            <SubRowAsync
+                row={row}
+                visibleColumns={visibleColumns}
+            />
+        ),
+        []
+    );
+
 
 
 
@@ -179,6 +226,7 @@ function DealsTable({ data }: { data: object[] }) {
             <CustomTable
                 columns={columns}
                 data={localData}
+                renderRowSubComponent={renderRowSubComponent}
                 autoResetSortBy={false}
                 autoResetPage={false}
                 localStorageSortName={localStorageSortName}
@@ -187,7 +235,8 @@ function DealsTable({ data }: { data: object[] }) {
                     // onClick: () => setSort(column.id),
                     style: {
                         height: '44px',
-                        backgroundColor: 'var(--color-secondary-light87)'
+                        backgroundColor: 'var(--color-secondary-light87)',
+                        zIndex: '1000'
                     },
 
                 })}

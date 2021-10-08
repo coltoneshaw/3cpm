@@ -1,10 +1,11 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import NoData from '@/app/Pages/Stats/Components/NoData';
+import {currencyTooltipFormatter} from '@/app/Components/Charts/formatting'
 
 import { parseNumber} from '@/utils/number_formatting';
 
-import { Type_Tooltip, Type_SoDistribution } from '@/types/Charts';
+import type { Type_Tooltip, Type_SoDistribution } from '@/types/Charts';
 
 
 interface Type_SoDistributionArray {
@@ -15,7 +16,7 @@ interface Type_SoDistributionArray {
     numberOfDeals: number
 }
 
-const SoDistribution = ({ title, data = [], metrics }: Type_SoDistribution) => {
+const SoDistribution = ({ data = [], metrics, defaultCurrency }: Type_SoDistribution) => {
 
     let dataArray: Type_SoDistributionArray[] = []
 
@@ -58,14 +59,15 @@ const SoDistribution = ({ title, data = [], metrics }: Type_SoDistribution) => {
                         bottom: 5,
                     }}
                     stackOffset="expand"
+                    maxBarSize={50}
+                    barGap={1}
                 >
                     <Legend/>
                     <CartesianGrid opacity={.3} vertical={false}/>
-                    <Tooltip
-                        // @ts-ignore - tooltip refactoring
-                        // todo - improve how tooltips can pass the values.
-                        content={<CustomTooltip/>}
-                    />
+
+                    {/* TODO - pass the custom props down properly here.  */}
+                    {/* @ts-ignore */}
+                    <Tooltip content={<CustomTooltip formatter={(value:any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{strokeDasharray: '3 3', opacity: .2}}/>
                     <XAxis
                         dataKey="SO"
                         minTickGap={-200}
@@ -73,12 +75,12 @@ const SoDistribution = ({ title, data = [], metrics }: Type_SoDistribution) => {
                     />
 
                     <YAxis
-                        tickFormatter={tick => tick * 100 + "%"}
+                        tickFormatter={tick => parseNumber(tick * 100, 0) + "%"}
                     />
 
 
-                    <Bar dataKey="percentOfDeals" fill="var(--color-primary-light25)" name='% of deals'/>
-                    <Bar dataKey="percentOfVolume" fill="var(--color-secondary-light25)" name='% of volume'/>
+                    <Bar dataKey="percentOfDeals" fill="var(--chart-metric1-color)" name='% of deals'/>
+                    <Bar dataKey="percentOfVolume" fill="var(--chart-metric3-color)" name='% of volume'/>
 
                 </BarChart>
             </ResponsiveContainer>)
@@ -86,15 +88,15 @@ const SoDistribution = ({ title, data = [], metrics }: Type_SoDistribution) => {
 
     return (
         <div className="boxData stat-chart " >
-            <h3 className="chartTitle">{title}</h3>
+            <h3 className="chartTitle">Active Deals SO Distribution</h3>
             {renderChart()}
         </div>
     )
 }
 
 
-function CustomTooltip({ active, payload, label }: Type_Tooltip) {
-    if (!active || payload.length == 0 || payload[0] == undefined) {
+function CustomTooltip({ active, payload, label, formatter }: Type_Tooltip) {
+    if (!active || !payload || payload[0] == undefined) {
         return null
     }
 
@@ -102,7 +104,7 @@ function CustomTooltip({ active, payload, label }: Type_Tooltip) {
     return (
         <div className="tooltip">
             <h4>SO # {label}</h4>
-            <p><strong>Bought Volume:</strong> ${parseNumber(volume)} ( {parseNumber((percentOfVolume * 100), 2)} %)
+            <p><strong>Bought Volume:</strong> {formatter(volume)} ( {parseNumber((percentOfVolume * 100), 2)} %)
             </p>
             <p><strong>Deal Count:</strong> {numberOfDeals} ( {parseNumber((percentOfDeals * 100), 2)} %)</p>
         </div>

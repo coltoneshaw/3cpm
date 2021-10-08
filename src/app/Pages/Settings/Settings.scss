@@ -5,9 +5,12 @@
     width: 75%;
     min-width: 200px;
 
-    padding: 5%;
+    padding: 5em;
     justify-content: space-between;
     text-align: left;
+
+    // relative for the add profile dropdown.
+    position: relative;
 
 }
 
@@ -18,14 +21,26 @@
 .subText{
     font-weight: 300;
     font-size: .8em;
+    margin: 0 0 1em 0;
 }
 
 .settingsButtonDiv{
     justify-content: center;
+
+    .deleteProfile{
+        background-color: var(--color-red);
+        color: black !important;
+        opacity: .9;
+    }
+
+    .deleteProfile:hover {
+        background-color: var(--color-red);
+        opacity: .8;
+    }
 }
 
 .settingsButtonDiv button{
-    width: 150px;
+    width: 200px;
 }
 
 .settings-right {
@@ -42,16 +57,26 @@
     margin: 10px
 }
 
+.desktopPicker {
+    margin: 10px;
+    width: 100%;
+}
+
 .settings-dataGrid {
     flex-grow: 1;
     text-align: center;
     border: none;
     width: 50%;
     align-self: center;
-    width: 60%
+    width: 60%;
 }
 
 .versionNumber {
     align-self: center;
 }
 
+.settings-datePicker{
+    .MuiSvgIcon-root {
+        color: var(--color-text-lightbackground) !important;
+    }
+}

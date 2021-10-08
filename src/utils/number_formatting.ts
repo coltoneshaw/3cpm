@@ -5,7 +5,7 @@
  * @param digits number of trailing digits to return.
  * @returns returns a number to 0 decimals and comma seperated
  */
-const parseNumber = (number: number | string, digits:number = 0, maxSize?: boolean) => {
+const parseNumber = (number: number | string, digits:number = 0, activeDeals?: boolean) => {
     switch (typeof number) {
         case "number": // do nothing
             break
@@ -16,9 +16,16 @@ const parseNumber = (number: number | string, digits:number = 0, maxSize?: boole
             number = 0
     }
 
-    let numberFormatter:any = { 'minimumFractionDigits': digits, 'maximumFractionDigits': digits }
-    if(maxSize && number >= 1) numberFormatter = { 'minimumSignificantDigits': digits , 'maximumSignificantDigits': digits, "useGrouping": false}
-    if(maxSize && number < 1) numberFormatter = { 'minimumFractionDigits': digits -1 , 'maximumFractionDigits': digits -1, "useGrouping": false}
+    let numberFormatter:any = {'minimumFractionDigits': (digits > 4) ? 4 : digits,  'maximumFractionDigits': digits}
+
+    if(activeDeals){
+        if(number >= 1000) numberFormatter = { 'minimumFractionDigits': 0, 'maximumFractionDigits': 0, "useGrouping": false}
+        if(number >= 10) numberFormatter = { 'minimumFractionDigits': digits, 'maximumFractionDigits': digits, "useGrouping": false}
+        if(number < 10) numberFormatter = { 'minimumFractionDigits': (digits > 4) ? digits : 4, 'maximumFractionDigits' : 8}
+    }
+    // console.log(digits)
+    // if(maxSize && number >= 1) numberFormatter = { 'minimumSignificantDigits': digits , 'maximumSignificantDigits': digits, "useGrouping": false}
+    // if(number < 1) numberFormatter = { 'minimumFractionDigits': (digits > 6) ? digits : 6  , 'maximumFractionDigits': (digits > 6) ? digits : 6 , "useGrouping": false}
     // if(maxSize && number < 1) numberFormatter = { 'minimumSignificantDigits': maxSize , 'maximumSignificantDigits': maxSize}
 
     return number.toLocaleString(undefined, numberFormatter)

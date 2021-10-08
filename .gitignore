@@ -7,3 +7,5 @@ dist/*
 build/*
 /src/main-app.js
 release/*
+commit.sh
+.env

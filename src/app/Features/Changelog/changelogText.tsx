@@ -1,5 +1,5 @@
 
-const mostRecent = 'v0.4.1'
+const mostRecent = 'v1.0.0'
 
 
 const versionInformation = [
@@ -249,6 +249,38 @@ const versionInformation = [
         new: [
             'MacOS application is now signed and does not require additional permissions to download!',
             'Menu bar under help includes relevant links to github, discord, and more.'
+        ]
+    },
+    {
+        version: 'v1.0.0',
+        link: 'https://docs.3cpm.io/changelog#v-1-0-0',
+        enhancements: [
+            'Save settings into a custom profile and fast swap between! Even supports multiple 3 Commas accounts.',
+            'Auto-refresh bar has a built in loading indicator in seconds.',
+            'DCA calculator, order details, and order timeline built into every active deal.',
+            'Force paper or real account directly in the settings.',
+            'Documentation on docs.3cpm.io along with a link in the sidebar!',
+            'Support for ALL 3Commas quote pairs across the entire app.',
+            'Added Completed SO Distribution chart.',
+            'Added bot risk % to the bot planner to show how much risk that bot accounts for.'
+        ],
+        bugs: [
+            'Fixed a few spelling mistakes across the app',
+            'Fixed the max risk bar from overflowing if over 400% risk.',
+            'Updated unnecessary scroll bars across the app',
+        ],
+        new: [
+            'Enabled accounts are synced on every auto refresh, no more out of date data!',
+            'Update banner now differentiates between beta and general releases.',
+            'TTP has been added to the active deals bot name hover.',
+            'Active deals with an error have the `Active SO` and `# SO` in bold red with a tooltip hover to see the specific error message.',
+            'Adjusted wording on deal notifications if you lost money.',
+            'Reset all data is moved under Menu > Help > Delete All',
+            'Added a clear all local storage under Menu > Edit',
+            'Adjusted metrics to be ordered the same across stats.',
+            'Dynamic chart height for bot / pair performance based on the number of data points.',
+            'Improved overall chart formatting (highlighting, colors, bar width, etc.)',
+            'Adjusted tooltips and headers for better clarity.',
         ]
     },
 ]

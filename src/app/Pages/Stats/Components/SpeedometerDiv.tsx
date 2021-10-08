@@ -1,17 +1,21 @@
 import React from 'react';
 import { MaxRiskSpeedometer } from '@/app/Components/Charts/Speedometer'
 import { BalancePie } from '@/app/Components/Charts/Pie';
-import {Type_MetricData } from '@/types/3Commas'
+import type {Type_MetricData } from '@/types/3Commas'
+import type {defaultCurrency } from '@/types/config'
+import Box from '@mui/material/Box';
 
 interface Speedometer_Type {
     metrics: Type_MetricData
+    defaultCurrency: defaultCurrency
 }
-const SpeedometerDiv = ({metrics}: Speedometer_Type ) => {
+
+const SpeedometerDiv = ({metrics, defaultCurrency}: Speedometer_Type ) => {
 
     const { maxRiskPercent, bankrollAvailable } = metrics
 
     return (
-        <div style={{display: 'flex', justifyContent: 'space-between', paddingBottom: '32px'}}>
+        <div className="speedometerDiv">
             {/* Need to calculate the max width of the element and pass it into each as a variable to make this dymanic.  */}
             <MaxRiskSpeedometer
                 metric={maxRiskPercent}
@@ -82,6 +86,7 @@ const SpeedometerDiv = ({metrics}: Speedometer_Type ) => {
             <BalancePie 
                 metrics={ metrics }
                 title="Balances Available"
+                defaultCurrency={defaultCurrency}
             />
 
         </div>

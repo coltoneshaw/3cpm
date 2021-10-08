@@ -1,7 +1,8 @@
-import React, { useEffect} from 'react';
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis} from 'recharts';
-import { InputLabel, MenuItem, FormControl, Select} from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis } from 'recharts';
+import { InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 
+import { currencyTooltipFormatter, yAxisWidth, currencyTickFormatter } from '@/app/Components/Charts/formatting'
 
 import { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts'
 import { Type_Bot_Performance_Metrics } from '@/types/3Commas';
@@ -13,16 +14,46 @@ import { dynamicSort } from '@/utils/helperFunctions';
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 
-const colors = ["#cfe1f2", "#b5d4e9", "#93c3df", "#6daed5", "#4b97c9", "#2f7ebc", "#1864aa", "#0a4a90", "#08306b"]
+const colors = ["#DBEAFE", "#BFDBFE", "#93C5FD", "#60A5FA", "#3B82F6", "#2563EB", "#1D4ED8", "#1E40AF", "#1E3A8A"]
 
-/**
- * TODO
- * - Look at combining this chart by "pair-BO" to minimize bubbles on the chart.
- */
 
-const BotPerformanceBubble = ({ title, data = [] }: Type_BotPerformanceCharts) => {
+const filterData = (data: Type_Bot_Performance_Metrics[], filter: String) => {
+    let localData = [...data].sort(dynamicSort('-total_profit'));
+    const length = localData.length;
+    const fiftyPercent = length / 2
+    const twentyPercent = length / 5
 
-    const [filter, setFilter] = React.useState('all');
+    if (filter === 'top20') {
+        localData = localData.sort(dynamicSort('-total_profit'));
+        return localData.filter((bot, index) => index < twentyPercent)
+    } else if (filter === 'top50') {
+        localData = localData.sort(dynamicSort('-total_profit'));
+        return localData.filter((bot, index) => index < fiftyPercent)
+    } else if (filter === 'bottom50') {
+        localData = localData.sort(dynamicSort('total_profit'));
+        return localData.filter((bot, index) => index < fiftyPercent)
+    } else if (filter === 'bottom20') {
+        localData = localData.sort(dynamicSort('total_profit'));
+        return localData.filter((bot, index) => index < twentyPercent)
+    }
+    return localData;
+}
+
+const getPosition = (localData: Type_Bot_Performance_Metrics[]) => {
+    // localData = localData.sort(dynamicSort(metric))
+
+    return localData.map((entry, index) => {
+        // @ts-ignore
+        return <Cell key={entry.bot_id} fill={colors[index % colors.length]} opacity={.8} />
+    })
+
+}
+
+const BotPerformanceBubble = ({ data = [], defaultCurrency }: Type_BotPerformanceCharts) => {
+
+    const yWidth = yAxisWidth(defaultCurrency)
+    // const labelSpacing = (0 + Number(yWidth)) / 1.5 ?? 45
+    const [filter, setFilter] = useState('all');
 
     const defaultFilter = 'all';
     const localStorageFilterName = storageItem.charts.BotPerformanceBubble.filter
@@ -39,47 +70,14 @@ const BotPerformanceBubble = ({ title, data = [] }: Type_BotPerformanceCharts) =
         setStorageItem(localStorageFilterName, selectedFilter)
     };
 
-    const getPosition = (localData: Type_Bot_Performance_Metrics[]) => {
-        // localData = localData.sort(dynamicSort(metric))
-
-        return localData.map((entry, index) => {
-            // @ts-ignore
-            return <Cell key={entry.bot_id} fill={colors[index % colors.length]} opacity={.8} />
-        })
-
-    }
-
-    const filterData = (data: Type_Bot_Performance_Metrics[] ) => {
-        data = data.sort(dynamicSort('-total_profit'));
-        const length = data.length;
-        const fiftyPercent = length / 2
-        const twentyPercent = length / 5
-
-        if (filter === 'top20')  {
-            data = data.sort(dynamicSort('-total_profit'));
-            return data.filter( (bot, index) => index < twentyPercent)
-        } else if (filter === 'top50')  {
-            data = data.sort(dynamicSort('-total_profit'));
-            return data.filter( (bot, index) => index < fiftyPercent)
-        } else if (filter === 'bottom50')  {
-            data = data.sort(dynamicSort('total_profit'));
-            return data.filter( (bot, index) => index < fiftyPercent)
-        } else if (filter === 'bottom20') {
-            data = data.sort(dynamicSort('total_profit'));
-            return data.filter((bot, index) => index < twentyPercent)
-        }
-        return data;
-
-
-    }
 
     const renderChart = () => {
         if (data.length === 0) {
-            return (<NoData/>)
+            return (<NoData />)
         }
 
         // sort this by the index
-        const localData = filterData(data);
+        let localData = filterData([...data], filter);
 
         return (<ResponsiveContainer width="100%" height="100%" minHeight="400px">
 
@@ -93,7 +91,7 @@ const BotPerformanceBubble = ({ title, data = [] }: Type_BotPerformanceCharts) =
                     left: 20,
                 }}
             >
-                <CartesianGrid opacity={.3}/>
+                <CartesianGrid opacity={.3} />
 
                 {/*
                         X - Average Deal Hours
@@ -113,7 +111,7 @@ const BotPerformanceBubble = ({ title, data = [] }: Type_BotPerformanceCharts) =
 
 
                 >
-                    <Label value="Avg. Deal Hours" offset={0} position="insideBottom"/>
+                    <Label value="Avg. Deal Hours" offset={0} position="insideBottom" />
                 </XAxis>
 
                 <YAxis
@@ -122,45 +120,37 @@ const BotPerformanceBubble = ({ title, data = [] }: Type_BotPerformanceCharts) =
                     name="Total Profit"
                     allowDataOverflow={false}
                     allowDecimals={true}
+                    width={yWidth}
+                    tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)}
+                />
 
-                >
-                    <Label value="Total Profit"
-                           angle={-90}
-                           dy={0}
-                           dx={-20}
-                    />
-                </YAxis>
                 {/* Range is lowest number and highest number. */}
                 <ZAxis type="number" dataKey="number_of_deals"
-                       range={[Math.min(...localData.map(deal => deal.number_of_deals)) + 200, Math.max(...localData.map(deal => deal.number_of_deals)) + 200]}
-                       name="# of Deals Completed"/>
+                    range={[Math.min(...localData.map(deal => deal.number_of_deals)) + 200, Math.max(...localData.map(deal => deal.number_of_deals)) + 200]}
+                    name="# of Deals Completed" />
 
 
-                <Tooltip
-                    cursor={{strokeDasharray: '3 3'}}
-                    // @ts-ignore
-                    // TODOD - pass props properly to the custom tool tip
-                    content={<CustomTooltip/>}
-                />
+                {/* TODO - pass the custom props down properly here.  */}
+                {/* @ts-ignore */}
+                <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
                 <Scatter name="Deal Performance" data={localData}>
-                    {/* <LabelList dataKey="pair" /> */}
-
-                    {
-                        getPosition(localData)
-                    }
+                    {  getPosition(localData)  }
                 </Scatter>
             </ScatterChart>
         </ResponsiveContainer>)
     }
 
     return (
-        <div className="boxData" >
+        <div className="boxData" style={{ position: "relative" }}>
+            <p style={{ position: 'absolute', left: `-1.5em`, top: '45%', margin: 0, transform: 'rotate(-90deg)' }}>Total Profit</p>
+
             <div style={{ position: "relative" }}>
-                <h3 className="chartTitle">{title}</h3>
+                <h3 className="chartTitle">Bot Performance Scatter</h3>
                 <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>
                     <FormControl  >
                         <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
                         <Select
+                            variant="standard"
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={filter}
@@ -186,20 +176,20 @@ const BotPerformanceBubble = ({ title, data = [] }: Type_BotPerformanceCharts) =
 }
 
 
-function CustomTooltip({ active, payload}: Type_Tooltip) {
+function CustomTooltip({ active, payload, formatter }: Type_Tooltip) {
     if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
 
     const data: Type_Bot_Performance_Metrics = payload[0].payload
-    const {total_profit, bot_name, avg_deal_hours, bought_volume, number_of_deals} = data
+    const { total_profit, bot_name, avg_deal_hours, bought_volume, number_of_deals } = data
     return (
         <div className="tooltip">
             <h4>{bot_name}</h4>
-            <p><strong>Total Profit:</strong> ${parseNumber(total_profit)}</p>
+            <p><strong>Total Profit:</strong> {formatter(total_profit)}</p>
             <p><strong>Average Deal Hours:</strong> {parseNumber(avg_deal_hours, 2)}</p>
             <p><strong># of Deals:</strong> {number_of_deals}</p>
-            <p><strong>Bought Volume:</strong>{parseNumber(bought_volume)}</p>
+            <p><strong>Bought Volume:</strong> {formatter(bought_volume)}</p>
 
         </div>
     )

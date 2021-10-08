@@ -1,11 +1,11 @@
 const path = require('path');
 
 module.exports = {
-  externals: {'better-sqlite3': 'commonjs2 better-sqlite3', '3commas-api-node': 'commonjs2 3commas-api-node' },
+  externals: {'better-sqlite3': 'commonjs2 better-sqlite3'},
   // Build Mode
   mode: 'development',
   // Electron Entrypoint
-  entry: './src/main.ts',
+  entry: './src/main/main.ts',
   target: 'electron-main',
   resolve: {
     alias: {

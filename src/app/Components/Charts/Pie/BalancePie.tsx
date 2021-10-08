@@ -1,35 +1,44 @@
 
 import React from 'react';
 import { PieChart, Pie, Legend, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { parseNumber } from '@/utils/number_formatting';
-import { Type_Tooltip} from '@/types/Charts'
-import { Type_MetricData } from '@/types/3Commas';
+import { currencyTooltipFormatter } from '../formatting';
+
+//types
+import type { Type_Tooltip } from '@/types/Charts'
+import type { Type_MetricData } from '@/types/3Commas';
+import type { defaultCurrency } from '@/types/config';
 
 
-const COLORS = ['var(--color-primary-light25)', 'var(--color-secondary-light25)', 'var(--color-CTA)', '#FF8042'];
 
 interface Type_PieMetrics {
     title: string
     metrics: Type_MetricData
+    defaultCurrency: defaultCurrency
 }
-const BalancePie = ({ title, metrics }:Type_PieMetrics) => {
+const BalancePie = ({ title, metrics, defaultCurrency }: Type_PieMetrics) => {
 
 
-    const { availableBankroll, totalBoughtVolume, on_orders } = metrics
+    const { availableBankroll, totalBoughtVolume, on_orders, totalBankroll } = metrics
     const chartData = [{
         name: 'Available',
         metric: availableBankroll,
-        key: 1
+        percent: (availableBankroll / totalBankroll) * 100,
+        key: 1,
+        color: 'var(--chart-metric2-color)'
     },
     {
         name: 'Limit Orders',
         metric: on_orders,
-        key: 2
+        percent: (on_orders / totalBankroll) * 100,
+        key: 2,
+        color: 'var(--chart-metric1-color)'
     },
     {
         name: "Purchased",
         metric: totalBoughtVolume,
-        key: 3
+        percent: (totalBoughtVolume / totalBankroll) * 100,
+        key: 3,
+        color: 'var(--chart-metric3-color)'
     }
 
     ]
@@ -51,18 +60,16 @@ const BalancePie = ({ title, metrics }:Type_PieMetrics) => {
                     <PieChart width={300}>
                         <Pie
                             data={chartData} dataKey="metric" cx="50%" cy="50%" outerRadius={85}
-                            style={{outline: 'none'}}
-                            >
-                            {chartData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke='none'/>
+                            style={{ outline: 'none' }}
+                        >
+                            {chartData.map((entry) => (
+                                <Cell key={`cell-${entry.key}`} fill={entry.color} stroke='none' />
                             ))}
                         </Pie>
                         <Legend verticalAlign="bottom" height={36} />
-                        <Tooltip
-                            // @ts-ignore
-                            // TODO - pass custom props properly to tool tips
-                            content={<CustomTooltip />}
-                        />
+                        {/* TODO - pass the custom props down properly here.  */}
+                        {/* @ts-ignore */}
+                        <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />}/>
                     </PieChart>
                 </ResponsiveContainer>
 
@@ -78,15 +85,17 @@ const BalancePie = ({ title, metrics }:Type_PieMetrics) => {
 
 
 
-function CustomTooltip({ active, payload }: Type_Tooltip) {
+function CustomTooltip({ active, payload, formatter }: Type_Tooltip) {
     if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
-    const {name, value} = payload[0]
+
+    const { name, metric, percent } = payload[0].payload
     return (
         <div className="tooltip">
             <h4>{name}</h4>
-            <p>${parseNumber(value)}</p>
+            <p>{formatter(metric)}</p>
+            <p>{(percent) ? percent.toFixed(2) : 0}%</p>
         </div>
     )
 }

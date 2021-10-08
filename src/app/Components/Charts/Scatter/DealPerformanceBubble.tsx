@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis } from 'recharts';
-import { InputLabel, MenuItem, FormControl, Select} from '@material-ui/core';
+import { InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 
 import { Type_Tooltip, Type_DealPerformanceCharts } from '@/types/Charts'
 import { Type_Query_PerfArray } from '@/types/3Commas';
@@ -9,54 +9,86 @@ import NoData from '@/app/Pages/Stats/Components/NoData';
 import { dynamicSort } from '@/utils/helperFunctions';
 
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+import {currencyTooltipFormatter} from '@/app/Components/Charts/formatting'
 
-const colors = ["#cfe1f2", "#b5d4e9", "#93c3df", "#6daed5", "#4b97c9", "#2f7ebc", "#1864aa", "#0a4a90", "#08306b"]
+const colors = ["#DBEAFE", "#BFDBFE", "#93C5FD", "#60A5FA", "#3B82F6", "#2563EB", "#1D4ED8", "#1E40AF", "#1E3A8A"]
 
+const getPosition = (data: Type_Query_PerfArray[], metric: string) => {
+    let localData = [...data].sort(dynamicSort(metric))
+
+    const length = localData.length
+
+    return localData.map((entry, index) => {
+        return <Cell key={entry.performance_id} fill={colors[Math.round((index / length) * (colors.length - 1))]} opacity={.8} />
+    })
+
+}
+
+const filterData = (data: Type_Query_PerfArray[], filter: String) => {
+    let localData = [...data].sort(dynamicSort('-total_profit'));
+    const length = localData.length;
+    const fiftyPercent = length / 2
+    const twentyPercent = length / 5
+
+    if (filter === 'top20') {
+        localData = localData.sort(dynamicSort('-total_profit'));
+        return localData.filter((deal, index) => index < twentyPercent)
+    } else if (filter === 'top50') {
+        localData = localData.sort(dynamicSort('-total_profit'));
+        return localData.filter((deal, index) => index < fiftyPercent)
+    } else if (filter === 'bottom50') {
+        localData = localData.sort(dynamicSort('total_profit'));
+        return localData.filter((deal, index) => index < fiftyPercent)
+    } else if (filter === 'bottom20') {
+        localData = localData.sort(dynamicSort('total_profit'));
+        return localData.filter((deal, index) => index < twentyPercent)
+    }
+    return localData;
+}
+
+const defaultFilter = 'all';
+const defaultSort = 'percentTotalProfit';
 
 /**
  * TODO
  * - Look at combining this chart by "pair-BO" to minimize bubbles on the chart.
  */
-const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts) => {
+const DealPerformanceBubble = ({ data = [], defaultCurrency }: Type_DealPerformanceCharts) => {
 
-    const defaultSort = 'percentTotalProfit';
-    const localStorageSortName = storageItem.charts.DealPerformanceBubble.sort
+    
+    const {filter: storedFilter, sort: storedSort} = storageItem.charts.DealPerformanceBubble
 
-    const [sort, setSort] = useState(defaultSort);
+    // const [sort, setSort] = useState(defaultSort);
+
+    const [filter, setFilter] = useState(defaultFilter);
 
     useEffect(() => {
-        const getSortFromStorage = getStorageItem(localStorageSortName);
-        setSort((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
+        const getFilterFromStorage = getStorageItem(storedFilter);
+        setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
+
+        // const getSortFromStorage = getStorageItem(storedSort);
+        // setSort((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
     }, [])
 
+    // const handleChange = (event: any) => {
+    //     const selectedSort = (event.target.value != undefined) ? event.target.value : defaultSort;
+    //     setSort(selectedSort);
+    //     setStorageItem(storedSort, selectedSort)
+    // };
+
     const handleChange = (event: any) => {
-        const selectedSort = (event.target.value != undefined) ? event.target.value : defaultSort;
-        setSort(selectedSort);
-        setStorageItem(localStorageSortName, selectedSort)
+        const selectedFilter = (event.target.value != undefined) ? event.target.value : defaultFilter;
+        setFilter(selectedFilter);
+        setStorageItem(storedFilter, selectedFilter)
     };
 
-
-    const getPosition = (data: Type_Query_PerfArray[], metric: string) => {
-        data = data.sort(dynamicSort(metric))
-
-        const length = data.length
-
-        return data.map((entry, index) => {
-
-            // @ts-ignore
-
-            return <Cell key={entry.performance_id} fill={colors[Math.round((index / length) * (colors.length - 1))]} opacity={.8}/>
-        })
-
-    }
 
 
     const renderChart = () => {
         if (data.length === 0) {
-            return (<NoData/>)
+            return (<NoData />)
         }
-        const newData = data
-            .filter(row => row.percentTotalVolume > 1.5)
+        let localData = filterData([...data], filter);
 
         return (
             <ResponsiveContainer width="100%" height="100%" minHeight="400px">
@@ -70,7 +102,7 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
                         left: 20,
                     }}
                 >
-                    <CartesianGrid opacity={.3}/>
+                    <CartesianGrid opacity={.3} />
                     <XAxis
                         type="number"
                         dataKey="averageDealHours"
@@ -80,7 +112,7 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
 
                         allowDataOverflow={true}
                     >
-                        <Label value="Average Deal Hours" offset={0} position="insideBottom"/>
+                        <Label value="Average Deal Hours" offset={0} position="insideBottom" />
                     </XAxis>
 
                     <YAxis
@@ -89,50 +121,40 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
                         // width={100}
                         name="Avg. Hourly Profit %"
                         allowDataOverflow={true}
-                    >
-                        <Label value="Avg. Hourly Profit %" angle={-90}
-                               dy={0}
-                               dx={-30}
-                        />
+                    />
 
-                    </YAxis>
                     {/* Range is lowest number and highest number. */}
                     <ZAxis
                         type="number"
                         dataKey="total_profit"
-                        range={[
-                            Math.min(...newData.map(deal => deal.total_profit)) * 4,
-                            Math.max(...newData.map(deal => deal.total_profit)) * 4
-                        ]}
-                        name="Bought Volume"/>
 
+                        // TODO - Look at making this work better for currencies that are below zero.
+                        // range={[ Math.floor(Math.min(...localData.map(deal => deal.total_profit))) * 4, Math.ceil(Math.max(...localData.map(deal => deal.total_profit))) * 4]}
+                        name="Total Profit" />
 
-                    <Tooltip
-                        cursor={{strokeDasharray: '3 3'}}
-                        // @ts-ignore
+                    {/* TODO - pass the custom props down properly here.  */}
+                    {/* @ts-ignore */}
+                    <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
 
-                        // TODOD - pass props properly to the custom tool tip
-                        content={<CustomTooltip/>}
-                    />
-                    <Scatter name="Deal Performance" data={newData} isAnimationActive={false}>
-                        {/* <LabelList dataKey="pair" /> */}
+                    <Scatter name="Deal Performance" data={localData} isAnimationActive={false}>
 
-                        {
-                            getPosition(newData, sort)
-                        }
+                        {getPosition(localData, defaultSort)}
                     </Scatter>
                 </ScatterChart>
             </ResponsiveContainer>)
     }
 
     return (
-        <div className="boxData">
+        <div className="boxData" style={{ position: "relative" }}>
+            <p style={{ position: 'absolute', left: '-2.5em', top: '45%', margin: 0, transform: 'rotate(-90deg)' }}>Avg. Hourly Profit %</p>
+
             <div style={{ position: "relative" }}>
-                <h3 className="chartTitle">{title}</h3>
+                <h3 className="chartTitle">Deal Performance Scatter</h3>
                 <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>
-                    <FormControl  >
+                    {/* <FormControl  >
                         <InputLabel id="demo-simple-select-label">Color By</InputLabel>
                         <Select
+                            variant="standard"
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={sort}
@@ -142,6 +164,21 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
                             <MenuItem value="percentTotalProfit">Profit</MenuItem>
                             <MenuItem value="percentTotalVolume">Bought Volume</MenuItem>
                             <MenuItem value="number_of_deals">Total # of Deals</MenuItem>
+                        </Select>
+                    </FormControl> */}
+                    <FormControl  >
+                        <InputLabel>Filter By</InputLabel>
+                        <Select
+                            variant="standard"
+                            value={filter}
+                            onChange={handleChange}
+                            style={{ width: "150px" }}
+                        >
+                            <MenuItem value="all">All</MenuItem>
+                            <MenuItem value="top20">Top 20%</MenuItem>
+                            <MenuItem value="top50">Top 50%</MenuItem>
+                            <MenuItem value="bottom50">Bottom 50%</MenuItem>
+                            <MenuItem value="bottom20">Bottom 20%</MenuItem>
                         </Select>
                     </FormControl>
                 </div>
@@ -156,7 +193,7 @@ const DealPerformanceBubble = ({ title, data = [] }: Type_DealPerformanceCharts)
 }
 
 
-function CustomTooltip({ active, payload}: Type_Tooltip) {
+function CustomTooltip({ active, payload, formatter }: Type_Tooltip) {
     if (!active || payload.length == 0 || payload[0] == undefined) {
         return null
     }
@@ -174,11 +211,11 @@ function CustomTooltip({ active, payload}: Type_Tooltip) {
         <div className="tooltip">
             <h4>{pair}</h4>
             <p><strong>Bot:</strong> {bot_name}</p>
-            <p><strong>Total Profit:</strong> ${parseNumber(total_profit)}</p>
+            <p><strong>Total Profit:</strong> {formatter(total_profit)}</p>
             <p><strong>Average Deal Hours:</strong> {parseNumber(averageDealHours, 2)}</p>
             <p><strong>Average Hourly Profit Percent:</strong> {parseNumber(averageHourlyProfitPercent, 8)}%</p>
-            <p><strong># of Deals:</strong>{number_of_deals}</p>
-            <p><strong>Bought Volume:</strong>{parseNumber(bought_volume)}</p>
+            <p><strong># of Deals:</strong> {number_of_deals}</p>
+            <p><strong>Bought Volume:</strong> {formatter(bought_volume)}</p>
 
         </div>
     )

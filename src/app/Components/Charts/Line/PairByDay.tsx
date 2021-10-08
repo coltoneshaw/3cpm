@@ -1,108 +1,107 @@
 import React, { useEffect, useState } from 'react';
+import moment from "moment";
+import { ComposedChart, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line } from 'recharts';
+import PairSelector from './Components/PairSelector'
 
 
-import { Select, InputLabel, FormControl, MenuItem, Checkbox, ListItemText, Input} from '@material-ui/core';
-import { ComposedChart, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line} from 'recharts';
+import { useAppSelector } from '@/app/redux/hooks';
+import { getLang } from '@/utils/helperFunctions';
+const lang = getLang()
+import { yAxisWidth, currencyTickFormatter, currencyTooltipFormatter } from '@/app/Components/Charts/formatting'
 
-import { getLang} from '@/utils/helperFunctions';
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
-const lang = getLang()
 
-import { Type_Tooltip } from '@/types/Charts';
-import { getSelectPairDataByDate } from '@/app/Features/3Commas/3Commas';
+import type { Type_Tooltip } from '@/types/Charts';
+import type { defaultCurrency, Type_Profile } from '@/types/config'
+import type { DateRange } from "@/types/Date";
 
-const colors = ["#374151", "#B91C1C", "#B45309", "#047857", "#1D4ED8", "#4338CA", "#6D28D9", "#BE185D"]
+
+
+import { getSelectPairDataByDate, getFiltersQueryString } from '@/app/Features/3Commas/3Commas';
+
+const colors = ['var(--chart-metric1-color)', 'var(--chart-metric2-color)', 'var(--chart-metric3-color)', 'var(--chart-metric4-color)', 'var(--chart-metric5-color)', 'var(--chart-metric6-color)', 'var(--chart-metric7-color)', 'var(--chart-metric8-color)']
 
 interface pairByDate {
     date: string
     pair: string
 }
 
+// TODO - should be moved to the redux state.
+const getPairList = async (updatePairs: Function, updatePairFilters: Function, wheres: string, currentProfile: Type_Profile) => {
 
-const PairPerformanceByDate = () => {
+    const filtersQueryString = await getFiltersQueryString(currentProfile);
+    const { currencyString, accountIdString, currentProfileID } = filtersQueryString;
 
+
+    // selecting the pair data and sorting by profit for easier viewing.
+    //@ts-ignore
+    electron.database.query(`select pair, sum(actual_profit) as total_profit from deals WHERE ${wheres} and  profile_id = '${currentProfileID}'  and from_currency in (${currencyString}) and account_id in (${accountIdString}) group by pair order by total_profit desc;`)
+        .then((result: { pair: string }[]) => {
+            updatePairs(result.map(pair => ({ pair: pair.pair, opacity: 1 })))
+            let storedPairs = getStorageItem(storageItem.charts.pairByDateFilter)
+            if (!storedPairs) {
+                storedPairs = result.map(pair => pair.pair).filter((pair, index) => index < 2)
+            }
+            updatePairFilters(storedPairs)
+        })
+}
+
+
+const PairPerformanceByDate = ({ datePair, defaultCurrency }: { datePair: DateRange, defaultCurrency: defaultCurrency }) => {
+    const { currentProfile } = useAppSelector(state => state.config);
     const [localData, updateLocalData] = useState<pairByDate[]>([]);
     const [pairs, updatePairs] = useState<{ pair: string, opacity: number }[]>([])
     const [pairFilters, updatePairFilters] = useState<string[]>([]);
 
+    const yWidth = yAxisWidth(defaultCurrency)
+    useEffect(() => {
 
-    const handleChange = (event: any) => {
+        let from = ``
+        let to = ``
 
-        let filter = event.target.value
-        // preventing more than 8 items from showing at any given time.
-        if (filter.length > 8) filter = filter.filter((pair: string, index: number) => index > 0)
+        if (datePair.from !== null) {
+            let fromDate = moment.utc(datePair.from)
+                .subtract(datePair.from.getTimezoneOffset(), "minutes")
+                .startOf("day")
+                .toISOString()
 
-        updatePairFilters([...filter]);
-        setStorageItem(storageItem.charts.pairByDateFilter, [...filter])
-    };
+            from = `closed_at >= '${fromDate}'`
+        }
+
+        if (datePair.to !== null) {
+            let toDate = moment.utc(datePair.to)
+                .subtract(datePair.to.getTimezoneOffset(), "minutes")
+                .add(1, "days")
+                .startOf("day")
+                .toISOString()
+
+            to = `closed_at < '${toDate}'`
+        }
+
+        const wheres = ["1=1", from, to].filter(value => value.length > 0).join(' and ')
+
+        getPairList(updatePairs, updatePairFilters, wheres, currentProfile)
+
+    }, [datePair, currentProfile])
 
     useEffect(() => {
 
-        // selecting the pair data and sorting by profit for easier viewing.
-        //@ts-ignore
-        electron.database.query('select pair, sum(actual_profit) as total_profit from deals group by pair order by total_profit desc;')
-            .then((result: { pair: string }[]) => {
-                updatePairs(result.map(pair => ({ pair: pair.pair, opacity: 1 })))
-
-                let storedPairs = getStorageItem(storageItem.charts.pairByDateFilter)
-
-                if (!storedPairs) {
-                    storedPairs = result.map(pair => pair.pair).filter((pair, index) => index < 2)
-                }
-                updatePairFilters(storedPairs)
+        getSelectPairDataByDate(currentProfile, pairFilters, datePair)
+            .then(data => {
+                if (!data) return
+                updateLocalData(data)
             })
-
-    }, [])
-
-    useEffect(() => {
-        getSelectPairDataByDate(pairFilters)
-            .then(data => updateLocalData(data))
-    }, [pairFilters])
+    }, [pairFilters, datePair])
 
     return (
 
         <div className="boxData stat-chart ">
             <div style={{ position: "relative" }}>
                 <h3 className="chartTitle">Pair by Date</h3>
-
-                <div style={{ position: "absolute", left: 0, top: 0, height: "50px", zIndex: 5 }}>
-                    <FormControl>
-                        <InputLabel>Show</InputLabel>
-
-                        <Select
-                            multiple
-                            value={pairFilters}
-                            onChange={handleChange}
-                            input={<Input />}
-                            // @ts-ignore
-                            renderValue={() => (pairFilters.length > 0) ? pairFilters.join() : ""}
-                            style={{ width: "150px" }}
-
-                            MenuProps={{
-                                MenuListProps: {
-                                    style: {
-                                        display: 'grid',
-                                        gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
-                                    }
-                                }
-                            }}
+                <PairSelector pairFilters={pairFilters} updatePairFilters={updatePairFilters} pairs={pairs} />
 
 
-                        >
-                            {
-                                pairs.map(pair => (
-                                    <MenuItem value={pair.pair} key={pair.pair}>
-                                        <Checkbox checked={pairFilters.indexOf(pair.pair) > - 1} />
-                                        <ListItemText primary={pair.pair} />
-                                    </MenuItem>
-                                ))
-                            }
-
-                        </Select>
-                    </FormControl>
-
-                </div>
             </div>
 
 
@@ -131,6 +130,8 @@ const PairPerformanceByDate = () => {
                             })
                         }}
 
+
+
                         onMouseLeave={() => {
                             updatePairs(prevState => {
                                 return prevState.map(p => ({
@@ -149,7 +150,7 @@ const PairPerformanceByDate = () => {
                         minTickGap={(localData.length > 6) ? 40 : 0}
                         tickFormatter={(str) => {
                             if (str == 'auto' || str == undefined) return ""
-                            return new Date(str).toLocaleString(lang, { month: '2-digit', day: '2-digit' })
+                            return new Date(str).toLocaleString(lang, { month: '2-digit', day: '2-digit', timeZone: 'UTC' })
                         }}
                     />
 
@@ -159,23 +160,23 @@ const PairPerformanceByDate = () => {
                         tickCount={6}
                         type="number"
                         name="Profit"
+                        width={yWidth}
+                        allowDecimals={true}
+                        tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)}
                     />
 
                     {/* TODO - pass the custom props down properly here.  */}
                     {/* @ts-ignore */}
-                    <Tooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3' }} />
+                    <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
 
 
-                    {
-                        pairFilters.map((pair, index) => {
-                            const filteredPair = pairs.find(p => p.pair == pair)
+                    {pairFilters.map((pair, index) => {
+                        const filteredPair = pairs.find(p => p.pair == pair)
 
-                            const opacity = (filteredPair != undefined && filteredPair.opacity != undefined) ? filteredPair.opacity : 1;
-                            return <Line name={pair} type="monotone" dataKey={pair} stroke={colors[index]} dot={false} strokeWidth={1.75} opacity={opacity} />
-                            // return <Area type="monotone" name={pair} stackId="1" dataKey={pair} fill={colors[index]} stroke={colors[index]} opacity={opacity} />
+                        const opacity = (filteredPair != undefined && filteredPair.opacity != undefined) ? filteredPair.opacity : 1;
+                        return <Line name={pair} type="monotone" dataKey={pair} stroke={colors[index]} dot={false} strokeWidth={1.75} opacity={opacity} />
 
-                        })
-                    }
+                    })}
 
 
                 </ComposedChart>
@@ -187,20 +188,20 @@ const PairPerformanceByDate = () => {
 }
 
 
-function CustomTooltip({ active, payload = [], label }: Type_Tooltip) {
-    if (!active || payload.length == 0 || payload[0] == undefined) {
+function CustomTooltip({ active, payload = [], label, formatter }: Type_Tooltip) {
+    if (!active || !payload || !payload[0]) {
         return <></>
     }
 
 
     const returnPairData = () => {
-        const pairs = {...payload[0].payload}
+        const pairs = { ...payload[0].payload }
         delete pairs.date;
 
         if (pairs == {}) return ''
 
         return Object.keys(pairs).map(pair => {
-            return <p><strong>{pair}</strong> ${pairs[pair].toLocaleString()}</p>
+            return <p><strong>{pair}</strong> - Profit: {formatter(pairs[pair])}</p>
         })
     }
 
@@ -214,9 +215,7 @@ function CustomTooltip({ active, payload = [], label }: Type_Tooltip) {
     return (
         <div className="tooltip">
             <h4>{date}</h4>
-            {
-                returnPairData()
-            }
+            {returnPairData()}
         </div>
     )
 }

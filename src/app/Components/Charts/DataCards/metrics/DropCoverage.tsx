@@ -19,9 +19,7 @@ const Card_DropCoverage = ({metric}:Type_Card) => {
     const title = "Drop Coverage %"
     const message = descriptions.calculations.dropCoverage
     const key = title.replace(/\s/g, '')
-    return (
-        <Card title={title} message={message} key={key} metric={parseNumber( metric, 2) + "%"} />
-    )
+    return (<Card title={title} message={message} key={key} metric={ {metric: parseNumber( metric, 2), symbol: '%'} } />)
 }
 
 export default Card_DropCoverage;

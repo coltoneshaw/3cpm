@@ -1,62 +1,46 @@
-import { getTime, parseISO, formatISO, isValid } from 'date-fns'
-import React, { useState, useEffect} from 'react';
-import DateFnsUtils from '@date-io/date-fns';
+import { getTime, parseISO, formatISO, isValid, startOfDay, addMinutes } from 'date-fns'
+import { utcToZonedTime } from 'date-fns-tz';
 
+import React, { useState, useEffect } from 'react';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import { TextField, FormControl } from '@mui/material';
 
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
+import type { defaultTempProfile } from '@/app/Pages/Settings/Settings'
 
-import { useGlobalState } from '@/app/Context/Config';
+export default function StartDatePicker({ tempProfile, updateTempProfile }: { tempProfile: typeof defaultTempProfile, updateTempProfile: CallableFunction }) {
 
-
-
-
-export default function StartDatePicker() {
-  const state = useGlobalState()
-  const { state: { date, updateDate }} = state
-
-  const [localDate, setLocalDate] = useState<string>();
-
-  const handleDateChange = (date: any) => {
+  const handleDateChange = (date: Date | null) => {
     if (date != undefined && isValid(new Date(date))) {
-      setLocalDate(date)
-
-      // getting the shortform utc date, stripping and converting to ISO
-      const dateString = formatISO(date, { representation: 'date' })
-      const utcDate = dateString + 'T00:00:00Z'
-      updateDate(getTime(parseISO(utcDate)));
+      const newDate = startOfDay(addMinutes(new Date(date), new Date().getTimezoneOffset())).getTime();
+      updateTempProfile((prevState: typeof defaultTempProfile) => {
+        let newState = { ...prevState }
+        newState.startDate = newDate
+        return newState
+    })
     }
-
   };
 
-  // converting the date into a ISO date and storing it.
-  useEffect(() => {
+  const modifyDate = (date: number) => {
     const adjustedTime = date + ((new Date()).getTimezoneOffset() * 60000)
-    const dateString = new Date(adjustedTime).toUTCString()
-    setLocalDate(dateString)
-  }, [])
+    return new Date(adjustedTime).toUTCString()
+  }
 
 
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <KeyboardDatePicker
-        disableToolbar
-        variant="inline"
-        format="MM/dd/yyyy"
-        margin="normal"
-        id="date-picker-inline"
-        label="Stats Start Date"
-        value={localDate}
-        onChange={handleDateChange}
-        KeyboardButtonProps={{
-          'aria-label': 'change date',
-        }}
-        style={{
-          width: "100%"
-        }}
-      />
-    </MuiPickersUtilsProvider>
+    <FormControl style={{ width: "100%"}} className="settings-datePicker">
+        <DesktopDatePicker
+          label="Stats Start Date"
+          views={['day']}
+          inputFormat="MM/dd/yyyy"
+          value={tempProfile.startDate}
+          onChange={handleDateChange}
+          renderInput={(params) => (
+            <TextField {...params} helperText={params?.inputProps?.placeholder} />
+          )}
+          className="desktopPicker"
+        />
+
+    </FormControl>
+
   );
 }

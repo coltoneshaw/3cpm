@@ -17,9 +17,8 @@ const Card_ActiveDeals = ({metric}:Type_Card) => {
     const title = "Active Deals"
     const message = descriptions.calculations.activeDeals
     const key = title.replace(/\s/g, '')
-    return (
-        <Card title={title} message={message} key={key} metric={metric} />
-    )
+    return (<Card title={title} message={message} key={key} metric={{ metric: metric, symbol: '' }} />)
+
 }
 
 export default Card_ActiveDeals;

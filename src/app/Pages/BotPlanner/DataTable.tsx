@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Switch, Checkbox } from '@material-ui/core';
-import { Delete as DeleteIcon } from '@material-ui/icons';
+import { Switch, Checkbox } from '@mui/material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 import styled from 'styled-components'
 
-import { useGlobalData } from '@/app/Context/DataContext';
+import { useAppSelector } from '@/app/redux/hooks';
 import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+
+import {formatCurrency} from'@/utils/granularity'
 
 import { parseNumber } from '@/utils/number_formatting';
 import {
@@ -16,9 +18,6 @@ import {
 } from '@/utils/formulas';
 
 import { Type_Query_bots } from '@/types/3Commas'
-
-// import { DataGrid } from '@material-ui/data-grid';
-// import { MuiClassObject } from '@/app/Context/MuiClassObject'
 
 import { CustomTable } from '@/app/Components/DataTable/Index'
 
@@ -140,7 +139,6 @@ const EditableCell = ({
 
   useEffect(() => {
     setSize(String(value).length * 1.5)
-    // console.log({initialValue, value, il: initialValue.length, valuel: value.length})
   }, [value, initialValue])
 
   // If the initialValue is changed external, sync it up with our state
@@ -148,7 +146,7 @@ const EditableCell = ({
     setValue(String(initialValue))
   }, [initialValue])
 
-  return <span style={{ display: 'flex', justifyContent: 'left' }}><input value={value} onChange={onChange} onBlur={onBlur} size={size} style={{ textAlign: 'left' }} />{ending()}</span>
+  return <span style={{ display: 'flex', justifyContent: 'center' }}><input value={value} onChange={onChange} onBlur={onBlur} size={size} style={{ textAlign: 'center' }} />{ending()}</span>
 }
 
 interface Type_DataTable {
@@ -158,10 +156,7 @@ interface Type_DataTable {
 const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
   const localStorageSortName = storageItem.tables.BotPlanner.sort;
 
-  const state = useGlobalData()
-
-  const { data: { metricsData: { totalBankroll } } } = state;
-
+  const { metricsData: {totalBankroll}} = useAppSelector(state => state.threeCommas);
 
   // handling this locally because it does not need to be saved yet.
   const handleOnOff = (e: any) => {
@@ -261,7 +256,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         accessor: 'name',
         Cell: EditableCell,
         style: {
-          textAlign: 'left',
+          textAlign: 'center',
           paddingLeft: '1em'
         }
       },
@@ -269,10 +264,9 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         Header: 'Pairs',
         accessor: 'pairs',
         style: {
-          textAlign: 'left'
+          textAlign: 'center'
         },
         Cell: ({ cell }: any) => {
-
           if (cell.value.length > 20) {
             return 'Many'
           }
@@ -285,7 +279,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         accessor: 'from_currency',
         className:"monospace-cell",
         style: {
-          textAlign: 'left'
+          textAlign: 'center'
         }
       },
       {
@@ -294,7 +288,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         Cell: EditableCell,
         className:"monospace-cell",
         style: {
-          textAlign: 'left'
+          textAlign: 'center'
         }
       },
       {
@@ -303,7 +297,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         Cell: EditableCell,
         className:"monospace-cell",
         style: {
-          textAlign: 'left'
+          textAlign: 'center'
         }
       },
       {
@@ -312,7 +306,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         Cell: EditableCell,
         className:"monospace-cell",
         style: {
-          textAlign: 'left'
+          textAlign: 'center'
         }
       },
       {
@@ -321,7 +315,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         Cell: EditableCell,
         className:"monospace-cell",
         style: {
-          textAlign: 'left'
+          textAlign: 'center'
         }
       },
       {
@@ -330,7 +324,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         Cell: EditableCell,
         className:"monospace-cell",
         style: {
-          textAlign: 'left'
+          textAlign: 'center'
         }
       },
       {
@@ -339,7 +333,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         Cell: EditableCell,
         className:"monospace-cell",
         style: {
-          textAlign: 'left'
+          textAlign: 'center'
         }
       },
       {
@@ -348,7 +342,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         Cell: EditableCell,
         className:"monospace-cell",
         style: {
-          textAlign: 'left'
+          textAlign: 'center'
         }
       },
       {
@@ -356,41 +350,49 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         accessor: 'max_active_deals',
         className:"monospace-cell",
         style: {
-          textAlign: 'left'
+          textAlign: 'center'
         }
       },
       {
         Header: 'Deviation',
         accessor: 'price_deviation',
-        Cell: ({ cell }: any) => <span className="monospace-cell">{cell.value} %</span>,
+        Cell: ({ cell }: any) => <span className="monospace-cell">{cell.value}%</span>,
         style: {
-          textAlign: 'left'
+          textAlign: 'center'
         }
       },
       {
         Header: 'Deal Funds',
         accessor: 'max_funds_per_deal',
-        Cell: ({ cell }: any) => <span className="monospace-cell">{parseNumber(cell.value)}</span>,
+        Cell: ({ cell }: any) => < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>,
         style: {
-          textAlign: 'left'
+          textAlign: 'center'
         }
 
       },
       {
         Header: 'Bot Funds',
         accessor: 'max_funds',
-        Cell: ({ cell }: any) => <span className="monospace-cell">{parseNumber(cell.value)}</span>,
+        Cell: ({ cell }: any) =>  < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>,
         style: {
-          textAlign: 'left'
+          textAlign: 'center'
         }
       },
 
       {
         Header: 'Coverage',
         accessor: 'maxCoveragePercent',
-        Cell: ({ cell }: any) => <span className="monospace-cell">{cell.value} %</span>,
+        Cell: ({ cell }: any) => <span className="monospace-cell">{cell.value}%</span>,
         style: {
-          textAlign: 'left'
+          textAlign: 'center'
+        }
+      },
+      {
+        Header: 'Risk %',
+        accessor: 'riskPercent',
+        Cell: ({ cell }: any) => <span className="monospace-cell">{parseNumber(cell.value * 100)}%</span>,
+        style: {
+          textAlign: 'center'
         }
       },
       {
@@ -398,7 +400,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         accessor: 'maxSoReached',
         className:"monospace-cell",
         style: {
-          textAlign: 'left',
+          textAlign: 'center',
           width: '2em',
           maxWidth: '5em'
         }
@@ -427,7 +429,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
 
   return (
 
-      <div className="boxData flex-column" style={{padding: '2em 2em 2em 2em', overflow: 'hidden'}}>      {/* <div className="dataTable"  > */}
+      <div className="boxData flex-column" style={{padding: '1em', overflow: 'hidden'}}>
         <Styles>
           <CustomTable
             columns={columns}

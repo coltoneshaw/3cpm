@@ -1,7 +1,7 @@
 
 
 .dealsTable{
-    width: 100%
+    width: 100%;
 }
 
 .tooltip-activeDeals {
@@ -82,3 +82,19 @@
       }
 
   }
+
+.dcaCalcTable tr:hover {
+              background-color: var(--color-secondary-light25);
+              color: var(--color-text-darkbackground);
+        
+          }
+
+
+.summaryRow td {
+  border-top: 1px solid lightgray;
+}
+
+    
+
+  
+    

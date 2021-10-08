@@ -2,11 +2,13 @@ import React from "react";
 
 import Card from "../Card";
 import descriptions from "@/descriptions";
-import { parseNumber } from '@/utils/number_formatting'
+import {formatCurrency, supportedCurrencies} from'@/utils/granularity'
 
 interface Type_Card {
     metric: number
     additionalData: { on_orders: number, totalBoughtVolume:number }
+    currency: (keyof typeof supportedCurrencies)[]
+
 }
 
 /**
@@ -14,14 +16,14 @@ interface Type_Card {
  * @param metric - accepts the activeDealCount metric from the global data store.
  * @param additionalData - requires on_orders and totalBoughtVolume to be passed in.
  */
-const Card_totalInDeals = ({metric, additionalData: { on_orders, totalBoughtVolume }}:Type_Card) => {
+const Card_totalInDeals = ({metric, currency, additionalData: { on_orders, totalBoughtVolume }}:Type_Card) => {
 
     const title = "In deals"
-    const message = descriptions.calculations.totalInDeals(on_orders, totalBoughtVolume)
+    const message = descriptions.calculations.totalInDeals(on_orders, totalBoughtVolume, currency)
     const key = title.replace(/\s/g, '')
 
     return (
-        <Card title={title} message={message} key={key} metric={parseNumber(metric)} />
+        <Card title={title} message={message} key={key} metric={formatCurrency(currency, metric)} />
     )
 }
 

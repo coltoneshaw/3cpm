@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import {
     Dialog,
     DialogContent,
-} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { useThemeProvidor } from "@/app/Context/ThemeEngine";
 
 import './changelogModal.scss'
@@ -54,8 +54,11 @@ const changes = (version: string) => {
     const findData = versionInformation.find(v => v.version == version);
     if (findData == undefined) return '';
 
+    const link = (findData.link) ? findData.link : 'https://docs.3cpm.io/changelog'
+
     return (
         <>
+            <a href={link} className="changelogLink">Read the full changelog</a>
             {
                 generateNewFeatures(findData.new)
             }
@@ -103,7 +106,7 @@ const ChangelogModal = ({ open, setOpen }: { open: boolean, setOpen: any }) => {
 
             }}
         >
-            <DialogContent style={{ padding: 0 }}>
+            <DialogContent style={{ padding: 0, overflow: 'hidden' }}>
                 <div className="flex-row changelogModal">
                     <CloseIcon className="closeIcon" onClick={handleClose} />
                     <div className="flex-column versionDiv">

@@ -1,46 +1,37 @@
-import React, { useEffect } from 'react';
-import dotProp from 'dot-prop';
+import React, { useEffect, useState } from 'react';
 
-import {
-    TextField,
-    Button
-} from '@material-ui/core';
+import { updateReservedFundsArray, updateNestedCurrentProfile } from '@/app/redux/configActions';
 
-import { useGlobalState } from '@/app/Context/Config';
-import { TconfigValues, Type_ApiKeys } from '@/types/config'
+import { TextField, Button, InputLabel, FormControl, MenuItem, Select } from '@mui/material';
 
+import { Type_ReservedFunds } from '@/types/config'
+import type {defaultTempProfile} from '@/app/Pages/Settings/Settings'
 
-const ApiSettings = () => {
-    const state = useGlobalState();
-    const { state: { updateApiData, apiData }, config, actions: { fetchAccountsForRequiredFunds } } = state
+const ApiSettings = ({tempProfile, updateTempProfile}: {tempProfile: typeof defaultTempProfile, updateTempProfile: CallableFunction}) => {
 
 
-    const updateKeys = (config: TconfigValues) => {
-        if (dotProp.has(config, 'apis.threeC')) return config.apis.threeC
-        return { key: '', secret: '' }
-    }
+    const handleChange = (e: any) => {
+        const validKeys = ["key", 'secret', 'mode']
 
+        if (!e.target.name || !validKeys.includes(e.target.name)) {
+            console.debug('Failed to change API setting due to invalid config path.')
+            console.debug(e)
+            return
+        }
+        updateTempProfile((prevState: typeof defaultTempProfile) => {
+            let newState = { ...prevState }
 
-
-    useEffect(() => {
-        updateApiData(updateKeys(config));
-    }, [config]);
-
-    const handleKeyChange = (e: any) => {
-        updateApiData((prevState: Type_ApiKeys) => {
-            return {
-                ...prevState,
-                key: e.target.value
-            }
+            //@ts-ignore
+            newState[e.target.name as keyof typeof prevState] = e.target.value
+            return newState
         })
     }
 
-    const handleSecretChange = (e: any) => {
-        updateApiData((prevState: Type_ApiKeys) => {
-            return {
-                ...prevState,
-                secret: e.target.value
-            }
+    const handleUpdatingReservedFunds = (reservedFunds: Type_ReservedFunds[]) => {
+        updateTempProfile((prevState: typeof defaultTempProfile) => {
+            let newState = { ...prevState }
+            newState.reservedFunds = reservedFunds
+            return newState
         })
     }
 
@@ -49,12 +40,13 @@ const ApiSettings = () => {
         <div className=" flex-column settings-child">
             <h2 className="text-center ">API Settings</h2>
             <p className="subText">This app requires "Bots read", "Smart trades read", and "Accounts read" within 3commas.</p>
-            <div className=" flex-row" style={{paddingBottom: "25px"}} >
+            <div className=" flex-row" style={{ paddingBottom: "25px" }} >
                 <TextField
                     id="key"
                     label="Key"
-                    value={apiData.key}
-                    onChange={handleKeyChange}
+                    name="key"
+                    value={tempProfile.key}
+                    onChange={handleChange}
                     className="settings-left"
                     style={{
                         marginRight: "15px",
@@ -64,8 +56,9 @@ const ApiSettings = () => {
                 <TextField
                     id="secret"
                     label="Secret"
-                    value={apiData.secret}
-                    onChange={handleSecretChange}
+                    name="secret"
+                    value={tempProfile.secret}
+                    onChange={handleChange}
                     type="password"
                     style={{
                         marginLeft: "15px",
@@ -74,32 +67,48 @@ const ApiSettings = () => {
                 />
             </div>
 
-            <Button 
+            <div className=" flex-row" style={{ paddingBottom: "25px" }} >
+                <FormControl style={{ flexBasis: "50%" }} fullWidth>
+                    <InputLabel id="mode-label">Mode</InputLabel>
+                    <Select
+                        labelId="mode-label"
+                        id="mode"
+                        name="mode"
+                        label="Mode"
+                        value={tempProfile.mode}
+                        onChange={handleChange}
+                        style={{
+                            marginRight: '15px'
+                        }}
+                    >
+                        <MenuItem value={"real"}>Real</MenuItem>
+                        <MenuItem value={"paper"}>Paper</MenuItem>
+                    </Select>
+                </FormControl>
+            </div>
+
+            <Button
                 className="CtaButton"
                 disableElevation
                 onClick={
                     async () => {
                         // @ts-ignore
-                        // await electron.api.getAccountData()
-                        let key = apiData.key
-                        let secret = apiData.secret
+                        let key = tempProfile.key
+                        let secret = tempProfile.secret
+                        let mode = tempProfile.mode
                         try {
-                            await fetchAccountsForRequiredFunds(key, secret)
+                            await updateReservedFundsArray(key, secret, mode, handleUpdatingReservedFunds, tempProfile.reservedFunds)
                         } catch (error) {
                             alert('there was an error testing the API keys. Check the console for more information.')
                         }
                     }
-                    // fetch all accounts from the API
-                    // store these accounts in the database
-                    // update the accountData property & the reserved funds.
-                    // update the table on the page.
                 }
-                style={{ 
+                style={{
                     margin: "auto",
                     borderRight: 'none',
                     width: '150px'
-                    }} 
-                >
+                }}
+            >
                 Test API Keys
             </Button>
 

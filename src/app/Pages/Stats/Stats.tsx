@@ -1,21 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import dotProp from 'dot-prop';
+import { useAppSelector } from '@/app/redux/hooks';
 
 import './Stats.scss'
-import { Button, ButtonGroup } from '@material-ui/core';
+import { Button, ButtonGroup } from '@mui/material';
 
 import { RiskMonitor, SummaryStatistics, PerformanceMonitor } from './Views/Index';
 import { UpdateDataButton } from '@/app/Components/Buttons/Index'
-
-import { useGlobalState } from '@/app/Context/Config';
-import { useGlobalData } from '@/app/Context/DataContext';
-
-import {
-    Card_ActiveDeals, Card_totalInDeals, Card_MaxDca,
-    Card_TotalBankRoll, Card_TotalProfit, Card_MaxRiskPercent,
-    Card_TotalBoughtVolume, Card_TotalDeals, Card_TotalRoi,
-    Card_AverageDailyProfit, Card_AverageDealHours
-} from '@/app/Components/Charts/DataCards';
+import { RoiCards } from './Components/Index'
 
 import { getLang } from '@/utils/helperFunctions';
 const lang = getLang()
@@ -41,16 +32,18 @@ const buttonElements = [
 ]
 
 const StatsPage = () => {
-    const configState = useGlobalState()
-    const { config, state: { reservedFunds } } = configState
-    const state = useGlobalData()
-    const { data: { metricsData}} = state
-    const { activeDealCount, totalInDeals, maxRisk, totalBankroll, position, on_orders, totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent, totalDeals, boughtVolume, totalProfit_perf, averageDailyProfit, averageDealHours, totalClosedDeals, totalDealHours } = metricsData
+    const { currentProfile } = useAppSelector(state => state.config);
+    const { metricsData } = useAppSelector(state => state.threeCommas);
+
+    const [reservedFunds, updateReservedFunds] = useState(() => currentProfile.statSettings.reservedFunds)
+
+    useEffect(() => {
+        if (currentProfile.statSettings.reservedFunds.length > 0) updateReservedFunds(currentProfile.statSettings.reservedFunds)
+    }, [currentProfile.statSettings.reservedFunds])
+
 
     const [currentView, changeView] = useState('summary-stats')
-    const date: undefined | number = dotProp.get(config, 'statSettings.startDate')
-
-    // const account_id = findAccounts(config, 'statSettings.account_id')
+    const date: undefined | number = currentProfile.statSettings.startDate
 
     useEffect(() => {
         const getSortFromStorage = getStorageItem(localStorageSortName);
@@ -61,13 +54,13 @@ const StatsPage = () => {
 
     const returnAccountNames = () => {
         return reservedFunds.length > 0 ?
-            reservedFunds.filter(account => account.is_enabled).map(account => account.account_name).join(', ')
+            currentProfile.statSettings.reservedFunds.filter(account => account.is_enabled).map(account => account.account_name).join(', ')
             :
             "n/a";
     }
 
     const returnCurrencyValues = () => {
-        const currencyValues: string[] | undefined = dotProp.get(config, 'general.defaultCurrency')
+        const currencyValues: string[] | undefined = currentProfile.general.defaultCurrency
         return currencyValues != undefined && currencyValues.length > 0 ?
             currencyValues.join(', ')
             :
@@ -92,44 +85,6 @@ const StatsPage = () => {
         return <SummaryStatistics key="summary-stats" />
     }
 
-    const additionalMetrics = () => {
-
-        if (currentView === 'performance-monitor') {
-            return (
-                <>
-                    {/* <Card_TotalBoughtVolume metric={boughtVolume} /> */}
-                    <Card_MaxDca metric={maxRisk} />
-                    <Card_TotalDeals metric={totalDeals} />
-                    <Card_TotalRoi additionalData={{ totalProfit, totalBankroll }} />
-                    <Card_AverageDailyProfit metric={averageDailyProfit} />
-                    <Card_AverageDealHours metric={averageDealHours} additionalData={{ totalClosedDeals, totalDealHours }} />
-                    <Card_TotalProfit metric={totalProfit} />
-                </>)
-        } else if (currentView === 'risk-monitor') {
-            return (
-                <>
-                    {/* <Card_TotalBoughtVolume metric={boughtVolume} /> */}
-                    <Card_ActiveDeals metric={activeDealCount}/>
-                    <Card_totalInDeals metric={totalInDeals} additionalData={{on_orders, totalBoughtVolume}}/>
-                    <Card_MaxDca metric={maxRisk}/>
-                    <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{totalBankroll, maxDCA: maxRisk}}/>
-                    <Card_TotalBankRoll metric={totalBankroll}
-                                        additionalData={{position, totalBoughtVolume, reservedFundsTotal}}/>
-                </>)
-        }
-
-        return (
-            <>
-                <Card_ActiveDeals metric={activeDealCount}/>
-                <Card_totalInDeals metric={totalInDeals} additionalData={{on_orders, totalBoughtVolume}}/>
-                <Card_MaxDca metric={maxRisk}/>
-                {/* <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{ totalBankroll, maxDCA: maxRisk }} /> */}
-                <Card_TotalBankRoll metric={totalBankroll}
-                                    additionalData={{position, totalBoughtVolume, reservedFundsTotal}}/>
-                <Card_TotalProfit metric={totalProfit}/>
-                <Card_TotalRoi additionalData={{totalProfit, totalBankroll}}/>
-            </>)
-    }
 
     const dateString = (date: undefined | number) => {
 
@@ -169,20 +124,11 @@ const StatsPage = () => {
                     <p><strong>Start Date: </strong><br />{dateString(date)} </p>
                     <p><strong>Filtered Currency: </strong><br />{returnCurrencyValues()}</p>
                 </div>
-
             </div>
 
 
+            <RoiCards metricsData={metricsData} currentView={currentView} />
 
-
-            <div className="flex-column" style={{ alignItems: 'center' }}>
-
-                <div className="riskDiv" style={{ paddingBottom: '32px' }}>
-
-                    {additionalMetrics()}
-                </div>
-
-            </div>
 
 
             {/* // Returning the current view rendered in the function above. */}

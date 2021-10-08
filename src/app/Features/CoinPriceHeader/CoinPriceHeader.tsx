@@ -1,12 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useAppSelector } from '@/app/redux/hooks';
 
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import AddCoinModal from "./AddCoinModal";
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 import './CoinPriceHeader.scss'
 
 const CoinPriceHeader = () => {
+
+    const {currentProfile} = useAppSelector(state => state.config)
 
     const [selectedCoins, updateSelectedcoins] = useState([])
     const [coinData, updateCoinData] = useState([])
@@ -22,9 +25,7 @@ const CoinPriceHeader = () => {
         // @ts-ignore
         electron.binance.coinData()
             .then((data: any) => {
-                // console.log(data)
-                
-                if(data == undefined || data.length == 0) return
+                if (data == undefined || data.length == 0) return
 
                 //@ts-ignore
                 const filteredCoins = data.filter((coin: any) => selectedCoins.includes(coin.symbol))
@@ -35,7 +36,7 @@ const CoinPriceHeader = () => {
             })
     }
 
-    
+
 
     useEffect(() => {
         //@ts-ignore
@@ -49,7 +50,7 @@ const CoinPriceHeader = () => {
         updateCoinData(filteredCoins)
     }, [selectedCoins])
 
-    
+
 
     useEffect(() => {
         const coinPriceArray = getStorageItem(storageItem.settings.coinPriceArray)
@@ -59,14 +60,17 @@ const CoinPriceHeader = () => {
 
 
     return (
-        <div className="BtcPriceSpan monospace-cell" style={{color: 'var(--color-text-lightbackground)'}}>
+        <div className="BtcPriceSpan monospace-cell" style={{ color: 'var(--color-text-lightbackground)' }}>
+            <p style={{padding: 0, margin: 0, paddingLeft: '1em'}}>
+                Profile: {currentProfile.name}
+            </p>
             <AddCoinModal open={open} setOpen={setOpen} coinNames={coinNames} currentCoins={{ selectedCoins, updateSelectedcoins }} />
             <div className="coinDiv">
                 {coinData.map((coin: { symbol: string, price: string }, index) => {
                     return <span
                         key={coin.symbol}
-                        style={{paddingLeft: '1em'}}
-                        >
+                        style={{ paddingLeft: '1em' }}
+                    >
                         {coin.symbol}: {Number(coin.price).toLocaleString('fullwide', { useGrouping: true, maximumSignificantDigits: 5 })}{(coinData.length > 1 && index != (coinData.length - 1)) ? ' - ' : ''}
                     </span>
                 })}

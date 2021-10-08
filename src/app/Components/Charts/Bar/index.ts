@@ -3,7 +3,8 @@ import SoDistribution from './SoDistribution'
 import DealAllocationBar from './DealAllocation';
 import PairPerformanceBar from './PairPerformanceBar';
 import BotPerformanceBar from './BotPerformanceBar';
-import ProfitByDay from "../Bar/ProfitByDay";
+import ProfitByDay from "./ProfitByDay";
+import SoDealDistribution from "./SoDealDistribution"
 
 
 
@@ -13,5 +14,6 @@ export {
     DealAllocationBar,
     PairPerformanceBar,
     BotPerformanceBar,
-    ProfitByDay
+    ProfitByDay,
+    SoDealDistribution
 }

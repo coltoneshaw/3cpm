@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-import { FormControlLabel, Checkbox} from '@material-ui/core';
+import { FormControlLabel, Checkbox } from '@mui/material';
 
-import { useGlobalData } from "@/app/Context/DataContext";
+import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
+import { setSyncData } from "@/app/redux/threeCommas/threeCommasSlice";
 
 import { Type_SyncOptions } from "@/types/3Commas";
 
@@ -12,62 +13,57 @@ import { Type_SyncOptions } from "@/types/3Commas";
  */
 const SyncToggles = () => {
 
-    const dataState = useGlobalData()
-    const { autoSync: { syncOptions, setSyncOptions } } = dataState
+    const { syncOptions, autoRefresh } = useAppSelector(state => state.threeCommas);
+    const dispatch = useAppDispatch()
+
+    const [summary, setSummary] = useState(() => syncOptions.summary)
+    const [notifications, setNotifications] = useState(() => syncOptions.notifications)
 
     const changeSummary = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSyncOptions( ( prevState:Type_SyncOptions ) => ({
-            ...prevState,
-            summary: event.target.checked
-        }))
+        dispatch(setSyncData({ summary: event.target.checked }))
     }
+
 
     const changeNotifications = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSyncOptions( ( prevState:Type_SyncOptions ) => ({
-            ...prevState,
-            notifications: event.target.checked
-        }))
+        dispatch(setSyncData({ notifications: event.target.checked }))
     }
 
-    // can't have notifications disabled and summary enabled
     useEffect(() => {
-        if(!syncOptions.notifications) {
-            setSyncOptions( ( prevState:Type_SyncOptions ) => ({
-                ...prevState,
-                summary: false
-            }))
-        }
-    }, [syncOptions.notifications])
+        setSummary(syncOptions.summary)
+        setNotifications(syncOptions.notifications)
+    }, [syncOptions])
+
 
     return (
         <div className="syncToggles">
-        <FormControlLabel
-            control={
-                <Checkbox
-                    checked={syncOptions.summary}
-                    onChange={changeSummary}
-                    name="summary"
-                    style={{color: 'var(--color-secondary)'}}
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={notifications}
+                        onChange={changeNotifications}
+                        name="notifications"
+                        color="primary"
+                        style={{ color: 'var(--color-secondary)' }}
 
-                />
-            }
-            label="Summary Notifications"
-        />
+                    />
+                }
+                label="Enable Notifications"
 
-        <FormControlLabel
-            control={
-                <Checkbox
-                    checked={syncOptions.notifications}
-                    onChange={changeNotifications}
-                    name="notifications"
-                    color="primary"
-                    style={{color: 'var(--color-secondary)'}}
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={summary}
+                        onChange={changeSummary}
+                        name="summary"
+                        style={{ color: 'var(--color-secondary)' }}
 
-                />
-            }
-            label="Enable Notifications"
+                    />
+                }
+                label="Summarize Notifications"
+            />
 
-        />
+
         </div>
     )
 }

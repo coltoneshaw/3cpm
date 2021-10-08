@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAppSelector } from '@/app/redux/hooks';
 
 import DataTable from './DataTable';
 import { UpdateDataButton } from '@/app/Components/Buttons/Index'
@@ -8,21 +9,17 @@ import './BotPlanner.scss';
 
 import Risk from "./Risk";
 
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
-import { useGlobalData } from '@/app/Context/DataContext';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 import { calc_dropMetrics } from '@/utils/formulas'
 
 import { Type_Query_bots } from '@/types/3Commas';
 
 const BotPlannerPage = () => {
 
-    const state = useGlobalData();
-    const { data: { botData, metricsData: { totalBankroll } } } = state;
-
+    const { metricsData: {totalBankroll}, botData} = useAppSelector(state => state.threeCommas);
+    const {config, currentProfile} = useAppSelector(state => state.config);
     const [localBotData, updateLocalBotData] = useState<Type_Query_bots[]>([])
-
-
 
     useEffect(() => {
 
@@ -35,7 +32,7 @@ const BotPlannerPage = () => {
             updateLocalBotData([])
         }
 
-    }, [botData])
+    }, [botData, currentProfile, totalBankroll])
 
 
     const blankObject = {
@@ -70,12 +67,12 @@ const BotPlannerPage = () => {
         profit_currency: '',
         account_name: 'Fake Bot',
         account_id: 111111111,
-        active_deals_count: 0
+        active_deals_count: 0,
+        enabled_inactive_funds: 0
     }
 
     const addToTable = () => {
         updateLocalBotData((prevState: Type_Query_bots[]) => {
-            console.log(blankObject)
             return [
                 blankObject,
                 ...prevState
@@ -96,23 +93,21 @@ const BotPlannerPage = () => {
         const customBotIds = customBots.map(bot => bot.id);
         if (customBotIds.length === 0) {
             // @ts-ignore - electron
-            electron.database.run(`DELETE from bots where origin = 'custom'`)
+            electron.database.run(`DELETE from bots where origin = 'custom' AND profile_id = '${config.current}'`)
         } else {
             // @ts-ignore - electron
-            electron.database.query("select * from bots where origin = 'custom'; ")
+            electron.database.query(`select * from bots where origin = 'custom' AND profile_id = '${config.current}';`)
                 .then((table: Type_Query_bots[]) => {
                     for (let row of table) {
                         if (!customBotIds.includes(row.id)) {
                             // @ts-ignore - electron
-                            electron.database.run(`DELETE from bots where id = '${row.id}'`)
+                            electron.database.run(`DELETE from bots where id = '${row.id}' AND profile_id = '${config.current}'`)
                         }
                     }
                 });
         }
 
         // const existingBots = localBotData.filter(bot => bot.origin === 'sync').map(bot => ({id: bot.id, metrics: bot.metrics}))
-
-        // console.log(existingBots)
 
         // @ts-ignore
         await electron.database.upsert('bots', localBotData, 'id', 'hide')
@@ -130,7 +125,7 @@ const BotPlannerPage = () => {
             <div className="flex-row headerButtonsAndKPIs">
                 <Risk localBotData={localBotData}/>
 
-                <div className="flex-row headerButtons" style={{ justifyContent: "flex-end" }}>
+                <div className="flex-row headerButtons" style={{ justifyContent: "flex-end"}}>
                 <UpdateDataButton className="button-botPlanner updatebutton CtaButton" style={{ margin: '5px', height: '38px' }} disabled={true} />
 
                     <SaveButton

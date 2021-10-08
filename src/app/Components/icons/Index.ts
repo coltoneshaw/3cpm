@@ -7,6 +7,7 @@ import PieChart from "./PieChart";
 import BackwardClock from './BackwardClock';
 import ActiveDealsIcon from "./ActiveDeals";
 import LoaderIcon from "./Loading/Loading";
+import TradingViewLogo from "./TradingViewLogo";
 
 export {
     BotPlannerIcon,
@@ -17,5 +18,6 @@ export {
     PieChart,
     BackwardClock,
     ActiveDealsIcon,
-    LoaderIcon
+    LoaderIcon,
+    TradingViewLogo
 }
