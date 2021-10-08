@@ -17,4 +17,6 @@
 ---
 
 * [Changelog](changelog.md)
+* [Troubleshooting](troubleshooting/README.md)
+  * [Error Syncing](troubleshooting/error-syncing.md)
 

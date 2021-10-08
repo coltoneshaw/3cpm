@@ -12,7 +12,7 @@ The 3C Portfolio Manager is an essential add-on to your 3Commas experience. It e
 * Windows
   * &lt;10 - Untested, if it works let me know!
   * 10 - Fully supported
-  * 11 - Untested
+  * 11 - Fully supported - Thanks @Karizma!
 * Linux
   * Ubuntu - Fully Supported
   * Other distros are currently untested.
