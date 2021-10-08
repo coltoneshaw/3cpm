@@ -31,8 +31,10 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
 
 
     useLayoutEffect(() => {
-        const getFilterFromStorage = getStorageItem(localStorageFilterName);
-        setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
+        // const getFilterFromStorage = getStorageItem(localStorageFilterName);
+        // setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
+
+        setFilter(defaultFilter);
 
         const getSortFromStorage = getStorageItem(localStorageSortName);
         setSort((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
@@ -123,10 +125,10 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
 
 
             </div>
-            <ResponsiveContainer width="100%" height="100%" maxHeight={chartHeight} minHeight={chartHeight}>
+            <ResponsiveContainer width="100%" height={chartHeight}>
 
                 <ComposedChart
-                    data={(newData.length > 0) ? newData : undefined}
+                    data={ newData ?? undefined}
                     margin={{
                         top: 40,
                         right: 0,

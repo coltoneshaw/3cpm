@@ -13,16 +13,13 @@ import { dynamicSort } from '@/utils/helperFunctions';
 import { filterData } from '@/app/Components/Charts/formatting'
 import { currencyTickFormatter, currencyTooltipFormatter } from '@/app/Components/Charts/formatting'
 
+const defaultFilter = 'all';
+const defaultSort = '-total_profit';
 
 
-const PairPerformanceBar = ({ data = [], defaultCurrency }: Type_Pair_Performance) => {
-
-    const defaultFilter = 'all';
-    const defaultSort = '-total_profit';
-
-    const localStorageFilterName = storageItem.charts.PairPerformanceBar.filter
-    const localStorageSortName = storageItem.charts.PairPerformanceBar.sort
-
+const usePerformanceSortAndFilter = (name: 'PairPerformanceBar' | 'BotPerformanceBar') => {
+    const localStorageFilterName = storageItem.charts[name].filter
+    const localStorageSortName = storageItem.charts[name].sort
 
     const [sort, setSort] = useState(defaultSort);
     const [filter, setFilter] = useState(defaultFilter);
@@ -30,12 +27,12 @@ const PairPerformanceBar = ({ data = [], defaultCurrency }: Type_Pair_Performanc
 
 
     useLayoutEffect(() => {
-        const getFilterFromStorage = getStorageItem(localStorageFilterName);
-        setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
+        // const getFilterFromStorage = getStorageItem(localStorageFilterName);
+        // setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
 
+        setFilter(defaultFilter);
         const getSortFromStorage = getStorageItem(localStorageSortName);
         setSort((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
-
     }, [])
 
 
@@ -51,9 +48,25 @@ const PairPerformanceBar = ({ data = [], defaultCurrency }: Type_Pair_Performanc
         setStorageItem(localStorageFilterName, selectedFilter)
     };
 
-    const hide = (id: string) => {
-        return id != sort
+    return {
+        sort: {
+            handleSortChange,
+            sort,
+        },
+        filter: {
+            handleFilterChange,
+            filter
+        },
+        metrics: {
+            metricsDisplayed,
+            updatedMetricsDisplayed
+        }
     }
+}
+
+const PairPerformanceBar = ({ data = [], defaultCurrency }: Type_Pair_Performance) => {
+
+    const {sort: {sort, handleSortChange}, filter: {filter, handleFilterChange}, metrics: {metricsDisplayed, updatedMetricsDisplayed}} = usePerformanceSortAndFilter('PairPerformanceBar')
 
 
     const [localData, updateLocalData] = useState<any[]>(() => data)
@@ -112,10 +125,6 @@ const PairPerformanceBar = ({ data = [], defaultCurrency }: Type_Pair_Performanc
                         </Select>
                     </FormControl>
                 </div>
-
-
-
-
             </div>
             <ResponsiveContainer width="100%" height="100%" maxHeight={chartHeight} minHeight={chartHeight}>
                 <ComposedChart
@@ -167,7 +176,7 @@ const PairPerformanceBar = ({ data = [], defaultCurrency }: Type_Pair_Performanc
                     <XAxis
                         xAxisId="total_profit"
                         type="number"
-                        hide={hide("-total_profit")}
+                        hide={"-total_profit" != sort}
                         domain={[0, 'auto']}
                         allowDataOverflow={true}
                         offset={20}
@@ -180,15 +189,13 @@ const PairPerformanceBar = ({ data = [], defaultCurrency }: Type_Pair_Performanc
                             dx: 0,
                             dy: 20
                         }}
-
                         tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)}
-
                     />
 
                     <XAxis
                         xAxisId="avg_deal_hours"
                         type="number"
-                        hide={hide("-avg_deal_hours")}
+                        hide={"-avg_deal_hours" != sort}
                         domain={[0, 'auto']}
                         allowDataOverflow={true}
                         height={50}
@@ -200,13 +207,11 @@ const PairPerformanceBar = ({ data = [], defaultCurrency }: Type_Pair_Performanc
                             dx: 0,
                             dy: 20
                         }}
-
-
                     />
                     <XAxis
                         xAxisId="bought_volume"
                         type="number"
-                        hide={hide("-bought_volume")}
+                        hide={"-bought_volume" != sort}
                         domain={[0, 'auto']}
                         allowDataOverflow={true}
                         height={50}
@@ -218,7 +223,6 @@ const PairPerformanceBar = ({ data = [], defaultCurrency }: Type_Pair_Performanc
                             dx: 0,
                             dy: 20
                         }}
-
                     />
 
                     <Bar name="Total Profit" dataKey="total_profit" fill="var(--chart-metric2-color)" xAxisId="total_profit" fillOpacity={.8} hide={metricsDisplayed.total_profit} />

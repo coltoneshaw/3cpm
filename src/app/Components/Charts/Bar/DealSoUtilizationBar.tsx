@@ -38,15 +38,15 @@ const DealSoUtilizationBar = ({ data = [], defaultCurrency }: Type_ActiveDealCha
                     <Tooltip content={<CustomTooltip formatter={(value:any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{strokeDasharray: '3 3', opacity: .2}}/>
                     <XAxis
                         dataKey="pair"
-                        angle={45}
-                        dx={10}
-                        // dx={15}
-                        dy={10}
+                        angle={(localData.length > 20) ? 90 : 45}
+                        textAnchor="start"
+                        dx={5}
+                        // // dx={15}
+                        // dy={10}
                         fontSize=".75em"
                         minTickGap={-200}
                         axisLine={false}
                         height={75}
-
                     />
                     <YAxis tickFormatter={tick => parseNumber(tick * 100, 0) + "%"} />
 
