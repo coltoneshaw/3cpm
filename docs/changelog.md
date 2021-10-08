@@ -49,7 +49,7 @@ This is the largest release of the 3C Portfolio Manager to date! It includes a h
 
 #### Known Issues
 
-* Migrating to profiles can create an issue where you're unable to sync with 3Commas. If you have this issue use the help article [here](profiles.md#profiles-help).
+* Migrating to profiles can create an issue where you're unable to sync with 3Commas. If you have this issue use the help article [here](configuration/profiles.md#profiles-help).
 
 ## v0.4.1
 

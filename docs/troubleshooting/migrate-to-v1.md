@@ -13,6 +13,6 @@ Migrating to v1.0.0 from any prior release can contain a bug or two due to the l
    2. Close the 3C Portfolio Manager application
    3. You can delete the **entire** folder titled `3C Portfolio Manager`
    4. Re-open the application
-   5. Follow the setup steps outlined under [Creating a Profile](../profiles.md#creating)
+   5. Follow the setup steps outlined under [Creating a Profile](../configuration/profiles.md#creating)
 3. If you continue to have an [issue open a ticket or reach out to me ](../#feedback-or-bug-submission)
 

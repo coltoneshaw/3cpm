@@ -12,7 +12,7 @@ We have tried to make profile management as simple as possible. If anything is u
 
 ### Creating:
 
-1. Within the application hover over the person icon on the bottom left and click "Add new profile"![](.gitbook/assets/screen-shot-2021-10-01-at-10.30.24-am.png)  
+1. Within the application hover over the person icon on the bottom left and click "Add new profile"![](../.gitbook/assets/screen-shot-2021-10-01-at-10.30.24-am.png)  
 2. This will direct you to a blank settings page where you can configure your new profile!
    * **Tip: Be sure to name your profile something that tells you exactly what it is.**
 3. Fill out the API data and select a mode. Then be sure to click "Test API Keys"
