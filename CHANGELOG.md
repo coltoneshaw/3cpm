@@ -2,7 +2,7 @@
 
 ## New Features
 - Save settings into a custom profile and fast swap between! Even supports multiple 3 Commas accounts.
-- Auto-refresh bar has a built in loading indicator in seconds.
+- Auto-refresh bar has a built-in loading indicator in seconds.
 - DCA calculator, order details, and order timeline built into every active deal.
 - Force paper or real account directly in the settings.
 - Documentation on docs.3cpm.io along with a link in the sidebar!
@@ -12,7 +12,7 @@
 
 
 ## Enhancements
-- Enabled accounts are synced on every auto refresh, no more out of date data!
+- Enabled accounts are synced on every auto-refresh, no more out-of-date data!
 - Update banner now differentiates between beta and general releases.
 - TTP has been added to the active deals bot name hover.
 - Active deals with an error have the `Active SO` and `# SO` in bold red with a tooltip hover to see the specific error message.
@@ -20,10 +20,10 @@
 - Reset all data is moved under Menu > Help > Delete All
 - Added a clear all local storage under Menu > Edit
 - Adjusted metrics to be ordered the same across stats.
-- Dynamic chart height for bot / pair performance based on the number of data points.
+- Dynamic chart height for bot/pair performance based on the number of data points.
 - Improved overall chart formatting (highlighting, colors, bar width, etc.)
 - Adjusted tooltips and headers for better clarity.
-- Improved the Risk Monitor view for larger screens. Thanks @GD_NL.
+- Improved the Risk Monitor view for larger screens. 
 - Improved chart loading performance
 - Updating TradingView Icon
 
@@ -38,7 +38,6 @@
 
 ## Backend Changes
 - Entire data handling has been moved from React context API to Redux
-
 # v0.4.1
 
 ## New Features

@@ -1,4 +1,4 @@
-import { Type_Profit, Type_Query_PerfArray, Type_ActiveDeals, Type_MetricData, Type_Bot_Performance_Metrics, Type_Pair_Performance_Metrics } from '@/types/3Commas';
+import { Type_Profit, Type_Query_PerfArray, Type_ActiveDeals, Type_MetricData, Type_Bot_Performance_Metrics, Type_Pair_Performance_Metrics, Type_SoDistributionArray } from '@/types/3Commas';
 
 import type {defaultCurrency} from '@/types/config'
 export interface Type_SoDistribution {
@@ -7,8 +7,9 @@ export interface Type_SoDistribution {
     defaultCurrency: defaultCurrency
 }
 
-export interface Type_SoDealDis {
+export type Type_SoDealDis = {
     defaultCurrency: defaultCurrency
+    data: Type_SoDistributionArray[] | undefined
 }
 
 

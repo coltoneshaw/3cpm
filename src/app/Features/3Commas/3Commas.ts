@@ -504,6 +504,12 @@ const fetchSoData = async (currentProfile: Type_Profile, oDate?: DateRange) => {
     const filtersQueryString = await getFiltersQueryString(currentProfile);
     const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
 
+
+    let date = initDate(startString, oDate);
+    const [fromDateStr, toDateStr] = DateRangeToSQLString(date)
+    const fromSQL = `and closed_at >= '${fromDateStr}'`
+    const toSQL = `and closed_at < '${toDateStr}'`
+
     const query = `
             select 
                 completed_safety_orders_count, 
@@ -516,6 +522,7 @@ const fetchSoData = async (currentProfile: Type_Profile, oDate?: DateRange) => {
                 and currency in (${currencyString} )
                 and closed_at_iso_string > ${startString}
                 and profile_id = '${currentProfileID}'
+                ${fromSQL} ${toSQL}
             group by 
                 completed_safety_orders_count;`
 
