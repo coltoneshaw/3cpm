@@ -18,5 +18,6 @@
 
 * [Changelog](changelog.md)
 * [Troubleshooting](troubleshooting/README.md)
+  * [Migrate to v1](troubleshooting/migrate-to-v1.md)
   * [Error Syncing](troubleshooting/error-syncing.md)
 
