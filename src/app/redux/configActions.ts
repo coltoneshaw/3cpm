@@ -18,8 +18,6 @@ const updateConfig = async () => {
 }
 
 const storeConfigInFile = async () => {
-
-
     try {
         //@ts-ignore
         await electron.config.set(null, store.getState().config.config)
@@ -33,7 +31,6 @@ const storeConfigInFile = async () => {
 
 const updateCurrentProfile = (profileData: Type_Profile) => {
     store.dispatch(setCurrentProfile(profileData));
-
     // setting this to zero here to prevent a spam of notifications with auto sync enabled. 
     store.dispatch(setSyncData({syncCount: 0, time: 0}))
 }

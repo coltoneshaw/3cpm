@@ -272,6 +272,8 @@ const syncNewProfileData = async (offset: number = 1000, profileData: Type_Profi
 
 
     try {
+        //@ts-ignore
+        await electron.config.set(null, store.getState().config.config)
         await updateThreeCData('newProfile', options, profileData)
             .then(async () => updateAllDataQuery(profileData, 'fullSync'))
         success = true;

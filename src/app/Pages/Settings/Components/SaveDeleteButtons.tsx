@@ -13,7 +13,6 @@ interface SubmitButtons {
     setOpen: any
 }
 const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
-    const dispatch = useAppDispatch()
     const { currentProfile, config } = useAppSelector(state => state.config);
 
     const { isSyncing } = useAppSelector(state => state.threeCommas);
@@ -28,7 +27,7 @@ const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
             try {
 
                 // saving the config here so the update function below can work properly.
-                await storeConfigInFile()
+                // await storeConfigInFile()
 
                 //updating the current profile's data
                 const update = await syncNewProfileData(1000, currentProfile);
@@ -38,7 +37,7 @@ const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
                     await electron.config.set('current', currentProfile.id)
 
                     updateConfig();
-                    callback()
+                    callback();
                 }
             } catch (error) {
 
