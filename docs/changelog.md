@@ -4,6 +4,13 @@
 
 This is the largest release of the 3C Portfolio Manager to date! It includes a huge amount of fixes, a completely rebuild application state, improved performance and so much more. Be sure to read the full changelog to for all the new changes, including the one breaking change.
 
+
+
+#### Known Issues:
+
+* If you add a profile and choose not to save it, you'll need to re-select your main profile again.
+* Disable auto-sync while you're creating a profile or you will get API errors until the new profile has 3Commas keys added to it.
+
 #### New Features
 
 * Save settings into a custom profile and fast swap between! Even supports multiple 3 Commas accounts.
