@@ -1,5 +1,7 @@
 # Frequently Asked Questions
 
+### How do I update?
+
 ### Why did we go with a downloadable application?
 
 I know, quite a few people might be up in arms about requiring a download on their computer to use this. It was ultimately a tough decision but one that I hope you agree made sense. There were a few considerations:

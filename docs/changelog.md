@@ -39,11 +39,11 @@ This is the largest release of the 3C Portfolio Manager to date! It includes a h
 
 * You can no longer select more than currency unless it's a USD base. This will be improved in the future.
 
-#### Backend Changes
+#### Back end Changes
 
-* Entire data handling has been moved from React context API to Redux
-* Included a logging module to log any issues with the application backend. These are locally stored **only.**
-  * **Windows:** `%USERPROFILE%\AppData\Roaming\{app name}\logs\{process type}.log`
+* Entire data handling has been moved from React context API to redux
+* Included a logging module to log any issues with the application back end. These are locally stored **only.**
+  * **Windows:** `%USERPROFILE%\AppData\Roaming\3C Portfolio Manager\logs\main.log`
   * **Mac**: `~/Library/Logs/3C Portfolio Manager/main.log`
   * **Linux**:  `~/.config/3C Portfolio Manager/logs/main.log`
 
