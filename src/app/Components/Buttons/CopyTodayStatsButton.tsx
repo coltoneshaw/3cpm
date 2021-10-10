@@ -15,7 +15,7 @@ interface Type_ButtonProps {
     profitData: Type_Profit[],
     currency: defaultCurrency,
 }
-const CopyTodayStatus = ({metricsData, profitData, currency, style, className}: Type_ButtonProps) => {
+const CopyTodayStatsButton = ({metricsData, profitData, currency, style, className}: Type_ButtonProps) => {
     const anchorRef = useRef<HTMLDivElement>(null);
     const [isToastOpen, setToastOpen] = useState(false);
     const [isSubmenuOpen, setSubmenuOpen] = useState(false);
@@ -114,4 +114,4 @@ const CopyTodayStatus = ({metricsData, profitData, currency, style, className}: 
     )
 }
 
-export default CopyTodayStatus;
+export default CopyTodayStatsButton;
