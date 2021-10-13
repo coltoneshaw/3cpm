@@ -67,14 +67,14 @@ const CopyTodayStatsButton = ({metricsData, profitData, currency, style, classNa
 
     return (
         <>
-            <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
+            <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button" disableElevation>
                 <Button
                     className={className}
                     onClick={() => copyStatsToClipboard()}
                     disableElevation
                     style={style}
                 >
-                    Copy Today's stats
+                    Copy Stats
                 </Button>
                 <Button
                     className={className}
@@ -100,7 +100,7 @@ const CopyTodayStatsButton = ({metricsData, profitData, currency, style, classNa
                                 <ClickAwayListener onClickAway={handleClose}>
                                     <MenuList id="split-button-menu">
                                             <MenuItem onClick={copyYesterdayStats} disabled={profitData.length < 2}>
-                                                Use yesterday's total
+                                                Yesterday's Stats
                                             </MenuItem>
                                     </MenuList>
                                 </ClickAwayListener>

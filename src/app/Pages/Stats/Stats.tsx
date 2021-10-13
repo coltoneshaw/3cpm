@@ -114,8 +114,8 @@ const StatsPage = () => {
                                 })
                             }
                         </ButtonGroup>
-                        <UpdateDataButton key="updateDataButton" className="CtaButton" style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }} />
                         <CopyTodayStatsButton key="copyTodayStatsButton" currency={currentProfile.general.defaultCurrency} profitData={profitData} metricsData={metricsData} className="CtaButton" style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }} />
+                        <UpdateDataButton key="updateDataButton" className="CtaButton" style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }} />
 
                     </div>
                 </div>
