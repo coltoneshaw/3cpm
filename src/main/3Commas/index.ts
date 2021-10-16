@@ -1,4 +1,6 @@
 import { update, run, query } from '@/main/Database/database';
+import {config} from '@/main/Config/config';
+
 const { bots, getAccountDetail, deals, getAccountSummary, getDealOrders } = require('./api');
 const log = require('electron-log');
 
@@ -37,8 +39,12 @@ async function getDealData(type: string, options: Type_UpdateFunction, profileDa
 
       let { deals, lastSyncTime } = data
 
+      const enabled = config.get('globalSettings.notifications.enabled')
+      const summary = config.get('globalSettings.notifications.summary')
       // if notifications need to be enabled for the fullSync then the type below needs to be updated.
-      if (type === 'autoSync' && options.notifications && options.time != undefined || options.syncCount != 0) findAndNotifyNewDeals(deals, options.time, options.summary)
+      if (type === 'autoSync' && enabled && options.time != undefined || options.syncCount != 0) {
+        findAndNotifyNewDeals(deals, options.time, summary)
+      }
       update('deals', deals, profileData.id)
       // log.info(data)
 

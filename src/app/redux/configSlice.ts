@@ -1,9 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit'
-import type { RootState } from './store'
+import { TconfigValues, Type_Profile, Type_ReservedFunds } from '@/types/config';
+import { defaultConfig, defaultProfile } from '@/utils/defaultConfig';
+import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Type_Profile, TconfigValues, Type_ReservedFunds } from '@/types/config'
-import { defaultProfile, defaultConfig } from '@/utils/defaultConfig'
 
 
 const defaultReservedFunds = {
@@ -18,7 +17,6 @@ const defaultReservedFunds = {
 const initialState = {
     config: <TconfigValues>defaultConfig,
     currentProfile: <Type_Profile>defaultProfile,
-    reservedFunds: <Type_ReservedFunds[]>[defaultReservedFunds]
 }
 
 const configPaths = {
@@ -122,7 +120,15 @@ export const configSlice = createSlice({
         },
         addConfigProfile: state => {
             state.currentProfile = { ...defaultProfile, id: uuidv4() }
-        }
+        },
+        updateNotificationsSettings: (state, action) => {
+            const newConfig = { ...state.config }
+            newConfig.globalSettings.notifications = {
+                ...state.config.globalSettings.notifications,
+                ...action.payload,
+            }
+            state.config = newConfig
+        },
     }
 })
 
@@ -130,7 +136,8 @@ export const {
     setConfig, setCurrentProfile, 
     updateCurrentProfileByPath, deleteProfileById, addConfigProfile,
     setCurrentProfileById,
-    updateLastSyncTime
+    updateLastSyncTime,
+    updateNotificationsSettings,
 } = configSlice.actions;
 export { configPaths }
 

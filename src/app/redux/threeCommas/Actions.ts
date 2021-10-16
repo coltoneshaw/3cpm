@@ -223,13 +223,15 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
     const syncOptions = store.getState().threeCommas.syncOptions
     store.dispatch(setIsSyncing(true))
 
-    let time = (syncOptions.time) ? syncOptions.time : 0;
-    let syncCount = (syncOptions.syncCount) ? syncOptions.syncCount : 0;
-    if(type === 'fullSync') syncCount = 0;
+    const originalTime = syncOptions.time || 0
+    let time = originalTime
+    let syncCount = syncOptions.syncCount || 0
+    if (type === 'fullSync') {
+        syncCount = 0
+        time = 0
+    }
     const options = {
         syncCount,
-        summary: (syncOptions.summary) ? syncOptions.summary : false,
-        notifications: (syncOptions.notifications) ? syncOptions.notifications : false,
         time,
         offset
     }
@@ -244,10 +246,11 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
             .then((lastSyncTime) => {
                 store.dispatch(setSyncData({
                     syncCount:(type === 'autoSync') ? options.syncCount + 1 : 0,
-                    time: (type === 'autoSync') ? options.time + 15000 : 0
+                    // don't override syncOptions.time in case of a fullSync
+                    // because there might be a concurrent autoSync running
+                    time: (type === 'autoSync') ? originalTime + 15000 : originalTime
                 }))
                 store.dispatch(updateLastSyncTime({data: lastSyncTime }))
-
             })
 
     } catch (error) {

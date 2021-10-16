@@ -1,7 +1,7 @@
-import { setConfig, setCurrentProfile, updateCurrentProfileByPath, deleteProfileById } from '@/app/redux/configSlice'
+import { setConfig, setCurrentProfile, updateCurrentProfileByPath, deleteProfileById, updateNotificationsSettings } from '@/app/redux/configSlice'
 import {setSyncData} from '@/app/redux/threeCommas/threeCommasSlice'
 
-import { TconfigValues, Type_Profile, Type_ReservedFunds } from '@/types/config';
+import { TconfigValues, Type_NotificationsSettings, Type_Profile, Type_ReservedFunds } from '@/types/config';
 
 import { removeDuplicatesInArray } from '@/utils/helperFunctions';
 
@@ -127,12 +127,16 @@ const deleteProfileByIdGlobal = (config: TconfigValues, profileId:string, setOpe
     }
 }
 
-
+const updateNotificationsSettingsGlobal = async (settings: Partial<Type_NotificationsSettings>) => {
+    store.dispatch(updateNotificationsSettings(settings))
+    await storeConfigInFile()
+}
 
 export {
     updateConfig,
     updateReservedFundsArray,
     updateNestedCurrentProfile,
     storeConfigInFile,
-    deleteProfileByIdGlobal
+    deleteProfileByIdGlobal,
+    updateNotificationsSettingsGlobal,
 }

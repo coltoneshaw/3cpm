@@ -61,8 +61,6 @@ export const initialState = {
 export type typeString = 'botData' | 'profitData' | 'activeDeals' | 'performanceData' | 'metricsData' | 'accountData' | 'balanceData'
 
 export type Type_SyncData = {
-    summary?: boolean,
-    notifications?: boolean,
     time?: number,
     syncCount?: number
 }
