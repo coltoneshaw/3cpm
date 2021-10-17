@@ -56,6 +56,7 @@ const ToggleRefreshButton = ({ style, className }: Type_ButtonProps) => {
         if (!autoRefresh || isSyncing) return
 
         if (counter > 0) {
+            // @ts-ignore
             setActualTimeout(setTimeout(() => {
                 setCounter(prevState =>  Math.max(prevState - refreshRate, 0))
             }, refreshRate));

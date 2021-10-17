@@ -85,7 +85,7 @@ const BotPlannerPage = () => {
         const customBots = localBotData.filter(bot => bot.origin === 'custom')
 
         // @ts-ignore - electron
-        if (customBots.length > 0) await electron.database.update('bots', customBots)
+        if (customBots.length > 0) await window.ThreeCPM.Repository.Database.update('bots', customBots)
 
 
         // Deciding what bots to delete if they're included in the local bot data or not.
@@ -93,15 +93,15 @@ const BotPlannerPage = () => {
         const customBotIds = customBots.map(bot => bot.id);
         if (customBotIds.length === 0) {
             // @ts-ignore - electron
-            electron.database.run(`DELETE from bots where origin = 'custom' AND profile_id = '${config.current}'`)
+            window.ThreeCPM.Repository.Database.run(`DELETE from bots where origin = 'custom' AND profile_id = '${config.current}'`)
         } else {
             // @ts-ignore - electron
-            electron.database.query(`select * from bots where origin = 'custom' AND profile_id = '${config.current}';`)
+            window.ThreeCPM.Repository.Database.query(`select * from bots where origin = 'custom' AND profile_id = '${config.current}';`)
                 .then((table: Type_Query_bots[]) => {
                     for (let row of table) {
                         if (!customBotIds.includes(row.id)) {
                             // @ts-ignore - electron
-                            electron.database.run(`DELETE from bots where id = '${row.id}' AND profile_id = '${config.current}'`)
+                            window.ThreeCPM.Repository.Database.run(`DELETE from bots where id = '${row.id}' AND profile_id = '${config.current}'`)
                         }
                     }
                 });
@@ -110,7 +110,7 @@ const BotPlannerPage = () => {
         // const existingBots = localBotData.filter(bot => bot.origin === 'sync').map(bot => ({id: bot.id, metrics: bot.metrics}))
 
         // @ts-ignore
-        await electron.database.upsert('bots', localBotData, 'id', 'hide')
+        await window.ThreeCPM.Repository.Database.upsert('bots', localBotData, 'id', 'hide')
 
 
     }

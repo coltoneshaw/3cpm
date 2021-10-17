@@ -64,7 +64,7 @@ function SubRowAsync({ row, visibleColumns }: any) {
 
     useEffect(() => {
         // @ts-ignore
-        const getDealOrdersPromise = electron.api.getDealOrders(currentProfile, row.original.id)
+        const getDealOrdersPromise = window.ThreeCPM.Repository.API.getDealOrders(currentProfile, row.original.id)
 
         Promise.all([getDealOrdersPromise])
             .then(([getDealOrdersResult]) => {

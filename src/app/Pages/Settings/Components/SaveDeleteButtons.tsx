@@ -55,7 +55,7 @@ const SaveDeleteButtons = ({ setOpen, tempProfile }: SubmitButtons) => {
                 const update = await syncNewProfileData(1000);
                 if (update) {
                     //@ts-ignore
-                    await electron.config.set('current', currentProfile.id)
+                    await window.ThreeCPM.Repository.Config.set('current', currentProfile.id)
                     updateConfig();
                     callback();
                 }
@@ -63,7 +63,7 @@ const SaveDeleteButtons = ({ setOpen, tempProfile }: SubmitButtons) => {
 
                 // if there is an error storing the current profile, the data from the database gets deleted.
                 //@ts-ignore
-                await electron.database.deleteAllData(currentProfile.id)
+                await window.ThreeCPM.Repository.Database.deleteAllData(currentProfile.id)
                 console.error(error)
                 alert('There was an error storing your profile data. Please try again. If the issue persists look at the documentation for additional guidance.')
             } finally {
