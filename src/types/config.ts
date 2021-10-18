@@ -34,8 +34,8 @@ export interface Type_Profile {
         startDate: number
         account_id: number[],
         reservedFunds: Type_ReservedFunds[]
-    }
-
+    },
+    writeEnabled: boolean,
 }
 
 export interface Type_ReservedFunds {

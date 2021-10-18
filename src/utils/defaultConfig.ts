@@ -67,7 +67,8 @@ const configSchema = {
 
             }
         }
-    }
+    },
+    writeEnabled: {type: "boolean", default: false}
 }
 
 
@@ -97,9 +98,9 @@ const defaultProfile:Type_Profile = {
         startDate: getTime(sub(new Date(), { days: 90 })),
         account_id: [],
         reservedFunds: []
-    }
+    },
+    writeEnabled: false,
 }
-
 
 const defaultConfig = {
     profiles: Object.assign({[currentId]: defaultProfile}), 

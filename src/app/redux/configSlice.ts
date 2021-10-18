@@ -41,6 +41,7 @@ const configPaths = {
         account_id: 'statSettings.account_id',
     },
     name: 'name',
+    writeEnabled: true,
     general: {
         defaultCurrency: 'general.defaultCurrency'
     }
