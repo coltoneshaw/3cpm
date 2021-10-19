@@ -19,9 +19,10 @@ function WriteModeSettings ({tempProfile, updateTempProfile}: {tempProfile: type
 
                     <FormGroup>
                         <FormControlLabel control={ <Switch
-                            checked={tempProfile.writeEnabled}
+                            checked={tempProfile.writeEnabled ?? false}
                             color="primary"
                             onClick={toggleWriteEnabled}
+                            value={true}
                             name="write-mode"
                             inputProps={{ 'aria-label': 'enable write mode' }}
                         />} label="Enable write mode" />

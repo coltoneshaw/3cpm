@@ -40,12 +40,14 @@ const SaveDeleteButtons = ({ setOpen, tempProfile }: SubmitButtons) => {
     const setProfileConfig = async () => {
         const { status, message } = checkProfileIsValid(tempProfile)
         if (status) {
-            const {key, mode, secret, reservedFunds, name, startDate, defaultCurrency} = tempProfile
+            const {key, mode, secret, reservedFunds, name, startDate, defaultCurrency, writeEnabled} = tempProfile
             updateNestedCurrentProfile(reservedFunds, configPaths.statSettings.reservedFunds);
             updateNestedCurrentProfile({key, mode, secret}, configPaths.apis.threeC.main);
             updateNestedCurrentProfile(name, configPaths.name);
             updateNestedCurrentProfile(startDate, configPaths.statSettings.startDate);
             updateNestedCurrentProfile(defaultCurrency, configPaths.general.defaultCurrency);
+            console.log("storing", writeEnabled, "to", configPaths.writeEnabled)
+            updateNestedCurrentProfile(writeEnabled, configPaths.writeEnabled);
 
             setLoaderIcon(true)
             try {
