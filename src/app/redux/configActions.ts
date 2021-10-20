@@ -44,7 +44,7 @@ const updateNestedCurrentProfile = (data: string | {} | [], path: string) => {
     store.dispatch(updateCurrentProfileByPath({ data, path }))
 }
 
-const updateReservedFundsArray = async (key: string, secret: string, mode: string, handleUpdatingReservedFunds: CallableFunction, reservedFunds: Type_ReservedFunds[]) => {
+const updateReservedFundsArray = async (key: string, secret: string, mode: string,  reservedFunds: Type_ReservedFunds[]) => {
 
     // @ts-ignore
     const accountSummary = await electron.api.getAccountData(undefined, key, secret, mode)
@@ -59,7 +59,7 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
         // checking to see if any reserved funds exist
         if (reservedFunds.length === 0 || reservedFunds === []) {
             console.log('setting since there are no account IDs!')
-            return filteredAccountData.map(account => {
+           return filteredAccountData.map(account => {
                 const { id, name } = account
                 return {
                     id,
@@ -68,13 +68,14 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
                     is_enabled: false
                 }
             })
+
         }
 
         // getting account IDs from the reserved funds
         // const configuredAccountIds = removeDuplicatesInArray(reservedFunds.map(account => account.id), 'id')
 
         // finding any accounts that did not exist since the last sync.
-        const reservedFundsArray = filteredAccountData
+       return filteredAccountData
             // .filter( account => !configuredAccountIds.includes(account.id) )
             .map(account => {
                 let { id, name } = account
@@ -96,7 +97,6 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
 
         // updateReservedFunds(reservedFundsArray)
 
-        handleUpdatingReservedFunds(reservedFundsArray)
 
     }
 

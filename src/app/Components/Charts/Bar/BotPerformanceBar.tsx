@@ -7,75 +7,16 @@ import NoData from '@/app/Pages/Stats/Components/NoData';
 import type { Type_Bot_Performance_Metrics } from '@/types/3Commas';
 import type { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts';
 
-import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 import { parseNumber } from '@/utils/number_formatting';
-import { dynamicSort } from '@/utils/helperFunctions';
-import { filterData } from '@/app/Components/Charts/formatting'
 import { currencyTickFormatter, currencyTooltipFormatter } from '@/app/Components/Charts/formatting'
+import {usePerformanceSortAndFilter, useLocalDataWithHeight} from './Components/barCustomState';
 
 
 
 const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCharts) => {
+    const {sort: {sort, handleSortChange}, filter: {filter, handleFilterChange}, metrics: {metricsDisplayed, updatedMetricsDisplayed}} = usePerformanceSortAndFilter('BotPerformanceBar', { 'total_profit': false, 'bought_volume': false, 'avg_deal_hours': false, 'avg_profit': false });
+    const {chartHeight, newData} = useLocalDataWithHeight(data, filter, sort)
 
-
-    const defaultFilter = 'all';
-    const defaultSort = '-total_profit';
-
-    const localStorageFilterName = storageItem.charts.BotPerformanceBar.filter
-    const localStorageSortName = storageItem.charts.BotPerformanceBar.sort
-
-    const [sort, setSort] = useState(defaultSort);
-    const [filter, setFilter] = useState(defaultFilter);
-    const [metricsDisplayed, updatedMetricsDisplayed] = useState(() => ({ 'total_profit': false, 'bought_volume': false, 'avg_deal_hours': false, 'avg_profit': false }))
-
-
-
-    useLayoutEffect(() => {
-        // const getFilterFromStorage = getStorageItem(localStorageFilterName);
-        // setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
-
-        setFilter(defaultFilter);
-
-        const getSortFromStorage = getStorageItem(localStorageSortName);
-        setSort((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
-
-    }, [])
-
-    const handleSortChange = (event: any) => {
-        const selectedSort = (event.target.value != undefined) ? event.target.value : defaultSort;
-        setSort(selectedSort);
-        setStorageItem(localStorageSortName, selectedSort)
-    };
-
-    const handleFilterChange = (event: any) => {
-        const selectedFilter = (event.target.value != undefined) ? event.target.value : defaultFilter;
-        setFilter(selectedFilter);
-        setStorageItem(localStorageFilterName, selectedFilter)
-    };
-
-
-    const hide = (id: string) => {
-        return id != sort
-    }
-
-    const [localData, updateLocalData] = useState(data)
-    const [newData, updateNewData] = useState<any[]>([])
-    const [chartHeight, updateChartHeight] = useState<number>(300)
-
-    useEffect(() => {
-        if (data && data != []) updateLocalData(data)
-    }, [data])
-
-
-    useEffect(() => {
-        if (localData) updateNewData(() =>{
-            const newData = filterData(localData, filter).sort(dynamicSort(sort))
-            updateChartHeight((newData.length * 15) + 250)
-            return newData
-        })
-
-        // adjusting the chart height based on the number of data points include.d 15px is rougly the width required, 200px is for the other chart elements.
-    }, [localData, filter, sort])
 
 
     return (
@@ -177,7 +118,7 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
                     <XAxis
                         xAxisId="total_profit"
                         type="number"
-                        hide={hide("-total_profit")}
+                        hide={"-total_profit" != sort}
                         domain={[0, 'auto']}
                         allowDataOverflow={true}
                         height={50}
@@ -194,7 +135,7 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
                     <XAxis
                         xAxisId="avg_deal_hours"
                         type="number"
-                        hide={hide("-avg_deal_hours")}
+                        hide={"-avg_deal_hours" != sort}
                         domain={[0, 'auto']}
                         allowDataOverflow={true}
                         height={50}
@@ -210,7 +151,7 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
                     <XAxis
                         xAxisId="bought_volume"
                         type="number"
-                        hide={hide("-bought_volume")}
+                        hide={"-bought_volume" != sort}
                         domain={[0, 'auto']}
                         allowDataOverflow={true}
                         height={50}
@@ -228,7 +169,7 @@ const BotPerformanceBar = ({ data = [], defaultCurrency }: Type_BotPerformanceCh
                     <XAxis
                         xAxisId="avg_profit"
                         type="number"
-                        hide={hide("-avg_profit")}
+                        hide={"-avg_profit" != sort}
                         domain={[0, 'auto']}
                         allowDataOverflow={true}
                         height={50}
