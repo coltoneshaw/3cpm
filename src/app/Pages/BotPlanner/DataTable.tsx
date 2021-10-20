@@ -348,6 +348,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
       {
         Header: 'Deals',
         accessor: 'max_active_deals',
+        Cell: EditableCell,
         className:"monospace-cell",
         style: {
           textAlign: 'center'

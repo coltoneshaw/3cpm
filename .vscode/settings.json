@@ -3,5 +3,6 @@
     "liveServer.settings.port": 5501,
     "cSpell.words": [
         "preload"
-    ]
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib"
 }
