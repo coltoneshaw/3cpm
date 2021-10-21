@@ -9,6 +9,8 @@ import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 import CardTooltip from '@/app/Components/Charts/DataCards/CustomToolTip';
 import {SubRowAsync} from './Components/index'
 
+import { OpenIn3Commas } from '@/app/Components/DataTable/Components'
+
 import Styles from './StyledDiv'
 
 const returnErrorTooltip = (errorMessage: string, value: string) => {
@@ -61,15 +63,7 @@ function DealsTable({ data }: { data: object[] }) {
                     width: '150px'
                 },
 
-                Cell: ({ cell }: any) => {
-                    return (
-                        <span
-                            data-text={cell.row.original.bot_settings}
-                            className="tooltip-activeDeals">
-                            {cell.value}
-                        </span>
-                    )
-                }
+                Cell: ({ cell }: any) => <OpenIn3Commas cell={cell} bot_id={cell.row.original.bot_id} className='tooltip-activeDeals'  />
             },
             {
                 Header: 'Pair',
