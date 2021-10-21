@@ -128,6 +128,7 @@ ipcMain.handle('database-checkOrMakeTables', () => {
  */
 
  const { updateAPI, getAndStoreBotData, getAccountSummary, getDealOrders, updateDeal } = require('@/main/3Commas/index')
+ import {UpdateDealRequest} from "@/main/3Commas/types/Deals";
  import {Type_Profile} from '@/types/config'
 
 ipcMain.handle('api-updateData', async (event, type, options, profileData?:Type_Profile) => {
@@ -166,7 +167,6 @@ ipcMain.handle('binance-getCoins', async (event) => {
 });
 
 import { fetchVersions } from '../app/Features/UpdateBanner/UpdateApiFetch';
-import {UpdateDealRequest} from "@/main/3Commas/types/Deals";
 
 ipcMain.handle('pm-versions', async (event) => {
   return await fetchVersions()
