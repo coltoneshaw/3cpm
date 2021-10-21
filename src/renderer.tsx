@@ -12,6 +12,7 @@ import ElectronAPIRepository from "@/app/Repositories/Impl/electron/API";
 import ElectronBinanceRepository from "@/app/Repositories/Impl/electron/Binance";
 import ElectronConfigRepository from "@/app/Repositories/Impl/electron/Config";
 import ElectronDBRepository from "@/app/Repositories/Impl/electron/Database";
+import ElectronDealsRepository from "@/app/Repositories/Impl/electron/Deals";
 
 
 interface ThreeCPMNS {
@@ -26,6 +27,7 @@ window.ThreeCPM = window.ThreeCPM || {};
 // @ts-ignore - we do that to avoid having tons of ts-ignore
 const electrn = window.electron
 let repo: Repository = {
+    Deals: new ElectronDealsRepository(electrn),
     API: new ElectronAPIRepository(electrn),
     Binance: new ElectronBinanceRepository(electrn),
     Config: new ElectronConfigRepository(electrn),
@@ -39,9 +41,7 @@ let repo: Repository = {
 // if (electrn) {
 //     repo = {
 //         API: new ElectronAPIRepository(electrn),
-//         Binance: new ElectronBinanceRepository(electrn),
-//         Config: new ElectronConfigRepository(electrn),
-//         Database: new ElectronDBRepository(electrn),
+//        ...
 //     }
 // }
 // ...

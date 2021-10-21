@@ -14,7 +14,7 @@ import {
 } from '@/utils/formulas';
 
 import { Type_Profile } from "@/types/config";
-import { threeCommas_Api_Deals } from './types/Deals';
+import {threeCommas_Api_Deals, UpdateDealRequest} from './types/Deals';
 
 
 
@@ -405,6 +405,13 @@ async function getAccountSummary(profileData?: Type_Profile, key?: string, secre
   return array;
 }
 
+async function updateDeal(profileData: Type_Profile, deal: UpdateDealRequest) {
+  let api = threeCapi(profileData)
+  if (!api) return false
+
+  return await api.updateDeal(deal)
+}
+
 
 
 export {
@@ -413,5 +420,6 @@ export {
   deals,
   bots,
   getAccountSummary,
-  getDealOrders
+  getDealOrders,
+  updateDeal
 }

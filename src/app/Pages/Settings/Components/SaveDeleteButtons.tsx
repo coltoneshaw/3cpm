@@ -46,7 +46,6 @@ const SaveDeleteButtons = ({ setOpen, tempProfile }: SubmitButtons) => {
             updateNestedCurrentProfile(name, configPaths.name);
             updateNestedCurrentProfile(startDate, configPaths.statSettings.startDate);
             updateNestedCurrentProfile(defaultCurrency, configPaths.general.defaultCurrency);
-            console.log("storing", writeEnabled, "to", configPaths.writeEnabled)
             updateNestedCurrentProfile(writeEnabled, configPaths.writeEnabled);
 
             setLoaderIcon(true)

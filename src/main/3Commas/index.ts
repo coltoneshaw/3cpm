@@ -1,5 +1,5 @@
 import { update, run, query } from '@/main/Database/database';
-const { bots, getAccountDetail, deals, getAccountSummary, getDealOrders } = require('./api');
+const { bots, getAccountDetail, deals, getAccountSummary, getDealOrders, updateDeal: apiUpdateDeal } = require('./api');
 const log = require('electron-log');
 
 const { getProfileConfigAll } = require('@/main/Config/config')
@@ -8,6 +8,7 @@ import { findAndNotifyNewDeals } from '@/main/Notifications/notifications'
 
 import { Type_Deals_API, Type_Query_Accounts, Type_API_bots, Type_UpdateFunction } from '@/types/3Commas'
 import { Type_Profile } from '@/types/config'
+import {UpdateDealRequest} from "@/main/3Commas/types/Deals";
 
 /**
  * 
@@ -107,7 +108,10 @@ async function getAndStoreBotData(profileData: Type_Profile) {
   } catch (error) {
     log.error('error getting bot data', error)
   }
+}
 
+async function updateDeal(profileData: Type_Profile, deal: UpdateDealRequest) {
+  return await apiUpdateDeal(profileData, deal)
 }
 
 export {
@@ -118,5 +122,6 @@ export {
   deals,
   getAccountData,
   getAccountSummary,
-  getDealOrders
+  getDealOrders,
+  updateDeal
 }

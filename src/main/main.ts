@@ -127,7 +127,7 @@ ipcMain.handle('database-checkOrMakeTables', () => {
  * 
  */
 
- const { updateAPI, getAndStoreBotData, getAccountSummary, getDealOrders } = require('@/main/3Commas/index')
+ const { updateAPI, getAndStoreBotData, getAccountSummary, getDealOrders, updateDeal } = require('@/main/3Commas/index')
  import {Type_Profile} from '@/types/config'
 
 ipcMain.handle('api-updateData', async (event, type, options, profileData?:Type_Profile) => {
@@ -147,6 +147,9 @@ ipcMain.handle('api-getBots', async (event, profileData:Type_Profile) => {
   await getAndStoreBotData(profileData)
 });
 
+ipcMain.handle('api-deals-update', async (event, profileData: Type_Profile, deal: UpdateDealRequest) => {
+    return await updateDeal(profileData, deal)
+});
 
  /************************************************************************
   * 
@@ -163,6 +166,7 @@ ipcMain.handle('binance-getCoins', async (event) => {
 });
 
 import { fetchVersions } from '../app/Features/UpdateBanner/UpdateApiFetch';
+import {UpdateDealRequest} from "@/main/3Commas/types/Deals";
 
 ipcMain.handle('pm-versions', async (event) => {
   return await fetchVersions()

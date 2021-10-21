@@ -1,3 +1,5 @@
+import {UpdateDealRequest} from "@/main/3Commas/types/Deals";
+
 const { contextBridge, ipcRenderer } = require('electron')
 import {Type_UpdateFunction } from '@/types/3Commas'
 import {Type_Profile} from '@/types/config'
@@ -5,6 +7,11 @@ import {Type_Profile} from '@/types/config'
 async function setupContextBridge() {
 
   contextBridge.exposeInMainWorld('electron', {
+    deals: {
+      async update( profileData: Type_Profile, deal: UpdateDealRequest ) {
+        return await ipcRenderer.invoke('api-deals-update', profileData, deal);
+      },
+    },
     api: {
       async update( type: string, options: Type_UpdateFunction, profileData:Type_Profile ) {
         console.log('Updating 3Commas data.')

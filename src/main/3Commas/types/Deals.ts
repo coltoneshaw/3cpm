@@ -1,4 +1,7 @@
-
+export type UpdateDealRequest = {
+    deal_id: number
+    take_profit?: number
+}
 
 export type MarketOrders = {
     order_id: string

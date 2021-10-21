@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import fetch from 'electron-fetch';
 const log = require('electron-log');
-import type { threeCommas_Api_Deals, MarketOrders, GetDeal } from './types/Deals'
+import type {threeCommas_Api_Deals, MarketOrders, GetDeal, UpdateDealRequest} from './types/Deals'
 import type { accounts, AccountCurrencyRates, AccountsMarketList, AccountTableData, AccountPieChartData } from './types/Accounts'
 import type { Bots, GetBotsStats, ShowBot } from './types/Bots'
 import type {GridBots, GridMarketOrders, GridBotProfits, GridBotShow, GridRequiredBalance} from './types/GridBots'
@@ -87,9 +87,14 @@ class threeCommasAPI {
                 }
             )
 
+            if (response.status >= 400) {
+                console.error("API call is in error:", response.status, "url", `${this._url}${path}${u.toString()}`)
+            }
+
+
             return await response.json()
         } catch (e) {
-            log.error(e);
+            log.error("error making api request", e);
             return false
         }
     }
@@ -112,6 +117,11 @@ class threeCommasAPI {
     async getDealSafetyOrders(deal_id: string): Promise<MarketOrders[]> {
         return await this.makeRequest('GET', `/public/api/ver1/deals/${deal_id}/market_orders?`, { deal_id })
     }
+
+    async updateDeal(params: UpdateDealRequest): Promise<any> {
+        return await this.makeRequest('PATCH', `/public/api/ver1/deals/${params.deal_id}/update_deal?`, {...params})
+    }
+
 
     /**
      * Bots methods
