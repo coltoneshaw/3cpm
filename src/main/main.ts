@@ -95,25 +95,16 @@ ipcMain.handle('config-clear', () => {
 
 
  ipcMain.handle('query-database', (event, queryString) => {
-
   return query(queryString)
 });
 
-ipcMain.handle('update-database', (event, table, updateData) => {
-  return update(table, updateData)
-});
+ipcMain.handle('update-database', (event, table, updateData):void => update(table, updateData) );
 
-ipcMain.handle('upsert-database', (event, table:string, data:any[], id:string, updateColumn:string) => {
-  return upsert(table, data, id, updateColumn)
-});
+ipcMain.handle('upsert-database', (event, table:string, data:any[], id:string, updateColumn:string):void => upsert(table, data, id, updateColumn));
 
-ipcMain.handle('run-database', (event, queryString) => {
-  return run(queryString)
-});
+ipcMain.handle('run-database', (event, queryString):void => run(queryString) );
 
-ipcMain.handle('database-deleteAll', (e, profileID: string) => {
-  deleteAllData(profileID)
-});
+ipcMain.handle('database-deleteAll', async (event, profileID?: string):Promise<void> => await deleteAllData(profileID) );
 
 ipcMain.handle('database-checkOrMakeTables', () => {
   log.log('attempting to check if tables exist yet.')

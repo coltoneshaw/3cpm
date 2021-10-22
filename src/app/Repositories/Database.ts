@@ -1,7 +1,9 @@
+type tableNames = 'deals' | 'bots' | 'accountData'
+
 interface DBRepository {
-    query(queryString:string):any;
-    update(table:string, updateData:object[]):any;
-    upsert(table:string, data:any[], id:string, updateColumn:string):any;
-    run(query:string):any;
-    deleteAllData(profileID: string):any;
+    query(queryString:string):Promise<any[]>;
+    update( table: tableNames, updateData:object[] ):void;
+    upsert(table:string, data:any[], id:string, updateColumn:string):void;
+    run(query:string):void;
+    deleteAllData(profileID?: string):Promise<void>;
 }

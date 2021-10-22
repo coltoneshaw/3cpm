@@ -68,7 +68,6 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
             ORDER BY
                 closed_at asc;`
 
-    // @ts-ignore
     let dataArray = await window.ThreeCPM.Repository.Database.query(query)
 
     // if no data return blank array.
@@ -169,7 +168,6 @@ const fetchPerformanceDataFunction = async (profileData: Type_Profile, oDate?: D
                     performance_id;`
 
 
-    // @ts-ignore
     let databaseQuery = await window.ThreeCPM.Repository.Database.query(queryString);
 
     if (databaseQuery == null || databaseQuery.length > 0) {
@@ -237,7 +235,6 @@ const fetchBotPerformanceMetrics = async (profileData: Type_Profile, oDate?: Dat
                 GROUP BY
                     bot_id;`
 
-    // @ts-ignore
     let databaseQuery = await window.ThreeCPM.Repository.Database.query(queryString);
 
     if (databaseQuery == null || databaseQuery.length > 0) {
@@ -263,12 +260,9 @@ const botQuery = async (currentProfile: Type_Profile) => {
                     and from_currency in (${currencyString})
                     and (account_id in (${accountIdString})  OR origin = 'custom')`
 
-    // @ts-ignore
     let databaseQuery = await window.ThreeCPM.Repository.Database.query(queryString);
 
-    if (databaseQuery != null || databaseQuery.length > 0) {
-        return databaseQuery
-    }
+    if (databaseQuery != null) return databaseQuery
     return []
 
 }
@@ -303,7 +297,6 @@ const fetchPairPerformanceMetrics = async (profileData: Type_Profile, oDate?: Da
         GROUP BY
             pair;`
 
-    // @ts-ignore
     let databaseQuery = await window.ThreeCPM.Repository.Database.query(queryString);
 
     if (databaseQuery == null || databaseQuery.length > 0) {
@@ -329,7 +322,6 @@ const getActiveDealsFunction = async (profileData: Type_Profile) => {
                     and currency in (${currencyString} )
                     and profile_id = '${currentProfileID}'
                     `
-    // @ts-ignore
     let activeDeals: Array<Type_ActiveDeals> = await window.ThreeCPM.Repository.Database.query(query)
 
 
@@ -381,7 +373,6 @@ const getAccountDataFunction = async (profileData: Type_Profile) => {
                     and currency_code IN ( ${currencyString} )
                     and profile_id = '${currentProfileID}';
     `
-    // @ts-ignore
     let accountData: Array<Type_Query_Accounts> = await window.ThreeCPM.Repository.Database.query(query)
 
     // removed this since it seems redundant to the above query
@@ -472,7 +463,6 @@ const getSelectPairDataByDate = async (profileData: Type_Profile, pairs: string[
     `
 
 
-    // @ts-ignore
     let pairData: Array<Type_Pair_By_Date> = await window.ThreeCPM.Repository.Database.query(query);
 
 
@@ -526,7 +516,6 @@ const fetchSoData = async (currentProfile: Type_Profile, oDate?: DateRange) => {
             group by 
                 completed_safety_orders_count;`
 
-    //@ts-ignore
     const data = await window.ThreeCPM.Repository.Database.query(query)
 
     if(!data || data.length == 0){

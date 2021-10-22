@@ -67,21 +67,18 @@ async function setupContextBridge() {
         console.log(queryString)
         return await ipcRenderer.invoke('query-database', queryString);
       },
-      async update(table:string, updateData:object[]) {
-        console.log('updating the database.')
-        return await ipcRenderer.invoke('update-database', table, updateData);
+      update(table:string, updateData:object[]):void {
+        ipcRenderer.invoke('update-database', table, updateData);
       },
-      async upsert(table:string, data:any[], id:string, updateColumn:string) {
-        console.log('running upsert on the database.')
-        return await ipcRenderer.invoke('upsert-database', table, data, id, updateColumn);
+      upsert(table:string, data:any[], id:string, updateColumn:string):void {
+        ipcRenderer.invoke('upsert-database', table, data, id, updateColumn);
       },
-      async run(query:string) {
-        console.log('running query' + query)
-        return await ipcRenderer.invoke('run-database', query);
+      run(query:string):void {
+        ipcRenderer.invoke('run-database', query);
       },
-      async deleteAllData(profileID: string) {
+      async deleteAllData(profileID?: string):Promise<void> {
         console.log('deleting all data!')
-        return await ipcRenderer.invoke('database-deleteAll', profileID);
+        await ipcRenderer.invoke('database-deleteAll', profileID);
       }
     },
     general: {

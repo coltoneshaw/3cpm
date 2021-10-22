@@ -63,7 +63,6 @@ const SaveDeleteButtons = ({ setOpen, tempProfile }: SubmitButtons) => {
             } catch (error) {
 
                 // if there is an error storing the current profile, the data from the database gets deleted.
-                //@ts-ignore
                 await window.ThreeCPM.Repository.Database.deleteAllData(currentProfile.id)
                 console.error(error)
                 alert('There was an error storing your profile data. Please try again. If the issue persists look at the documentation for additional guidance.')
