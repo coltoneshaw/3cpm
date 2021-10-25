@@ -16,7 +16,7 @@ import {UpdateDealRequest} from "@/main/3Commas/types/Deals";
  * - Inspect if the lastSyncTime is set. If it is, then need to run bulk. If it's not, need to run update. This might need to go into
  * the code for threeC
  */
-async function updateAPI(type: string, options: Type_UpdateFunction, profileData: Type_Profile) {
+async function updateAPI(type: string, options: Type_UpdateFunction, profileData: Type_Profile):Promise<number | false> {
 
   if (!profileData) {
     log.error(' No profile was provided to the updateAPI call');
