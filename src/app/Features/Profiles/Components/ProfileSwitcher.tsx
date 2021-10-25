@@ -57,7 +57,7 @@ const ProfileSwitcher = () => {
                         dispatch(setCurrentProfileById({profileId: p}))
 
                         //@ts-ignore
-                        electron.config.set('current', p)
+                        mainPreload.config.set('current', p)
                         popupState.close()
                     }} 
                     style={styles}>

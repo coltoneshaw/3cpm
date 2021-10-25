@@ -6,7 +6,7 @@ import {Type_Profile} from '@/types/config'
 
 async function setupContextBridge() {
 
-  contextBridge.exposeInMainWorld('electron', {
+  contextBridge.exposeInMainWorld('mainPreload', {
     deals: {
       async update( profileData: Type_Profile, deal: UpdateDealRequest ) {
         return await ipcRenderer.invoke('api-deals-update', profileData, deal);

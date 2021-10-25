@@ -23,7 +23,7 @@ const CoinPriceHeader = () => {
     const fetchNewCoinData = (update?: string) => {
 
         // @ts-ignore
-        electron.binance.coinData()
+        mainPreload.binance.coinData()
             .then((data: any) => {
                 if (data == undefined || data.length == 0) return
 

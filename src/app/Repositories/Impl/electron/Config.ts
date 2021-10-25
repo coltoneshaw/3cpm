@@ -1,22 +1,23 @@
 import BaseElectronRepository from "@/app/Repositories/Impl/electron/Base";
+import { ConfigRepository } from '@/app/Repositories/interfaces';
 
 export default class ElectronConfigRepository extends BaseElectronRepository implements ConfigRepository {
     get(value: string): any {
-        return this.electron.config.get(value)
+        return this.mainPreload.config.get(value)
     }
     getProfile(value: string): any {
-        return this.electron.config.getProfile(value)
+        return this.mainPreload.config.getProfile(value)
     }
     reset(): any {
-        return this.electron.config.reset()
+        return this.mainPreload.config.reset()
     }
     set(key: string, value: any): any {
-        return this.electron.config.set(key, value)
+        return this.mainPreload.config.set(key, value)
     }
     setProfile(key: string, value: any): any {
-        return this.electron.config.setProfile(key, value)
+        return this.mainPreload.config.setProfile(key, value)
     }
     bulk(changes: object): any {
-        return this.electron.config.bulk(changes)
+        return this.mainPreload.config.bulk(changes)
     }
 }

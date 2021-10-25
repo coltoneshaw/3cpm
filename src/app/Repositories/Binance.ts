@@ -1,5 +1,0 @@
-interface BinanceRepository {
-    coinData():any;
-}
-
-

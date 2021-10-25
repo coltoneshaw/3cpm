@@ -41,8 +41,8 @@ const getFiltersQueryString = async (profileData: Type_Profile) => {
 const updateThreeCData = async (type: string, options: Type_UpdateFunction, profileData: Type_Profile): Promise<{lastSyncTime : number}>  => {
 
     console.info({ options })
-    // @ts-ignore
-    return await electron.api.update(type, options, profileData);
+
+    return await window.ThreeCPM.Repository.API.update(type, options, profileData);
 }
 
 

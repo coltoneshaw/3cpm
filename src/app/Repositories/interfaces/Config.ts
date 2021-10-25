@@ -1,4 +1,4 @@
-interface ConfigRepository {
+export default interface ConfigRepository {
     get(value: string): any;
     getProfile(value: string): any;
     reset(): any;

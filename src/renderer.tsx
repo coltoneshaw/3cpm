@@ -8,11 +8,15 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 import store from '@/app/redux/store'
 import { Provider } from 'react-redux'
-import ElectronAPIRepository from "@/app/Repositories/Impl/electron/API";
-import ElectronBinanceRepository from "@/app/Repositories/Impl/electron/Binance";
-import ElectronConfigRepository from "@/app/Repositories/Impl/electron/Config";
-import ElectronDBRepository from "@/app/Repositories/Impl/electron/Database";
-import ElectronDealsRepository from "@/app/Repositories/Impl/electron/Deals";
+
+import {
+  ElectronAPIRepository,
+  ElectronDealsRepository,
+  ElectronDBRepository,
+  ElectronConfigRepository,
+  ElectronBinanceRepository
+} from "@/app/Repositories/Impl/electron";
+import {Repository} from '@/app/Repositories/interfaces'
 
 
 interface ThreeCPMNS {
@@ -25,13 +29,13 @@ declare global {
 window.ThreeCPM = window.ThreeCPM || {};
 
 // @ts-ignore - we do that to avoid having tons of ts-ignore
-const electrn = window.electron
+const mainPreload = window.mainPreload
 let repo: Repository = {
-    Deals: new ElectronDealsRepository(electrn),
-    API: new ElectronAPIRepository(electrn),
-    Binance: new ElectronBinanceRepository(electrn),
-    Config: new ElectronConfigRepository(electrn),
-    Database: new ElectronDBRepository(electrn),
+    Deals: new ElectronDealsRepository(mainPreload),
+    API: new ElectronAPIRepository(mainPreload),
+    Binance: new ElectronBinanceRepository(mainPreload),
+    Config: new ElectronConfigRepository(mainPreload),
+    Database: new ElectronDBRepository(mainPreload),
 };
 
 

@@ -20,13 +20,13 @@ const UpdateBanner = () => {
 
     const openVersionLink = () => {
         // @ts-ignore
-        electron.general.openLink(latestLink)
+        mainPreload.general.openLink(latestLink)
     }
 
     useEffect(() => {
 
         // @ts-ignore
-        electron.pm.versions()
+        mainPreload.pm.versions()
             .then((versionData:any) => {
 
                 if(versionData == undefined || versionData[0] == undefined){

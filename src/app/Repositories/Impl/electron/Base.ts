@@ -1,7 +1,7 @@
 export default class BaseElectronRepository {
-    protected electron: any;
+    protected mainPreload: any;
 
-    constructor(electron: any) {
-        this.electron = electron;
+    constructor(mainPreload: any) {
+        this.mainPreload = mainPreload;
     }
 }
