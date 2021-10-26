@@ -63,7 +63,6 @@ function SubRowAsync({ row, visibleColumns }: any) {
     const { currentProfile } = useAppSelector(state => state.config);
 
     useEffect(() => {
-        // @ts-ignore
         const getDealOrdersPromise = window.ThreeCPM.Repository.API.getDealOrders(currentProfile, row.original.id)
 
         Promise.all([getDealOrdersPromise])

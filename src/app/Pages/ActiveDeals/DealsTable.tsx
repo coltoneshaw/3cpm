@@ -12,16 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import Styles from './StyledDiv'
 import {useAppSelector} from "@/app/redux/hooks";
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    IconButton,
-    TextField
-} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 import EditDeal from "@/app/Pages/ActiveDeals/Components/EditDeal";
 
 const returnErrorTooltip = (errorMessage: string, value: string) => {
@@ -219,6 +210,9 @@ function DealsTable({ data }: { data: object[] }) {
         }
     ]
 
+
+    // TODO
+    // This can be rewritten to utilize the hide property of react-table
     if (writeEnabled) {
         cols.push({
                 Header: '',

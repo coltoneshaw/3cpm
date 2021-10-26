@@ -55,7 +55,6 @@ const SaveDeleteButtons = ({ setOpen, tempProfile }: SubmitButtons) => {
                 //updating the current profile's data
                 const update = await syncNewProfileData(1000);
                 if (update) {
-                    //@ts-ignore
                     await window.ThreeCPM.Repository.Config.set('current', currentProfile.id)
                     updateConfig();
                     callback();

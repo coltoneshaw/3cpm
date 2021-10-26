@@ -47,7 +47,6 @@ const MainWindow = () => {
                     handleOpenChangelog()
 
                     // setting to false so this does not open again
-                    //@ts-ignore
                     window.ThreeCPM.Repository.Config.set('general.version', version)
                 }
             })

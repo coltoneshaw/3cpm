@@ -17,7 +17,7 @@ interface mainPreload {
     getDealOrders: (profileData:Type_Profile, dealID: number) => Promise<ReturnType<typeof getDealOrders>>,
   },
   config: {
-    get: (value:string) => Promise<any>,
+    get: (value?:string) => Promise<any>,
     getProfile: ( value:string ) => Promise<any>,
     reset: () => Promise<void>,
     set: (key:string, value:any) => Promise<any>,
@@ -73,7 +73,7 @@ async function setupContextBridge() {
       },
     },
     config: {
-      async get( value:string ) {
+      async get( value?:string ) {
         console.log('fetching Config')
         return await ipcRenderer.invoke('allConfig', value);
       },

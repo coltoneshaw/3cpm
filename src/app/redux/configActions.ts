@@ -9,8 +9,7 @@ import store from './store'
 
 const updateConfig = async () => {
 
-    //@ts-ignore
-    await mainPreload.config.get()
+    await window.mainPreload.config.get()
         .then((config: any) => {
             store.dispatch(setConfig(config));
             updateCurrentProfile(config.profiles[config.current])
@@ -19,8 +18,7 @@ const updateConfig = async () => {
 
 const storeConfigInFile = async () => {
     try {
-        //@ts-ignore
-        await mainPreload.config.set(null, store.getState().config.config)
+        await window.mainPreload.config.bulk(store.getState().config.config)
         updateConfig()
         return true
     } catch (e) {
@@ -115,8 +113,7 @@ const deleteProfileByIdGlobal = (config: TconfigValues, profileId:string, setOpe
         store.dispatch(deleteProfileById({ profileId }))
         storeConfigInFile();
 
-        //@ts-ignore
-        mainPreload.database.deleteAllData(profileId)
+        window.mainPreload.database.deleteAllData(profileId)
 
         // delete the profile command
         // route the user back to a their default profile OR route the user to a new blank profile..?

@@ -118,7 +118,7 @@ class threeCommasAPI {
         return await this.makeRequest('GET', `/public/api/ver1/deals/${deal_id}/market_orders?`, { deal_id })
     }
 
-    async updateDeal(params: UpdateDealRequest): Promise<any> {
+    async updateDeal(params: UpdateDealRequest): Promise<threeCommas_Api_Deals> {
         return await this.makeRequest('PATCH', `/public/api/ver1/deals/${params.deal_id}/update_deal?`, {...params})
     }
 

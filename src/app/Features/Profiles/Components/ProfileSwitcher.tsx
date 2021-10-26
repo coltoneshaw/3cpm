@@ -56,8 +56,7 @@ const ProfileSwitcher = () => {
                         updateCurrentProfileId(p);
                         dispatch(setCurrentProfileById({profileId: p}))
 
-                        //@ts-ignore
-                        mainPreload.config.set('current', p)
+                        window.mainPreload.config.set('current', p)
                         popupState.close()
                     }} 
                     style={styles}>

@@ -7,10 +7,10 @@ const FeedbackOrBugButton = () => {
 
     const openLink = () => {
         const link = 'https://github.com/coltoneshaw/3c-portfolio-manager#feedback-or-bug-submission'
-        // @ts-ignore
-        let elctron = window.electron
-        if (elctron) {
-            return elctron.general.openLink(link);
+
+        let electron = window.mainPreload
+        if (electron) {
+            return window.mainPreload.general.openLink(link);
         }
         return window.open(link)
     }
