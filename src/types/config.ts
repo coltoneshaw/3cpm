@@ -27,7 +27,7 @@ export interface Type_Profile {
     },
     syncStatus: {
         deals: {
-            lastSyncTime: number | null
+            lastSyncTime: number 
         }
     },
     statSettings: {

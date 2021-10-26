@@ -1,5 +1,4 @@
 import { Notification } from 'electron';
-import { Type_Deals_API } from '@/types/3Commas'
 
 import { parseNumber } from '@/utils/number_formatting'
 import { getProfileConfig } from '@/main/Config/config'
@@ -7,6 +6,7 @@ import { getProfileConfig } from '@/main/Config/config'
 import { convertMiliseconds } from '@/utils/helperFunctions'
 
 import path from "path";
+import type {threeCommas_Api_Deals} from '@/main/3Commas/types/Deals';
 
 const accountFilters = () => {
     //@ts-ignore
@@ -66,7 +66,16 @@ const calcDealTime = (created_at:string , closed_at:string ) => {
  * @param lastSyncTime This is the miliseconds of the last sync.
  * @param summary boolean value to represent if notifications are summarized if multiple come in together.
  */
-function findAndNotifyNewDeals(data: Type_Deals_API[], lastSyncTime: number, summary: boolean) {
+
+type data = threeCommas_Api_Deals & {
+    completed_manual_safety_orders_count: number,
+    max_deal_funds: number | null,
+    profitPercent: string | null,
+    impactFactor: number | null,
+    closed_at_iso_string: number | null,
+}
+
+ function findAndNotifyNewDeals(data: data[], lastSyncTime: number, summary: boolean) {
 
     const filters = accountFilters()
 
@@ -76,32 +85,35 @@ function findAndNotifyNewDeals(data: Type_Deals_API[], lastSyncTime: number, sum
     // Additionally this filters out any deals it's already notified of
 
     // remove deals that closed before the last sync and that have already been notified.
-    data = data.filter(deal => deal.closed_at_iso_string > lastSyncTime && !dealsNotified.includes(deal.id) && filters.includes(deal.account_id))
+    const closedDeals = data.filter(deal => 
+            deal.closed_at_iso_string != null && 
+            deal.closed_at_iso_string > lastSyncTime && 
+            !dealsNotified.includes(deal.id) && filters.includes(deal.account_id));
 
 
     // end the function if no deals exist in the filtered array
-    if(data.length === 0 || !lastSyncTime) return false
+    if(closedDeals.length === 0 || !lastSyncTime) return false
 
     // if summary enabled and more than one deal exists.
-    if (summary && data.length > 1) {
+    if (summary && closedDeals.length > 1) {
         // @ts-ignore
-        const totalProfit = data.map(deal => deal.final_profit).reduce((sum, profit) => sum + profit);
-        const pairs = data.map(deal => deal.pair)
-        const moneyBags = ("💰".repeat(data.length))
+        const totalProfit = closedDeals.map(deal => deal.final_profit).reduce((sum, profit) => sum + profit);
+        const pairs = closedDeals.map(deal => deal.pair)
+        const moneyBags = ("💰".repeat(closedDeals.length))
         const ifRich = (+totalProfit > 0) ? "rich" : "poor"
         try {
 
-            showNotification(`${data.length} Deals Closed, you're ${ifRich}`, `Profit: ${parseNumber(totalProfit, 5)} - Pairs: ${pairs.join(', ')}. ${moneyBags} `);
+            showNotification(`${closedDeals.length} Deals Closed, you're ${ifRich}`, `Profit: ${parseNumber(totalProfit, 5)} - Pairs: ${pairs.join(', ')}. ${moneyBags} `);
 
             // add the deal IDs to the notified deal array
-            dealsNotified.push(...data.map(deal => deal.id))
+            dealsNotified.push(...closedDeals.map(deal => deal.id))
         } catch (error) {
             console.error('error showing notification - ' + error)
         }
         return
     }
 
-    for (let deal of data) {
+    for (let deal of closedDeals) {
 
 
         const {bot_name, pair, final_profit, final_profit_percentage, from_currency, id, created_at, closed_at} = deal;
@@ -113,7 +125,7 @@ function findAndNotifyNewDeals(data: Type_Deals_API[], lastSyncTime: number, sum
         // calculate difference in miliseconds between created_at and closed_at
         // decide if it's days / hours / minutes / seconds
         // add to end of string
-        const moneyBags = (final_profit_percentage > 0) ? "💰".repeat(Math.abs(Math.round(final_profit_percentage))) : '';
+        const moneyBags = (+final_profit_percentage > 0) ? "💰".repeat(Math.abs(Math.round(+final_profit_percentage))) : '';
         const notificationString = `(${id}) ${bot_name} - ${pair} closed a deal. Profit: ${parseNumber(final_profit, 5)} ${from_currency} ( ${final_profit_percentage} % ) ${calcDealTime(created_at, closed_at)}${moneyBags}`;
 
         try {

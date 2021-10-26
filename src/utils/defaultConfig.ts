@@ -91,7 +91,7 @@ const defaultProfile:Type_Profile = {
     },
     syncStatus: {
         deals: {
-            lastSyncTime: null,
+            lastSyncTime: 0,
         }
     },
     statSettings: {

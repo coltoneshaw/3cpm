@@ -1,5 +1,5 @@
 import { update, run, query } from '@/main/Database/database';
-const { bots, getAccountDetail, deals, getAccountSummary, getDealOrders, updateDeal: apiUpdateDeal } = require('./api');
+import { bots, getAccountDetail, deals, getAccountSummary, getDealOrders, updateDeal } from './api';
 const log = require('electron-log');
 
 const { getProfileConfigAll } = require('@/main/Config/config')
@@ -34,36 +34,38 @@ async function updateAPI(type: string, options: Type_UpdateFunction, profileData
 async function getDealData(type: string, options: Type_UpdateFunction, profileData: Type_Profile) {
 
   return await deals(options.offset, type, profileData)
-    .then((data: { deals: any[], lastSyncTime: number }) => {
+    .then(data => {
 
       let { deals, lastSyncTime } = data
 
+      if (deals.length === 0) return lastSyncTime;
       // if notifications need to be enabled for the fullSync then the type below needs to be updated.
-      if (type === 'autoSync' && options.notifications && options.time != undefined || options.syncCount != 0) findAndNotifyNewDeals(deals, options.time, options.summary)
+      if (type === 'autoSync' && options.notifications && options.time != undefined || options.syncCount != 0) {
+        findAndNotifyNewDeals(deals, options.time, options.summary)
+      }
       update('deals', deals, profileData.id)
-      // log.info(data)
 
       return lastSyncTime
     })
 
 }
-async function getAccountData(profileData: Type_Profile) {
+async function getAccountData(profileData: Type_Profile):Promise<void> {
 
   if (!profileData) {
     log.error(' No profile was provided to the updateAPI call');
-    return false
+    return 
   }
 
   // 1. Fetch data from the API
   await getAccountDetail(profileData)
-    .then(async (data: Type_Query_Accounts[]) => {
+    .then(async data => {
       // 2. Delete all the data in the database that exist in the API response
       const accountIds = data.map(account => account.account_id);
       await run(`DELETE FROM accountData WHERE account_id in ( ${accountIds.join()}) and profile_id='${profileData.id}';`)
       return data
     })
     //3. Post the API response to the database.
-    .then((data: Type_Query_Accounts[]) => update('accountData', data, profileData.id))
+    .then(data=> update('accountData', data, profileData.id))
 }
 
 
@@ -71,15 +73,15 @@ async function getAccountData(profileData: Type_Profile) {
  * 
  * @param profileData if not sent, this will use the current profile saved to the config.
  */
-async function getAndStoreBotData(profileData: Type_Profile) {
+async function getAndStoreBotData(profileData: Type_Profile): Promise<void> {
   if (!profileData) {
     log.error(' No profile was provided to the updateAPI call');
-    return false
+    return 
   }
   
   try {
     await bots(profileData)
-      .then(async (data: Type_API_bots[]) => {
+      .then(async data => {
         if (data != null && data.length > 0) {
 
           // deleting the bots that do not exist in the sync
@@ -110,9 +112,9 @@ async function getAndStoreBotData(profileData: Type_Profile) {
   }
 }
 
-async function updateDeal(profileData: Type_Profile, deal: UpdateDealRequest) {
-  return await apiUpdateDeal(profileData, deal)
-}
+// async function updateDeal(profileData: Type_Profile, deal: UpdateDealRequest) {
+//   return await apiUpdateDeal(profileData, deal)
+// }
 
 export {
   bots,
