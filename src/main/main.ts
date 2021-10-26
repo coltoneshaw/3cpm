@@ -71,14 +71,8 @@ ipcMain.handle('allConfig', (event, value?:string ) => {
   return config.store
 });
 
-ipcMain.handle('setStoreValue', (event, key, value) => {
-  if (key === null) return config.set(value);
-  return config.set(key, value);
-});
-
-ipcMain.handle('setBulkValues', (event, values) => {
-  return config.set(values)
-});
+ipcMain.handle('setStoreValue', (event, key:string, value:any) => config.set(key, value));
+ipcMain.handle('setBulkValues', (event, values) => config.set(values) );
 
 ipcMain.handle('config-clear', () => {
   return config.clear()

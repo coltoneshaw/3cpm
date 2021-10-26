@@ -9,8 +9,8 @@ import store from './store'
 
 const updateConfig = async () => {
 
-    await window.mainPreload.config.get()
-        .then((config: any) => {
+    await window.ThreeCPM.Repository.Config.get('all')
+        .then(config => {
             store.dispatch(setConfig(config));
             updateCurrentProfile(config.profiles[config.current])
         })
@@ -18,7 +18,7 @@ const updateConfig = async () => {
 
 const storeConfigInFile = async () => {
     try {
-        await window.mainPreload.config.bulk(store.getState().config.config)
+        await window.ThreeCPM.Repository.Config.bulk(store.getState().config.config)
         updateConfig()
         return true
     } catch (e) {

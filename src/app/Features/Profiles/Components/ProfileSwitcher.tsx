@@ -55,8 +55,7 @@ const ProfileSwitcher = () => {
                     onClick={() => { 
                         updateCurrentProfileId(p);
                         dispatch(setCurrentProfileById({profileId: p}))
-
-                        window.mainPreload.config.set('current', p)
+                        window.ThreeCPM.Repository.Config.set('current', p)
                         popupState.close()
                     }} 
                     style={styles}>
