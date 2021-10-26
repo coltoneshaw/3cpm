@@ -24,12 +24,14 @@ interface ThreeCPMNS {
 }
 
 declare global {
-    interface Window { ThreeCPM: ThreeCPMNS; }
+    interface Window { 
+      ThreeCPM: ThreeCPMNS; 
+    }
 }
-window.ThreeCPM = window.ThreeCPM || {};
 
-// @ts-ignore - we do that to avoid having tons of ts-ignore
+window.ThreeCPM = window.ThreeCPM || {};
 const mainPreload = window.mainPreload
+
 let repo: Repository = {
     Deals: new ElectronDealsRepository(mainPreload),
     API: new ElectronAPIRepository(mainPreload),

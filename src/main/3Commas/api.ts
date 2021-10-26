@@ -161,7 +161,7 @@ async function getMarketOrders(deal_id: number, profileData: Type_Profile) {
  */
 async function getDealOrders(profileData: Type_Profile, deal_id: number) {
   const api = threeCapi(profileData)
-  if (!api) return false
+  if (!api) return []
 
   // this is the /market_orders endpoint.
   const data = await api.getDealSafetyOrders(String(deal_id))
@@ -392,7 +392,7 @@ async function getAccountDetail(profileData: Type_Profile) {
 // TODO replace this with the get account detail function with some conditional logic
 async function getAccountSummary(profileData?: Type_Profile, key?: string, secret?: string, mode?: string) {
   let api = threeCapi(profileData, key, secret, mode)
-  if (!api) return false
+  if (!api) return []
   let accountData = await api.accounts()
 
   let array = []
