@@ -30,16 +30,18 @@ export interface database {
     deleteAllData: (profileID?: string) => Promise<void>
 }
 
+export interface api {
+    update: (type: string, options: Type_UpdateFunction, profileData: Type_Profile) => Promise<false | number>,
+    updateBots: (profileData: Type_Profile) => Promise<void>,
+    getAccountData: (profileData: Type_Profile, key?: string, secret?: string, mode?: string) => Promise<{ id: number, name: string }[]>,
+    getDealOrders: (profileData: Type_Profile, dealID: number) => Promise<ReturnType<typeof getDealOrders>>,
+}
+
 interface mainPreload {
     deals: {
         update: (profileData: Type_Profile, deal: UpdateDealRequest) => Promise<void>
     },
-    api: {
-        update: (type: string, options: Type_UpdateFunction, profileData: Type_Profile) => Promise<false | number>,
-        updateBots: (profileData: Type_Profile) => Promise<void>,
-        getAccountData: (profileData: Type_Profile, key?: string, secret?: string, mode?: string) => Promise<{ id: number, name: string }[]>,
-        getDealOrders: (profileData: Type_Profile, dealID: number) => Promise<ReturnType<typeof getDealOrders>>,
-    },
+    api: api,
     config: config,
     database: database,
     general: {
