@@ -30,7 +30,7 @@ export type Bots = {
         safety_order_volume: string,
         safety_order_step_percentage: string,
         take_profit_type: 'total',
-        type: 'Bot::SingleBot',
+        type: 'Bot::SingleBot' | 'Bot::MultiBot',
         martingale_volume_coefficient: string,
         martingale_step_coefficient: string,
         stop_loss_percentage: string,

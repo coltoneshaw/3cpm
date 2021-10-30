@@ -1,4 +1,4 @@
-export interface Type_Query_PerfArray {
+export type Type_Query_PerfArray = {
     performance_id: string
     bot_name: string
     pair: string[]
@@ -11,15 +11,7 @@ export interface Type_Query_PerfArray {
     percentTotalProfit: number
 }
 
-export interface Type_Pair_Performance_Metrics {
-    pair:string
-    avg_completed_so: number
-    total_profit: number
-    number_of_deals: number
-    avg_profit: number
-    bought_volume: number
-    avg_deal_hours: number
-}
+export type Type_Pair_Performance_Metrics = fetchPairPerformanceMetrics;
 
 export type Type_SoDistributionArray = {
     completed_safety_orders_count: number // the actual SO level. 0 = BO.
