@@ -27,9 +27,9 @@ class Sidebar extends Component {
                     <SidebarNav Icon={TradingViewLogo} name="Trading View" link="/backtesting" />
                 </div>
                 <div className="flex-column sidebar-column" style={{ justifyContent: 'flex-end' }}>
-                    <SidebarLink Icon={Coffee} name="Donate" onClick={() => window.mainPreload.general.openLink('https://www.buymeacoffee.com/ColtonS')} />
+                    <SidebarLink Icon={Coffee} name="Donate" onClick={() => window.ThreeCPM.Repository.General.openLink('https://www.buymeacoffee.com/ColtonS')} />
 
-                    <SidebarLink Icon={MenuBookIcon} name="Documentation"  onClick={() => window.mainPreload.general.openLink('https://docs.3cpm.io')} />
+                    <SidebarLink Icon={MenuBookIcon} name="Documentation"  onClick={() => window.ThreeCPM.Repository.General.openLink('https://docs.3cpm.io')} />
                     <ProfileSwitcher />
                     <SidebarNav Icon={Cog} name="Settings" link="/settings" />
                     <DisplaySwitcher />

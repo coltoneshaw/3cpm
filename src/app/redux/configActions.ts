@@ -113,7 +113,7 @@ const deleteProfileByIdGlobal = (config: TconfigValues, profileId:string, setOpe
         store.dispatch(deleteProfileById({ profileId }))
         storeConfigInFile();
 
-        window.mainPreload.database.deleteAllData(profileId)
+        window.ThreeCPM.Repository.Database.deleteAllData(profileId)
 
         // delete the profile command
         // route the user back to a their default profile OR route the user to a new blank profile..?

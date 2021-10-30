@@ -10,7 +10,7 @@ const FeedbackOrBugButton = () => {
 
         let electron = window.mainPreload
         if (electron) {
-            return window.mainPreload.general.openLink(link);
+            return window.ThreeCPM.Repository.General.openLink(link);
         }
         return window.open(link)
     }
