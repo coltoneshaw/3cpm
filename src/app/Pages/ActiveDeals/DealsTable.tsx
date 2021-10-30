@@ -10,6 +10,8 @@ import CardTooltip from '@/app/Components/Charts/DataCards/CustomToolTip';
 import {SubRowAsync} from './Components/index'
 import EditIcon from '@mui/icons-material/Edit';
 
+import { OpenIn3Commas } from '@/app/Components/DataTable/Components'
+
 import Styles from './StyledDiv'
 import {useAppSelector} from "@/app/redux/hooks";
 import IconButton from "@mui/material/IconButton";
@@ -65,7 +67,6 @@ function DealsTable({ data }: { data: object[] }) {
                 paddingLeft: '1em',
                 width: '150px'
             },
-
             Cell: ({ cell }: any) => {
                 return (
                     <span
@@ -79,7 +80,11 @@ function DealsTable({ data }: { data: object[] }) {
         {
             Header: 'Pair',
             accessor: 'pair',
-
+            Cell: ({ cell }: any) => <OpenIn3Commas cell={cell} bot_id={cell.row.original.bot_id} className='tooltip-activeDeals'  />
+        },
+        {
+            Header: 'Pair',
+            accessor: 'pair',
             style: { textAlign: 'left', width: '120px' },
         },
         {

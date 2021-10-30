@@ -20,6 +20,9 @@ import {
 import { Type_Query_bots } from '@/types/3Commas'
 
 import { CustomTable } from '@/app/Components/DataTable/Index'
+import { OpenIn3Commas } from '@/app/Components/DataTable/Components'
+
+
 
 const Styles = styled.div`
   overflow: auto;
@@ -254,7 +257,8 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
       {
         Header: 'Name',
         accessor: 'name',
-        Cell: EditableCell,
+        // Cell: EditableCell,
+        Cell: ({ cell }: any) => <OpenIn3Commas cell={cell} bot_id={cell.row.original.id} />,
         style: {
           textAlign: 'center',
           paddingLeft: '1em'
