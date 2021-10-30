@@ -34,8 +34,8 @@ export interface database {
 export interface api {
     update: (type: string, options: Type_UpdateFunction, profileData: Type_Profile) => Promise<false | number>,
     updateBots: (profileData: Type_Profile) => Promise<void>,
-    getAccountData: (profileData: Type_Profile, key?: string, secret?: string, mode?: string) => Promise<{ id: number, name: string }[]>,
-    getDealOrders: (profileData: Type_Profile, dealID: number) => Promise<ReturnType<typeof getDealOrders>>,
+    getAccountData: (profileData?: Type_Profile, key?: string, secret?: string, mode?: string) => Promise<{ id: number, name: string }[]>,
+    getDealOrders: (profileData: Type_Profile, dealID: number) => ReturnType<typeof getDealOrders>,
 }
 
 export interface general {
@@ -43,10 +43,10 @@ export interface general {
 }
 
 export interface binance {
-    coinData: () => BinanceTicketPrice | false
+    coinData: () => Promise< BinanceTicketPrice | false >
 }
 export interface pm {
-    versions: () => Type_GithubRelease | false
+    versions: () => Promise<Type_GithubRelease | false >
 }
 
 interface mainPreload {

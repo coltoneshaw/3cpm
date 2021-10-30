@@ -66,8 +66,8 @@ ipcMain.handle('open-external-link', (event, link) => {
   shell.openExternal(link)
 });
 
-ipcMain.handle('allConfig', (event, value?:string ) => {
-  if (value != null) return config.get(value)
+ipcMain.handle('allConfig', (event, value:string ) => {
+  if (value  != 'all') return config.get(value)
   return config.store
 });
 

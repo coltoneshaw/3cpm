@@ -46,7 +46,7 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
 
     const accountSummary = await window.ThreeCPM.Repository.API.getAccountData(undefined, key, secret, mode)
 
-    if (accountSummary !== undefined || accountSummary.length > 0) {
+    if (accountSummary != undefined) {
 
         const prevState = <any[]>[];
 

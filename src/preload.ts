@@ -32,7 +32,7 @@ async function setupContextBridge() {
       },
     },
     config: {
-      async get(value?: string | 'all'): Promise<any>{
+      get: async (value: string | 'all'): Promise<any> => {
         console.log('fetching Config')
         return await ipcRenderer.invoke('allConfig', value);
       },
@@ -87,14 +87,10 @@ async function setupContextBridge() {
       }
     },
     binance: {
-      async coinData() {
-        return await ipcRenderer.invoke('binance-getCoins');
-      }
+      coinData: async () => await ipcRenderer.invoke('binance-getCoins')
     },
     pm: {
-      async versions() {
-        return await ipcRenderer.invoke('pm-versions');
-      }
+      versions: async () => await ipcRenderer.invoke('pm-versions')
     }
   })
 }

@@ -38,10 +38,8 @@ const getFiltersQueryString = async (profileData: Type_Profile) => {
  * @params - type 'autoSync'
  * @params {options} - option string
  */
-const updateThreeCData = async (type: string, options: Type_UpdateFunction, profileData: Type_Profile): Promise<{lastSyncTime : number}>  => {
-
+const updateThreeCData = async (type: string, options: Type_UpdateFunction, profileData: Type_Profile) => {
     console.info({ options })
-
     return await window.ThreeCPM.Repository.API.update(type, options, profileData);
 }
 

@@ -19,12 +19,12 @@ const UpdateBanner = () => {
     }
 
     const openVersionLink = () => {
-        window.mainPreload.general.openLink(latestLink)
+        window.ThreeCPM.Repository.General.openLink(latestLink)
     }
 
     useEffect(() => {
 
-        window.mainPreload.pm.versions()
+        window.ThreeCPM.Repository.Pm.versions()
             .then((versionData:any) => {
 
                 if(versionData == undefined || versionData[0] == undefined){
