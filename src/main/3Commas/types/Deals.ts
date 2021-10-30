@@ -1,4 +1,7 @@
-
+export type UpdateDealRequest = {
+    deal_id: number
+    take_profit?: number
+}
 
 export type MarketOrders = {
     order_id: string
@@ -28,7 +31,7 @@ export type threeCommas_Api_Deals = {
     created_at: string 
     updated_at: string 
     closed_at: string 
-    closed_at_iso_string: number 
+    // closed_at_iso_string: number 
     finished: boolean
     current_active_safety_orders_count: boolean 
     current_active_safety_orders: number  //DEPRECATED

@@ -31,7 +31,7 @@ export type accounts = {
     deposit_enabled: boolean,
     supported_market_types: ['spot'],
     api_key: string,
-    name: 'Binance US',
+    name: string,
     auto_balance_method: 'time' | 'currency_change',
     auto_balance_error: null | string,
     customer_id: null,

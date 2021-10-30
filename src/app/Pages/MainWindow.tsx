@@ -41,16 +41,13 @@ const MainWindow = () => {
     };
 
     useEffect(() => {
-
-        // @ts-ignore
-        electron.config.get('general.version')
+        window.ThreeCPM.Repository.Config.get('general.version')
             .then((versionData: string) => {
                 if (versionData == undefined || versionData != version) {
                     handleOpenChangelog()
 
                     // setting to false so this does not open again
-                    //@ts-ignore
-                    electron.config.set('general.version', version)
+                    window.ThreeCPM.Repository.Config.set('general.version', version)
                 }
             })
 

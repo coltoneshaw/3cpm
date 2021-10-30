@@ -23,6 +23,7 @@ import { ProfileNameEditor } from '@/app/Features/Profiles/Components/Index'
 
 
 import { ChangelogModal, ToastNotifcations } from '@/app/Features/Index';
+import WriteModeSettings from "@/app/Pages/Settings/Components/WriteModeSettings";
 
 export const defaultTempProfile = {
     key: '',
@@ -32,6 +33,7 @@ export const defaultTempProfile = {
     name: '',
     reservedFunds: [] as any[],
     startDate: 0,
+    writeEnabled: false,
 }
 
 
@@ -55,7 +57,7 @@ const SettingsPage = () => {
 
     useEffect(() => {
         updateTempProfile(() => {
-            const { apis: { threeC } , general, statSettings, name} = currentProfile
+            const { apis: { threeC } , general, statSettings, name, writeEnabled} = currentProfile
             return {
                 key: threeC.key,
                 secret: threeC.secret,
@@ -64,6 +66,7 @@ const SettingsPage = () => {
                 name,
                 reservedFunds: statSettings.reservedFunds,
                 startDate: statSettings.startDate,
+                writeEnabled: writeEnabled
             }
         })
     }, [currentProfile])
@@ -72,7 +75,9 @@ const SettingsPage = () => {
         <>
             <div className="settings-div boxData flex-column" style={{ margin: "auto" }}>
                 <ProfileNameEditor tempProfile={tempProfile} updateTempProfile={updateTempProfile} />
+
                 <ApiSettings tempProfile={tempProfile} updateTempProfile={updateTempProfile}/>
+
                 <div className="flex-column settings-child">
                     <h2 className="text-center ">General Settings:</h2>
                     <div className="flex-row">
@@ -99,13 +104,14 @@ const SettingsPage = () => {
 
                 </div>
 
+                <WriteModeSettings tempProfile={tempProfile} updateTempProfile={updateTempProfile}/>
+
                 <SaveDeleteButtons setOpen={setOpen} tempProfile={tempProfile} />
 
                 {/* These buttons still need to be wired up, but for now they are displayed. */}
                 <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ margin: 'auto' }}>
 
-                    {/* @ts-ignore */}
-                    <Button onClick={() => electron.general.openLink('https://github.com/coltoneshaw/3c-portfolio-manager#feedback-or-bug-submission')} style={{ margin: '1em', borderRight: 'none' }} >Leave Feedback / Report a bug</Button>
+                    <Button onClick={() => window.mainPreload.general.openLink('https://github.com/coltoneshaw/3c-portfolio-manager#feedback-or-bug-submission')} style={{ margin: '1em', borderRight: 'none' }} >Leave Feedback / Report a bug</Button>
                 </ButtonGroup>
                 <Button
                     variant="text" color="primary"

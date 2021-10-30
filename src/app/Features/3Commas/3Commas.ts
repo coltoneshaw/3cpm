@@ -41,8 +41,8 @@ const getFiltersQueryString = async (profileData: Type_Profile) => {
 const updateThreeCData = async (type: string, options: Type_UpdateFunction, profileData: Type_Profile): Promise<{lastSyncTime : number}>  => {
 
     console.info({ options })
-    // @ts-ignore
-    return await electron.api.update(type, options, profileData);
+
+    return await window.ThreeCPM.Repository.API.update(type, options, profileData);
 }
 
 
@@ -68,8 +68,7 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
             ORDER BY
                 closed_at asc;`
 
-    // @ts-ignore
-    let dataArray = await electron.database.query(query)
+    let dataArray = await window.ThreeCPM.Repository.Database.query(query)
 
     // if no data return blank array.
     if (dataArray == null || dataArray.length === 0) {
@@ -169,8 +168,7 @@ const fetchPerformanceDataFunction = async (profileData: Type_Profile, oDate?: D
                     performance_id;`
 
 
-    // @ts-ignore
-    let databaseQuery = await electron.database.query(queryString);
+    let databaseQuery = await window.ThreeCPM.Repository.Database.query(queryString);
 
     if (databaseQuery == null || databaseQuery.length > 0) {
         const totalProfitSummary = databaseQuery
@@ -237,8 +235,7 @@ const fetchBotPerformanceMetrics = async (profileData: Type_Profile, oDate?: Dat
                 GROUP BY
                     bot_id;`
 
-    // @ts-ignore
-    let databaseQuery = await electron.database.query(queryString);
+    let databaseQuery = await window.ThreeCPM.Repository.Database.query(queryString);
 
     if (databaseQuery == null || databaseQuery.length > 0) {
         return databaseQuery
@@ -263,12 +260,9 @@ const botQuery = async (currentProfile: Type_Profile) => {
                     and from_currency in (${currencyString})
                     and (account_id in (${accountIdString})  OR origin = 'custom')`
 
-    // @ts-ignore
-    let databaseQuery = await electron.database.query(queryString);
+    let databaseQuery = await window.ThreeCPM.Repository.Database.query(queryString);
 
-    if (databaseQuery != null || databaseQuery.length > 0) {
-        return databaseQuery
-    }
+    if (databaseQuery != null) return databaseQuery
     return []
 
 }
@@ -303,8 +297,7 @@ const fetchPairPerformanceMetrics = async (profileData: Type_Profile, oDate?: Da
         GROUP BY
             pair;`
 
-    // @ts-ignore
-    let databaseQuery = await electron.database.query(queryString);
+    let databaseQuery = await window.ThreeCPM.Repository.Database.query(queryString);
 
     if (databaseQuery == null || databaseQuery.length > 0) {
         return databaseQuery
@@ -329,8 +322,7 @@ const getActiveDealsFunction = async (profileData: Type_Profile) => {
                     and currency in (${currencyString} )
                     and profile_id = '${currentProfileID}'
                     `
-    // @ts-ignore
-    let activeDeals: Array<Type_ActiveDeals> = await electron.database.query(query)
+    let activeDeals: Array<Type_ActiveDeals> = await window.ThreeCPM.Repository.Database.query(query)
 
 
     if (activeDeals != undefined && activeDeals.length > 0) {
@@ -381,8 +373,7 @@ const getAccountDataFunction = async (profileData: Type_Profile) => {
                     and currency_code IN ( ${currencyString} )
                     and profile_id = '${currentProfileID}';
     `
-    // @ts-ignore
-    let accountData: Array<Type_Query_Accounts> = await electron.database.query(query)
+    let accountData: Array<Type_Query_Accounts> = await window.ThreeCPM.Repository.Database.query(query)
 
     // removed this since it seems redundant to the above query
     // .then((data: Type_Query_Accounts[]) => data.filter(row => defaultCurrency.includes(row.currency_code)))
@@ -472,8 +463,7 @@ const getSelectPairDataByDate = async (profileData: Type_Profile, pairs: string[
     `
 
 
-    // @ts-ignore
-    let pairData: Array<Type_Pair_By_Date> = await electron.database.query(query);
+    let pairData: Array<Type_Pair_By_Date> = await window.ThreeCPM.Repository.Database.query(query);
 
 
     let currentDate = moment(date.from).clone();
@@ -526,8 +516,7 @@ const fetchSoData = async (currentProfile: Type_Profile, oDate?: DateRange) => {
             group by 
                 completed_safety_orders_count;`
 
-    //@ts-ignore
-    const data = await electron.database.query(query)
+    const data = await window.ThreeCPM.Repository.Database.query(query)
 
     if(!data || data.length == 0){
         return []

@@ -14,7 +14,7 @@ import {
 } from '@/utils/formulas';
 
 import { Type_Profile } from "@/types/config";
-import { threeCommas_Api_Deals } from './types/Deals';
+import {threeCommas_Api_Deals, UpdateDealRequest} from './types/Deals';
 
 
 
@@ -161,7 +161,7 @@ async function getMarketOrders(deal_id: number, profileData: Type_Profile) {
  */
 async function getDealOrders(profileData: Type_Profile, deal_id: number) {
   const api = threeCapi(profileData)
-  if (!api) return false
+  if (!api) return []
 
   // this is the /market_orders endpoint.
   const data = await api.getDealSafetyOrders(String(deal_id))
@@ -270,10 +270,10 @@ async function getDealsThatAreUpdated(api: threeCommasAPI, perSyncOffset: number
   }
 
   log.info('Response data Length: ' + responseArray.length)
-  if (lastSyncTime != newLastSyncTime) { setProfileConfig('syncStatus.deals.lastSyncTime', newLastSyncTime, id) }
+  if (lastSyncTime != newLastSyncTime) { setProfileConfig('syncStatus.deals.lastSyncTime', newLastSyncTime ?? 0, id) }
   return {
     deals: responseArray,
-    lastSyncTime: (lastSyncTime != newLastSyncTime) ? newLastSyncTime : lastSyncTime
+    lastSyncTime: (lastSyncTime != newLastSyncTime) ? newLastSyncTime ?? 0 : lastSyncTime
   }
 }
 
@@ -282,7 +282,7 @@ async function deals(offset: number, type: string, profileData: Type_Profile) {
   let {deals, lastSyncTime} = await getDealsUpdate(offset, type, profileData);
   let dealArray = [];
 
-  if(!deals || deals.length === 0) return { deals, lastSyncTime}
+  if(!deals || deals.length === 0) return { deals: [], lastSyncTime}
 
 
   for (let deal of deals) {
@@ -328,8 +328,8 @@ async function deals(offset: number, type: string, profileData: Type_Profile) {
       profitPercent: (activeDeal) ? null : ((+final_profit_percentage / 100) / +deal_hours).toFixed(3),
       impactFactor: (activeDeal) ? (((+bought_average_price - +current_price) / +bought_average_price) * (415 / (Number(bought_volume) ** 0.618))) / (+actual_usd_profit / +actual_profit) : null,
       closed_at_iso_string: (activeDeal) ? null : new Date(closed_at).getTime(),
-      final_profit: +final_profit,
-      final_profit_percentage: +final_profit_percentage
+      // final_profit: +final_profit,
+      // final_profit_percentage: +final_profit_percentage
     }
 
     dealArray.push({ ...deal, ...tempObject })
@@ -350,7 +350,7 @@ async function deals(offset: number, type: string, profileData: Type_Profile) {
  */
 async function getAccountDetail(profileData: Type_Profile) {
   const api = threeCapi(profileData)
-  if (!api) return false
+  if (!api) return []
 
   let accountData = await api.accounts()
   let array = [];
@@ -392,7 +392,7 @@ async function getAccountDetail(profileData: Type_Profile) {
 // TODO replace this with the get account detail function with some conditional logic
 async function getAccountSummary(profileData?: Type_Profile, key?: string, secret?: string, mode?: string) {
   let api = threeCapi(profileData, key, secret, mode)
-  if (!api) return false
+  if (!api) return []
   let accountData = await api.accounts()
 
   let array = []
@@ -405,6 +405,13 @@ async function getAccountSummary(profileData?: Type_Profile, key?: string, secre
   return array;
 }
 
+async function updateDeal(profileData: Type_Profile, deal: UpdateDealRequest) {
+  let api = threeCapi(profileData)
+  if (!api) return false
+
+  return await api.updateDeal(deal)
+}
+
 
 
 export {
@@ -413,5 +420,6 @@ export {
   deals,
   bots,
   getAccountSummary,
-  getDealOrders
+  getDealOrders,
+  updateDeal
 }

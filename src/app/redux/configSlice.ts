@@ -41,9 +41,10 @@ const configPaths = {
         account_id: 'statSettings.account_id',
     },
     name: 'name',
+    writeEnabled: 'writeEnabled',
     general: {
         defaultCurrency: 'general.defaultCurrency'
-    }
+    },
 }
 
 export const configSlice = createSlice({
@@ -87,6 +88,9 @@ export const configSlice = createSlice({
                     break
                 case configPaths.name: // update all the api data.
                     newProfile.name = data
+                    break
+                case configPaths.writeEnabled: // update all the api data.
+                    newProfile.writeEnabled = data
                     break
                 case configPaths.general.defaultCurrency: // update all the currency data
                     newProfile.general.defaultCurrency = data
