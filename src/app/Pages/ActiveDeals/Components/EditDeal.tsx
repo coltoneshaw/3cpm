@@ -43,7 +43,10 @@ const EditDeal = ({originalDeal, open, onClose}: any) => {
         updateWorking(true)
         console.log("updating deal", req)
         let updatedDeal = await window.ThreeCPM.Repository.Deals.update(currentProfile, req)
-        console.debug("updated deal", updatedDeal)
+        console.debug("update deal response", updatedDeal)
+        if (updatedDeal?.error_description) {
+            alert(updatedDeal.error_description);
+        }
 
         updateActionBtn("Refreshing data")
         await updateAllData(1000, currentProfile, 'fullSync')
