@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {formatCurrency} from'@/utils/granularity'
+import { formatCurrency } from '@/utils/granularity'
 
 
 import { CustomTable } from '@/app/Components/DataTable/Index'
@@ -7,13 +7,13 @@ import { getDateString } from '@/utils/helperFunctions';
 import { parseNumber } from '@/utils/number_formatting';
 import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 import CardTooltip from '@/app/Components/Charts/DataCards/CustomToolTip';
-import {SubRowAsync} from './Components/index'
+import { SubRowAsync } from './Components/index'
 import EditIcon from '@mui/icons-material/Edit';
 
 import { OpenIn3Commas } from '@/app/Components/DataTable/Components'
 
 import Styles from './StyledDiv'
-import {useAppSelector} from "@/app/redux/hooks";
+import { useAppSelector } from "@/app/redux/hooks";
 import IconButton from "@mui/material/IconButton";
 import EditDeal from "@/app/Pages/ActiveDeals/Components/EditDeal";
 
@@ -46,16 +46,17 @@ function DealsTable({ data }: { data: object[] }) {
     let cols: any[] = [
         {
             accessor: 'id',
-            Header: ({ toggleAllRowsExpanded, rows}: { toggleAllRowsExpanded: any, rows: any[] }) => {
+            Header: ({ toggleAllRowsExpanded, rows }: { toggleAllRowsExpanded: any, rows: any[] }) => {
                 return (
-                    <span onClick={() => toggleAllRowsExpanded(false)} style={{cursor: 'pointer'}}>
+                    <span onClick={() => toggleAllRowsExpanded(false)} style={{ cursor: 'pointer' }}>
                         X
                     </span>
-                )},
+                )
+            },
             Cell: ({ row }: any) => (
                 <span {...row.getToggleRowExpandedProps()}>
-                        {row.isExpanded ? '🔽' : '▶️'}
-                    </span>
+                    {row.isExpanded ? '🔽' : '▶️'}
+                </span>
             ),
             disableSortBy: true
         },
@@ -67,13 +68,18 @@ function DealsTable({ data }: { data: object[] }) {
                 paddingLeft: '1em',
                 width: '150px'
             },
+            Cell: ({ cell }: any) => <OpenIn3Commas cell={cell} bot_id={cell.row.original.bot_id} className='tooltip-activeDeals' />
+        },
+        {
+            Header: 'Pair',
+            accessor: 'pair',
             Cell: ({ cell }: any) => {
                 return (
                     <span
                         data-text={cell.row.original.bot_settings}
                         className="tooltip-activeDeals">
-                            {cell.value}
-                        </span>
+                        {cell.value}
+                    </span>
                 )
             }
         },
@@ -104,7 +110,7 @@ function DealsTable({ data }: { data: object[] }) {
             style: { textAlign: 'right' },
             sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
             Cell: ({ cell }: any) => {
-                return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
+                return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>
             }
         },
         {
@@ -113,7 +119,7 @@ function DealsTable({ data }: { data: object[] }) {
             style: { textAlign: 'right' },
             sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
             Cell: ({ cell }: any) => {
-                return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
+                return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>
             }
         },
         {
@@ -121,7 +127,7 @@ function DealsTable({ data }: { data: object[] }) {
             accessor: 'bought_volume',
             style: { textAlign: 'right' },
             Cell: ({ cell }: any) => {
-                return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, false).metric}</span>
+                return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, false).metric}</span>
             }
         },
         {
@@ -131,7 +137,7 @@ function DealsTable({ data }: { data: object[] }) {
             className: '',
             sortable: false,
             Cell: ({ cell }: any) => {
-                return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, false).metric}</span>
+                return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, false).metric}</span>
             },
         },
         {
@@ -167,7 +173,7 @@ function DealsTable({ data }: { data: object[] }) {
 
                 const in_profit = (cell.row.original.actual_profit_percentage > 0) ? 'green' : 'red'
                 // leaving this as USD for now because 3C only displays this value in a USD quote.
-                return < span className={"pill pill-left monospace-cell " + in_profit} >{formatCurrency( ['USD'], cell.value, false).metric}</span>
+                return < span className={"pill pill-left monospace-cell " + in_profit} >{formatCurrency(['USD'], cell.value, false).metric}</span>
             },
             style: {
                 paddingRight: 0,
@@ -194,7 +200,7 @@ function DealsTable({ data }: { data: object[] }) {
             style: { textAlign: 'right' },
             sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
             Cell: ({ cell }: any) => {
-                return < span className=" monospace-cell" style={{ paddingLeft: '1em' }}>{formatCurrency( [cell.row.original.from_currency], cell.value, false).metric}</span>
+                return < span className=" monospace-cell" style={{ paddingLeft: '1em' }}>{formatCurrency([cell.row.original.from_currency], cell.value, false).metric}</span>
             }
         },
         {
@@ -202,7 +208,7 @@ function DealsTable({ data }: { data: object[] }) {
             accessor: 'max_deal_funds',
             style: { textAlign: 'right' },
             Cell: ({ cell }: any) => {
-                return < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>
+                return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>
             },
         },
         {
@@ -220,17 +226,17 @@ function DealsTable({ data }: { data: object[] }) {
     // This can be rewritten to utilize the hide property of react-table
     if (writeEnabled) {
         cols.push({
-                Header: '',
-                id: 'actions',
-                style: { textAlign: 'right', paddingRight: '1rem' },
-                Cell: (row: any) => {
-                    return (
-                        <>
-                            <IconButton  color="info"  size="small" onClick={() => {edit(row)}}><EditIcon /></IconButton>
-                        </>
-                    )
-                },
-            })
+            Header: '',
+            id: 'actions',
+            style: { textAlign: 'right', paddingRight: '1rem' },
+            Cell: (row: any) => {
+                return (
+                    <>
+                        <IconButton color="info" size="small" onClick={() => { edit(row) }}><EditIcon /></IconButton>
+                    </>
+                )
+            },
+        })
     }
 
     const columns = React.useMemo(
@@ -250,8 +256,8 @@ function DealsTable({ data }: { data: object[] }) {
 
 
 
-    function edit({row}: any) {
-        changeEditRow({...row.original})
+    function edit({ row }: any) {
+        changeEditRow({ ...row.original })
         changeOpenEditDialog(true)
     }
 
@@ -266,9 +272,9 @@ function DealsTable({ data }: { data: object[] }) {
     return (
         <>
 
-        <EditDeal originalDeal={editRow} open={openEditDialog} onClose={handleDialogClose}></EditDeal>
+            <EditDeal originalDeal={editRow} open={openEditDialog} onClose={handleDialogClose}></EditDeal>
 
-        <Styles>
+            <Styles>
                 <CustomTable
                     columns={columns}
                     data={localData}
