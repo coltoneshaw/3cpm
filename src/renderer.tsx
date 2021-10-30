@@ -14,8 +14,11 @@ import {
   ElectronDealsRepository,
   ElectronDBRepository,
   ElectronConfigRepository,
-  ElectronBinanceRepository
 } from "@/app/Repositories/Impl/electron";
+
+import BaseBinanceRepository from '@/app/Repositories/Impl/Binance';
+import {BaseGeneralRepository, BasePmRepository} from '@/app/Repositories/Impl/General'
+
 import {Repository} from '@/app/Repositories/interfaces'
 
 
@@ -35,9 +38,11 @@ const mainPreload = window.mainPreload
 let repo: Repository = {
     Deals: new ElectronDealsRepository(mainPreload),
     API: new ElectronAPIRepository(mainPreload),
-    Binance: new ElectronBinanceRepository(mainPreload),
     Config: new ElectronConfigRepository(mainPreload),
     Database: new ElectronDBRepository(mainPreload),
+    Binance: new BaseBinanceRepository(mainPreload),
+    General: new BaseGeneralRepository(mainPreload),
+    Pm: new BasePmRepository(mainPreload)
 };
 
 

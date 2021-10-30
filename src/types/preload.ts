@@ -3,7 +3,8 @@ import { defaultConfig } from "@/utils/defaultConfig";
 import type { UpdateDealRequest } from "@/main/3Commas/types/Deals";
 import { Type_UpdateFunction } from '@/types/3Commas'
 import type { getDealOrders } from '@/main/3Commas/index';
-
+import type {Type_GithubRelease} from '@/app/Repositories/Types/GithubRelease'
+import type {BinanceTicketPrice} from '@/app/Repositories/Types/Binance';
 
 declare global {
     interface Window {
@@ -37,6 +38,17 @@ export interface api {
     getDealOrders: (profileData: Type_Profile, dealID: number) => Promise<ReturnType<typeof getDealOrders>>,
 }
 
+export interface general {
+    openLink: (link: string) => void
+}
+
+export interface binance {
+    coinData: () => BinanceTicketPrice | false
+}
+export interface pm {
+    versions: () => Type_GithubRelease | false
+}
+
 interface mainPreload {
     deals: {
         update: (profileData: Type_Profile, deal: UpdateDealRequest) => Promise<void>
@@ -44,15 +56,9 @@ interface mainPreload {
     api: api,
     config: config,
     database: database,
-    general: {
-        openLink: (link: string) => void
-    },
-    binance: {
-        coinData: () => Promise<any>
-    },
-    pm: {
-        versions: () => Promise<any>
-    }
+    general: general,
+    binance: binance,
+    pm: pm
 };
 
 export {

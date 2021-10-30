@@ -1,4 +1,6 @@
 import fetch from 'electron-fetch'
+import { BinanceTicketPrice } from '@/app/Repositories/Types/Binance'
+
 
 const fetchCoinPricesBinance = async () => {
 
@@ -10,7 +12,7 @@ const fetchCoinPricesBinance = async () => {
               timeout: 30000,
             })
 
-          return await response.json()
+          return await response.json<BinanceTicketPrice[]>()
         } catch (e) {
           console.log(e);
           return false

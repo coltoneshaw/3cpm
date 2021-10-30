@@ -4,12 +4,15 @@ import ConfigRepository from "./Config";
 import DBRepository from "./Database";
 import DealsRepository from "./Deals";
 import Repository from "./Repository";
+import {PmRepository, GeneralRepository} from "./General"
 
 export {
     APIRepository,
-    BinanceRepository,
     ConfigRepository,
     DBRepository,
     DealsRepository,
-    Repository
+    Repository,
+    PmRepository,
+    BinanceRepository,
+    GeneralRepository
 }
