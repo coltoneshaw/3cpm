@@ -48,11 +48,10 @@ const dispatch_setBalanceData = (data: typeof initialState.balanceData) => store
 
 const fetchAndStoreBotData = async (currentProfile: Type_Profile, update: boolean) => {
     try {
-        // @ts-ignore
         await botQuery(currentProfile)
-            .then((result: Type_Query_bots[]) => {
+            .then(result => {
                 // if (!result) return
-                if (update) dispatch_setBotData(result)
+                if (update && result.length > 0) dispatch_setBotData(result)
                 const inactiveBotFunds = result.filter(b => b.is_enabled === 1).map(r => r.enabled_inactive_funds)
                 // pull enabled_inactive_funds from the bots and add it to metrics.
                 dispatch_setMetricsData({ inactiveBotFunds: (inactiveBotFunds.length > 0) ? inactiveBotFunds.reduce((sum, funds) => sum + funds) : 0})

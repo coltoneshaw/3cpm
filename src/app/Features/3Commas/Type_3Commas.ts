@@ -18,6 +18,8 @@ type fetchPerformanceData = {
 }
 
 type fetchBotPerformanceMetrics = {
+    bot_id: number,
+    pairs: string,
     total_profit: string,
     avg_profit: number,
     number_of_deals : number,
@@ -27,6 +29,7 @@ type fetchBotPerformanceMetrics = {
     bot_name : string,
     type: 'Bot::SingleBot' | 'Bot::MultiBot'
 }
+
 
 type fetchPairPerformanceMetrics = {
     pair:string

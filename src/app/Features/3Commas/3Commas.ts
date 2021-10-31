@@ -6,7 +6,8 @@ import {
     // Type_Query_DealData,
     Type_Query_PerfArray,
     Type_UpdateFunction,
-    Type_bots
+    Type_bots,
+    Type_Query_bots
 } from '@/types/3Commas'
 
 
@@ -215,7 +216,8 @@ const fetchBotPerformanceMetrics = async (profileData: Type_Profile, oDate?: Dat
     const toSQL = `and closed_at < '${toDateStr}'`
 
     const queryString = `
-                SELECT bot_id,
+                SELECT 
+                    bot_id,
                     sum(final_profit)                                                         as total_profit,
                     avg(final_profit)                                                         as avg_profit,
                     count(*)                                                                  as number_of_deals,
@@ -247,7 +249,7 @@ const fetchBotPerformanceMetrics = async (profileData: Type_Profile, oDate?: Dat
 
 }
 
-const botQuery = async (currentProfile: Type_Profile) => {
+const botQuery = async (currentProfile: Type_Profile): Promise<Type_Query_bots[] | []> => {
     const filtersQueryString = await getFiltersQueryString(currentProfile);
     const { accountIdString, currentProfileID, currencyString } = filtersQueryString;
 
@@ -262,7 +264,7 @@ const botQuery = async (currentProfile: Type_Profile) => {
                     and from_currency in (${currencyString})
                     and (account_id in (${accountIdString})  OR origin = 'custom')`
 
-    let databaseQuery: Type_bots[] | [] = await window.ThreeCPM.Repository.Database.query(queryString);
+    let databaseQuery: Type_Query_bots[] | [] = await window.ThreeCPM.Repository.Database.query(queryString);
 
     if (databaseQuery != null) return databaseQuery
     return []
