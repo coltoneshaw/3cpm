@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
 import { addConfigProfile, setCurrentProfileById} from '@/app/redux/configSlice'
+import { setSyncData} from '@/app/redux/threeCommas/threeCommasSlice'
+
 import { useHistory } from 'react-router-dom'
 
 import PersonIcon from '@mui/icons-material/Person';

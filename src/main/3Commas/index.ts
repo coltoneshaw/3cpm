@@ -39,10 +39,9 @@ async function getDealData(type: string, options: Type_UpdateFunction, profileDa
 
       let { deals, lastSyncTime } = data
 
-      const enabled = config.get('globalSettings.notifications.enabled')
-      const summary = config.get('globalSettings.notifications.summary')
+      const {enabled, summary} = config.get('globalSettings.notification')
       // if notifications need to be enabled for the fullSync then the type below needs to be updated.
-      if (type === 'autoSync' && enabled && options.time != undefined || options.syncCount != 0) {
+      if (type === 'autoSync' && enabled && options.syncCount != 0 && options.time != undefined) {
         findAndNotifyNewDeals(deals, options.time, summary)
       }
       update('deals', deals, profileData.id)

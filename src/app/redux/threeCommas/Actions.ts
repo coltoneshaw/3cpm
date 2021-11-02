@@ -223,7 +223,7 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
     const syncOptions = store.getState().threeCommas.syncOptions
     store.dispatch(setIsSyncing(true))
 
-    const originalTime = syncOptions.time || 0
+    const originalTime = syncOptions.time || new Date().getTime()
     let time = originalTime
     let syncCount = syncOptions.syncCount || 0
     if (type === 'fullSync') {
