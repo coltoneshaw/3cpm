@@ -1,7 +1,7 @@
 import { parseISO, differenceInMilliseconds } from 'date-fns'
 
 
-const isElectron = window.mainPreload
+const isElectron = () => window.mainPreload
 /**
  * 
  * @param jsonString the json string to be validated
@@ -132,7 +132,7 @@ function getDatesBetweenTwoDates(startDate: string, endDate: string) {
 }
 
 const openLink = (url: string) => {
-  if (isElectron) return window.ThreeCPM.Repository.General.openLink(url);
+  if (isElectron()) return window.ThreeCPM.Repository.General.openLink(url);
   return window.open(url)
 }
 
