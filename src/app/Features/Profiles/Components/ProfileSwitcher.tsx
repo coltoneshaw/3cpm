@@ -59,8 +59,7 @@ const ProfileSwitcher = () => {
                         dispatch(setCurrentProfileById({profileId: p}))
                         dispatch(setSyncData({syncCount: 0, time: 0}))
 
-                        //@ts-ignore
-                        electron.config.set('current', p)
+                        window.ThreeCPM.Repository.Config.set('current', p)
                         popupState.close()
                     }} 
                     style={styles}>

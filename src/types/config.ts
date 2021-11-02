@@ -28,15 +28,15 @@ export interface Type_Profile {
     },
     syncStatus: {
         deals: {
-            lastSyncTime: number | null
+            lastSyncTime: number 
         }
     },
     statSettings: {
         startDate: number
         account_id: number[],
         reservedFunds: Type_ReservedFunds[]
-    }
-
+    },
+    writeEnabled: boolean,
 }
 
 export interface Type_GlobalSettings {

@@ -9,9 +9,8 @@ import store from './store'
 
 const updateConfig = async () => {
 
-    //@ts-ignore
-    await electron.config.get()
-        .then((config: any) => {
+    await window.ThreeCPM.Repository.Config.get('all')
+        .then(config => {
             store.dispatch(setConfig(config));
             updateCurrentProfile(config.profiles[config.current])
         })
@@ -19,8 +18,7 @@ const updateConfig = async () => {
 
 const storeConfigInFile = async () => {
     try {
-        //@ts-ignore
-        await electron.config.set(null, store.getState().config.config)
+        await window.ThreeCPM.Repository.Config.bulk(store.getState().config.config)
         updateConfig()
         return true
     } catch (e) {
@@ -47,10 +45,9 @@ const updateNestedCurrentProfile = (data: string | {} | [], path: string) => {
 
 const updateReservedFundsArray = async (key: string, secret: string, mode: string,  reservedFunds: Type_ReservedFunds[]) => {
 
-    // @ts-ignore
-    const accountSummary = await electron.api.getAccountData(undefined, key, secret, mode)
+    const accountSummary = await window.ThreeCPM.Repository.API.getAccountData(undefined, key, secret, mode)
 
-    if (accountSummary !== undefined || accountSummary.length > 0) {
+    if (accountSummary != undefined) {
 
         const prevState = <any[]>[];
 
@@ -117,8 +114,7 @@ const deleteProfileByIdGlobal = (config: TconfigValues, profileId:string, setOpe
         store.dispatch(deleteProfileById({ profileId }))
         storeConfigInFile();
 
-        //@ts-ignore
-        electron.database.deleteAllData(profileId)
+        window.ThreeCPM.Repository.Database.deleteAllData(profileId)
 
         // delete the profile command
         // route the user back to a their default profile OR route the user to a new blank profile..?

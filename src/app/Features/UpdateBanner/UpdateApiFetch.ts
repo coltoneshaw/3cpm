@@ -1,5 +1,7 @@
 import fetch from 'electron-fetch'
 
+import type {Type_GithubRelease} from '@/app/Repositories/Types/GithubRelease'
+
 const fetchVersions = async () => {
 
 
@@ -10,7 +12,7 @@ const fetchVersions = async () => {
               timeout: 30000,
             })
 
-          return await response.json()
+          return await response.json<Type_GithubRelease[] | []>()
         } catch (e) {
           console.log(e);
           return false

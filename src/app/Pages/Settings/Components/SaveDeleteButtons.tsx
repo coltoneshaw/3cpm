@@ -40,12 +40,13 @@ const SaveDeleteButtons = ({ setOpen, tempProfile }: SubmitButtons) => {
     const setProfileConfig = async () => {
         const { status, message } = checkProfileIsValid(tempProfile)
         if (status) {
-            const {key, mode, secret, reservedFunds, name, startDate, defaultCurrency} = tempProfile
+            const {key, mode, secret, reservedFunds, name, startDate, defaultCurrency, writeEnabled} = tempProfile
             updateNestedCurrentProfile(reservedFunds, configPaths.statSettings.reservedFunds);
             updateNestedCurrentProfile({key, mode, secret}, configPaths.apis.threeC.main);
             updateNestedCurrentProfile(name, configPaths.name);
             updateNestedCurrentProfile(startDate, configPaths.statSettings.startDate);
             updateNestedCurrentProfile(defaultCurrency, configPaths.general.defaultCurrency);
+            updateNestedCurrentProfile(writeEnabled, configPaths.writeEnabled);
 
             setLoaderIcon(true)
             try {
@@ -54,16 +55,14 @@ const SaveDeleteButtons = ({ setOpen, tempProfile }: SubmitButtons) => {
                 //updating the current profile's data
                 const update = await syncNewProfileData(1000);
                 if (update) {
-                    //@ts-ignore
-                    await electron.config.set('current', currentProfile.id)
+                    await window.ThreeCPM.Repository.Config.set('current', currentProfile.id)
                     updateConfig();
                     callback();
                 }
             } catch (error) {
 
                 // if there is an error storing the current profile, the data from the database gets deleted.
-                //@ts-ignore
-                await electron.database.deleteAllData(currentProfile.id)
+                await window.ThreeCPM.Repository.Database.deleteAllData(currentProfile.id)
                 console.error(error)
                 alert('There was an error storing your profile data. Please try again. If the issue persists look at the documentation for additional guidance.')
             } finally {

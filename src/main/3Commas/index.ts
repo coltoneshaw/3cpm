@@ -1,7 +1,6 @@
 import { update, run, query } from '@/main/Database/database';
-import {config} from '@/main/Config/config';
-
-const { bots, getAccountDetail, deals, getAccountSummary, getDealOrders } = require('./api');
+import { config } from '@/main/Config/config';
+import { bots, getAccountDetail, deals, getAccountSummary, getDealOrders, updateDeal } from './api';
 const log = require('electron-log');
 
 const { getProfileConfigAll } = require('@/main/Config/config')
@@ -10,6 +9,7 @@ import { findAndNotifyNewDeals } from '@/main/Notifications/notifications'
 
 import { Type_Deals_API, Type_Query_Accounts, Type_API_bots, Type_UpdateFunction } from '@/types/3Commas'
 import { Type_Profile } from '@/types/config'
+import { UpdateDealRequest } from "@/main/3Commas/types/Deals";
 
 /**
  * 
@@ -17,7 +17,7 @@ import { Type_Profile } from '@/types/config'
  * - Inspect if the lastSyncTime is set. If it is, then need to run bulk. If it's not, need to run update. This might need to go into
  * the code for threeC
  */
-async function updateAPI(type: string, options: Type_UpdateFunction, profileData: Type_Profile) {
+async function updateAPI(type: string, options: Type_UpdateFunction, profileData: Type_Profile): Promise<number | false> {
 
   if (!profileData) {
     log.error(' No profile was provided to the updateAPI call');
@@ -35,39 +35,39 @@ async function updateAPI(type: string, options: Type_UpdateFunction, profileData
 async function getDealData(type: string, options: Type_UpdateFunction, profileData: Type_Profile) {
 
   return await deals(options.offset, type, profileData)
-    .then((data: { deals: any[], lastSyncTime: number }) => {
+    .then(data => {
 
       let { deals, lastSyncTime } = data
 
-      const {enabled, summary} = config.get('globalSettings.notification')
+      if (deals.length === 0) return lastSyncTime;
+      const { enabled, summary } = config.get('globalSettings.notification')
       // if notifications need to be enabled for the fullSync then the type below needs to be updated.
-      if (type === 'autoSync' && enabled && options.syncCount != 0 && options.time != undefined) {
+      if (type === 'autoSync' && enabled && options.time != undefined || options.syncCount != 0) {
         findAndNotifyNewDeals(deals, options.time, summary)
       }
       update('deals', deals, profileData.id)
-      // log.info(data)
 
       return lastSyncTime
     })
 
 }
-async function getAccountData(profileData: Type_Profile) {
+async function getAccountData(profileData: Type_Profile): Promise<void> {
 
   if (!profileData) {
     log.error(' No profile was provided to the updateAPI call');
-    return false
+    return
   }
 
   // 1. Fetch data from the API
   await getAccountDetail(profileData)
-    .then(async (data: Type_Query_Accounts[]) => {
+    .then(async data => {
       // 2. Delete all the data in the database that exist in the API response
       const accountIds = data.map(account => account.account_id);
       await run(`DELETE FROM accountData WHERE account_id in ( ${accountIds.join()}) and profile_id='${profileData.id}';`)
       return data
     })
     //3. Post the API response to the database.
-    .then((data: Type_Query_Accounts[]) => update('accountData', data, profileData.id))
+    .then(data => update('accountData', data, profileData.id))
 }
 
 
@@ -75,15 +75,15 @@ async function getAccountData(profileData: Type_Profile) {
  * 
  * @param profileData if not sent, this will use the current profile saved to the config.
  */
-async function getAndStoreBotData(profileData: Type_Profile) {
+async function getAndStoreBotData(profileData: Type_Profile): Promise<void> {
   if (!profileData) {
     log.error(' No profile was provided to the updateAPI call');
-    return false
+    return
   }
-  
+
   try {
     await bots(profileData)
-      .then(async (data: Type_API_bots[]) => {
+      .then(async data => {
         if (data != null && data.length > 0) {
 
           // deleting the bots that do not exist in the sync
@@ -112,8 +112,11 @@ async function getAndStoreBotData(profileData: Type_Profile) {
   } catch (error) {
     log.error('error getting bot data', error)
   }
-
 }
+
+// async function updateDeal(profileData: Type_Profile, deal: UpdateDealRequest) {
+//   return await apiUpdateDeal(profileData, deal)
+// }
 
 export {
   bots,
@@ -123,5 +126,6 @@ export {
   deals,
   getAccountData,
   getAccountSummary,
-  getDealOrders
+  getDealOrders,
+  updateDeal
 }

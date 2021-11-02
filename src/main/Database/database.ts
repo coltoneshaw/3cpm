@@ -225,11 +225,11 @@ function normalizeData(data: any) {
  * 
  * @description Inserting data into a table. Data coming in needs to be an array of objects.
  */
-async function update(table: string, data: any[], profileId:string) {
+function update(table: string, data: any[], profileId:string): void  {
 
     if (data.length == 0) {
         log.log('no data to write')
-        return false
+        return
     }
 
     let normalizedData = data.map(row => {
@@ -255,14 +255,14 @@ async function update(table: string, data: any[], profileId:string) {
         }
     });
 
-    await insertMany(normalizedData)
+    insertMany(normalizedData)
 }
 
-async function upsert(table: string, data: any[], id: string, updateColumn: string) {
+function upsert(table: string, data: any[], id: string, updateColumn: string): void {
 
     if (data.length == 0) {
         log.log('no data to write')
-        return false
+        return
     }
 
     // removing any inconsistencies with how sqlite handles the data.
@@ -285,7 +285,7 @@ async function upsert(table: string, data: any[], id: string, updateColumn: stri
         }
     });
 
-    await insertMany(normalizedData)
+    insertMany(normalizedData)
 }
 
 /**
@@ -299,34 +299,34 @@ async function upsert(table: string, data: any[], id: string, updateColumn: stri
  * - Can add the ability to set custom filters to be returned. Not sure the exact benefit of this but it's possible.
  */
 async function query(query: string) {
-    const row = await db.prepare(query)
-    return await row.all()
+    const row = db.prepare(query)
+    return row.all()
 }
 
-async function run(query: string) {
+function run(query: string):void {
     const stmt = db.prepare(query);
-    await stmt.run()
+    stmt.run()
 }
 
-async function deleteAllData(profileID?: string) {
+async function deleteAllData(profileID?: string):Promise<void> {
 
     if (!profileID) {
         // truncating the table
-        await run(`DELETE FROM bots;'`)
-        await run(`DELETE FROM accountData;`)
-        await run(`DELETE FROM deals;'`)
+        await Promise.all([ run(`DELETE FROM bots;'`),
+        run(`DELETE FROM accountData;`),
+        run(`DELETE FROM deals;'`)]);
         log.info('deleting all database info.')
     }
     log.info('deleting all database info.')
-    await run(`DELETE
-               FROM bots
-               WHERE profile_id = '${profileID}'`)
-    await run(`DELETE
-               FROM accountData
-               WHERE profile_id = '${profileID}'`)
-    await run(`DELETE
-               FROM deals
-               WHERE profile_id = '${profileID}'`)
+    await Promise.all([run(`DELETE
+            FROM bots
+            WHERE profile_id = '${profileID}'`),
+    run(`DELETE
+            FROM accountData
+            WHERE profile_id = '${profileID}'`),
+    run(`DELETE
+            FROM deals
+            WHERE profile_id = '${profileID}'`)]);
     log.info('database info deleted.')
 
 }

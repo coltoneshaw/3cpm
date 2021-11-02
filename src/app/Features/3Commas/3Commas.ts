@@ -3,10 +3,13 @@ import {
     Type_Pair_By_Date,
     Type_Profit,
     Type_Query_Accounts,
-    Type_Query_DealData,
+    // Type_Query_DealData,
     Type_Query_PerfArray,
-    Type_UpdateFunction
+    Type_UpdateFunction,
+    Type_bots,
+    Type_Query_bots
 } from '@/types/3Commas'
+
 
 import { Type_ReservedFunds, Type_Profile } from '@/types/config'
 
@@ -38,11 +41,9 @@ const getFiltersQueryString = async (profileData: Type_Profile) => {
  * @params - type 'autoSync'
  * @params {options} - option string
  */
-const updateThreeCData = async (type: string, options: Type_UpdateFunction, profileData: Type_Profile): Promise<{lastSyncTime : number}>  => {
-
+const updateThreeCData = async (type: string, options: Type_UpdateFunction, profileData: Type_Profile) => {
     console.info({ options })
-    // @ts-ignore
-    return await electron.api.update(type, options, profileData);
+    return await window.ThreeCPM.Repository.API.update(type, options, profileData);
 }
 
 
@@ -56,20 +57,21 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
                sum(final_profit)        as final_profit,
                sum(deal_hours)          as deal_hours,
                count(id)                as total_deals
-        FROM deals
-        WHERE closed_at != null 
-                or finished = 1 
-                and account_id in (${accountIdString} )
-                and currency in (${currencyString} )
-                and closed_at_iso_string > ${startString}
-                and profile_id = '${currentProfileID}'
-            GROUP BY
-                 closed_at_str
-            ORDER BY
-                closed_at asc;`
+        FROM 
+            deals
+        WHERE 
+            closed_at != null 
+            or finished = 1 
+            and account_id in (${accountIdString} )
+            and currency in (${currencyString} )
+            and closed_at_iso_string > ${startString}
+            and profile_id = '${currentProfileID}'
+        GROUP BY
+            closed_at_str
+        ORDER BY
+            closed_at asc;`
 
-    // @ts-ignore
-    let dataArray = await electron.database.query(query)
+    let dataArray: fetchDealDataFunctionQuery[] | [] = await window.ThreeCPM.Repository.Database.query(query)
 
     // if no data return blank array.
     if (dataArray == null || dataArray.length === 0) {
@@ -89,7 +91,7 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
 
     const { days } = getDatesBetweenTwoDates((new Date(startString)).toISOString().split('T')[0], (new Date()).toISOString().split('T')[0])
     const profitArray: Type_Profit[] = [];
-    let totalDealHours = dataArray.map((deal: Type_Query_DealData) => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours)
+    let totalDealHours = dataArray.map(deal => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours)
 
 
     days.forEach((day: string, index: number) => {
@@ -133,7 +135,7 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
 
 }
 
-const fetchPerformanceDataFunction = async (profileData: Type_Profile, oDate?: DateRange ) => {
+const fetchPerformanceDataFunction = async (profileData: Type_Profile, oDate?: DateRange ): Promise<Type_Query_PerfArray[] | []> => {
     const filtersQueryString = await getFiltersQueryString(profileData);
     const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
 
@@ -169,19 +171,18 @@ const fetchPerformanceDataFunction = async (profileData: Type_Profile, oDate?: D
                     performance_id;`
 
 
-    // @ts-ignore
-    let databaseQuery = await electron.database.query(queryString);
+    let databaseQuery: fetchPerformanceData[] | [] = await window.ThreeCPM.Repository.Database.query(queryString);
 
     if (databaseQuery == null || databaseQuery.length > 0) {
         const totalProfitSummary = databaseQuery
-            .map((deal: Type_Query_PerfArray) => deal.total_profit)
+            .map(deal => deal.total_profit)
             .reduce((sum: number, item: number) => sum + item)
 
         const boughtVolumeSummary = databaseQuery
-            .map((deal: Type_Query_PerfArray) => deal.bought_volume)
+            .map(deal => deal.bought_volume)
             .reduce((sum: number, item: number) => sum + item)
 
-        return databaseQuery.map((perfData: Type_Query_PerfArray) => {
+        return databaseQuery.map(perfData => {
             const { bought_volume, total_profit } = perfData
             return {
                 ...perfData,
@@ -215,7 +216,8 @@ const fetchBotPerformanceMetrics = async (profileData: Type_Profile, oDate?: Dat
     const toSQL = `and closed_at < '${toDateStr}'`
 
     const queryString = `
-                SELECT bot_id,
+                SELECT 
+                    bot_id,
                     sum(final_profit)                                                         as total_profit,
                     avg(final_profit)                                                         as avg_profit,
                     count(*)                                                                  as number_of_deals,
@@ -237,8 +239,7 @@ const fetchBotPerformanceMetrics = async (profileData: Type_Profile, oDate?: Dat
                 GROUP BY
                     bot_id;`
 
-    // @ts-ignore
-    let databaseQuery = await electron.database.query(queryString);
+    let databaseQuery: fetchBotPerformanceMetrics[] | [] = await window.ThreeCPM.Repository.Database.query(queryString);
 
     if (databaseQuery == null || databaseQuery.length > 0) {
         return databaseQuery
@@ -248,7 +249,7 @@ const fetchBotPerformanceMetrics = async (profileData: Type_Profile, oDate?: Dat
 
 }
 
-const botQuery = async (currentProfile: Type_Profile) => {
+const botQuery = async (currentProfile: Type_Profile): Promise<Type_Query_bots[] | []> => {
     const filtersQueryString = await getFiltersQueryString(currentProfile);
     const { accountIdString, currentProfileID, currencyString } = filtersQueryString;
 
@@ -263,12 +264,9 @@ const botQuery = async (currentProfile: Type_Profile) => {
                     and from_currency in (${currencyString})
                     and (account_id in (${accountIdString})  OR origin = 'custom')`
 
-    // @ts-ignore
-    let databaseQuery = await electron.database.query(queryString);
+    let databaseQuery: Type_Query_bots[] | [] = await window.ThreeCPM.Repository.Database.query(queryString);
 
-    if (databaseQuery != null || databaseQuery.length > 0) {
-        return databaseQuery
-    }
+    if (databaseQuery != null) return databaseQuery
     return []
 
 }
@@ -287,24 +285,26 @@ const fetchPairPerformanceMetrics = async (profileData: Type_Profile, oDate?: Da
     const toSQL = `and closed_at < '${toDateStr}'`
 
     const queryString = `
-        SELECT pair,
+        SELECT 
+                pair,
                sum(final_profit)                                                         as total_profit,
                avg(final_profit)                                                         as avg_profit,
                count(*)                                                                  as number_of_deals,
                sum(bought_volume)                                                        as bought_volume,
                avg(deal_hours)                                                           as avg_deal_hours,
                avg(completed_safety_orders_count + completed_manual_safety_orders_count) as avg_completed_so
-        FROM deals
-        WHERE closed_at is not null
-          and account_id in (${accountIdString})
-          and currency in (${currencyString})
-          and profile_id = '${currentProfileID}'
+        FROM 
+            deals
+        WHERE 
+            closed_at is not null
+            and account_id in (${accountIdString})
+            and currency in (${currencyString})
+            and profile_id = '${currentProfileID}'
             ${fromSQL} ${toSQL}
         GROUP BY
             pair;`
 
-    // @ts-ignore
-    let databaseQuery = await electron.database.query(queryString);
+    let databaseQuery: fetchPairPerformanceMetrics[] | [] = await window.ThreeCPM.Repository.Database.query(queryString);
 
     if (databaseQuery == null || databaseQuery.length > 0) {
         return databaseQuery
@@ -329,8 +329,7 @@ const getActiveDealsFunction = async (profileData: Type_Profile) => {
                     and currency in (${currencyString} )
                     and profile_id = '${currentProfileID}'
                     `
-    // @ts-ignore
-    let activeDeals: Array<Type_ActiveDeals> = await electron.database.query(query)
+    let activeDeals: Type_ActiveDeals[] | [] = await window.ThreeCPM.Repository.Database.query(query)
 
 
     if (activeDeals != undefined && activeDeals.length > 0) {
@@ -381,8 +380,7 @@ const getAccountDataFunction = async (profileData: Type_Profile) => {
                     and currency_code IN ( ${currencyString} )
                     and profile_id = '${currentProfileID}';
     `
-    // @ts-ignore
-    let accountData: Array<Type_Query_Accounts> = await electron.database.query(query)
+    let accountData: Type_Query_Accounts[] | [] = await window.ThreeCPM.Repository.Database.query(query)
 
     // removed this since it seems redundant to the above query
     // .then((data: Type_Query_Accounts[]) => data.filter(row => defaultCurrency.includes(row.currency_code)))
@@ -472,8 +470,7 @@ const getSelectPairDataByDate = async (profileData: Type_Profile, pairs: string[
     `
 
 
-    // @ts-ignore
-    let pairData: Array<Type_Pair_By_Date> = await electron.database.query(query);
+    let pairData: Array<Type_Pair_By_Date> | [] = await window.ThreeCPM.Repository.Database.query(query);
 
 
     let currentDate = moment(date.from).clone();
@@ -526,8 +523,7 @@ const fetchSoData = async (currentProfile: Type_Profile, oDate?: DateRange) => {
             group by 
                 completed_safety_orders_count;`
 
-    //@ts-ignore
-    const data = await electron.database.query(query)
+    const data : fetchSoData[] | [] = await window.ThreeCPM.Repository.Database.query(query)
 
     if(!data || data.length == 0){
         return []
