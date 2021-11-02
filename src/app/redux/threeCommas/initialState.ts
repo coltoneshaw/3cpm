@@ -50,8 +50,6 @@ export const initialState = {
     isSyncing: false,
     isSyncingTime: 0,
     syncOptions: <Type_SyncData>{
-            summary: false,
-            notifications: true,
             time: 0,
             syncCount: 0
     },
@@ -61,10 +59,8 @@ export const initialState = {
 export type typeString = 'botData' | 'profitData' | 'activeDeals' | 'performanceData' | 'metricsData' | 'accountData' | 'balanceData'
 
 export type Type_SyncData = {
-    summary?: boolean,
-    notifications?: boolean,
-    time?: number,
-    syncCount?: number
+    time: number,
+    syncCount: number
 }
 
 export type setDataType =

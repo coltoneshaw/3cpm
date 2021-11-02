@@ -1,4 +1,5 @@
 import { update, run, query } from '@/main/Database/database';
+import { config } from '@/main/Config/config';
 import { bots, getAccountDetail, deals, getAccountSummary, getDealOrders, updateDeal } from './api';
 const log = require('electron-log');
 
@@ -8,7 +9,7 @@ import { findAndNotifyNewDeals } from '@/main/Notifications/notifications'
 
 import { Type_Deals_API, Type_Query_Accounts, Type_API_bots, Type_UpdateFunction } from '@/types/3Commas'
 import { Type_Profile } from '@/types/config'
-import {UpdateDealRequest} from "@/main/3Commas/types/Deals";
+import { UpdateDealRequest } from "@/main/3Commas/types/Deals";
 
 /**
  * 
@@ -16,7 +17,7 @@ import {UpdateDealRequest} from "@/main/3Commas/types/Deals";
  * - Inspect if the lastSyncTime is set. If it is, then need to run bulk. If it's not, need to run update. This might need to go into
  * the code for threeC
  */
-async function updateAPI(type: string, options: Type_UpdateFunction, profileData: Type_Profile):Promise<number | false> {
+async function updateAPI(type: string, options: Type_UpdateFunction, profileData: Type_Profile): Promise<number | false> {
 
   if (!profileData) {
     log.error(' No profile was provided to the updateAPI call');
@@ -39,9 +40,10 @@ async function getDealData(type: string, options: Type_UpdateFunction, profileDa
       let { deals, lastSyncTime } = data
 
       if (deals.length === 0) return lastSyncTime;
+      const { enabled, summary } = config.get('globalSettings.notification')
       // if notifications need to be enabled for the fullSync then the type below needs to be updated.
-      if (type === 'autoSync' && options.notifications && options.time != undefined || options.syncCount != 0) {
-        findAndNotifyNewDeals(deals, options.time, options.summary)
+      if (type === 'autoSync' && enabled && options.time != undefined || options.syncCount != 0) {
+        findAndNotifyNewDeals(deals, options.time, summary)
       }
       update('deals', deals, profileData.id)
 
@@ -49,11 +51,11 @@ async function getDealData(type: string, options: Type_UpdateFunction, profileDa
     })
 
 }
-async function getAccountData(profileData: Type_Profile):Promise<void> {
+async function getAccountData(profileData: Type_Profile): Promise<void> {
 
   if (!profileData) {
     log.error(' No profile was provided to the updateAPI call');
-    return 
+    return
   }
 
   // 1. Fetch data from the API
@@ -65,7 +67,7 @@ async function getAccountData(profileData: Type_Profile):Promise<void> {
       return data
     })
     //3. Post the API response to the database.
-    .then(data=> update('accountData', data, profileData.id))
+    .then(data => update('accountData', data, profileData.id))
 }
 
 
@@ -76,9 +78,9 @@ async function getAccountData(profileData: Type_Profile):Promise<void> {
 async function getAndStoreBotData(profileData: Type_Profile): Promise<void> {
   if (!profileData) {
     log.error(' No profile was provided to the updateAPI call');
-    return 
+    return
   }
-  
+
   try {
     await bots(profileData)
       .then(async data => {

@@ -102,9 +102,17 @@ const defaultProfile:Type_Profile = {
     writeEnabled: false,
 }
 
-const defaultConfig = {
+
+const defaultConfig: TconfigValues = {
+
     profiles: Object.assign({[currentId]: defaultProfile}), 
     current: currentId,
+    globalSettings: {
+        notifications: {
+            enabled: true,
+            summary: false,
+        },
+    },
     general: {
         version : version
     },

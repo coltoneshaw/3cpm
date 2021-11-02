@@ -5,7 +5,7 @@ import { formatDeals } from '@/app/Components/DataTable/Index'
 
 import { useAppSelector } from '@/app/redux/hooks';
 import { Card_ActiveDeals, Card_totalInDeals, Card_ActiveDealReserve, Card_TotalDayProfit, Card_TotalUnrealizedProfit, Card_TotalRoi } from '@/app/Components/Charts/DataCards';
-import { SyncToggles } from './Components/index';
+import { NotificationsSettings } from './Components/index';
 
 import './ActiveDeals.scss'
 
@@ -51,7 +51,7 @@ const ActiveDealsPage = () => {
             <div className="boxData flex-column" style={{padding: '.5em 1em 1em', overflow: 'hidden'}}>
                 <div className="tableSettings">
 
-                    <SyncToggles />
+                    <NotificationsSettings />
 
                     <div className="filters tableButtons" >
                     <ToggleRefreshButton style={{ width: '250px', margin: '5px', height: '38px' }} className={"ToggleRefreshButton"}  />

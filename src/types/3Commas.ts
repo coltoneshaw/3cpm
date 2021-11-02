@@ -256,8 +256,6 @@ export type Type_MarketOrders = {
 export interface Type_UpdateFunction{
     offset: number
     time:number
-    summary: boolean
-    notifications: boolean
     syncCount: number
 }
 
