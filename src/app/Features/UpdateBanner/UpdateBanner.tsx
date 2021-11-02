@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 
 // @ts-ignore
 import { version } from '#/package.json';
-
+import { openLink } from '@/utils/helperFunctions';
 import './UpdateBanner.scss';
 
 import Close from '@mui/icons-material/Close';
@@ -18,9 +18,8 @@ const UpdateBanner = () => {
         changeShow( false )
     }
 
-    const openVersionLink = () => {
-        window.ThreeCPM.Repository.General.openLink(latestLink)
-    }
+    const openVersionLink = () => openLink(latestLink)
+    
 
     useEffect(() => {
 

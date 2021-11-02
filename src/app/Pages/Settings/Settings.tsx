@@ -4,7 +4,7 @@ import { useAppSelector } from '@/app/redux/hooks';
 
 // @ts-ignore
 import { version } from '#/package.json';
-
+import { openLink } from '@/utils/helperFunctions';
 
 import {
     ButtonGroup,
@@ -111,7 +111,7 @@ const SettingsPage = () => {
                 {/* These buttons still need to be wired up, but for now they are displayed. */}
                 <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ margin: 'auto' }}>
 
-                    <Button onClick={() => window.ThreeCPM.Repository.General.openLink('https://github.com/coltoneshaw/3c-portfolio-manager#feedback-or-bug-submission')} style={{ margin: '1em', borderRight: 'none' }} >Leave Feedback / Report a bug</Button>
+                    <Button onClick={() => openLink('https://github.com/coltoneshaw/3c-portfolio-manager#feedback-or-bug-submission')} style={{ margin: '1em', borderRight: 'none' }} >Leave Feedback / Report a bug</Button>
                 </ButtonGroup>
                 <Button
                     variant="text" color="primary"

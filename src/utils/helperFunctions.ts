@@ -1,22 +1,23 @@
 import { parseISO, differenceInMilliseconds } from 'date-fns'
 
 
+const isElectron = window.mainPreload
 /**
  * 
  * @param jsonString the json string to be validated
  * @param options 
  * @returns a parsed json string or false.
  */
-function tryParseJSON_( jsonString:string , options?:object ) {
-    try {
-      const o = JSON.parse(jsonString);
-      if (o && typeof o === "object") {
-        return o;
-      }
+function tryParseJSON_(jsonString: string, options?: object) {
+  try {
+    const o = JSON.parse(jsonString);
+    if (o && typeof o === "object") {
+      return o;
     }
-    catch (e) { }
-    // console.error('error parsing the json file')
-    return false;
+  }
+  catch (e) { }
+  // console.error('error parsing the json file')
+  return false;
 };
 
 
@@ -26,8 +27,8 @@ function tryParseJSON_( jsonString:string , options?:object ) {
  * @param idAttribute the ID attribute used to remove duplicate matches
  * @returns cleaned array with only one item per ID attribute
  */
-const removeDuplicatesInArray = (data: any[], idAttribute:any) => {
-  return Array.from(new Set( data.map(a => a[idAttribute] ))).map(id => data.find(a => a[idAttribute] === id))
+const removeDuplicatesInArray = (data: any[], idAttribute: any) => {
+  return Array.from(new Set(data.map(a => a[idAttribute]))).map(id => data.find(a => a[idAttribute] === id))
 }
 
 
@@ -36,16 +37,16 @@ const removeDuplicatesInArray = (data: any[], idAttribute:any) => {
  * @param property property to sort the array based on
  * @returns function to be used in `.sort()`
  */
-function dynamicSort(property:string ) {
+function dynamicSort(property: string) {
   let sortOrder = 1;
-  if(property[0] === "-") {
-      sortOrder = -1;
-      property = property.substr(1);
+  if (property[0] === "-") {
+    sortOrder = -1;
+    property = property.substr(1);
   }
-  return function (a:any ,b:any) {
-      /* next line works with strings and numbers, 
-       * and you may want to customize it to your needs
-       */
+  return function (a: any, b: any) {
+    /* next line works with strings and numbers, 
+     * and you may want to customize it to your needs
+     */
     const result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
     return result * sortOrder;
   }
@@ -71,10 +72,10 @@ function convertMiliseconds(miliseconds: number) {
   return { d: days, h: hours, m: minutes, s: seconds };
 };
 
-const padZero = (number:number) => {
-    if(number >= 10) return number;
+const padZero = (number: number) => {
+  if (number >= 10) return number;
 
-    return '0' + number
+  return '0' + number
 }
 
 /**
@@ -84,7 +85,7 @@ const padZero = (number:number) => {
  */
 const getDateString = (created_at: string) => {
   const now = new Date()
-  const timeObject = convertMiliseconds( differenceInMilliseconds(now, parseISO(created_at)) )
+  const timeObject = convertMiliseconds(differenceInMilliseconds(now, parseISO(created_at)))
 
   const { d, h, m, s } = timeObject
 
@@ -93,14 +94,14 @@ const getDateString = (created_at: string) => {
   const minute = (m > 0) ? padZero(m) + 'm ' : ''
   const seconds = (s > 0) ? padZero(s) + 's' : ''
 
-  if(d > 0) return day + (padZero(h) + 'h ') + minute
+  if (d > 0) return day + (padZero(h) + 'h ') + minute
 
   return day + hour + minute + seconds
 }
 
 function getLang() {
-  if (navigator.languages != undefined) 
-    return navigator.languages[0]; 
+  if (navigator.languages != undefined)
+    return navigator.languages[0];
   return navigator.language;
 }
 
@@ -112,24 +113,28 @@ function getLang() {
  * 
  * https://stackoverflow.com/a/64057471/13836826
  */
-function getDatesBetweenTwoDates(startDate:string, endDate:string) {
-  const days = [],  
-        months = new Set(),
-        years = new Set()
+function getDatesBetweenTwoDates(startDate: string, endDate: string) {
+  const days = [],
+    months = new Set(),
+    years = new Set()
 
   const dateMove = new Date(startDate)
   let date = startDate
 
-  while (date < endDate){
-    date = dateMove.toISOString().slice(0,10)
+  while (date < endDate) {
+    date = dateMove.toISOString().slice(0, 10)
     months.add(date.slice(0, 7))
     years.add(date.slice(0, 4))
     days.push(date)
-    dateMove.setDate(dateMove.getDate()+1) // increment day
+    dateMove.setDate(dateMove.getDate() + 1) // increment day
   }
-  return {years: [...Array.from(years)], months: [...Array.from(months)], days} // return arrays
+  return { years: [...Array.from(years)], months: [...Array.from(months)], days } // return arrays
 }
 
+const openLink = (url: string) => {
+  if (isElectron) return window.ThreeCPM.Repository.General.openLink(url);
+  return window.open(url)
+}
 
 
 export {
@@ -139,5 +144,6 @@ export {
   getDateString,
   getLang,
   convertMiliseconds,
-  getDatesBetweenTwoDates
+  getDatesBetweenTwoDates,
+  openLink
 }

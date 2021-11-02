@@ -2,6 +2,7 @@ import React from "react";
 
 import LaunchIcon from '@mui/icons-material/Launch';
 
+import {openLink} from '@/utils/helperFunctions'
 
 const OpenIn3Commas = ({ cell, bot_id, className }: { cell: any, bot_id: string, className?: string }) => {
 
@@ -30,10 +31,7 @@ const OpenIn3Commas = ({ cell, bot_id, className }: { cell: any, bot_id: string,
                     cursor: 'pointer'
                 }}
 
-                    onClick={() => {
-                        //@ts-ignore
-                        electron.general.openLink(url)
-                    }}
+                    onClick={() => openLink(url)}
                 />
             </span>
         </>

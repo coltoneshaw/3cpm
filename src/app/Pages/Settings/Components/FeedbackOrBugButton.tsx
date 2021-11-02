@@ -1,23 +1,12 @@
 import {Button} from "@mui/material";
 import React from "react";
 
+import { openLink } from "@/utils/helperFunctions";
 
-const FeedbackOrBugButton = () => {
-
-
-    const openLink = () => {
-        const link = 'https://github.com/coltoneshaw/3c-portfolio-manager#feedback-or-bug-submission'
-
-        let electron = window.mainPreload
-        if (electron) {
-            return window.ThreeCPM.Repository.General.openLink(link);
-        }
-        return window.open(link)
-    }
-
+const FeedbackOrBugButton = () => {    
 
     return (
-        <Button onClick={openLink} style={{ margin: '1em', borderRight: 'none' }} >Leave Feedback / Report a bug</Button>
+        <Button onClick={() => openLink('https://github.com/coltoneshaw/3c-portfolio-manager#feedback-or-bug-submission')} style={{ margin: '1em', borderRight: 'none' }} >Leave Feedback / Report a bug</Button>
     )
 
 
