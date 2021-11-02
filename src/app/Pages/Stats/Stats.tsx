@@ -5,7 +5,7 @@ import './Stats.scss'
 import { Button, ButtonGroup } from '@mui/material';
 
 import { RiskMonitor, SummaryStatistics, PerformanceMonitor } from './Views/Index';
-import { UpdateDataButton } from '@/app/Components/Buttons/Index'
+import { UpdateDataButton, CopyTodayStatsButton } from '@/app/Components/Buttons/Index'
 import { RoiCards } from './Components/Index'
 
 import { getLang } from '@/utils/helperFunctions';
@@ -33,7 +33,7 @@ const buttonElements = [
 
 const StatsPage = () => {
     const { currentProfile } = useAppSelector(state => state.config);
-    const { metricsData } = useAppSelector(state => state.threeCommas);
+    const { metricsData, profitData } = useAppSelector(state => state.threeCommas);
 
     const [reservedFunds, updateReservedFunds] = useState(() => currentProfile.statSettings.reservedFunds)
 
@@ -114,6 +114,7 @@ const StatsPage = () => {
                                 })
                             }
                         </ButtonGroup>
+                        <CopyTodayStatsButton key="copyTodayStatsButton" currency={currentProfile.general.defaultCurrency} profitData={profitData} metricsData={metricsData} className="CtaButton" style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }} />
                         <UpdateDataButton key="updateDataButton" className="CtaButton" style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }} />
 
                     </div>
