@@ -48,11 +48,10 @@ const dispatch_setBalanceData = (data: typeof initialState.balanceData) => store
 
 const fetchAndStoreBotData = async (currentProfile: Type_Profile, update: boolean) => {
     try {
-        // @ts-ignore
         await botQuery(currentProfile)
-            .then((result: Type_Query_bots[]) => {
+            .then(result => {
                 // if (!result) return
-                if (update) dispatch_setBotData(result)
+                if (update && result.length > 0) dispatch_setBotData(result)
                 const inactiveBotFunds = result.filter(b => b.is_enabled === 1).map(r => r.enabled_inactive_funds)
                 // pull enabled_inactive_funds from the bots and add it to metrics.
                 dispatch_setMetricsData({ inactiveBotFunds: (inactiveBotFunds.length > 0) ? inactiveBotFunds.reduce((sum, funds) => sum + funds) : 0})
@@ -223,13 +222,15 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
     const syncOptions = store.getState().threeCommas.syncOptions
     store.dispatch(setIsSyncing(true))
 
-    let time = (syncOptions.time) ? syncOptions.time : 0;
-    let syncCount = (syncOptions.syncCount) ? syncOptions.syncCount : 0;
-    if(type === 'fullSync') syncCount = 0;
+    const originalTime = syncOptions.time || new Date().getTime()
+    let time = originalTime
+    let syncCount = syncOptions.syncCount || 0
+    if (type === 'fullSync') {
+        syncCount = 0
+        time = 0
+    }
     const options = {
         syncCount,
-        summary: (syncOptions.summary) ? syncOptions.summary : false,
-        notifications: (syncOptions.notifications) ? syncOptions.notifications : false,
         time,
         offset
     }
@@ -244,10 +245,11 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
             .then((lastSyncTime) => {
                 store.dispatch(setSyncData({
                     syncCount:(type === 'autoSync') ? options.syncCount + 1 : 0,
-                    time: (type === 'autoSync') ? options.time + 15000 : 0
+                    // don't override syncOptions.time in case of a fullSync
+                    // because there might be a concurrent autoSync running
+                    time: (type === 'autoSync') ? originalTime + 15000 : originalTime
                 }))
                 store.dispatch(updateLastSyncTime({data: lastSyncTime }))
-
             })
 
     } catch (error) {
@@ -274,7 +276,7 @@ const syncNewProfileData = async (offset: number = 1000) => {
 
     try {
         //@ts-ignore
-        await electron.config.set(null, store.getState().config.config)
+        await mainPreload.config.set(null, store.getState().config.config)
         await updateThreeCData('newProfile', options, profileData)
             .then(async () => updateAllDataQuery(profileData, 'fullSync'))
         success = true;

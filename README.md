@@ -59,18 +59,18 @@ If you have any issues don't hesitate to reach out to me on Discord @the_okayest
 
 A dev build will enable you to contribute to the project locally, make changes in real time, and test the code for yourself. Just follow the below steps.
 
-1. Download the project locally
+### 1. Download the project locally
 
 ```
 git clone https://github.com/coltoneshaw/3c-portfolio-manager.git
 ```
 
-2. Navigate into the folder you downloaded
+### 2. Navigate into the folder you downloaded
 
 ```bash
 cd 3c-portfolio-manager
 ```
-3. Download the project dependencies.
+### 3. Download the project dependencies.
 
 ```
 npm i --include=dev
@@ -82,7 +82,7 @@ Invalid path name example - `/Desktop/my folder/3c-portfolio-manager`
 
 Valid path name example - `/Desktop/my_folder/3c-portfolio-manager`
 
-4. Build webpack and sqlite3
+### 4. Build webpack and sqlite3
 
 ```
 npm run webpack
@@ -91,7 +91,7 @@ npm run rebuild
 
 These commands will take a few minutes as they build the webpack config and rebuild sqlite locally.
 
-5. Start the dev server
+### 5. Start the dev server
 
 ```
 npm run dev
@@ -104,14 +104,14 @@ If you make changes to the Electron main.ts / preload.ts file you may need to ca
 
 ## Packaging the application
 
-1. Run steps 1 - 5 of setting the dev server up.
-2. Package the application
+### 1. Run steps 1 - 5 of setting the dev server up.
+### 2. Package the application
 
 ```
 npm run build
 ```
 
-3. The relevant build files will be located in `./release`
+### 3. The relevant build files will be located in `./release`
 
 # Frequently Asked Questions
 

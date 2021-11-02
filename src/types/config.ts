@@ -1,8 +1,9 @@
-import type { supportedCurrencies} from'@/utils/granularity'
+import type { supportedCurrencies } from '@/utils/granularity'
 
-export interface TconfigValues {
+export type TconfigValues = {
     profiles: Record<string, Type_Profile>,
     current: string,
+    globalSettings: Type_GlobalSettings,
     general: {
         version: string
     },
@@ -27,16 +28,26 @@ export interface Type_Profile {
     },
     syncStatus: {
         deals: {
-            lastSyncTime: number | null
+            lastSyncTime: number 
         }
     },
     statSettings: {
         startDate: number
         account_id: number[],
         reservedFunds: Type_ReservedFunds[]
-    }
-
+    },
+    writeEnabled: boolean,
 }
+
+export interface Type_GlobalSettings {
+    notifications: Type_NotificationsSettings
+}
+
+export type Type_NotificationsSettings = {
+    enabled: boolean,
+    summary: boolean,
+}
+
 
 export interface Type_ReservedFunds {
     id: number
@@ -64,7 +75,7 @@ export interface Type_ConfigContext {
         currency: string[]
         updateCurrency: any
         updateApiData: any
-        apiData: {key: string, secret: string, mode: string}
+        apiData: { key: string, secret: string, mode: string }
         reservedFunds: Type_ReservedFunds[],
         updateReservedFunds: any
         currentProfileId: string

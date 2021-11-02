@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React from 'react';
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Scatter, Legend, ResponsiveContainer, Line, Label } from 'recharts';
 import { InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 
@@ -7,83 +7,20 @@ import NoData from '@/app/Pages/Stats/Components/NoData';
 import { Type_Pair_Performance_Metrics } from '@/types/3Commas';
 import { Type_Tooltip, Type_Pair_Performance } from '@/types/Charts';
 
-import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 import { parseNumber } from '@/utils/number_formatting';
-import { dynamicSort } from '@/utils/helperFunctions';
-import { filterData } from '@/app/Components/Charts/formatting'
 import { currencyTickFormatter, currencyTooltipFormatter } from '@/app/Components/Charts/formatting'
-
-const defaultFilter = 'all';
-const defaultSort = '-total_profit';
+import {usePerformanceSortAndFilter, useLocalDataWithHeight} from './Components/barCustomState';
 
 
-const usePerformanceSortAndFilter = (name: 'PairPerformanceBar' | 'BotPerformanceBar') => {
-    const localStorageFilterName = storageItem.charts[name].filter
-    const localStorageSortName = storageItem.charts[name].sort
-
-    const [sort, setSort] = useState(defaultSort);
-    const [filter, setFilter] = useState(defaultFilter);
-    const [metricsDisplayed, updatedMetricsDisplayed] = useState(() => ({ 'total_profit': false, 'bought_volume': false, 'avg_deal_hours': false }))
 
 
-    useLayoutEffect(() => {
-        // const getFilterFromStorage = getStorageItem(localStorageFilterName);
-        // setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
-
-        setFilter(defaultFilter);
-        const getSortFromStorage = getStorageItem(localStorageSortName);
-        setSort((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);
-    }, [])
-
-
-    const handleSortChange = (event: any) => {
-        const selectedSort = (event.target.value != undefined) ? event.target.value : defaultSort;
-        setSort(selectedSort);
-        setStorageItem(localStorageSortName, selectedSort)
-    };
-
-    const handleFilterChange = (event: any) => {
-        const selectedFilter = (event.target.value != undefined) ? event.target.value : defaultFilter;
-        setFilter(selectedFilter);
-        setStorageItem(localStorageFilterName, selectedFilter)
-    };
-
-    return {
-        sort: {
-            handleSortChange,
-            sort,
-        },
-        filter: {
-            handleFilterChange,
-            filter
-        },
-        metrics: {
-            metricsDisplayed,
-            updatedMetricsDisplayed
-        }
-    }
-}
 
 const PairPerformanceBar = ({ data = [], defaultCurrency }: Type_Pair_Performance) => {
 
-    const {sort: {sort, handleSortChange}, filter: {filter, handleFilterChange}, metrics: {metricsDisplayed, updatedMetricsDisplayed}} = usePerformanceSortAndFilter('PairPerformanceBar')
+    const {sort: {sort, handleSortChange}, filter: {filter, handleFilterChange}, metrics: {metricsDisplayed, updatedMetricsDisplayed}} = usePerformanceSortAndFilter('PairPerformanceBar', { 'total_profit': false, 'bought_volume': false, 'avg_deal_hours': false });
 
+    const {chartHeight, newData} = useLocalDataWithHeight(data, filter, sort)
 
-    const [localData, updateLocalData] = useState<any[]>(() => data)
-    const [chartHeight, updateChartHeight] = useState<number>(300)
-    const [newData, updateNewData] = useState<any[]>([])
-    useEffect(() => {
-        if (data && data != []) updateLocalData(data)
-    }, [data])   
-
-    // useLayoutEffect here works only for the bot perf bar. Runs into rerender issues with pair performance
-    useEffect(() => {
-        if (data && data != []) updateNewData(() => {
-            const newData = filterData(localData, filter).sort(dynamicSort(sort))
-            updateChartHeight((newData.length * 15) + 250)
-            return newData
-        })
-    }, [filter, sort, localData])
 
     return (
         <div className="boxData stat-chart ">

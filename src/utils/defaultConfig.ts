@@ -67,7 +67,8 @@ const configSchema = {
 
             }
         }
-    }
+    },
+    writeEnabled: {type: "boolean", default: false}
 }
 
 
@@ -90,20 +91,28 @@ const defaultProfile:Type_Profile = {
     },
     syncStatus: {
         deals: {
-            lastSyncTime: null,
+            lastSyncTime: 0,
         }
     },
     statSettings: {
         startDate: getTime(sub(new Date(), { days: 90 })),
         account_id: [],
         reservedFunds: []
-    }
+    },
+    writeEnabled: false,
 }
 
 
-const defaultConfig = {
+const defaultConfig: TconfigValues = {
+
     profiles: Object.assign({[currentId]: defaultProfile}), 
     current: currentId,
+    globalSettings: {
+        notifications: {
+            enabled: true,
+            summary: false,
+        },
+    },
     general: {
         version : version
     },

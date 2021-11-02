@@ -1,8 +1,8 @@
 
-import SyncToggles from "./SyncToggles";
+import NotificationsSettings from "./NotificationsSettings";
 import SubRowAsync from "./Subrow";
 
 export {
-    SyncToggles,
+    NotificationsSettings,
     SubRowAsync
 }
