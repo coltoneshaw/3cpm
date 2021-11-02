@@ -73,7 +73,7 @@ function DealsTable({ data }: { data: object[] }) {
         {
             Header: 'Pair',
             accessor: 'pair',
-            Cell: ({ cell }: any) => <OpenIn3Commas cell={cell} bot_id={cell.row.original.bot_id} className='tooltip-activeDeals'  />
+            style: { textAlign: 'center', width: '120px' },
         },
         {
             Header: 'Duration',
