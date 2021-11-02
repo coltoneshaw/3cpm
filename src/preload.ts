@@ -57,9 +57,7 @@ async function setupContextBridge() {
       //   const profile = await ipcRenderer.invoke('allConfig', 'current');
       //   return await ipcRenderer.invoke('setStoreValue', 'profiles.' + profile + '.' + key, value);
       // },
-      async bulk(changes: typeof defaultConfig): Promise<void> {
-        await ipcRenderer.invoke('setStoreValue', null, changes);
-      }
+     bulk: async (changes: typeof defaultConfig): Promise<void> => await ipcRenderer.invoke('setBulkValues', changes)
     },
     database: {
       async query(queryString: string) {

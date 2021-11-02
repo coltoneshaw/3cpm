@@ -1,6 +1,6 @@
 import { useAppSelector } from '@/app/redux/hooks';
 import { Checkbox, FormControlLabel } from '@mui/material';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { updateNotificationsSettingsGlobal } from '@/app/redux/configActions';
 
 /**
@@ -11,9 +11,14 @@ const NotificationsSettings = () => {
 
     const { enabled: storeEnabled, summary: storeSummary } = useAppSelector(state => state.config.config.globalSettings.notifications);
 
-    const [summary, setSummary] = useState(() => storeEnabled)
-    const [enabled, setEnabled] = useState(() => storeSummary)
+    const [summary, setSummary] = useState(() => storeSummary)
+    const [enabled, setEnabled] = useState(() => storeEnabled)
 
+    useEffect(() => {
+        setSummary(storeSummary)
+        setEnabled(storeEnabled)
+    }, [storeEnabled, storeSummary]);
+    
     const changeSummary = (event: React.ChangeEvent<HTMLInputElement>) => {
         const checked = event.target.checked
         updateNotificationsSettingsGlobal({ summary: checked })

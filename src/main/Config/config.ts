@@ -93,7 +93,7 @@ const config = new Store({
         },
         '1.1.0': (store: any) => {
             log.info('migrating the config store to 1.1.0')
-            store.set('globalSettings.notification', {enabled: true , summary: false})
+            store.set('globalSettings.notifications', {enabled: true , summary: false})
         }
     },
     defaults: <TconfigValues>defaultConfig
