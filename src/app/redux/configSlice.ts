@@ -4,15 +4,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
 
-
-const defaultReservedFunds = {
-    id: 0,
-    account_name: '',
-    reserved_funds: 0,
-    is_enabled: false
-}
-
-
 // Define the initial state using that type
 const initialState = {
     config: <TconfigValues>defaultConfig,
@@ -41,6 +32,12 @@ const configPaths = {
     name: 'name',
     general: {
         defaultCurrency: 'general.defaultCurrency'
+    },
+    globalSettings: {
+        notifications: {
+            enabled: 'globalSettings.notifications.enabled',
+            summary: 'globalSettings.notifications.summary',
+        }
     }
 }
 

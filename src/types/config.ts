@@ -1,6 +1,6 @@
 import type { supportedCurrencies } from '@/utils/granularity'
 
-export interface TconfigValues {
+export type TconfigValues = {
     profiles: Record<string, Type_Profile>,
     current: string,
     globalSettings: Type_GlobalSettings,
@@ -43,7 +43,7 @@ export interface Type_GlobalSettings {
     notifications: Type_NotificationsSettings
 }
 
-export interface Type_NotificationsSettings {
+export type Type_NotificationsSettings = {
     enabled: boolean,
     summary: boolean,
 }

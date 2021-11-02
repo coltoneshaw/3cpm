@@ -33,6 +33,7 @@ const updateCurrentProfile = (profileData: Type_Profile) => {
     store.dispatch(setCurrentProfile(profileData));
     // setting this to zero here to prevent a spam of notifications with auto sync enabled. 
     store.dispatch(setSyncData({syncCount: 0, time: 0}))
+
 }
 
 /**
