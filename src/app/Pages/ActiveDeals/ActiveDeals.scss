@@ -11,6 +11,8 @@
 
 
   .tooltip-activeDeals:before {
+    z-index: 1;
+
     content: attr(data-text); /* here's the magic */
     position:absolute;
     
@@ -32,6 +34,7 @@
     
   
     display:none; /* hide by default */
+
   }
 
   .tooltip-activeDeals:after {
