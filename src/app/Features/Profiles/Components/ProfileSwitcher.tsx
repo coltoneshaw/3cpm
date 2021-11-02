@@ -55,6 +55,7 @@ const ProfileSwitcher = () => {
                     onClick={() => { 
                         updateCurrentProfileId(p);
                         dispatch(setCurrentProfileById({profileId: p}))
+                        dispatch(setSyncData({syncCount: 0, time: 0}))
 
                         //@ts-ignore
                         electron.config.set('current', p)
