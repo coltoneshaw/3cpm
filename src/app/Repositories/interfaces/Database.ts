@@ -1,9 +1,9 @@
-type tableNames = 'deals' | 'bots' | 'accountData'
+import type {database, tableNames} from '@/types/preload';
 
 export default interface DBRepository {
-    query(queryString:string):Promise<any[]>;
-    update( table: tableNames, updateData:object[] ):void;
-    upsert(table:string, data:any[], id:string, updateColumn:string):void;
-    run(query:string):void;
-    deleteAllData(profileID?: string):Promise<void>;
+    query: database['query'];
+    update: database['update'];
+    upsert: database['upsert'];
+    run: database['run'];
+    deleteAllData: database['deleteAllData'];
 }

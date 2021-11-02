@@ -1,4 +1,6 @@
-import {APIRepository, DealsRepository, DBRepository, BinanceRepository, ConfigRepository} from '@/app/Repositories/interfaces';
+import {
+    APIRepository, DealsRepository, 
+    DBRepository, BinanceRepository, ConfigRepository, PmRepository, GeneralRepository} from '@/app/Repositories/interfaces';
 
 export default interface Repository {
     readonly Deals: DealsRepository;
@@ -6,4 +8,6 @@ export default interface Repository {
     readonly Database: DBRepository;
     readonly Binance: BinanceRepository;
     readonly Config: ConfigRepository;
+    readonly General: GeneralRepository;
+    readonly Pm: PmRepository;
 }

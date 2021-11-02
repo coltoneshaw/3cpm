@@ -66,19 +66,13 @@ ipcMain.handle('open-external-link', (event, link) => {
   shell.openExternal(link)
 });
 
-ipcMain.handle('allConfig', (event, value?:string ) => {
-  if (value != null) return config.get(value)
+ipcMain.handle('allConfig', (event, value:string ) => {
+  if (value  != 'all') return config.get(value)
   return config.store
 });
 
-ipcMain.handle('setStoreValue', (event, key, value) => {
-  if (key === null) return config.set(value);
-  return config.set(key, value);
-});
-
-ipcMain.handle('setBulkValues', (event, values) => {
-  return config.set(values)
-});
+ipcMain.handle('setStoreValue', (event, key:string, value:any) => config.set(key, value));
+ipcMain.handle('setBulkValues', (event, values) => config.set(values) );
 
 ipcMain.handle('config-clear', () => {
   return config.clear()

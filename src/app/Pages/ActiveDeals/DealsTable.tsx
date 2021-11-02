@@ -68,27 +68,12 @@ function DealsTable({ data }: { data: object[] }) {
                 paddingLeft: '1em',
                 width: '150px'
             },
-
             Cell: ({ cell }: any) => <OpenIn3Commas cell={cell} bot_id={cell.row.original.bot_id} className='tooltip-activeDeals' />
         },
         {
             Header: 'Pair',
             accessor: 'pair',
-            Cell: ({ cell }: any) => {
-                return (
-                    <span
-                        data-text={cell.row.original.bot_settings}
-                        className="tooltip-activeDeals">
-                        {cell.value}
-                    </span>
-                )
-            }
-        },
-        {
-            Header: 'Pair',
-            accessor: 'pair',
-
-            style: { textAlign: 'left', width: '120px' },
+            Cell: ({ cell }: any) => <OpenIn3Commas cell={cell} bot_id={cell.row.original.bot_id} className='tooltip-activeDeals'  />
         },
         {
             Header: 'Duration',
