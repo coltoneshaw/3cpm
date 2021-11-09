@@ -153,7 +153,6 @@ const fetchPerformanceDataFunction = async (profileData: Type_Profile, oDate?: D
     return []
 }
 
-
 const getActiveDealsFunction = async (profileData: Type_Profile) => {
     const filtersQueryString = await getFiltersQueryString(profileData);
     const { currencyString, accountIdString, currentProfileID } = filtersQueryString;

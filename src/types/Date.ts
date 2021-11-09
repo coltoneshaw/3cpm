@@ -3,4 +3,9 @@ class DateRange {
     public to: Date | null = null;
 }
 
-export {DateRange}
+class utcDateRange {
+    public utcEndDate: number | null = null;
+    public utcStartDate: number | null = null;
+}
+
+export {DateRange, utcDateRange}

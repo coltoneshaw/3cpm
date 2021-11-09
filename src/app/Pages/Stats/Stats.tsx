@@ -4,19 +4,20 @@ import { useAppSelector } from '@/app/redux/hooks';
 import './Stats.scss'
 import { Button, ButtonGroup } from '@mui/material';
 
-import { RiskMonitor, SummaryStatistics, PerformanceMonitor } from './Views/Index';
-import { UpdateDataButton, CopyTodayStatsButton } from '@/app/Components/Buttons/Index'
-import { RoiCards } from './Components/Index'
+import { UpdateDataButton } from '@/app/Components/Buttons/Index'
+import { RoiCards, ViewRenderer } from './Components/Index'
 
 import { getLang } from '@/utils/helperFunctions';
 const lang = getLang()
 
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
-const defaultNav = 'day';
+const defaultNav = 'summary-stats';
 const localStorageSortName = storageItem.navigation.statsPage
 
 
-const buttonElements = [
+
+
+const buttonElements:buttonElements = [
     {
         name: 'Summary Statistics',
         id: 'summary-stats'
@@ -31,9 +32,10 @@ const buttonElements = [
     }
 ]
 
+
 const StatsPage = () => {
     const { currentProfile } = useAppSelector(state => state.config);
-    const { metricsData, profitData } = useAppSelector(state => state.threeCommas);
+    const { metricsData } = useAppSelector(state => state.threeCommas);
 
     const [reservedFunds, updateReservedFunds] = useState(() => currentProfile.statSettings.reservedFunds)
 
@@ -42,7 +44,7 @@ const StatsPage = () => {
     }, [currentProfile.statSettings.reservedFunds])
 
 
-    const [currentView, changeView] = useState('summary-stats')
+    const [currentView, changeView] = useState<pageIds>(defaultNav)
     const date: undefined | number = currentProfile.statSettings.startDate
 
     useEffect(() => {
@@ -68,22 +70,13 @@ const StatsPage = () => {
     }
 
     // this needs to stay on this page
-    const viewChanger = (newView: string) => {
+    const viewChanger = (newView: pageIds) => {
 
         const selectedNav = (newView != undefined) ? newView : defaultNav;
         changeView(selectedNav);
         setStorageItem(localStorageSortName, selectedNav)
     }
-    // this needs to stay on this page
-    const currentViewRender = () => {
-        if (currentView === 'risk-monitor') {
-            return <RiskMonitor key="risk-monitor" />
-        } else if (currentView === 'performance-monitor') {
-            return <PerformanceMonitor key="performance-monitor" />
-        }
 
-        return <SummaryStatistics key="summary-stats" />
-    }
 
 
     const dateString = (date: undefined | number) => {
@@ -114,7 +107,6 @@ const StatsPage = () => {
                                 })
                             }
                         </ButtonGroup>
-                        <CopyTodayStatsButton key="copyTodayStatsButton" currency={currentProfile.general.defaultCurrency} profitData={profitData} metricsData={metricsData} className="CtaButton" style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }} />
                         <UpdateDataButton key="updateDataButton" className="CtaButton" style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }} />
 
                     </div>
@@ -130,10 +122,7 @@ const StatsPage = () => {
 
             <RoiCards metricsData={metricsData} currentView={currentView} />
 
-
-
-            {/* // Returning the current view rendered in the function above. */}
-            {currentViewRender()}
+            <ViewRenderer currentView={currentView}/>
 
 
         </>
