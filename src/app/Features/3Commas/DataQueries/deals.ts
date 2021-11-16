@@ -5,11 +5,14 @@ import { getDatesBetweenTwoDates } from '@/utils/helperFunctions'
 import { initDate, DateRangeToSQLString } from '@/app/Features/3Commas/3Commas';
 import type { DateRange } from "@/types/Date";
 
+
 // Filtering by only closed.
 // This can most likely be moved to the performance dashboard or upwards to the app header.
 const fetchDealDataFunction = async (profileData: Type_Profile) => {
     const filtersQueryString = await getFiltersQueryString(profileData);
     const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
+    const profitData: Type_Profit[] | [] = []
+
     const query = `
         SELECT substr(closed_at, 0, 11) as closed_at_str,
                sum(final_profit)        as final_profit,
@@ -20,7 +23,7 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
         WHERE 
             closed_at != null 
             or finished = 1 
-            and account_id in (${accountIdString} )
+            and account_id in ( ${accountIdString} )
             and currency in (${currencyString} )
             and closed_at_iso_string > ${startString}
             and profile_id = '${currentProfileID}'
@@ -35,7 +38,7 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
     if (dataArray == null || dataArray.length === 0) {
 
         return {
-            profitData: [],
+            profitData,
             metrics: {
                 totalProfit: 0,
                 averageDailyProfit: 0,
@@ -46,8 +49,8 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
         }
     }
 
-
-    const { days } = getDatesBetweenTwoDates((new Date(startString)).toISOString().split('T')[0], (new Date()).toISOString().split('T')[0])
+    
+    const { days } = getDatesBetweenTwoDates(new Date(startString).toISOString().split('T')[0], new Date().toISOString().split('T')[0]);
     const profitArray: Type_Profit[] = [];
     let totalDealHours = dataArray.map(deal => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours)
 

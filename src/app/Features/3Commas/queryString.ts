@@ -2,7 +2,7 @@
 import { Type_ReservedFunds, Type_Profile } from '@/types/config'
 
 
-export const getFiltersQueryString = async (profileData: Type_Profile) => {
+export const getFiltersQueryString = (profileData: Type_Profile) => {
     const { general: { defaultCurrency }, statSettings: { reservedFunds, startDate }, id } = profileData
 
     const currencyString = (defaultCurrency) ? defaultCurrency.map((b: string) => "'" + b + "'") : ""

@@ -16,25 +16,18 @@ type params = {
     type: 'pair' | 'bot_name'
 }
 
-const dataFilter = ({ data = [], metric }: params) => {
+const dataFilter = ({ data = [] }: params) => {
 
-    let lengthAdjustedData = [...data].sort(dynamicSort('totalProfit'));
-    let indexFilter = (data.length > 10) ? 5 : Math.round( data.length * .50 );
-    switch (metric) {
-        case 'bottom':
-            lengthAdjustedData = lengthAdjustedData.sort(dynamicSort('totalProfit'));
-            if(data.length < 10) indexFilter--
-            break;
-        case 'top':
-            lengthAdjustedData = lengthAdjustedData.sort(dynamicSort('-totalProfit'));
-            break;
+    let lengthAdjustedData = [...data].sort(dynamicSort('-totalProfit'));
+    let indexFilter = data.length > 5;
+
+    if (indexFilter) {
+        return lengthAdjustedData
+        .filter( (pair, index) => index < 5)
     }
 
-    
 
     return lengthAdjustedData
-        .filter( (pair, index) => index < indexFilter)
-        .sort(dynamicSort('-totalProfit'));
 
 }
 

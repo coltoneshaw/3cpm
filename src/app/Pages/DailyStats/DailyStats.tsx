@@ -1,184 +1,170 @@
 import React, { useEffect, useMemo, useState } from "react";
-import moment from "moment";
-import { isValid } from 'date-fns'
 import { CopyTodayStatsButton } from '@/app/Components/Buttons/Index'
-
 import { Grid, TextField } from '@mui/material';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
 import { useAppSelector } from '@/app/redux/hooks';
+import { PairBar } from "@/app/Pages/DailyStats/Components";
+import { useDailyState } from "./logic";
+import AllCurrencySelector from '@/app/Components/Selectors/AllCurrencySelector'
+import AccountSelector from "@/app/Components/Selectors/AccountSelector";
 
-import type { Type_Profile } from '@/types/config';
-import { PairBar, queryDealByPairByDay, queryDealByBotByDay } from "@/app/Pages/DailyStats/Components";
+import { SummaryProfitByDay } from '@/app/Components/Charts/Area'
+import { ProfitByDay } from '@/app/Components/Charts/Bar';
 
-const oldestYear = 2015
+import { RoiMetrics } from "./Components/KPIs";
+import { formatCurrency } from "@/utils/granularity";
 
-const returnTodayUTC = (date?: Date | null) => {
-    if (!date) date = new Date();
-    return moment.utc(date)
-        .subtract(date.getTimezoneOffset(), "minutes")
-        .startOf("day")
-        .valueOf()
-}
-
-
-const queryDayDashboard = async (utcStartDate: number, profileData: Type_Profile) => {
-    const utcEndDate = utcStartDate + 86400000
-    const utcDateRange = { utcEndDate, utcStartDate }
-
-    return {
-        pairDay: await queryDealByPairByDay(profileData, utcDateRange),
-        botDay: await queryDealByBotByDay(profileData, utcDateRange)
-    }
-
-}
-
-/**
-How to query:
-
-1. Query all deals during the window
-2. Parse that data on the JS side out and group by pair
-
-
-*/
-
+import './DailyStats.scss';
 /*
 TODO list:
 
-- Add four additional KPI metrics
 - Save the query in the redux state. Maybe.
-- Move this daily stats page to it's own page.
-- Create a dropdown that controls what currency / accounts are shown.
-    - Store Accounts / Currencies in the data store
-    - Can also filter bots, as needed
+- Add Reserves to the copy / paste
 
+- Adjust the reserves / unrealized to be based on current filters.
+- Add a table of closed deals for that day.
+/*
+
+ROi METRICS
+To create ROI
 */
-type blankDashboard = {
-    pairDay: queryDealByPairByDayReturn[] | [],
-    botDay: botQueryDealByDayReturn[] | []
-}
-const blankDashboard: blankDashboard = {
-    pairDay: [],
-    botDay: []
-}
+
+const formatToUSD = (value: number) => formatCurrency(['USD'], value).metric
+
 
 const DailyStats = () => {
-    const { currentProfile } = useAppSelector(state => state.config);
     const { metricsData, profitData } = useAppSelector(state => state.threeCommas);
 
+    const { queryStats, value, handleChange, defaultCurrency, reservedFunds, updateAccounts, updateCurrency } = useDailyState()
 
-    const [value, setValue] = useState<Date | null>();
-    const [utcStartDate, setUtcStartDate] = useState<number>(() => returnTodayUTC());
-    const [queryStats, updateQueryStats] = useState(blankDashboard)
-    const handleChange = (date: Date | null) => setValue(date);
-    useEffect(() => {
-        if (value && isValid(value) && value.getFullYear() > oldestYear) setUtcStartDate(returnTodayUTC(value))
-    }, [value])
-
-    // take the UTC date and pass it into a database query to pull metrics.
-    // should these get stored in redux? Maybe after they're queried
-
-    useEffect(() => {
-        queryDayDashboard(utcStartDate, currentProfile)
-            .then(data => updateQueryStats(data))
-    }, [utcStartDate])
+    // These need to be adjusted based on the current currency / exchange. Right now it's not.
+    const activeDealReserve = (queryStats.activeDeals.activeDeals.length > 0) ? queryStats.activeDeals.activeDeals.map(deal => deal.actual_usd_profit).reduce((sum, profit) => sum + profit) : 0;
+    const unrealizedProfitTotal = (queryStats.activeDeals.activeDeals.length > 0) ? queryStats.activeDeals.activeDeals.map(deal => (deal.take_profit / 100) * deal.bought_volume).reduce((sum, profit) => sum + profit) : 0;
 
     /*
     Top metrics
-    structure them differently than the KPIs. Maybe taller squares?
 
-    What about moving the day dashboard to it's own icon since it doesn't respect the filter?
 
     Metric ideas:
     - longest running deal
-    - 3c total profit - Is this needed? Would be cool to show total that you've made. Outside of date filters.
+    - 3c total profit - This is outside of any date filters.
     - % change from the prior day
     - Best pair / worst pair
     - best bot / worst bot
-    - 
+    - Day ROI
+    - Active Deal Reserves
+
+    Total ROI
+
+    Weekly / daily ROI
+    Charts defaulted to last 30 days
     */
-
-
 
 
     return (
         <>
             <Grid container spacing={1}>
-                <Grid item xs={5} style={{ marginBottom: '10px' }}>
+                <Grid item xs={3} style={{ marginBottom: '10px' }}>
                     <DesktopDatePicker
-                        label="Date desktop"
+                        label="Date"
                         value={value}
                         onChange={handleChange}
                         maxDate={new Date()}
                         renderInput={(params) => <TextField {...params} />}
                     />
                 </Grid>
-                <Grid>
-                    <CopyTodayStatsButton 
-                        key="copyTodayStatsButton" 
-                        currency={currentProfile.general.defaultCurrency} 
-                        profitData={profitData} 
-                        metricsData={metricsData} 
-                        className="CtaButton" 
-                        style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }} 
+                <Grid item xs={3} style={{ marginBottom: '10px' }}>
+                    <AllCurrencySelector defaultCurrency={defaultCurrency} updateCurrency={updateCurrency} />
+                </Grid>
+                <Grid item xs={3} style={{ marginBottom: '10px' }}>
+                    <AccountSelector reservedFunds={reservedFunds} updateAccounts={updateAccounts} />
+                </Grid>
+                <Grid item xs={3} style={{ marginBottom: '10px' }}>
+                    <CopyTodayStatsButton
+                        key="copyTodayStatsButton"
+                        currency={defaultCurrency}
+                        profitData={profitData}
+                        metricsData={metricsData}
+                        className="CtaButton"
+                        style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }}
                     />
 
                 </Grid>
             </Grid>
             <Grid container spacing={4}>
                 <Grid item xs={3}>
-                    <div className="boxData" style={{ height: '10rem' }}>
-                        <h3 className="chartTitle">Top Pair</h3>
+                    <div className="boxData kpiMetricsContainer" style={{ height: '6rem' }}>
+                        <h3 className="chartTitle">ROI</h3>
+                        <div className="metrics">
+                            <RoiMetrics stats={queryStats.dailyProfit} bankroll={metricsData.totalBankroll} />
+                        </div>
                     </div>
                 </Grid>
                 <Grid item xs={3}>
-                    <div className="boxData" style={{ height: '10rem' }}>
+                    <div className="boxData kpiMetricsContainer" style={{ height: '6rem' }}>
                         <h3 className="chartTitle">Profit</h3>
-                        <p>% Up from 10/2/21</p>
+                        <div className="metrics">
+                            <div className="roiSpan">
+                                <strong>Day:</strong>
+                                <p>${formatToUSD(queryStats.dailyProfit.current.day)}</p>
+                            </div>
+                            <div className="roiSpan">
+                                <strong>Total:</strong>
+                                <p>${formatToUSD(queryStats.totalProfit)}</p>
+                            </div>
+                        </div>
                     </div>
                 </Grid>
                 <Grid item xs={3}>
-                    <div className="boxData" style={{ height: '10rem' }}>
+                    <div className="boxData kpiMetricsContainer" style={{ height: '6rem' }}>
+                        <h3 className="chartTitle">Future Profits</h3>
+                        <div className="metrics">
+                            <div className="roiSpan">
+                                <strong>Reserves:</strong>
+                                <p>${formatToUSD(activeDealReserve)}</p>
+                            </div>
+                            <div className="roiSpan">
+                                <strong>Unrealized:</strong>
+                                <p>${formatToUSD(unrealizedProfitTotal)}</p>
+                            </div>
+                        </div>
                     </div>
                 </Grid>
                 <Grid item xs={3}>
-                    <div className="boxData" style={{ height: '10rem' }}>
-                    </div>
-                </Grid>
-                {/* <Grid item xs={3}>
-                    <div className="boxData"  style={{height: '10rem'}}>
-                    </div>
-                </Grid>
-                <Grid item xs={3} >
-                    <div className="boxData" style={{height: '10rem'}}>
-                    </div>
-                </Grid> */}
-
-
-                <Grid item xs={6}>
-                    <div className="boxData stat-chart " >
-                        <h3 className="chartTitle">Top {(queryStats.pairDay.length < 10) ? '50%' : '5'} Pairs by Profit</h3>
-                        <PairBar data={queryStats.pairDay} defaultCurrency={currentProfile.general.defaultCurrency} metric="top" type="pair" />
-                    </div>
-                </Grid>
-                <Grid item xs={6}>
-                    <div className="boxData stat-chart " >
-                        <h3 className="chartTitle">Bottom {(queryStats.pairDay.length < 10) ? '50%' : '5'} Pairs by Profit</h3>
-                        <PairBar data={queryStats.pairDay} defaultCurrency={currentProfile.general.defaultCurrency} metric="bottom" type="pair" />
+                    <div className="boxData kpiMetricsContainer" style={{ height: '6rem' }}>
+                        <h3 className="chartTitle">Current Deal Stats</h3>
+                        <div className="metrics">
+                            <div className="roiSpan">
+                                <strong>In Deals:</strong>
+                                <p>${formatToUSD(queryStats.activeDeals.metrics.totalBoughtVolume)}</p>
+                            </div>
+                            <div className="roiSpan">
+                                <strong>Deals:</strong>
+                                <p>{queryStats.activeDeals.activeDeals.length}</p>
+                            </div>
+                        </div>
                     </div>
                 </Grid>
 
 
                 <Grid item xs={6}>
+                    <ProfitByDay data={queryStats.dailyProfit.profitData} X="profit" defaultCurrency={defaultCurrency} />
+                </Grid>
+                <Grid item xs={6}>
+                    <SummaryProfitByDay data={queryStats.dailyProfit.profitData} X="runningSum" defaultCurrency={defaultCurrency} />
+                </Grid>
+
+                <Grid item xs={6}>
                     <div className="boxData stat-chart " >
-                        <h3 className="chartTitle">Top {(queryStats.pairDay.length < 10) ? '50%' : '5'} Bots by Profit</h3>
-                        <PairBar data={queryStats.botDay} defaultCurrency={currentProfile.general.defaultCurrency} metric="top" type="bot_name" />
+                        <h3 className="chartTitle">{(queryStats.pairDay.length < 5) ? '' : 'Top 5 '}Pairs by Profit</h3>
+                        <PairBar data={queryStats.pairDay} defaultCurrency={defaultCurrency} metric="top" type="pair" />
                     </div>
                 </Grid>
                 <Grid item xs={6}>
                     <div className="boxData stat-chart " >
-                        <h3 className="chartTitle">Top {(queryStats.pairDay.length < 10) ? '50%' : '5'} Bots by Profit</h3>
-                        <PairBar data={queryStats.botDay} defaultCurrency={currentProfile.general.defaultCurrency} metric="bottom" type="bot_name" />
+                        <h3 className="chartTitle">Top {(queryStats.botDay.length < 5) ? '' : '5 '}Bots by Profit</h3>
+                        <PairBar data={queryStats.botDay} defaultCurrency={defaultCurrency} metric="top" type="bot_name" />
                     </div>
                 </Grid>
             </Grid>
