@@ -22,15 +22,26 @@
         p, .roi-percent {
             margin: 0;
             padding: .2em 0;
-            font-size: .9em;
+            font-size: 1.1em;
+            white-space: nowrap;
         }
 
         strong {
             margin: 0 .4em 0 0;
-            font-size: .9em;
+            font-size: 1.1em;
             font-weight: 700;
             letter-spacing: .5px;
             padding: .2em 0;
+        }
+
+        @media only screen and (max-width: 1550px){
+            p, .roi-percent {
+                font-size: 1em;
+            }
+    
+            strong {
+                font-size: 1em;
+            }
         }
     }
 }
@@ -38,15 +49,17 @@
 .roiSpan {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    // flex-wrap: wrap;
     justify-content: center;
 
     strong {
         text-align: right;
         white-space: nowrap;
+        align-self: center;
     }
 
     p {
+        align-self: center;
         .roi-percent {
             white-space: nowrap;
         }

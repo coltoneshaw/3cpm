@@ -22,7 +22,6 @@ TODO list:
 - Save the query in the redux state. Maybe.
 - Add Reserves to the copy / paste
 
-- Adjust the reserves / unrealized to be based on current filters.
 - Add a table of closed deals for that day.
 /*
 
