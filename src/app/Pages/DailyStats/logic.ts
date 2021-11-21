@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
 import { isValid } from 'date-fns'
 import { useAppSelector } from '@/app/redux/hooks';
@@ -13,6 +13,8 @@ export const daysInMilli = {
     thirty: 2592000000,
     sixty: 5184000000
 };
+
+
 
 type blankDashboard = {
     pairDay: queryDealByPairByDayReturn[] | [],
@@ -82,8 +84,8 @@ const blankDashboard: blankDashboard = {
     }
 }
 
-const returnTodayUtcEnd = (date?: Date | null) => {
-    if (!date) date = new Date();
+const returnTodayUtcEnd = (date: Date) => {
+    // if (!date) date = new Date();
     return moment.utc(date)
         .subtract(date.getTimezoneOffset(), "minutes")
         .endOf("day")
@@ -118,7 +120,7 @@ export const useDailyState = () => {
     const reservedFunds = currentProfile.statSettings.reservedFunds
 
     const [value, setValue] = useState<Date | null>();
-    const [utcEndDate, setutcEndDate] = useState<number>(() => returnTodayUtcEnd());
+    const [utcEndDate, setutcEndDate] = useState<number>(() => returnTodayUtcEnd(new Date()));
     const [queryStats, updateQueryStats] = useState(blankDashboard);
 
     const [currency, updateCurrency] = useState(defaultCurrency);

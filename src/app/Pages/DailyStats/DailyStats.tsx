@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React from "react";
 import { CopyTodayStatsButton } from '@/app/Components/Buttons/Index'
 import { Grid, TextField } from '@mui/material';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
@@ -40,26 +40,6 @@ const DailyStats = () => {
     // These need to be adjusted based on the current currency / exchange. Right now it's not.
     const activeDealReserve = (queryStats.activeDeals.activeDeals.length > 0) ? queryStats.activeDeals.activeDeals.map(deal => deal.actual_usd_profit).reduce((sum, profit) => sum + profit) : 0;
     const unrealizedProfitTotal = (queryStats.activeDeals.activeDeals.length > 0) ? queryStats.activeDeals.activeDeals.map(deal => (deal.take_profit / 100) * deal.bought_volume).reduce((sum, profit) => sum + profit) : 0;
-
-    /*
-    Top metrics
-
-
-    Metric ideas:
-    - longest running deal
-    - 3c total profit - This is outside of any date filters.
-    - % change from the prior day
-    - Best pair / worst pair
-    - best bot / worst bot
-    - Day ROI
-    - Active Deal Reserves
-
-    Total ROI
-
-    Weekly / daily ROI
-    Charts defaulted to last 30 days
-    */
-
 
     return (
         <>

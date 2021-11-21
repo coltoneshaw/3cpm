@@ -3,7 +3,6 @@ import { Type_Profile } from '@/types/config'
 import type { Type_ActiveDeals, Type_Profit, Type_Query_PerfArray } from '@/types/3Commas'
 import type { utcDateRange } from "@/types/Date";
 import { getDatesBetweenTwoDates } from '@/utils/helperFunctions';
-import moment from "moment";
 
 import { daysInMilli } from '@/app/Pages/DailyStats/logic';
 type filters = {
@@ -174,9 +173,9 @@ const getTotalProfit = async (profileData: Type_Profile,  filters: filters): Pro
 // This can most likely be moved to the performance dashboard or upwards to the app header.
 const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utcDateRange, filters: filters) => {
     const filtersQueryString = getFiltersQueryString(profileData);
-    const { startString, currentProfileID } = filtersQueryString;
+    const { currentProfileID } = filtersQueryString;
     const profitData: Type_Profit[] | [] = []
-    const utcStart = (utcDateRange && utcDateRange.utcStartDate) ? utcDateRange.utcStartDate - daysInMilli.thirty : new Date().getTime() - daysInMilli.thirty;
+    const utcStart = utcDateRange.utcStartDate - daysInMilli.thirty
 
     const query = `
         SELECT substr(closed_at, 0, 11) as closed_at_str,
@@ -225,12 +224,8 @@ const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utc
     }
 
 
-    // const dateStart = () => (utcStart) ? utcDateRange.utcStartDate - daysInMilli.thirty : startString;
 
-    const dateEnd = () => (utcDateRange && utcDateRange.utcEndDate) ? new Date(utcDateRange.utcEndDate) : new Date()
-
-
-    const { days } = getDatesBetweenTwoDates(new Date(utcStart).toISOString().split('T')[0], dateEnd().toISOString().split('T')[0]);
+    const { days } = getDatesBetweenTwoDates(new Date(utcStart).toISOString().split('T')[0], new Date(utcDateRange.utcEndDate).toISOString().split('T')[0]);
     const profitArray: Type_Profit[] = [];
     let totalDealHours = dataArray.map(deal => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours)
 
