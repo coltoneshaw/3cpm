@@ -32,8 +32,6 @@ const convertToNewDates = (data: Type_Profit[], langString: any, type: string) =
             profit: day.profit
         }
     })
-
-
     let primaryDates = Array.from(new Set(mappedArray.map(day => { return { converted_date: day.converted_date, utc_date: day.utc_date } })))
     primaryDates = removeDuplicatesInArray(primaryDates, 'converted_date')
 
@@ -115,9 +113,7 @@ const ProfitByDay = ({ data = [], X, defaultCurrency }: Type_ProfitChart) => {
 
 
     const renderChart = () => {
-        if (data.length === 0) {
-            return (<NoData />)
-        }
+        if (!data || data.length === 0) return <NoData />
         const filteredData = convertToNewDates(data, filterString, dateType);
         const calculateAverage = () => {
             const totalProfit = (filteredData.length > 0) ? filteredData.map(deal => deal.profit).reduce((sum, profit) => sum + profit) : 0

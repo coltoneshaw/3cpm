@@ -1,10 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { RiskMonitor, SummaryStatistics, PerformanceMonitor } from '../Views/Index';
+import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
+const defaultNav = 'summary-stats';
+const localStorageSortName = storageItem.navigation.statsPage
+
+const useViewRenderer = () => {
+
+    const [currentView, changeView] = useState<pageIds>(defaultNav)
+
+    const viewChanger = (newView: pageIds) => {
+
+        const selectedNav = (newView != undefined) ? newView : defaultNav;
+        changeView(selectedNav);
+        setStorageItem(localStorageSortName, selectedNav)
+    }
+
+    useEffect(() => {
+        const getSortFromStorage = getStorageItem(localStorageSortName);
+        changeView((getSortFromStorage != undefined) ? getSortFromStorage : defaultNav);
+    }, [])
+
+    return {
+        currentView, 
+        viewChanger
+    }
 
 
-const ViewRenderer = ({ currentView }: { currentView: 'summary-stats' | 'risk-monitor' | 'performance-monitor' | 'twentyfour-hour-stats' }) => {
+}
+
+const ViewRenderer = ({ currentView }: { currentView: pageIds }) => {
     const currentViewRender = () => {
-        let view = <SummaryStatistics key="twentyfour-hour-stats" />
+        let view = <SummaryStatistics key="summary-stats" />
         switch (currentView) {
             case 'risk-monitor':
                 view = <RiskMonitor key="risk-monitor" />
@@ -21,4 +47,7 @@ const ViewRenderer = ({ currentView }: { currentView: 'summary-stats' | 'risk-mo
     return currentViewRender()
 }
 
-export default ViewRenderer;
+export {
+    ViewRenderer,
+    useViewRenderer 
+}
