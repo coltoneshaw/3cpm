@@ -35,7 +35,6 @@ const PairBar = (params: params) => {
     const { data = [], defaultCurrency, type } = params
 
     if (!data || data.length === 0) return <NoData/>
-    console.log(data)
     return (
             <ResponsiveContainer width="100%" height="90%" minHeight="300px">
                 <BarChart
