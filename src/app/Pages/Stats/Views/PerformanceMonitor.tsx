@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useAppSelector } from '@/app/redux/hooks';
 
 // material UI components
-import { Grid } from '@mui/material';
-import { TextField } from '@mui/material';
+import { Grid, TextField, Box } from '@mui/material';
 import DateRangePicker, { DateRange } from '@mui/lab/DateRangePicker';
-import Box from '@mui/material/Box';
 
 // custom charts
 import { BotPerformanceBubble, DealPerformanceBubble } from '@/app/Components/Charts/Scatter';

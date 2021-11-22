@@ -5,7 +5,8 @@ import {
     TradingViewPage,
     SettingsPage,
     StatsPage,
-    ActiveDealsPage
+    ActiveDealsPage,
+    DailyStats
 } from '@/app/Pages/Index'
 
 // @ts-ignore
@@ -68,7 +69,7 @@ const MainWindow = () => {
             <Route exact path="/stats" render={() => <StatsPage key="statsPage" />} />
             <Route exact path="/settings" render={() => <SettingsPage key="settingsPage" />} />
             <Route exact path="/activeDeals" render={() => <ActiveDealsPage key="activeDealsPage" />} />
-
+            <Route exact path="/dailystats" render={() => <DailyStats key="dailyStats" />} />
             <Route exact path="/backtesting" render={() => <TradingViewPage key="tradingViewPage" />} />
 
         </div>
