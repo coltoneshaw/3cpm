@@ -62,6 +62,7 @@ function DealsTable({ data }: { data: object[] }) {
         {
             Header: () => <span style={{width: '100%', textAlign: 'left', paddingLeft: '3px'}}>Bot Name</span>,
             accessor: 'bot_name',
+            align: 'flex-start',
             width: 150,
             Cell: ({ cell }: any) => <OpenIn3Commas cell={cell} bot_id={cell.row.original.bot_id} className='tooltip-activeDeals' />
         },

@@ -89,8 +89,8 @@
 }
 
 .activeDealsTable {
+  overflow: auto;
   .table {
-    overflow-y: auto;
     border-spacing: 0;
     background-color: var(--color-background-light);
     color: var(--color-text-lightbackground);

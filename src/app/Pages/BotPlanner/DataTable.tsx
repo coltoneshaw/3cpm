@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { useAppSelector } from '@/app/redux/hooks';
 import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
-import {formatCurrency} from'@/utils/granularity'
+import { formatCurrency } from '@/utils/granularity'
 
 import { parseNumber } from '@/utils/number_formatting';
 import {
@@ -21,79 +21,6 @@ import { Type_Query_bots } from '@/types/3Commas'
 
 import { CustomTable } from '@/app/Components/DataTable/Index'
 import { OpenIn3Commas } from '@/app/Components/DataTable/Components'
-
-
-
-const Styles = styled.div`
-  overflow: auto;
-
-  table {
-    border-spacing: 0;
-    background-color: var(--color-background-light);
-    color: var(--color-text-lightbackground);
-    font-size: .875em;
-    min-width: 1200px;
-    width: 100%;
-
-    th,
-    td {
-      margin: 0;
-    };
-
-    th {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      height: 44px;
-      background-color: var(--color-secondary-light87);
-      font-family: "Open Sans", sans-serif;
-      font-size: .875em;
-      padding: 0 .5em;
-
-  }
-
-    thead {
-
-      
-    }
-
-    
-    tbody{
-
-      input {
-        font-size: .875rem;
-        padding: 0;
-        margin: 0;
-        border: 0;
-        background-color: var(--color-background-light);
-        color: var(--color-text-lightbackground);
-      }
-
-        tr {
-            :nth-child(2n+2) {
-                background-color: var(--color-secondary-light87);
-
-                input {
-                  background-color: var(--color-secondary-light87);
-                }
-            }
-    
-            :hover {
-              input {
-                background-color: var(--color-secondary-light25);
-                color: var(--color-text-darkbackground);
-              }
-                background-color: var(--color-secondary-light25);
-                color: var(--color-text-darkbackground);
-            }
-        };
-
-        }
-    }
-
-    
-  }
-`
 
 interface Cell {
   value: {
@@ -159,7 +86,7 @@ interface Type_DataTable {
 const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
   const localStorageSortName = storageItem.tables.BotPlanner.sort;
 
-  const { metricsData: {totalBankroll}} = useAppSelector(state => state.threeCommas);
+  const { metricsData: { totalBankroll } } = useAppSelector(state => state.threeCommas);
 
   // handling this locally because it does not need to be saved yet.
   const handleOnOff = (e: any) => {
@@ -231,6 +158,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
       {
         Header: 'Enabled?',
         accessor: 'is_enabled',
+        width: 80,
         Cell: ({ cell }: any) => {
           return <Switch
             checked={cell.value === 1 || cell.value === true}
@@ -244,6 +172,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
       {
         Header: 'Hide?',
         accessor: 'hide',
+        width: 50,
         Cell: ({ cell }: any) => {
           return <Checkbox
             checked={cell.value === 1 || cell.value === true}
@@ -255,178 +184,126 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
         }
       },
       {
-        Header: 'Name',
+        Header: () => <span style={{ width: '100%', textAlign: 'left', paddingLeft: '3px' }}>Bot Name</span>,
         accessor: 'name',
+        width: 160,
         // Cell: EditableCell,
         Cell: ({ cell }: any) => <OpenIn3Commas cell={cell} bot_id={cell.row.original.id} />,
-        style: {
-          textAlign: 'center',
-          paddingLeft: '1em'
-        }
       },
       {
-        Header: 'Pairs',
+        Header: () => <span style={{ width: '100%', textAlign: 'left', paddingLeft: '3px' }}>Pairs</span>,
         accessor: 'pairs',
-        style: {
-          textAlign: 'center'
-        },
-        Cell: ({ cell }: any) => {
-          if (cell.value.length > 20) {
-            return 'Many'
-          }
-
-          return cell.value
-        }
+        align: 'flex-start',
+        Cell: ({ cell }: any) => (cell.value.length > 20) ? 'Many' : cell.value
       },
       {
         Header: 'Currency',
         accessor: 'from_currency',
-        className:"monospace-cell",
-        style: {
-          textAlign: 'center'
-        }
+        width: 60
+        // className: "monospace-cell",
       },
       {
         Header: 'BO',
         accessor: 'base_order_volume',
         Cell: EditableCell,
-        className:"monospace-cell",
-        style: {
-          textAlign: 'center'
-        }
+        className: "monospace-cell",
+        // align: 'flex-end'
       },
       {
         Header: 'SO',
         accessor: 'safety_order_volume',
         Cell: EditableCell,
-        className:"monospace-cell",
-        style: {
-          textAlign: 'center'
-        }
+        className: "monospace-cell",
+        // align: 'flex-end'
       },
       {
-        Header: 'Take Profit',
+        Header: 'TP',
+        width: 60,
         accessor: 'take_profit',
         Cell: EditableCell,
-        className:"monospace-cell",
-        style: {
-          textAlign: 'center'
-        }
+        className: "monospace-cell",
       },
       {
         Header: 'MSTC',
+        width: 60,
         accessor: 'max_safety_orders',
         Cell: EditableCell,
-        className:"monospace-cell",
-        style: {
-          textAlign: 'center'
-        }
+        className: "monospace-cell",
       },
       {
         Header: 'SOS',
+        width: 60,
         accessor: 'safety_order_step_percentage',
         Cell: EditableCell,
-        className:"monospace-cell",
-        style: {
-          textAlign: 'center'
-        }
+        className: "monospace-cell",
       },
       {
         Header: 'OS',
+        width: 60,
         accessor: 'martingale_volume_coefficient',
         Cell: EditableCell,
-        className:"monospace-cell",
+        className: "monospace-cell",
         style: {
           textAlign: 'center'
         }
       },
       {
         Header: 'SS',
+        width: 60,
         accessor: 'martingale_step_coefficient',
         Cell: EditableCell,
-        className:"monospace-cell",
-        style: {
-          textAlign: 'center'
-        }
+        className: "monospace-cell",
       },
       {
         Header: 'Deals',
+        width: 60,
         accessor: 'max_active_deals',
         Cell: EditableCell,
-        className:"monospace-cell",
-        style: {
-          textAlign: 'center'
-        }
+        className: "monospace-cell",
       },
       {
         Header: 'Deviation',
+        width: 80,
         accessor: 'price_deviation',
         Cell: ({ cell }: any) => <span className="monospace-cell">{cell.value}%</span>,
-        style: {
-          textAlign: 'center'
-        }
       },
       {
         Header: 'Deal Funds',
         accessor: 'max_funds_per_deal',
-        Cell: ({ cell }: any) => < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>,
-        style: {
-          textAlign: 'center'
-        }
-
+        Cell: ({ cell }: any) => < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>,
+        align: 'flex-end'
       },
       {
         Header: 'Bot Funds',
         accessor: 'max_funds',
-        Cell: ({ cell }: any) =>  < span className=" monospace-cell">{formatCurrency( [cell.row.original.from_currency], cell.value, true).metric}</span>,
-        style: {
-          textAlign: 'center'
-        }
+        Cell: ({ cell }: any) => < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>,
+        align: 'flex-end'
       },
 
       {
         Header: 'Coverage',
+        width: 80,
         accessor: 'maxCoveragePercent',
         Cell: ({ cell }: any) => <span className="monospace-cell">{cell.value}%</span>,
-        style: {
-          textAlign: 'center'
-        }
       },
       {
         Header: 'Risk %',
+        width: 80,
         accessor: 'riskPercent',
         Cell: ({ cell }: any) => <span className="monospace-cell">{parseNumber(cell.value * 100)}%</span>,
-        style: {
-          textAlign: 'center'
-        }
       },
       {
         Header: 'Max SO Covered',
+        width: 80,
         accessor: 'maxSoReached',
-        className:"monospace-cell",
-        style: {
-          textAlign: 'center',
-          width: '2em',
-          maxWidth: '5em'
-        }
+        className: "monospace-cell",
       },
       {
         Header: () => <DeleteIcon />,
         accessor: 'origin',
-        Cell: ({ cell }: any) => {
-          if (cell.value === 'custom') {
-            return (
-              <DeleteIcon
-                onClick={() => handleDeleteRow(cell.row.original.id)}
-              />
-            )
-          }
-          return (<></>)
-        }
+        width: 60,
+        Cell: ({ cell }: any) => (cell.value === 'custom') ? <DeleteIcon onClick={() => handleDeleteRow(cell.row.original.id)} /> : <></>
       }
-
-
-
     ],
     []
   )
@@ -434,35 +311,38 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
 
   return (
 
-      <div className="boxData flex-column" style={{padding: '1em', overflow: 'hidden'}}>
-        <Styles>
-          <CustomTable
-            columns={columns}
-            data={localBotData}
-            autoResetSortBy={false}
-            // autoResetPage={false}
-            manualSortBy={true}
-            updateLocalBotData={handleEditCellChangeCommitted}
-            localStorageSortName={localStorageSortName}
-            //@ts-ignore
-            getHeaderProps={column => ({
-              
+    <div className="boxData flex-column" style={{ padding: '1em', overflow: 'hidden' }}>
+      <div className="botsTable">
+        <CustomTable
+          columns={columns}
+          data={localBotData}
+          autoResetSortBy={false}
+          // autoResetPage={false}
+          manualSortBy={true}
+          updateLocalBotData={handleEditCellChangeCommitted}
+          localStorageSortName={localStorageSortName}
+          //@ts-ignore
+          getHeaderProps={() => ({
+            style: {
+              height: '44px',
+              backgroundColor: 'var(--color-secondary-light87)',
+              zIndex: '1000',
+            }
+          })}
+          //@ts-ignore
+          getColumnProps={column => ({
 
-            })}
-            //@ts-ignore
-            getColumnProps={column => ({
+          })}
+          //@ts-ignore
+          getRowProps={row => ({
 
-            })}
-            //@ts-ignore
-            getRowProps={row => ({
+          })}
+          //@ts-ignore
+          getCellProps={cellInfo => ({
 
-            })}
-            //@ts-ignore
-            getCellProps={cellInfo => ({
-
-            })}
-          />
-        </Styles>
+          })}
+        />
+      </div>
       {/* </div> */}
     </div>
 
