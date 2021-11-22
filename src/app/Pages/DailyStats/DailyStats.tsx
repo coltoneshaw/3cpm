@@ -1,10 +1,11 @@
 import React from "react";
-import { CopyTodayStatsButton } from '@/app/Components/Buttons/Index'
 import { Grid, TextField } from '@mui/material';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import moment from "moment";
 
+import { UpdateDataButton } from '@/app/Components/Buttons/Index'
 import { useAppSelector } from '@/app/redux/hooks';
-import { PairBar } from "@/app/Pages/DailyStats/Components";
+import { PairBar, CopyTodayStatsButton } from "@/app/Pages/DailyStats/Components";
 import { useDailyState } from "./logic";
 import { AllCurrencySelector, AccountSelector } from '@/app/Components/Selectors'
 
@@ -18,9 +19,9 @@ import './DailyStats.scss';
 const formatToUSD = (value: number) => formatCurrency(['USD'], value).metric
 
 const DailyStats = () => {
-    const { metricsData, profitData } = useAppSelector(state => state.threeCommas);
+    const { metricsData } = useAppSelector(state => state.threeCommas);
 
-    const { queryStats, value, handleChange, defaultCurrency, reservedFunds, updateAccounts, updateCurrency } = useDailyState()
+    const { queryStats, value, handleChange, defaultCurrency, reservedFunds, updateAccounts, updateCurrency } = useDailyState();
 
     // These need to be adjusted based on the current currency / exchange. Right now it's not.
     const activeDealReserve = (queryStats.activeDeals.activeDeals.length > 0) ? queryStats.activeDeals.activeDeals.map(deal => deal.actual_usd_profit).reduce((sum, profit) => sum + profit) : 0;
@@ -34,7 +35,7 @@ const DailyStats = () => {
                         label="Date"
                         value={value}
                         onChange={handleChange}
-                        maxDate={new Date()}
+                        maxDate={new Date( moment.utc(value).startOf("day").valueOf())}
                         renderInput={(params) => <TextField {...params} />}
                     />
                 </Grid>
@@ -47,12 +48,13 @@ const DailyStats = () => {
                 <Grid item xs={3}>
                     <CopyTodayStatsButton
                         key="copyTodayStatsButton"
-                        currency={defaultCurrency}
-                        profitData={profitData}
+                        todayProfit={queryStats.dailyProfit.current.day}
                         metricsData={metricsData}
+                        activeDealReserve={activeDealReserve}
                         className="CtaButton"
-                        style={{ margin: "auto", height: "36px", marginLeft: "15px", padding: "5px 15px" }}
+                        style={{ margin: "auto", height: "38px", marginLeft: "15px", padding: "5px 15px" }}
                     />
+                    <UpdateDataButton className="CtaButton" style={{ margin: '5px', height: '38px' }} disabled={true} />
 
                 </Grid>
             </Grid>
@@ -61,7 +63,7 @@ const DailyStats = () => {
                     <div className="boxData kpiMetricsContainer" style={{ height: '6rem' }}>
                         <h3 className="chartTitle">ROI</h3>
                         <div className="metrics">
-                            <RoiMetrics stats={queryStats.dailyProfit} bankroll={metricsData.totalBankroll} />
+                            <RoiMetrics stats={queryStats.dailyProfit} bankroll={metricsData.totalBankroll} date={value}/>
                         </div>
                     </div>
                 </Grid>

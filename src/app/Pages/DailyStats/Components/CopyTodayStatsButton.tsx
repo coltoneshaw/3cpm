@@ -12,34 +12,30 @@ interface Type_ButtonProps {
     style?: object,
     className?: string
     metricsData: Type_MetricData
-    profitData: Type_Profit[],
-    currency: defaultCurrency,
+    todayProfit: number,
+    activeDealReserve: number
 }
-const CopyTodayStatsButton = ({ metricsData, profitData, currency, style, className }: Type_ButtonProps) => {
+const CopyTodayStatsButton = ({ metricsData, todayProfit, style, className, activeDealReserve }: Type_ButtonProps) => {
     const anchorRef = useRef<HTMLDivElement>(null);
-    // const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
     const [isToastOpen, setToastOpen] = useState(false);
     const [isSubmenuOpen, setSubmenuOpen] = useState(false);
 
     const copyStatsToClipboard = (yesterday?: boolean) => {
-        let dayIdx = yesterday ? 2 : 1
-        const todaysProfit = formatCurrency(currency, (profitData.length > 0) ? profitData[profitData.length - dayIdx].profit : 0)
-        const bankRoll = formatCurrency(currency, metricsData.totalBankroll)
+        const todaysProfit = formatCurrency(['USD'], todayProfit )
+        const bankRoll = formatCurrency(['USD'], metricsData.totalBankroll)
+
         // IDENT NOTICE: code formatting bellow is importamt, do not re-indent the following lines
         let text = `**Today's Profit:** ${todaysProfit.metric + " " + todaysProfit.extendedSymbol}
 **Bankroll:** ${bankRoll.metric + " " + bankRoll.extendedSymbol}
 **Risk:** ${metricsData.maxRiskPercent}%
-**Active deals:** ${metricsData.activeDealCount}`
-
+**Active deals:** ${metricsData.activeDealCount}
+**Active deal Reserve:** ${activeDealReserve}`
         navigator.clipboard.writeText(text).then(() => setToastOpen(true));
     };
 
     // toast
     const handleToastClose = (event: any, reason: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
+        if (reason === 'clickaway') return;
         setToastOpen(false);
     };
 
@@ -79,7 +75,7 @@ const CopyTodayStatsButton = ({ metricsData, profitData, currency, style, classN
                 >
                     Copy Stats
                 </Button>
-                <Button
+                {/* <Button
                     className={className}
                     disableElevation
                     size="small"
@@ -87,10 +83,10 @@ const CopyTodayStatsButton = ({ metricsData, profitData, currency, style, classN
                 >
                     <ArrowDropDownIcon />
                 </Button>
-
+ */}
 
             </ButtonGroup>
-            <Popover
+            {/* <Popover
                 id='popperID'
                 open={isSubmenuOpen}
                 anchorEl={anchorRef.current}
@@ -115,7 +111,7 @@ const CopyTodayStatsButton = ({ metricsData, profitData, currency, style, classN
                 </Paper>
 
 
-            </Popover>
+            </Popover> */}
 
             <ToastNotifcations open={isToastOpen} handleClose={handleToastClose} message="Stats copied to your clipboard." />
         </>

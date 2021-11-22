@@ -53,9 +53,8 @@ const blankDashboard = {
 const returnTodayUtcEnd = (date: Date) => {
     // if (!date) date = new Date();
     return moment.utc(date)
-        .subtract(date.getTimezoneOffset(), "minutes")
         .endOf("day")
-        .valueOf()
+        .valueOf();
 }
 
 
@@ -79,19 +78,21 @@ export const queryDayDashboard = async (utcEndDate: number, profileData: Type_Pr
     return { pairDay, botDay, dailyProfit, totalProfit, activeDeals }
 }
 
+
+
+
 export const useDailyState = () => {
     const { currentProfile } = useAppSelector(state => state.config);
 
     const defaultCurrency = currentProfile.general.defaultCurrency;
     const reservedFunds = currentProfile.statSettings.reservedFunds
 
-    const [value, setValue] = useState<Date | null>();
+    const [value, setValue] = useState<Date | null>( () => new Date());
     const [utcEndDate, setUtcEndDate] = useState<number>(() => returnTodayUtcEnd(new Date()));
     const [queryStats, updateQueryStats] = useState(blankDashboard);
 
     const [currency, updateCurrency] = useState(defaultCurrency);
     const [accounts, updateAccounts] = useState(reservedFunds);
-
     const handleChange = (date: Date | null) => setValue(date);
     useEffect(() => {
         if (value && isValid(value) && value.getFullYear() > oldestYear) setUtcEndDate(returnTodayUtcEnd(value))
@@ -105,7 +106,9 @@ export const useDailyState = () => {
         const accountIdString = accounts.map(a => a.id)
         queryDayDashboard(utcEndDate, currentProfile, { currency: currencyString, accounts: accountIdString })
             .then(data => updateQueryStats(data))
-    }, [utcEndDate, currency, accounts])
+    }, [utcEndDate, currency, accounts]);
+
+
 
     return {
         queryStats,
@@ -114,7 +117,7 @@ export const useDailyState = () => {
         defaultCurrency: currentProfile.general.defaultCurrency,
         reservedFunds: currentProfile.statSettings.reservedFunds,
         updateCurrency,
-        updateAccounts
+        updateAccounts,
     }
 }
 
