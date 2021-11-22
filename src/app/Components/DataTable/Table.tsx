@@ -19,15 +19,15 @@ const headerProps = (props, { column }) => getStyles(props, column.align, 'heade
 //@ts-ignore
 const cellProps = (props, { cell }) => getStyles(props, cell.column.align, 'cell')
 //@ts-ignore
-const getStyles = (props, align = 'left', type = 'cell') => [
+const getStyles = (props, align = 'center', type = 'cell') => [
     props,
     {
         style: {
             ...props.style,
-            justifyContent: 'center',
+            justifyContent: align,
             alignItems: 'center',
             display: 'flex',
-            flexDirection: (type === 'cell') ? 'column' : 'row'
+            // flexDirection: (type === 'cell') ? 'column' : 'row'
         },
     },
 ]
@@ -41,7 +41,7 @@ function CustomTable({ columns, data, renderRowSubComponent, getHeaderProps = de
         () => ({
             // When using the useFlexLayout:
             minWidth: 30, // minWidth is only used as a limit for resizing
-            width: 80, // width is used for both the flex-basis and flex-grow
+            width: 100, // width is used for both the flex-basis and flex-grow
         }),
         []
     )
@@ -85,7 +85,6 @@ function CustomTable({ columns, data, renderRowSubComponent, getHeaderProps = de
                     <div {...headerGroup.getHeaderGroupProps()} className="tr">
                         {headerGroup.headers.map((column) => (
 
-                            //@ts-ignore
                             <div  // Return an array of prop objects and react-table will merge them appropriately
                                 {...column.getHeaderProps([
                                     {
@@ -93,7 +92,6 @@ function CustomTable({ columns, data, renderRowSubComponent, getHeaderProps = de
                                         className: column.className,
                                         style: {
                                             //@ts-ignore
-
                                             ...column.style,
                                             justifyContent: 'center',
                                             alignItems: 'center',
@@ -102,7 +100,6 @@ function CustomTable({ columns, data, renderRowSubComponent, getHeaderProps = de
                                             textAlign: 'center !important',
                                             padding: '5px 0',
                                             height: '44px',
-
                                         },
                                     },
 
@@ -118,19 +115,11 @@ function CustomTable({ columns, data, renderRowSubComponent, getHeaderProps = de
                                 className="th"
                             >
                                 {column.render('Header')}
-                                {/* Add a sort direction indicator */}
-
                                 {/* @ts-ignore */}
                                 {column.canSort && (
                                     <span style={{ paddingLeft: '.5em' }}>
-
-                                        {//@ts-ignore column.getSortByToggleProps()
-                                            column.isSorted
-                                                //@ts-ignore
-                                                ? column.isSortedDesc
-                                                    ? ' 🔽'
-                                                    : ' 🔼'
-                                                : ''}
+                                        {//@ts-ignore
+                                            column.isSorted ? column.isSortedDesc ? ' 🔽' : ' 🔼' : ''}
                                     </span>
                                 )}
 
