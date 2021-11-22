@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Type_Profile, Type_ReservedFunds } from '@/types/config';
+import { Type_ReservedFunds } from '@/types/config';
 
 import {
     FormControl,
@@ -8,8 +8,6 @@ import {
     Select,
     ListItemText,
     Checkbox,
-    Input,
-    ListSubheader
 } from '@mui/material';
 
 type AccountSelector = {
@@ -17,11 +15,9 @@ type AccountSelector = {
     updateAccounts: CallableFunction
 }
 const AccountSelector = ({reservedFunds, updateAccounts}:AccountSelector) => {
-
     const [selectedAccounts, updateSelectedAccounts] = useState(reservedFunds);
     const [selectedAccountIds, updateSelectedAccountIds] = useState<number[]>(() => reservedFunds.filter(a => a.is_enabled).map(a => a.id));
     const updateTempAccounts = (newAccounts: number[]) => {
-
         const selected = reservedFunds.filter(a => newAccounts.includes(a.id))
         updateAccounts(selected)
         updateSelectedAccounts(selected)

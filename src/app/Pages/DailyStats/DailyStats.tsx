@@ -6,8 +6,7 @@ import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { useAppSelector } from '@/app/redux/hooks';
 import { PairBar } from "@/app/Pages/DailyStats/Components";
 import { useDailyState } from "./logic";
-import AllCurrencySelector from '@/app/Components/Selectors/AllCurrencySelector'
-import AccountSelector from "@/app/Components/Selectors/AccountSelector";
+import { AllCurrencySelector, AccountSelector } from '@/app/Components/Selectors'
 
 import { SummaryProfitByDay } from '@/app/Components/Charts/Area'
 import { ProfitByDay } from '@/app/Components/Charts/Bar';
@@ -16,21 +15,7 @@ import { RoiMetrics } from "./Components/KPIs";
 import { formatCurrency } from "@/utils/granularity";
 
 import './DailyStats.scss';
-/*
-TODO list:
-
-- Save the query in the redux state. Maybe.
-- Add Reserves to the copy / paste
-
-- Add a table of closed deals for that day.
-/*
-
-ROi METRICS
-To create ROI
-*/
-
 const formatToUSD = (value: number) => formatCurrency(['USD'], value).metric
-
 
 const DailyStats = () => {
     const { metricsData, profitData } = useAppSelector(state => state.threeCommas);
@@ -43,8 +28,8 @@ const DailyStats = () => {
 
     return (
         <>
-            <Grid container spacing={1}>
-                <Grid item xs={3} style={{ marginBottom: '10px' }}>
+            <Grid container spacing={1} style={{ marginBottom: '10px' }}>
+                <Grid item xs={3}>
                     <DesktopDatePicker
                         label="Date"
                         value={value}
@@ -53,13 +38,13 @@ const DailyStats = () => {
                         renderInput={(params) => <TextField {...params} />}
                     />
                 </Grid>
-                <Grid item xs={3} style={{ marginBottom: '10px' }}>
+                <Grid item xs={3}>
                     <AllCurrencySelector defaultCurrency={defaultCurrency} updateCurrency={updateCurrency} />
                 </Grid>
-                <Grid item xs={3} style={{ marginBottom: '10px' }}>
+                <Grid item xs={3}>
                     <AccountSelector reservedFunds={reservedFunds} updateAccounts={updateAccounts} />
                 </Grid>
-                <Grid item xs={3} style={{ marginBottom: '10px' }}>
+                <Grid item xs={3}>
                     <CopyTodayStatsButton
                         key="copyTodayStatsButton"
                         currency={defaultCurrency}

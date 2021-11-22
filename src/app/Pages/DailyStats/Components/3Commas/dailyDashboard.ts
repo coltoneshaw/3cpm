@@ -1,4 +1,3 @@
-import { getFiltersQueryString } from '@/app/Features/3Commas/queryString';
 import { Type_Profile } from '@/types/config'
 import type { Type_ActiveDeals, Type_Profit, Type_Query_PerfArray } from '@/types/3Commas'
 import type { utcDateRange } from "@/types/Date";
@@ -12,8 +11,6 @@ type filters = {
 
 
 const queryDealByPairByDay = async (profileData: Type_Profile, utcDateRange: utcDateRange, filters: filters): Promise<queryDealByPairByDayReturn[] | []> => {
-    const filtersQueryString = await getFiltersQueryString(profileData);
-    const { currentProfileID } = filtersQueryString;
 
     const queryString = `
                 SELECT 
@@ -30,14 +27,14 @@ const queryDealByPairByDay = async (profileData: Type_Profile, utcDateRange: utc
                     and account_id in (${filters.accounts} )
                     and currency in (${filters.currency} )
                     and closed_at_iso_string BETWEEN ${utcDateRange.utcStartDate} and ${utcDateRange.utcEndDate}
-                    and profile_id = '${currentProfileID}'
+                    and profile_id = '${profileData.id}'
                 GROUP BY 
                     pair;`
 
 
     let databaseQuery: queryDealByPairByDayQuery[] | [] = await window.ThreeCPM.Repository.Database.query(queryString);
 
-    if (databaseQuery == null || databaseQuery.length > 0) {
+    if (!databaseQuery || databaseQuery.length > 0) {
         const totalProfitSummary = databaseQuery
             .map(deal => deal.totalProfit)
             .reduce((sum: number, item: number) => sum + item)
@@ -60,8 +57,6 @@ const queryDealByPairByDay = async (profileData: Type_Profile, utcDateRange: utc
 }
 
 const queryDealByBotByDay = async (profileData: Type_Profile, utcDateRange: utcDateRange, filters: filters): Promise<botQueryDealByDayReturn[] | []> => {
-    const filtersQueryString = await getFiltersQueryString(profileData);
-    const { currentProfileID } = filtersQueryString;
 
     const queryString = `
                 SELECT 
@@ -79,14 +74,14 @@ const queryDealByBotByDay = async (profileData: Type_Profile, utcDateRange: utcD
                     and account_id in (${filters.accounts} )
                     and currency in (${filters.currency} )
                     and closed_at_iso_string BETWEEN ${utcDateRange.utcStartDate} and ${utcDateRange.utcEndDate}
-                    and profile_id = '${currentProfileID}'
+                    and profile_id = '${profileData.id}'
                 GROUP BY 
                     bot_id;`
 
 
     let databaseQuery: botQueryDealByDayQuery[] | [] = await window.ThreeCPM.Repository.Database.query(queryString);
 
-    if (databaseQuery == null || databaseQuery.length > 0) {
+    if (!databaseQuery || databaseQuery.length > 0) {
         const totalProfitSummary = databaseQuery
             .map(deal => deal.totalProfit)
             .reduce((sum: number, item: number) => sum + item)
@@ -109,27 +104,34 @@ const queryDealByBotByDay = async (profileData: Type_Profile, utcDateRange: utcD
 }
 
 
-const getHistoricalProfits = async (profitArray: Type_Profit[] | [], filters: filters, filtersQueryString: ReturnType<typeof getFiltersQueryString>, utcStart: number) => {
-    const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
+const getHistoricalProfits = async (profitArray: Type_Profit[] | [], filters: filters, currentProfileID:string, utcStart: number) => {
 
     const sixtyQuery = `
-    SELECT 
-        sum(final_profit) as final_profit
-    FROM 
-        deals
-    WHERE 
-        closed_at != null 
-        or finished = 1 
-        and account_id in (${(filters) ? filters.accounts : accountIdString} )
-        and currency in (${(filters) ? filters.currency : currencyString} )
-        and closed_at_iso_string BETWEEN ${utcStart - daysInMilli.thirty} and ${utcStart}
-        and profile_id = '${currentProfileID}';`
+        SELECT 
+            sum(final_profit) as final_profit
+        FROM 
+            deals
+        WHERE 
+            closed_at != null 
+            or finished = 1 
+            and account_id in (${filters.accounts} )
+            and currency in (${filters.currency} )
+            and closed_at_iso_string BETWEEN ${utcStart - daysInMilli.thirty} and ${utcStart}
+            and profile_id = '${currentProfileID}';`
 
     let sixtyDayProfit = await window.ThreeCPM.Repository.Database.query(sixtyQuery);
     const totalDays = profitArray.length
 
-    const currentWeek = profitArray.filter((value, index) => index + 1 > totalDays - 7).map(d => d.profit).reduce((s, d) => s + d)
-    const priorWeek = profitArray.filter((value, index) => index + 1 > totalDays - 14 && index + 1 < totalDays - 7).map(d => d.profit).reduce((s, d) => s + d)
+    const currentWeek = profitArray
+        .filter((value, index) => index + 1 > totalDays - 7)
+        .map(d => d.profit)
+        .reduce((s, d) => s + d);
+
+    const priorWeek = profitArray
+        .filter((value, index) => index + 1 > totalDays - 14 && index + 1 < totalDays - 7)
+        .map(d => d.profit)
+        .reduce((s, d) => s + d)
+
     const priorDay = profitArray[totalDays - 2].profit
 
 
@@ -145,12 +147,9 @@ const getHistoricalProfits = async (profitArray: Type_Profit[] | [], filters: fi
             day: [...profitArray].pop()?.profit ?? 0
         }
     }
-
 }
 
-const getTotalProfit = async (profileData: Type_Profile,  filters: filters): Promise<number> => {
-    const filtersQueryString = getFiltersQueryString(profileData);
-    const { currencyString, accountIdString, currentProfileID } = filtersQueryString;
+const getTotalProfit = async (profileData: Type_Profile, filters: filters): Promise<number> => {
 
     const totalProfit = `
     SELECT 
@@ -160,20 +159,16 @@ const getTotalProfit = async (profileData: Type_Profile,  filters: filters): Pro
     WHERE 
         closed_at != null 
         or finished = 1 
-        and account_id in (${(filters) ? filters.accounts : accountIdString} )
-        and currency in (${(filters) ? filters.currency : currencyString} )
-        and profile_id = '${currentProfileID}';`
+        and account_id in (${filters.accounts} )
+        and currency in (${filters.currency} )
+        and profile_id = '${profileData.id}';`
 
     const total = await window.ThreeCPM.Repository.Database.query(totalProfit);
-
     return total[0].final_profit
-
 }
-// Filtering by only closed.
-// This can most likely be moved to the performance dashboard or upwards to the app header.
+
+
 const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utcDateRange, filters: filters) => {
-    const filtersQueryString = getFiltersQueryString(profileData);
-    const { currentProfileID } = filtersQueryString;
     const profitData: Type_Profit[] | [] = []
     const utcStart = utcDateRange.utcStartDate - daysInMilli.thirty
 
@@ -190,7 +185,7 @@ const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utc
             and account_id in (${filters.accounts} )
             and currency in (${filters.currency} )
             and closed_at_iso_string BETWEEN ${utcStart} and ${utcDateRange.utcEndDate}
-            and profile_id = '${currentProfileID}'
+            and profile_id = '${profileData.id}'
         GROUP BY
             closed_at_str
         ORDER BY
@@ -257,8 +252,7 @@ const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utc
     const averageDailyProfit = (profitArray.length > 0) ? totalProfit / (profitArray.length) : 0;
     const totalClosedDeals = (profitArray.length > 0) ? profitArray.map(day => day.total_deals).reduce((sum: number, total_deals: number) => sum + total_deals) : 0;
     const averageDealHours = (profitArray.length > 0) ? totalDealHours / totalClosedDeals : 0;
-    const historical = await getHistoricalProfits(profitArray, filters, filtersQueryString, utcStart)
-    console.log(historical)
+    const historical = await getHistoricalProfits(profitArray, filters, profileData.id, utcStart)
 
     return {
         profitData: profitArray,
@@ -276,9 +270,6 @@ const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utc
 }
 
 const getActiveDealsFunction = async (profileData: Type_Profile, filters: filters) => {
-    const filtersQueryString = getFiltersQueryString(profileData);
-    const { currentProfileID } = filtersQueryString;
-
     const query = `
                 SELECT
                     * 
@@ -288,7 +279,7 @@ const getActiveDealsFunction = async (profileData: Type_Profile, filters: filter
                     finished = 0 
                     and account_id in (${filters.accounts} )
                     and currency in (${filters.currency} )
-                    and profile_id = '${currentProfileID}'
+                    and profile_id = '${profileData.id}'
                     `
     let activeDeals: Type_ActiveDeals[] | [] = await window.ThreeCPM.Repository.Database.query(query)
 

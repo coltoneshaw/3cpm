@@ -16,45 +16,11 @@ export const daysInMilli = {
 
 
 
-type blankDashboard = {
-    pairDay: queryDealByPairByDayReturn[] | [],
-    botDay: botQueryDealByDayReturn[] | [],
+const blankDashboard = {
+    pairDay: <queryDealByPairByDayReturn[] | []> [],
+    botDay: <botQueryDealByDayReturn[] | []> [],
     activeDeals: {
-        activeDeals: Type_ActiveDeals[] | [],
-        metrics: {
-            totalBoughtVolume: number,
-            maxRisk: number
-        }
-    },
-    totalProfit: number,
-    dailyProfit: {
-        profitData: Type_Profit[] | [],
-        metrics: {
-            totalProfit: number;
-            averageDailyProfit: number;
-            averageDealHours: number;
-            totalClosedDeals: number;
-            totalDealHours: number;
-            todayProfit: number
-        },
-        priors: {
-            month: number,
-            week: number,
-            day: number
-        },
-        current: {
-            month: number,
-            week: number,
-            day: number
-        }
-    }
-
-}
-const blankDashboard: blankDashboard = {
-    pairDay: [],
-    botDay: [],
-    activeDeals: {
-        activeDeals: [],
+        activeDeals: <Type_ActiveDeals[] | []> [],
         metrics: {
             totalBoughtVolume: 0,
             maxRisk: 0
@@ -62,7 +28,7 @@ const blankDashboard: blankDashboard = {
     },
     totalProfit: 0,
     dailyProfit: {
-        profitData: [],
+        profitData: <Type_Profit[] | []> [],
         metrics: {
             totalProfit: 0,
             averageDailyProfit: 0,
@@ -98,19 +64,19 @@ type filters = {
     currency: string[] | string
 }
 
+const oneMilliHour = 86400000
 
 export const queryDayDashboard = async (utcEndDate: number, profileData: Type_Profile, filters: filters) => {
-    const utcStartDate = utcEndDate - 86399999
+    const utcStartDate = utcEndDate - oneMilliHour - 1
     const utcDateRange = { utcEndDate, utcStartDate }
-
-    return {
-        pairDay: await queryDealByPairByDay(profileData, utcDateRange, filters),
-        botDay: await queryDealByBotByDay(profileData, utcDateRange, filters),
-        dailyProfit: await queryProfitDataByDay(profileData, utcDateRange, filters),
-        totalProfit: await getTotalProfit(profileData, filters),
-        activeDeals: await getActiveDealsFunction(profileData, filters)
-    }
-
+    const [ pairDay, botDay, dailyProfit, totalProfit, activeDeals] = await Promise.all([ 
+        queryDealByPairByDay(profileData, utcDateRange, filters), 
+        queryDealByBotByDay(profileData, utcDateRange, filters),
+        queryProfitDataByDay(profileData, utcDateRange, filters),
+        getTotalProfit(profileData, filters),
+        getActiveDealsFunction(profileData, filters)
+    ])
+    return { pairDay, botDay, dailyProfit, totalProfit, activeDeals }
 }
 
 export const useDailyState = () => {
@@ -120,7 +86,7 @@ export const useDailyState = () => {
     const reservedFunds = currentProfile.statSettings.reservedFunds
 
     const [value, setValue] = useState<Date | null>();
-    const [utcEndDate, setutcEndDate] = useState<number>(() => returnTodayUtcEnd(new Date()));
+    const [utcEndDate, setUtcEndDate] = useState<number>(() => returnTodayUtcEnd(new Date()));
     const [queryStats, updateQueryStats] = useState(blankDashboard);
 
     const [currency, updateCurrency] = useState(defaultCurrency);
@@ -128,7 +94,7 @@ export const useDailyState = () => {
 
     const handleChange = (date: Date | null) => setValue(date);
     useEffect(() => {
-        if (value && isValid(value) && value.getFullYear() > oldestYear) setutcEndDate(returnTodayUtcEnd(value))
+        if (value && isValid(value) && value.getFullYear() > oldestYear) setUtcEndDate(returnTodayUtcEnd(value))
     }, [value])
 
     // take the UTC date and pass it into a database query to pull metrics.

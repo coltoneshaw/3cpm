@@ -1,9 +1,9 @@
 
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-import { formatCurrency, supportedCurrencies } from '@/utils/granularity'
+import { supportedCurrencies } from '@/utils/granularity'
 
 import {
     FormControl,
@@ -12,7 +12,6 @@ import {
     Select,
     ListItemText,
     Checkbox,
-    Input,
     ListSubheader
 } from '@mui/material';
 
@@ -37,7 +36,7 @@ const returnCurrencyMenuItems = (currencyArray: typeof supportedCurrencies) => {
 }
 
 import { defaultCurrency } from '@/types/config';
-const CurrencySelector = ({ defaultCurrency, updateCurrency }: { defaultCurrency: defaultCurrency, updateCurrency: CallableFunction }) => {
+const AllCurrencySelector = ({ defaultCurrency, updateCurrency }: { defaultCurrency: defaultCurrency, updateCurrency: CallableFunction }) => {
 
     const [selectedCurrency, updateSelectedCurrency] = useState(defaultCurrency)
     const updateTempCurrency = (newCurrency: defaultCurrency) => {
@@ -107,4 +106,4 @@ const CurrencySelector = ({ defaultCurrency, updateCurrency }: { defaultCurrency
     )
 }
 
-export default CurrencySelector
+export default AllCurrencySelector;
