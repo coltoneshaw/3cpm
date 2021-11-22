@@ -19,65 +19,8 @@ import {
 
 import { Type_Query_bots } from '@/types/3Commas'
 
-import { CustomTable } from '@/app/Components/DataTable/Index'
-import { OpenIn3Commas } from '@/app/Components/DataTable/Components'
-
-interface Cell {
-  value: {
-    initialValue: string
-  }
-  row: {
-    original: Type_Query_bots,
-  }
-  column: {
-    id: string
-  }
-  updateLocalBotData: any
-}
-
-// Create an editable cell renderer
-const EditableCell = ({
-  value: initialValue,
-  row: { original },
-  column: { id: column },
-  updateLocalBotData, // This is a custom function that we supplied to our table instance
-}: Cell) => {
-  // We need to keep and update the state of the cell normally
-  const [value, setValue] = useState(String(initialValue))
-  const [size, setSize] = useState(() => String(initialValue).length * 1.5)
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value)
-    setSize(e.target.value.length)
-
-  }
-
-  // We'll only update the external data when the input is blurred
-  const onBlur = () => {
-    updateLocalBotData(original.id, column, value, original)
-  }
-
-  const ending = () => {
-    if (column == 'safety_order_volume' || column == 'base_order_volume') {
-      return ''
-    } else if (column == 'take_profit') {
-      return <span>%</span>
-    } else if (column == 'max_safety_orders') {
-      return <span> SOs</span>
-    }
-  }
-
-  useEffect(() => {
-    setSize(String(value).length * 1.5)
-  }, [value, initialValue])
-
-  // If the initialValue is changed external, sync it up with our state
-  useEffect(() => {
-    setValue(String(initialValue))
-  }, [initialValue])
-
-  return <span style={{ display: 'flex', justifyContent: 'center' }}><input value={value} onChange={onChange} onBlur={onBlur} size={size} style={{ textAlign: 'center' }} />{ending()}</span>
-}
+import { CustomTable, OpenIn3Commas, Bots_EditableCell } from '@/app/Components/DataTable/Index';
+const EditableCell = Bots_EditableCell;
 
 interface Type_DataTable {
   localBotData: Type_Query_bots[]
@@ -312,7 +255,7 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
   return (
 
     <div className="boxData flex-column" style={{ padding: '1em', overflow: 'hidden' }}>
-      <div className="botsTable">
+      <div className="botsTable dataTableBase">
         <CustomTable
           columns={columns}
           data={localBotData}

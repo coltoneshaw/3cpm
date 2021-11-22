@@ -105,7 +105,6 @@ const BotPlannerPage = () => {
 
         window.ThreeCPM.Repository.Database.upsert('bots', localBotData, 'id', 'hide')
 
-
     }
 
 
@@ -113,8 +112,6 @@ const BotPlannerPage = () => {
 
     return (
         <>
-            {/* <h1 style={{margin: "auto"}}>Bot Planner</h1> */}
-
             <div className="flex-row headerButtonsAndKPIs">
                 <Risk localBotData={localBotData}/>
 

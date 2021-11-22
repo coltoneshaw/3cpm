@@ -1,11 +1,9 @@
-// import { dynamicSort } from "@/utils/helperFunctions";
 import React, { useEffect } from "react";
-// import formatDeal from './FormatDeals';
 
 import { useTable, useSortBy, useExpanded, useFlexLayout, HeaderGroup, HeaderProps } from 'react-table'
 import { setStorageItem, getStorageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
-// const initialSortBy = [{ id: "created_at", desc: false }]
+import './Table.scss'
 const defaultPropGetter = () => ({})
 
 
@@ -82,7 +80,7 @@ function CustomTable({ columns, data, renderRowSubComponent, getHeaderProps = de
         <div {...getTableProps()} className="dealsTable table">
             <div style={{ textAlign: 'center' }} className="thead">
                 {headerGroups.map(headerGroup => (
-                    <div {...headerGroup.getHeaderGroupProps()} className="tr">
+                    <div {...headerGroup.getHeaderGroupProps()} className="tr" key={headerGroup.id}>
                         {headerGroup.headers.map((column) => (
 
                             <div  // Return an array of prop objects and react-table will merge them appropriately
@@ -136,7 +134,7 @@ function CustomTable({ columns, data, renderRowSubComponent, getHeaderProps = de
 
                     return (
                         <>
-                            <div {...rowProps} className="tr">
+                            <div {...rowProps} className="tr" key={row.id}>
                                 {row.cells.map(cell => {
                                     return (
                                         <div  {...cell.getCellProps(cellProps)} className="td" >

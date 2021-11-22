@@ -238,7 +238,7 @@ function DealsTable({ data }: { data: object[] }) {
 
             <EditDeal originalDeal={editRow} open={openEditDialog} onClose={handleDialogClose}></EditDeal>
 
-            <div className="activeDealsTable">
+            <div className="activeDealsTable dataTableBase">
                 <CustomTable
                     columns={columns}
                     data={localData}

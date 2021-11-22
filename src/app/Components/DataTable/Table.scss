@@ -1,0 +1,57 @@
+.dataTableBase {
+    overflow: auto;
+    .table {
+        border-spacing: 0;
+        background-color: var(--color-background-light);
+        color: var(--color-text-lightbackground);
+        font-size: 0.9em;
+        // display: block;
+        .th,
+        .td {
+            margin: 0;
+            // padding: 0.3rem 0.2rem 0.3rem 0.2rem;
+        }
+
+        .thead {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0;
+            // text-align: center !important;
+            .th {
+                font-weight: 700;
+            }
+        }
+
+        .tbody {
+            input {
+                font-size: 0.875rem;
+                padding: 0;
+                margin: 0;
+                border: 0;
+                background-color: var(--color-background-light);
+                color: var(--color-text-lightbackground);
+            }
+
+            .tr:nth-child(2n + 2) .td {
+                background-color: var(--color-secondary-light87);
+
+                input {
+                    background-color: var(--color-secondary-light87);
+                }
+            }
+            .tr:hover .td {
+                input {
+                    background-color: var(--color-secondary-light25);
+                    color: var(--color-text-darkbackground);
+                }
+
+                .MuiSwitch-thumb {
+                    background-color: darkgrey !important;
+                }
+                background-color: var(--color-secondary-light25);
+                color: var(--color-text-darkbackground);
+            }
+        }
+    }
+}
