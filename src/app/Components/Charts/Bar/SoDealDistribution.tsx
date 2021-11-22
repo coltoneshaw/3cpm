@@ -18,15 +18,15 @@ import type{Type_SoDistributionArray} from '@/types/3Commas'
 // move the bot / pair data to be in the global state
 // add the query to the 3C table
 //
-const SoDealDistribution = ({ defaultCurrency }: Type_SoDealDis) => {
+const SoDealDistribution = ({data = [], defaultCurrency }: Type_SoDealDis) => {
 
-    const safety_order = useAppSelector(state => state.threeCommas.performanceData.safety_order)
+    // const safety_order = useAppSelector(state => state.threeCommas.performanceData.safety_order)
 
     const [soData, updateData] = useState<Type_SoDistributionArray[]>([]);
 
     useEffect(() => {
-        updateData(safety_order ?? [])
-    }, [safety_order])
+        updateData(data ?? [])
+    }, [data])
 
     const renderChart = () => {
         if (soData.length === 0) {

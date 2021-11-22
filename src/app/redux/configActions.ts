@@ -1,7 +1,7 @@
-import { setConfig, setCurrentProfile, updateCurrentProfileByPath, deleteProfileById } from '@/app/redux/configSlice'
+import { setConfig, setCurrentProfile, updateCurrentProfileByPath, deleteProfileById, updateNotificationsSettings } from '@/app/redux/configSlice'
 import {setSyncData} from '@/app/redux/threeCommas/threeCommasSlice'
 
-import { TconfigValues, Type_Profile, Type_ReservedFunds } from '@/types/config';
+import { TconfigValues, Type_NotificationsSettings, Type_Profile, Type_ReservedFunds } from '@/types/config';
 
 import { removeDuplicatesInArray } from '@/utils/helperFunctions';
 
@@ -9,20 +9,16 @@ import store from './store'
 
 const updateConfig = async () => {
 
-    //@ts-ignore
-    await electron.config.get()
-        .then((config: any) => {
+    await window.ThreeCPM.Repository.Config.get('all')
+        .then(config => {
             store.dispatch(setConfig(config));
             updateCurrentProfile(config.profiles[config.current])
         })
 }
 
 const storeConfigInFile = async () => {
-
-
     try {
-        //@ts-ignore
-        await electron.config.set(null, store.getState().config.config)
+        await window.ThreeCPM.Repository.Config.bulk(store.getState().config.config)
         updateConfig()
         return true
     } catch (e) {
@@ -33,9 +29,9 @@ const storeConfigInFile = async () => {
 
 const updateCurrentProfile = (profileData: Type_Profile) => {
     store.dispatch(setCurrentProfile(profileData));
-
     // setting this to zero here to prevent a spam of notifications with auto sync enabled. 
     store.dispatch(setSyncData({syncCount: 0, time: 0}))
+
 }
 
 /**
@@ -47,12 +43,11 @@ const updateNestedCurrentProfile = (data: string | {} | [], path: string) => {
     store.dispatch(updateCurrentProfileByPath({ data, path }))
 }
 
-const updateReservedFundsArray = async (key: string, secret: string, mode: string, updateReservedFunds: CallableFunction, reservedFunds: Type_ReservedFunds[]) => {
+const updateReservedFundsArray = async (key: string, secret: string, mode: string,  reservedFunds: Type_ReservedFunds[]) => {
 
-    // @ts-ignore
-    const accountSummary = await electron.api.getAccountData(undefined, key, secret, mode)
+    const accountSummary = await window.ThreeCPM.Repository.API.getAccountData(undefined, key, secret, mode)
 
-    if (accountSummary !== undefined || accountSummary.length > 0) {
+    if (accountSummary != undefined) {
 
         const prevState = <any[]>[];
 
@@ -62,7 +57,7 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
         // checking to see if any reserved funds exist
         if (reservedFunds.length === 0 || reservedFunds === []) {
             console.log('setting since there are no account IDs!')
-            return filteredAccountData.map(account => {
+           return filteredAccountData.map(account => {
                 const { id, name } = account
                 return {
                     id,
@@ -71,13 +66,14 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
                     is_enabled: false
                 }
             })
+
         }
 
         // getting account IDs from the reserved funds
         // const configuredAccountIds = removeDuplicatesInArray(reservedFunds.map(account => account.id), 'id')
 
         // finding any accounts that did not exist since the last sync.
-        const reservedFundsArray = filteredAccountData
+       return filteredAccountData
             // .filter( account => !configuredAccountIds.includes(account.id) )
             .map(account => {
                 let { id, name } = account
@@ -97,26 +93,11 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
                 }
             })
 
-        updateReservedFunds(reservedFundsArray)
+        // updateReservedFunds(reservedFundsArray)
+
 
     }
 
-}
-
-const checkProfileIsValid = (profile: Type_Profile) => {
-    try {
-        const { apis: { threeC }, name, statSettings: { reservedFunds, startDate } } = profile
-        if (!threeC.key || !threeC.mode || !threeC.secret) return { status: false, message: 'Missing 3Commas API information' }
-        if (!name) return { status: false, message: 'Missing a valid profile name' }
-        if (!reservedFunds) return { status: false, message: 'Missing accounts. Make sure to click "Test API Keys" and enable an account.' }
-        if (reservedFunds.filter(account => account.is_enabled).length == 0) return { status: false, message: 'Missing an enabled account under reserved funds.' }
-        if (!startDate) return { status: false, message: 'Missing a start date' }
-
-        return { status: true, }
-    } catch (e) {
-        console.error(e)
-        return { status: false, message: 'an error occured when saving. Check the Javascript Console for more details.' }
-    }
 }
 
 const deleteProfileByIdGlobal = (config: TconfigValues, profileId:string, setOpen?:CallableFunction | undefined) => {
@@ -133,8 +114,7 @@ const deleteProfileByIdGlobal = (config: TconfigValues, profileId:string, setOpe
         store.dispatch(deleteProfileById({ profileId }))
         storeConfigInFile();
 
-        //@ts-ignore
-        electron.database.deleteAllData(profileId)
+        window.ThreeCPM.Repository.Database.deleteAllData(profileId)
 
         // delete the profile command
         // route the user back to a their default profile OR route the user to a new blank profile..?
@@ -144,13 +124,16 @@ const deleteProfileByIdGlobal = (config: TconfigValues, profileId:string, setOpe
     }
 }
 
-
+const updateNotificationsSettingsGlobal = async (settings: Partial<Type_NotificationsSettings>) => {
+    store.dispatch(updateNotificationsSettings(settings))
+    await storeConfigInFile()
+}
 
 export {
     updateConfig,
     updateReservedFundsArray,
     updateNestedCurrentProfile,
     storeConfigInFile,
-    checkProfileIsValid,
-    deleteProfileByIdGlobal
+    deleteProfileByIdGlobal,
+    updateNotificationsSettingsGlobal,
 }

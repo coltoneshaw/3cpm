@@ -46,7 +46,7 @@
 .filters {
     font-weight: 400;
     font-size: .9em;
-    flex-basis: 50%;
+    flex-basis: 30%;
     align-items: center;
     justify-content: flex-end;
  
@@ -54,7 +54,7 @@
 
 .menuButtons{
     margin: auto;
-    flex-basis: 50%;
+    flex-basis: 70%;
     min-width: 730px;
 }
 
@@ -82,7 +82,6 @@
 
 .stat-chart {
     margin: 0;
-    margin-bottom: 32px;
 }
 
 .riskMonitorDiv {

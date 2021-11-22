@@ -5,26 +5,18 @@ import React, { useState, useEffect } from 'react';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { TextField, FormControl } from '@mui/material';
 
+import type { defaultTempProfile } from '@/app/Pages/Settings/Settings'
 
-import { useAppSelector } from '@/app/redux/hooks';
-import { configPaths } from '@/app/redux/configSlice'
-import { updateNestedCurrentProfile } from '@/app/redux/configActions';
-
-
-export default function StartDatePicker() {
-  const profile = useAppSelector(state => state.config.currentProfile)
-  const [date, updateDate] = useState(() => 0)
-
-  useEffect(() => {
-    if (profile.statSettings.startDate) updateDate(profile.statSettings.startDate)
-
-  }, [profile])
+export default function StartDatePicker({ tempProfile, updateTempProfile }: { tempProfile: typeof defaultTempProfile, updateTempProfile: CallableFunction }) {
 
   const handleDateChange = (date: Date | null) => {
     if (date != undefined && isValid(new Date(date))) {
       const newDate = startOfDay(addMinutes(new Date(date), new Date().getTimezoneOffset())).getTime();
-      updateDate(newDate)
-      updateNestedCurrentProfile(newDate, configPaths.statSettings.startDate)
+      updateTempProfile((prevState: typeof defaultTempProfile) => {
+        let newState = { ...prevState }
+        newState.startDate = newDate
+        return newState
+    })
     }
   };
 
@@ -40,7 +32,7 @@ export default function StartDatePicker() {
           label="Stats Start Date"
           views={['day']}
           inputFormat="MM/dd/yyyy"
-          value={date}
+          value={tempProfile.startDate}
           onChange={handleDateChange}
           renderInput={(params) => (
             <TextField {...params} helperText={params?.inputProps?.placeholder} />

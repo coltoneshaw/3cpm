@@ -1,0 +1,13 @@
+div.editDealModal {
+    background-color: var(--color-background-light);
+    color: var(--color-text-lightbackground);
+
+    .MuiDialogContentText-root{
+        color: var(--color-text-lightbackground);
+        padding: 1rem;
+    }
+
+    .MuiAutocomplete-input {
+        color: var(--color-text-lightbackground)
+    }
+}

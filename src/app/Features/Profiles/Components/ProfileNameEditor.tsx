@@ -1,30 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { TextField } from '@mui/material';
-import { useAppSelector } from '@/app/redux/hooks';
-import {configPaths } from "@/app/redux/configSlice";
 
-import { updateNestedCurrentProfile } from "@/app/redux/configActions";
+import type {defaultTempProfile} from '@/app/Pages/Settings/Settings'
 
+const ProfileNameEditor = ({tempProfile, updateTempProfile}: {tempProfile: typeof defaultTempProfile, updateTempProfile: CallableFunction}) => {
 
-const ProfileNameEditor = () => {
-    const profile = useAppSelector(state => state.config.currentProfile)
-    const [name, updateName] = useState('')
 
     const handleChange = (e: any) => {
-        updateName(e.target.value)
-        updateNestedCurrentProfile(e.target.value, configPaths.name)
+        updateTempProfile((prevState: typeof defaultTempProfile) => {
+            let newState = { ...prevState }
+            newState.name = e.target.value
+            return newState
+        })
     }
-
-    useEffect(() => {
-        updateName(profile.name)
-    }, [profile])
 
     return (
         <TextField
             id="ProfileName"
             label="Profile Name"
             name="ProfileName"
-            value={name}
+            value={tempProfile.name}
             onChange={handleChange}
             className="settings-left"
             style={{

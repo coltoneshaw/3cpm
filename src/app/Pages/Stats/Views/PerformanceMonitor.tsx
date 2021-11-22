@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useAppSelector } from '@/app/redux/hooks';
 
 // material UI components
-import { Grid } from '@mui/material';
-import { TextField } from '@mui/material';
+import { Grid, TextField, Box } from '@mui/material';
 import DateRangePicker, { DateRange } from '@mui/lab/DateRangePicker';
-import Box from '@mui/material/Box';
 
 // custom charts
 import { BotPerformanceBubble, DealPerformanceBubble } from '@/app/Components/Charts/Scatter';
@@ -15,7 +13,8 @@ import { PairPerformanceByDate } from '@/app/Components/Charts/Line';
 import {
     fetchBotPerformanceMetrics,
     fetchPairPerformanceMetrics,
-    fetchPerformanceDataFunction
+    fetchPerformanceDataFunction,
+    fetchSoData
 } from "@/app/Features/3Commas/3Commas";
 import { DateRange as Type_DateRange } from "@/types/Date";
 
@@ -35,13 +34,16 @@ const PerformanceMonitor = () => {
             fetchPerformanceDataFunction(currentProfile, datePair),
             fetchBotPerformanceMetrics(currentProfile, datePair),
             fetchPairPerformanceMetrics(currentProfile, datePair),
-        ]).then(([perfData, botPerfData, pairPerfData]) => {
+            fetchSoData(currentProfile, datePair),
+        ]).then(([perfData, botPerfData, pairPerfData, safety_order]) => {
             updateLocalPerf((prevState) => {
                 return {
                     ...prevState,
                     pair_bot: perfData,
                     bot: botPerfData,
-                    pair: pairPerfData
+                    pair: pairPerfData,
+                    safety_order
+
                 }
             })
         })
@@ -99,7 +101,7 @@ const PerformanceMonitor = () => {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <SoDealDistribution key="soDealDistribution" defaultCurrency={currentProfile.general.defaultCurrency}/>
+                    <SoDealDistribution data={localPerf.safety_order} key="soDealDistribution" defaultCurrency={currentProfile.general.defaultCurrency}/>
                 </Grid>
             </Grid>
         </>

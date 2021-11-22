@@ -7,20 +7,16 @@ import { useThemeProvidor } from '@/app/Context/ThemeEngine';
 const DisplaySwitcher = () => {
 
     const [ display, changeDisplay ] = useState(false)
-    const theme = useThemeProvidor()
-    const { changeTheme } = theme
-
-   
+    const { changeTheme } = useThemeProvidor()
+  
 
     const displaySwitch = () => {
-
         changeDisplay(!display)
         changeTheme()
-
     }
 
         return (
-            <div className="sidebarOption" id="displaySwitcher" onClick={() => displaySwitch()} >
+            <div className="sidebarOption" id="displaySwitcher" onClick={displaySwitch} >
                 { (display) ? <Moon /> : <Sun /> }
             </div>
         )

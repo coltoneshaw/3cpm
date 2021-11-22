@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
 
-import {yAxisWidth, currencyTickFormatter, currencyTooltipFormatter} from '@/app/Components/Charts/formatting'
+import { yAxisWidth, currencyTickFormatter, currencyTooltipFormatter } from '@/app/Components/Charts/formatting'
 
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -32,9 +32,7 @@ const convertToNewDates = (data: Type_Profit[], langString: any, type: string) =
             profit: day.profit
         }
     })
-
-
-    let primaryDates = Array.from(new Set( mappedArray.map(day => { return {converted_date: day.converted_date, utc_date: day.utc_date } }   )))
+    let primaryDates = Array.from(new Set(mappedArray.map(day => { return { converted_date: day.converted_date, utc_date: day.utc_date } })))
     primaryDates = removeDuplicatesInArray(primaryDates, 'converted_date')
 
     return primaryDates.map(date => {
@@ -48,7 +46,7 @@ const convertToNewDates = (data: Type_Profit[], langString: any, type: string) =
         }
 
     })
-        
+
 
 }
 
@@ -115,13 +113,11 @@ const ProfitByDay = ({ data = [], X, defaultCurrency }: Type_ProfitChart) => {
 
 
     const renderChart = () => {
-        if (data.length === 0) {
-            return (<NoData/>)
-        }
+        if (!data || data.length === 0) return <NoData />
         const filteredData = convertToNewDates(data, filterString, dateType);
         const calculateAverage = () => {
             const totalProfit = (filteredData.length > 0) ? filteredData.map(deal => deal.profit).reduce((sum, profit) => sum + profit) : 0
-            return currencyTickFormatter(totalProfit / filteredData.length, defaultCurrency) 
+            return currencyTickFormatter(totalProfit / filteredData.length, defaultCurrency)
         }
         return (
             <ResponsiveContainer width="100%" height="100%" minHeight="300px">
@@ -133,11 +129,11 @@ const ProfitByDay = ({ data = [], X, defaultCurrency }: Type_ProfitChart) => {
                         left: 20,
                         bottom: 5,
                     }}
-                    
+
 
                 >
 
-                    <CartesianGrid opacity={.3} vertical={false}/>
+                    <CartesianGrid opacity={.3} vertical={false} />
                     <XAxis
                         dataKey="converted_date"
                         axisLine={false}
@@ -153,21 +149,26 @@ const ProfitByDay = ({ data = [], X, defaultCurrency }: Type_ProfitChart) => {
                         }}
                     />
 
-                    <ReferenceLine y={calculateAverage()} stroke="var(--color-primary-light25)" strokeWidth={2} isFront={true} label={{value: calculateAverage(), position: 'left'}} />
+                    <ReferenceLine y={calculateAverage()} stroke="var(--color-primary-light25)" strokeWidth={2} isFront={true} label={{ value: calculateAverage(), position: 'left' }} />
                     <YAxis
                         dataKey={X}
                         tickLine={false}
                         axisLine={false}
                         width={yWidth}
                         type="number"
-                        tickFormatter = {(value:any) => currencyTickFormatter(value, defaultCurrency)}
-                    
+                        tickFormatter={(value: any) => {
+                            const tick = currencyTickFormatter(value, defaultCurrency)
+                            const average = calculateAverage()
+                            if ( average > tick * .75 && tick * 1.25 > average) return ''
+                            return tick
+                        }}
+
                     />
 
                     {/* TODO - pass the custom props down properly here.  */}
                     {/* @ts-ignore */}
-                    <Tooltip content={<CustomTooltip formatter={(value:any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{strokeDasharray: '3 3', opacity: .2}} />
-                    <Bar type="monotone" dataKey={X} fill="var(--chart-metric1-color)"/>
+                    <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3', opacity: .2 }} />
+                    <Bar type="monotone" dataKey={X} fill="var(--chart-metric1-color)" />
                 </BarChart>
 
             </ResponsiveContainer>)
@@ -183,12 +184,12 @@ const ProfitByDay = ({ data = [], X, defaultCurrency }: Type_ProfitChart) => {
 }
 
 
-const CustomTooltip = ({ active, payload, formatter}: Type_Tooltip) =>{
+const CustomTooltip = ({ active, payload, formatter }: Type_Tooltip) => {
     if (!active || payload.length == 0 || payload[0] == undefined) {
         return <></>
     }
     const data: Type_NewDateProfit = payload[0].payload
-    let {date, profit, type, utc_date} = data
+    let { date, profit, type, utc_date } = data
 
     if (type === 'day') {
         date = new Date(utc_date).toLocaleString(getLang(), {

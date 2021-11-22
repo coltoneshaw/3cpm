@@ -27,6 +27,7 @@ const App = () => {
   
   const dispatch = useAppDispatch()
   useEffect(() => {
+    console.log('updating the config here')
     updateConfig();
 
   }, [dispatch]);

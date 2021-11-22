@@ -90,6 +90,10 @@ const config = new Store({
         '1.0.0': async (store: any) => {
             log.info('migrating the config store to 1.0.0')
             await migrationToProfiles(store);
+        },
+        '1.1.0': (store: any) => {
+            log.info('migrating the config store to 1.1.0')
+            store.set('globalSettings.notifications', {enabled: true , summary: false})
         }
     },
     defaults: <TconfigValues>defaultConfig

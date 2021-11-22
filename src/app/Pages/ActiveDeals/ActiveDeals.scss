@@ -6,11 +6,13 @@
 
 .tooltip-activeDeals {
     position:relative; /* making the .tooltip span a container for the tooltip text */
-    border-bottom:1px dashed #000; /* little indicater to indicate it's hoverable */
+    // border-bottom:1px dashed #000; /* little indicater to indicate it's hoverable */
   }
 
 
   .tooltip-activeDeals:before {
+    z-index: 1;
+
     content: attr(data-text); /* here's the magic */
     position:absolute;
     
@@ -32,6 +34,7 @@
     
   
     display:none; /* hide by default */
+
   }
 
   .tooltip-activeDeals:after {
@@ -63,7 +66,7 @@
     justify-content: flex-start;
     padding-bottom: 4px;
 
-    .syncToggles{
+    .notificationsSettings {
         flex: 1;
         align-self: flex-start;
         display: flex;
@@ -73,7 +76,7 @@
     }
 
 
-    .tableButtons{
+    .tableButtons {
         flex-basis: 20%;
         align-items: center;
         display: flex;
