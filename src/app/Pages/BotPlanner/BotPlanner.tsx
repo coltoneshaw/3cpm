@@ -49,11 +49,9 @@ const blankObject = {
     enabled_inactive_funds: 0
 }
 
+const baseColumns = ['is_enabled']
+
 const columnList = [
-    {
-        id: 'is_enabled',
-        name: 'Enabled?'
-    },
     {
         id: 'hide',
         name: 'Hide?'
@@ -214,7 +212,7 @@ const BotPlannerPage = () => {
                 <DataTable
                     localBotData={localBotData}
                     updateLocalBotData={updateLocalBotData}
-                    selectedColumns={selectedColumns}
+                    selectedColumns={[...selectedColumns, ...baseColumns]}
                 />
             </div>
 

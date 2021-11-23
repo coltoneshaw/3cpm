@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { Switch, Checkbox } from '@mui/material';
 import { Delete as DeleteIcon } from '@mui/icons-material';
-import { ColumnSelector, useColumnSelector } from '@/app/Components/DataTable/Components';
 
 import { useAppSelector } from '@/app/redux/hooks';
 import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
@@ -259,7 +258,6 @@ const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: Type_D
         columns={columns.filter(c => selectedColumns.includes(c.accessor))}
         data={localBotData}
         autoResetSortBy={false}
-        // autoResetPage={false}
         manualSortBy={true}
         updateLocalBotData={handleEditCellChangeCommitted}
         localStorageSortName={localStorageSortName}

@@ -34,20 +34,19 @@ const storageItem = {
     tables: {
         DealsTable: {
             sort: 'sort-DealsTable', // [ {id: 'value', desc: boolean}],
-            columns: 'columns-DealsTable'
+            columns: 'columns-DealsTable' // array of accessor ids from react-table
         },
         BotPlanner: {
             sort: 'sort-BotPlanner', // [ {id: 'value', desc: boolean}],
-            columns: 'columns-DealsTable'
+            columns: 'columns-DealsTable'// array of accessor ids from react-table
         }
     }
 }
 
 const setStorageItem = (id:string, value:string | [] | object) => {
 
-    if(typeof value === 'object'){
-        value = JSON.stringify(value)
-    }
+    if(typeof value === 'object') value = JSON.stringify(value)
+
 
     localStorage.setItem(id, value)
 

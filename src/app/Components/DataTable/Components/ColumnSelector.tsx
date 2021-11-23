@@ -10,30 +10,39 @@ import {
 
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 8 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
 
 type ColumnSelector = {
-    columns: {id: string, name: string}[],
+    columns: { id: string, name: string }[],
     selectedColumns: string[],
     handleChange: CallableFunction
 }
 
 
-const useColumnSelector = (incomingColumns: {id: string, name: string}[], name:'BotPlanner' | 'DealsTable') => {
+const useColumnSelector = (incomingColumns: { id: string, name: string }[], name: 'BotPlanner' | 'DealsTable') => {
 
-    const [columns, ] = useState(() => incomingColumns)
+    const [columns,] = useState(() => incomingColumns)
     const [selectedColumns, updateSelectedColumns] = useState(() => incomingColumns.map(c => c.id))
     const localStorageSortName = storageItem.tables[name].columns
 
     useLayoutEffect(() => {
         const storageColumns = getStorageItem(localStorageSortName);
-        updateSelectedColumns((storageColumns != undefined) ? storageColumns : incomingColumns.map(c => c.id));
+        updateSelectedColumns((!storageColumns) ? storageColumns : incomingColumns.map(c => c.id));
     }, [])
 
-    const handleChange = (columns:string[]) => {
+    const handleChange = (columns: string[]) => {
         updateSelectedColumns(columns)
         setStorageItem(localStorageSortName, columns)
     }
-
 
     return {
         columns,
@@ -43,24 +52,15 @@ const useColumnSelector = (incomingColumns: {id: string, name: string}[], name:'
 
 }
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 8 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+
 const ColumnSelector = ({ columns, selectedColumns, handleChange }: ColumnSelector) => {
-    const onChange = (e: any) => handleChange(e.target.value)
+    const onChange = (e: any) => handleChange(e?.target?.value)
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
     const handleOpen = () => setOpen(true);
 
     return (
-        <FormControl style={{ width: '250px', padding: 0}} fullWidth>
+        <FormControl style={{ width: '250px', padding: 0 }} fullWidth>
             <Select
                 multiple
                 id="select_columns"

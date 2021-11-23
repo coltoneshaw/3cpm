@@ -13,11 +13,11 @@ const initialSortBy = (localStorageSortName: string) => {
 }
 
 //@ts-ignore
-const headerProps = (props, { column }) => getStyles(props, column.align, 'header')
+const headerProps = (props, { column }) => getStyles(props, column.align)
 //@ts-ignore
-const cellProps = (props, { cell }) => getStyles(props, cell.column.align, 'cell')
+const cellProps = (props, { cell }) => getStyles(props, cell.column.align)
 //@ts-ignore
-const getStyles = (props, align = 'center', type = 'cell') => [
+const getStyles = (props, align = 'center') => [
     props,
     {
         style: {
