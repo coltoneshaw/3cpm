@@ -52,7 +52,7 @@ export type Type_NotificationsSettings = {
 export interface Type_ReservedFunds {
     id: number
     account_name: string
-    reserved_funds: number
+    reserved_funds: string | number
     is_enabled: boolean
 }
 

@@ -158,7 +158,7 @@ const calculateMetrics = () => {
     const LOCAL_maxRisk = undefToZero(maxRisk + inactiveBotFunds)
 
     // Position = available + on orders.
-    const reservedFundsTotal = (reservedFundsArray.length) ? reservedFundsArray.filter(account => account.is_enabled).map(account => account.reserved_funds).reduce((sum: number, item: number) => sum + item) : 0
+    const reservedFundsTotal = (reservedFundsArray.length) ? reservedFundsArray.filter(account => account.is_enabled).map(account => Number(account.reserved_funds)).reduce((sum, item) => sum + item) : 0
     const availableBankroll = LOCAL_position - LOCAL_on_orders - reservedFundsTotal
     const totalInDeals = LOCAL_on_orders + LOCAL_totalBoughtVolume
     const totalBankroll = LOCAL_position + LOCAL_totalBoughtVolume - reservedFundsTotal
@@ -275,8 +275,7 @@ const syncNewProfileData = async (offset: number = 1000) => {
 
 
     try {
-        //@ts-ignore
-        await mainPreload.config.set(null, store.getState().config.config)
+        await window.ThreeCPM.Repository.Config.bulk(store.getState().config.config)
         await updateThreeCData('newProfile', options, profileData)
             .then(async () => updateAllDataQuery(profileData, 'fullSync'))
         success = true;
