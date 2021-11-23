@@ -46,7 +46,7 @@ const fetchBotPerformanceMetrics = async (profileData: Type_Profile, oDate?: Dat
                 GROUP BY
                     bot_id;`
 
-    let databaseQuery: fetchBotPerformanceMetrics[] | [] = await window.ThreeCPM.Repository.Database.query(queryString);
+    let databaseQuery: fetchBotPerformanceMetrics[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, queryString);
 
     if (databaseQuery == null || databaseQuery.length > 0) {
         return databaseQuery
@@ -71,7 +71,7 @@ const botQuery = async (currentProfile: Type_Profile): Promise<Type_Query_bots[]
                     and from_currency in (${currencyString})
                     and (account_id in (${accountIdString})  OR origin = 'custom')`
 
-    let databaseQuery: Type_Query_bots[] | [] = await window.ThreeCPM.Repository.Database.query(queryString);
+    let databaseQuery: Type_Query_bots[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, queryString);
 
     if (databaseQuery != null) return databaseQuery
     return []

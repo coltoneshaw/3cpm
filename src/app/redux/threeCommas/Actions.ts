@@ -54,7 +54,7 @@ const fetchAndStoreBotData = async (currentProfile: Type_Profile, update: boolea
                 if (update && result.length > 0) dispatch_setBotData(result)
                 const inactiveBotFunds = result.filter(b => b.is_enabled === 1).map(r => r.enabled_inactive_funds)
                 // pull enabled_inactive_funds from the bots and add it to metrics.
-                dispatch_setMetricsData({ inactiveBotFunds: (inactiveBotFunds.length > 0) ? inactiveBotFunds.reduce((sum, funds) => sum + funds) : 0})
+                dispatch_setMetricsData({ inactiveBotFunds: (inactiveBotFunds.length > 0) ? inactiveBotFunds.reduce((sum, funds) => sum + funds) : 0 })
 
             })
     } catch (error) {
@@ -112,7 +112,7 @@ const fetchAndStorePerformanceData = async (profileData: Type_Profile) => {
             console.log('getting SO performance metrics')
             dispatch_setPerformanceData({ safety_order: data })
         }))
-    
+
     await Promise.all([pair_bot(), bot(), pair(), so()])
 }
 
@@ -243,12 +243,12 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
             })
             .then((lastSyncTime) => {
                 store.dispatch(setSyncData({
-                    syncCount:(type === 'autoSync') ? options.syncCount + 1 : 0,
+                    syncCount: (type === 'autoSync') ? options.syncCount + 1 : 0,
                     // don't override syncOptions.time in case of a fullSync
                     // because there might be a concurrent autoSync running
                     time: (type === 'autoSync') ? originalTime + 15000 : originalTime
                 }))
-                store.dispatch(updateLastSyncTime({data: lastSyncTime }))
+                store.dispatch(updateLastSyncTime({ data: lastSyncTime }))
             })
 
     } catch (error) {
@@ -271,12 +271,13 @@ const syncNewProfileData = async (offset: number = 1000) => {
 
     const options = { syncCount: 0, summary: false, notifications: false, time: 0, offset }
     let success;
-
-
     try {
-        await window.ThreeCPM.Repository.Config.bulk(store.getState().config.config)
-        await updateThreeCData('newProfile', options, profileData)
-            .then(async () => updateAllDataQuery(profileData, 'fullSync'))
+        await window.ThreeCPM.Repository.Config.profile('create', store.getState().config.config, profileData.id)
+            .then(async () => {
+                await updateThreeCData('newProfile', options, profileData)
+                    .then(async () => await updateAllDataQuery(profileData, 'fullSync'))
+            })
+
         success = true;
     } catch (error) {
         console.error(error)
@@ -314,7 +315,7 @@ const refreshFunction = (method: string, offset?: number) => {
     // updating the refresh function here to 15000 instead of 50. The update bar doesn't work anymore
     const refreshRate = 15000
 
-    if(!store.getState().threeCommas.autoRefresh) return
+    if (!store.getState().threeCommas.autoRefresh) return
     switch (method) {
         case 'stop':
             store.dispatch(setAutoRefresh(false))
@@ -327,7 +328,7 @@ const refreshFunction = (method: string, offset?: number) => {
                     return
                 }
 
-                if(!store.getState().threeCommas.autoRefresh) return
+                if (!store.getState().threeCommas.autoRefresh) return
                 updateAllData(offset, profileData, 'autoSync', undefined)
                     .then(() => {
                         refreshFunction('run', offset)

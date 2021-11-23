@@ -37,7 +37,7 @@ const fetchPairPerformanceMetrics = async (profileData: Type_Profile, oDate?: Da
         GROUP BY
             pair;`
 
-    let databaseQuery: fetchPairPerformanceMetrics[] | [] = await window.ThreeCPM.Repository.Database.query(queryString);
+    let databaseQuery: fetchPairPerformanceMetrics[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, queryString);
 
     if (databaseQuery == null || databaseQuery.length > 0) {
         return databaseQuery
@@ -82,7 +82,7 @@ const getSelectPairDataByDate = async (profileData: Type_Profile, pairs: string[
     `
 
 
-    let pairData: Array<Type_Pair_By_Date> | [] = await window.ThreeCPM.Repository.Database.query(query);
+    let pairData: Array<Type_Pair_By_Date> | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, query);
 
 
     let currentDate = moment(date.from).clone();

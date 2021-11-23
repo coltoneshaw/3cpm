@@ -14,6 +14,7 @@ declare global {
 
 export interface config {
     get: <T extends 'all' | string>(value: T) => Promise<T extends 'all' ? typeof defaultConfig : T extends string ? any : never>,
+    profile: (type: 'create' | 'delete', config: typeof defaultConfig, profileId: string) => Promise<void>,
     getProfile: (value: string, profileId: string) => Promise< Type_Profile | undefined >,
     reset: () => Promise<void>,
     set: (key: string, value: any) => Promise<void>,
@@ -24,10 +25,10 @@ export interface config {
 
 export type tableNames = 'deals' | 'bots' | 'accountData'
 export interface database {
-    query: (queryString: string) => Promise<any>,
-    update: (table: tableNames, updateData: object[]) => void,
-    upsert: (table: tableNames, data: any[], id: string, updateColumn: string) => void,
-    run: (query: string) => void,
+    query: (profileId:string, queryString: string) => Promise<any>,
+    update: (profileId:string, table: tableNames, updateData: object[]) => void,
+    upsert: (profileId:string, table: tableNames, data: any[], id: string, updateColumn: string) => void,
+    run: (profileId:string, query: string) => void,
     deleteAllData: (profileID?: string) => Promise<void>
 }
 
