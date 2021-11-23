@@ -1,36 +1,24 @@
 .button-botPlanner {
     width: 200px !important;
-    margin: 5px 5px 10px 5px !important;
-    align-self: flex-end !important;
+    // margin: 5px 5px 10px 5px !important;
+    // align-self: flex-end !important;
+    margin: 5px !important
 }
 
 .updatebutton {
     width: 40px !important;
 }
 
-
-
-
-.riskDiv{
+.riskDiv {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     flex-wrap: wrap;
     width: 100%;
-    gap: 2em
+    gap: 2em;
 }
-
-
 
 #noBorder {
     border: none;
 }
 
-.dataTable {
-    flex-grow: 1;
-    text-align: center;
-    border: none;
-    width: 100%;
-    overflow: auto;
-    height: 65vh
-}

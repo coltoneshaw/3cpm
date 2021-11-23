@@ -1,7 +1,7 @@
 import { Grid, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { parseNumber } from '@/utils/number_formatting'
-import {formatCurrency, supportedCurrencies} from'@/utils/granularity'
+import { formatCurrency, supportedCurrencies } from '@/utils/granularity'
 
 const calcTpPrice = (currentPrice: number, tpPrice: number) => ((tpPrice - currentPrice) / currentPrice) * 100
 
@@ -39,13 +39,13 @@ function DCA({ row, ordersData }: any) {
 
 
     // const formatCurrencyLocally = (value:number) =>  formatCurrency([row.original.from_currency], value).metric
-    
+
     useEffect(() => {
         if (isNaN(addFunds)) {
             setAddFundsField(0)
             return
         }
-        setNewCalc( calculate(addFunds, atPrice, tpPercent, ordersData) )
+        setNewCalc(calculate(addFunds, atPrice, tpPercent, ordersData))
 
     }, [addFunds, atPrice, tpPercent])
 
@@ -53,62 +53,63 @@ function DCA({ row, ordersData }: any) {
 
 
 
-    return (<>
-        <Grid container spacing={3}>
-            <Grid item xs={4}>
-                <TextField label={"Add funds (" + row.original.from_currency + ")"} value={addFunds} onChange={event => {
-                    setAddFundsField(parseFloat(event.target.value))
-                }} type="number" fullWidth />
+    return (
+        <div className="flex-column" style={{ width: '100%' }}>
+            <Grid container spacing={3}>
+                <Grid item xs={4}>
+                    <TextField label={"Add funds (" + row.original.from_currency + ")"} value={addFunds} onChange={event => {
+                        setAddFundsField(parseFloat(event.target.value))
+                    }} type="number" fullWidth />
 
+                </Grid>
+                <Grid item xs={4}>
+                    <TextField label={"At Price (" + row.original.to_currency + ")"} value={atPrice} onChange={event => {
+                        setAtPrice(parseFloat(event.target.value))
+                    }} type="number" fullWidth />
+                </Grid>
+                <Grid item xs={4}>
+                    <TextField label="Take Profit (%)" value={tpPercent} onChange={event => {
+                        setTpPercent(parseFloat(event.target.value))
+                    }} type="number" fullWidth />
+                </Grid>
             </Grid>
-            <Grid item xs={4}>
-                <TextField label={"At Price (" + row.original.to_currency + ")"} value={atPrice} onChange={event => {
-                    setAtPrice(parseFloat(event.target.value))
-                }} type="number" fullWidth />
-            </Grid>
-            <Grid item xs={4}>
-                <TextField label="Take Profit (%)" value={tpPercent} onChange={event => {
-                    setTpPercent(parseFloat(event.target.value))
-                }} type="number" fullWidth />
-            </Grid>
-        </Grid>
 
 
-        <table style={{tableLayout: 'fixed', width: '50%', margin: 'auto',  marginTop: "2rem", }}>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Buy average</th>
-                    <th >Take Profit At</th>
-                    <th >Take Profit percent</th>
-                    <th>Gain to TP</th>
-                </tr>
-            </thead>
-            <tbody className="dcaCalcTable">
-                <tr>
-                    <td>Original</td>
-                    <td className=" monospace-cell">{parseNumber(origCalc.average, 6)}</td>
-                    <td className=" monospace-cell">{parseNumber(origCalc.tpAt, 6)}</td>
-                    <td className=" monospace-cell">{parseNumber(row.original.take_profit, 2)}%</td>
-                    <td className=" monospace-cell">{parseNumber(origCalc.gainRequired, 2)}%</td>
-                </tr>
-                <tr>
-                    <td>New</td>
-                    <td className=" monospace-cell">{parseNumber(newCalc.average, 6)}</td>
-                    <td className=" monospace-cell">{parseNumber(newCalc.tpAt, 6)}</td>
-                    <td className=" monospace-cell">{parseNumber(tpPercent, 2)}%</td>
-                    <td className=" monospace-cell">{parseNumber(newCalc.gainRequired, 2)}%</td>
-                </tr>
-                <tr className="summaryRow"> 
-                    <td>Difference</td>
-                    <td className=" monospace-cell">{parseNumber(origCalc.average - newCalc.average, 6)}</td>
-                    <td className=" monospace-cell">{parseNumber(origCalc.tpAt - newCalc.tpAt, 6)}</td>
-                    <td className=" monospace-cell">{parseNumber(row.original.take_profit - tpPercent, 2)}%</td>
-                    <td className=" monospace-cell">{parseNumber(origCalc.gainRequired - newCalc.gainRequired, 2)}%</td>
-                </tr>
-            </tbody>
-        </table>
-    </>)
+            <table style={{ tableLayout: 'fixed', margin: 'auto', marginTop: "2rem", width: '70%', alignSelf: 'center' }} className="dcaTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Buy average</th>
+                        <th >Take Profit At</th>
+                        <th >Take Profit percent</th>
+                        <th>Gain to TP</th>
+                    </tr>
+                </thead>
+                <tbody className="dcaCalcTable">
+                    <tr>
+                        <td>Original</td>
+                        <td className=" monospace-cell">{parseNumber(origCalc.average, 6)}</td>
+                        <td className=" monospace-cell">{parseNumber(origCalc.tpAt, 6)}</td>
+                        <td className=" monospace-cell">{parseNumber(row.original.take_profit, 2)}%</td>
+                        <td className=" monospace-cell">{parseNumber(origCalc.gainRequired, 2)}%</td>
+                    </tr>
+                    <tr>
+                        <td>New</td>
+                        <td className=" monospace-cell">{parseNumber(newCalc.average, 6)}</td>
+                        <td className=" monospace-cell">{parseNumber(newCalc.tpAt, 6)}</td>
+                        <td className=" monospace-cell">{parseNumber(tpPercent, 2)}%</td>
+                        <td className=" monospace-cell">{parseNumber(newCalc.gainRequired, 2)}%</td>
+                    </tr>
+                    <tr className="summaryRow">
+                        <td>Difference</td>
+                        <td className=" monospace-cell">{parseNumber(origCalc.average - newCalc.average, 6)}</td>
+                        <td className=" monospace-cell">{parseNumber(origCalc.tpAt - newCalc.tpAt, 6)}</td>
+                        <td className=" monospace-cell">{parseNumber(row.original.take_profit - tpPercent, 2)}%</td>
+                        <td className=" monospace-cell">{parseNumber(origCalc.gainRequired - newCalc.gainRequired, 2)}%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>)
 }
 
 export default DCA

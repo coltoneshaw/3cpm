@@ -1,103 +1,135 @@
-
-
-.dealsTable{
-    width: 100%;
+.dealsTable {
+  width: 100%;
 }
 
 .tooltip-activeDeals {
-    position:relative; /* making the .tooltip span a container for the tooltip text */
-    // border-bottom:1px dashed #000; /* little indicater to indicate it's hoverable */
+  position: relative; /* making the .tooltip span a container for the tooltip text */
+  // border-bottom:1px dashed #000; /* little indicater to indicate it's hoverable */
+}
+
+.tooltip-activeDeals:before {
+  z-index: 1;
+
+  content: attr(data-text); /* here's the magic */
+  position: absolute;
+
+  /* vertically center */
+  top: 50%;
+  transform: translateY(-50%);
+
+  /* move to right */
+  left: 100%;
+  margin-left: 15px; /* and add a small left margin */
+
+  /* basic styles */
+  width: max-content;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--color-secondary-dark25);
+  color: var(--color-text-darkbackground);
+  text-align: center;
+
+  display: none; /* hide by default */
+}
+
+.tooltip-activeDeals:after {
+  content: "";
+  position: absolute;
+
+  /* position tooltip correctly */
+  left: 100%;
+  margin-left: -5px;
+
+  /* vertically center */
+  top: 50%;
+  transform: translateY(-50%);
+
+  /* the arrow */
+  border: 10px solid var(--color-secondary-dark25);
+  border-color: transparent var(--color-secondary-dark25) transparent transparent;
+
+  display: none;
+}
+.tooltip-activeDeals:hover:before,
+.tooltip-activeDeals:hover:after {
+  display: block;
+}
+
+.tableSettings {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding-bottom: 4px;
+
+  .notificationsSettings {
+    flex: 1;
+    align-self: flex-start;
+    display: flex;
+    justify-content: flex-start;
+    height: 100%;
+    align-items: center;
   }
 
-
-  .tooltip-activeDeals:before {
-    z-index: 1;
-
-    content: attr(data-text); /* here's the magic */
-    position:absolute;
-    
-    /* vertically center */
-    top:50%;
-    transform:translateY(-50%);
-    
-    /* move to right */
-    left:100%;
-    margin-left:15px; /* and add a small left margin */
-    
-    /* basic styles */
-    width: max-content;
-    padding:10px;
-    border-radius:10px;
-    background:var(--color-secondary-dark25);
-    color: var(--color-text-darkbackground);
-    text-align:center;
-    
-  
-    display:none; /* hide by default */
-
-  }
-
-  .tooltip-activeDeals:after {
-    content: "";
-    position:absolute;
-    
-    /* position tooltip correctly */
-    left:100%;
-    margin-left:-5px;
-   
-    /* vertically center */
-    top:50%;
-    transform:translateY(-50%);
-   
-    /* the arrow */
-    border:10px solid var(--color-secondary-dark25);
-    border-color: transparent var(--color-secondary-dark25) transparent transparent;
-    
-    display:none;
-  }
-  .tooltip-activeDeals:hover:before, .tooltip-activeDeals:hover:after {
-    display:block;
-  }
-
-  .tableSettings {
-
+  .tableButtons {
+    flex-basis: 20%;
+    align-items: center;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
-    padding-bottom: 4px;
-
-    .notificationsSettings {
-        flex: 1;
-        align-self: flex-start;
-        display: flex;
-        justify-content: flex-start;
-        height: 100%;
-        align-items: center;
-    }
-
-
-    .tableButtons {
-        flex-basis: 20%;
-        align-items: center;
-        display: flex;
-        flex-direction: row;
-        align-self: flex-start;
-      }
-
+    align-self: flex-start;
   }
+}
 
 .dcaCalcTable tr:hover {
-              background-color: var(--color-secondary-light25);
-              color: var(--color-text-darkbackground);
-        
-          }
-
+  background-color: var(--color-secondary-light25);
+  color: var(--color-text-darkbackground);
+}
 
 .summaryRow td {
   border-top: 1px solid lightgray;
 }
 
-    
+.activeDealsTable .table .tbody {
 
-  
-    
+  .td {
+    padding: 2px 0;
+  }
+  .pill {
+    padding: 0.2em;
+    display: block;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    white-space: nowrap;
+    width: 90%;
+  }
+
+  .red {
+    background-color: var(--color-red);
+    opacity: var(--opacity-pill);
+  }
+
+  .green {
+    background-color: var(--color-green);
+    opacity: var(--opacity-pill);
+  }
+
+  .pill-left {
+    border-radius: 10px 0px 0px 10px;
+    text-align: right;
+    padding-right: 1em;
+    margin-right: 2px;
+  }
+
+  .pill-right {
+    border-radius: 0px 10px 10px 0px;
+    text-align: left;
+    padding-left: 1em;
+  }
+}
+
+
+.dcaTable {
+  tr {
+    padding: 2px 0;
+  }
+}

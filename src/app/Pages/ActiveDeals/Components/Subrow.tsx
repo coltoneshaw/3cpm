@@ -13,12 +13,12 @@ import type { Type_MarketOrders } from '@/types/3Commas'
 function SubRows({ row, visibleColumns, ordersData, loading }: any) {
     if (loading) {
         return (
-            <tr>
-                <td />
-                <td colSpan={visibleColumns.length - 1}>
+            <div>
+                <div />
+                <div >
                     Loading...
-                </td>
-            </tr>
+                </div>
+            </div>
         );
     }
 
@@ -29,9 +29,8 @@ function SubRows({ row, visibleColumns, ordersData, loading }: any) {
 
 
     return (
-        <tr>
-            <td />
-            <td colSpan={visibleColumns.length - 1}>
+        <div>
+            <div>
                 <TabContext value={activeTab}>
 
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -51,8 +50,8 @@ function SubRows({ row, visibleColumns, ordersData, loading }: any) {
                         <OrderTimeline ordersData={ordersData} row={row} />
                     </TabPanel>
                 </TabContext>
-            </td>
-        </tr>
+            </div>
+        </div>
     );
 }
 

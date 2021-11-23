@@ -1,96 +1,104 @@
-// import { dynamicSort } from "@/utils/helperFunctions";
 import React, { useEffect } from "react";
-// import formatDeal from './FormatDeals';
 
-import {useTable, useSortBy, useExpanded} from 'react-table'
-import { setStorageItem, getStorageItem} from '@/app/Features/LocalStorage/LocalStorage';
+import { useTable, useSortBy, useExpanded, useFlexLayout, HeaderGroup, HeaderProps } from 'react-table'
+import { setStorageItem, getStorageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
-// const initialSortBy = [{ id: "created_at", desc: false }]
+import './Table.scss'
 const defaultPropGetter = () => ({})
 
 
-const initialSortBy = (localStorageSortName:string) => {
+const initialSortBy = (localStorageSortName: string) => {
     const getSortFromStorage = getStorageItem(localStorageSortName);
-    return  (getSortFromStorage != undefined) ? getSortFromStorage : [];
+    return (getSortFromStorage != undefined) ? getSortFromStorage : [];
 }
+
+//@ts-ignore
+const headerProps = (props, { column }) => getStyles(props, column.align)
+//@ts-ignore
+const cellProps = (props, { cell }) => getStyles(props, cell.column.align)
+//@ts-ignore
+const getStyles = (props, align = 'center') => [
+    props,
+    {
+        style: {
+            ...props.style,
+            justifyContent: align,
+            alignItems: 'center',
+            display: 'flex',
+            // flexDirection: (type === 'cell') ? 'column' : 'row'
+        },
+    },
+]
 
 
 // Expose some prop getters for headers, rows and cells, or more if you want!
 // @ts-ignore
-function CustomTable({
-    // @ts-ignore
-    columns,
-    // @ts-ignore
-    data,
-     // @ts-ignore
-    renderRowSubComponent,
-    getHeaderProps = defaultPropGetter,
-    getColumnProps = defaultPropGetter,
-    getRowProps = defaultPropGetter,
-    getCellProps = defaultPropGetter,
+function CustomTable({ columns, data, renderRowSubComponent, getHeaderProps = defaultPropGetter, getColumnProps = defaultPropGetter, getRowProps = defaultPropGetter, getCellProps = cellProps, updateLocalBotData, updateReservedFunds, localStorageSortName, }) {
+
+    const defaultColumn = React.useMemo(
+        () => ({
+            // When using the useFlexLayout:
+            minWidth: 30, // minWidth is only used as a limit for resizing
+            width: 100, // width is used for both the flex-basis and flex-grow
+        }),
+        []
+    )
+
 
     //@ts-ignore
-    updateLocalBotData,
-    //@ts-ignore
-    updateReservedFunds,
-
-    //@ts-ignore
-    localStorageSortName,
-
-}) {
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-        visibleColumns,
-        // setSortBy,
-        //@ts-ignore
-
-        state: { sortBy   }
-    } = useTable(
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, visibleColumns, state: { sortBy } } = useTable(
         {
-            columns,
-            data,
+            columns, data,
             //@ts-ignore
             autoResetSortBy: false,
             updateLocalBotData,
             updateReservedFunds,
             autoResetExpanded: false,
-
             //@ts-ignore
             initialState: { sortBy: initialSortBy(localStorageSortName) },
+            defaultColumn,
         },
         useSortBy,
         useExpanded,
+        useFlexLayout
     );
 
 
+
+
     useEffect(() => {
-        if(sortBy != undefined) setSortStorage(sortBy)
+        if (sortBy != undefined) setSortStorage(sortBy)
     }, [sortBy]);
 
 
-    const setSortStorage = (sort:object[]) => {
+    const setSortStorage = (sort: object[]) => {
         setStorageItem(localStorageSortName, sort)
     }
 
 
     return (
-        <table {...getTableProps()} className="dealsTable">
-            <thead style={{ textAlign: 'center' }}>
+        <div {...getTableProps()} className="dealsTable table">
+            <div style={{ textAlign: 'center' }} className="thead">
                 {headerGroups.map(headerGroup => (
-                    <tr {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map(column => (
-                            <th
-                                // Return an array of prop objects and react-table will merge them appropriately
+                    <div {...headerGroup.getHeaderGroupProps()} className="tr" key={headerGroup.id}>
+                        {headerGroup.headers.map((column) => (
+
+                            <div  // Return an array of prop objects and react-table will merge them appropriately
                                 {...column.getHeaderProps([
                                     {
                                         //@ts-ignore
                                         className: column.className,
-                                        //@ts-ignore
-                                        style: column.style,
+                                        style: {
+                                            //@ts-ignore
+                                            ...column.style,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            textAlign: 'center !important',
+                                            padding: '5px 0',
+                                            height: '44px',
+                                        },
                                     },
 
                                     //@ts-ignore
@@ -102,65 +110,49 @@ function CustomTable({
                                     //@ts-ignore
                                     column.getSortByToggleProps()
                                 ])}
+                                className="th"
                             >
-                                {column.Header && column.render('Header')}
-                                {/* Add a sort direction indicator */}
-                                <span>
-                                    {//@ts-ignore
-                                        column.isSorted
-                                            //@ts-ignore
-                                            ? column.isSortedDesc
-                                                ? ' 🔽'
-                                                : ' 🔼'
-                                            : ''}
-                                </span>
-                            </th>
+                                {column.render('Header')}
+                                {/* @ts-ignore */}
+                                {column.canSort && (
+                                    <span style={{ paddingLeft: '.5em' }}>
+                                        {//@ts-ignore
+                                            column.isSorted ? column.isSortedDesc ? ' 🔽' : ' 🔼' : ''}
+                                    </span>
+                                )}
+
+                            </div>
                         ))}
-                    </tr>
+                    </div>
                 ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
+            </div>
+            <div {...getTableBodyProps()} className="tbody">
                 {rows.map((row) => {
                     prepareRow(row)
                     //@ts-ignore
                     const rowProps = row.getRowProps(getRowProps(row));
 
                     return (
-                        // Merge user row props in
-                        <React.Fragment key={rowProps.key}>
-                            <tr {...rowProps}>
+                        <>
+                            <div {...rowProps} className="tr" key={row.id}>
                                 {row.cells.map(cell => {
                                     return (
-                                        <td
-                                            // Return an array of prop objects and react-table will merge them appropriately
-                                            {...cell.getCellProps([
-                                                {
-                                                    //@ts-ignore
-                                                    className: cell.column.className,
-                                                    //@ts-ignore
-                                                    style: cell.column.style,
-                                                },
-                                                //@ts-ignore
-                                                getColumnProps(cell.column),
-                                                //@ts-ignore
-                                                getCellProps(cell),
-                                            ])}
-                                        >
+                                        <div  {...cell.getCellProps(cellProps)} className="td" >
                                             {cell.render('Cell')}
 
-                                        </td>
+                                        </div>
                                     )
                                 })}
-                            </tr>
-                            {
-                                // @ts-ignore
+                            </div>
+
+                            { // @ts-ignore
                                 row.isExpanded && renderRowSubComponent({ row, visibleColumns })
                             }
-                        </React.Fragment>
+                        </>
                     )
                 })}
-            </tbody>
-        </table>
+            </div>
+        </div>
     )
 }
 

@@ -63,7 +63,7 @@ const OrderTimeline = ({ row, ordersData }: { row: { original: Type_Deals }, ord
 
 
     return (
-        <>
+        <div className="flex-column" style={{width: '100%'}}>
             <FormControlLabel
                 control={
                     <Checkbox
@@ -75,7 +75,7 @@ const OrderTimeline = ({ row, ordersData }: { row: { original: Type_Deals }, ord
                     />
                 }
                 label="Show future SOs"
-                style={{ marginBottom: '1em' }}
+                style={{ marginBottom: '1em', alignSelf: 'center' }}
             />
             <table className="table table-bordered table-striped RUBYDEV__deals_table_thead_border_fix ">
                 <thead>
@@ -103,7 +103,7 @@ const OrderTimeline = ({ row, ordersData }: { row: { original: Type_Deals }, ord
                     )}
                 </tbody>
             </table>
-        </>
+        </div>
     )
 }
 
