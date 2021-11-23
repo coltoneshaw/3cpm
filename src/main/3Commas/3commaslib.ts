@@ -1,10 +1,10 @@
 import crypto from "crypto";
 import fetch from 'electron-fetch';
-const log = require('electron-log');
-import type {threeCommas_Api_Deals, MarketOrders, GetDeal, UpdateDealRequest} from './types/Deals'
+import log from 'electron-log';
+import type { threeCommas_Api_Deals, MarketOrders, GetDeal, UpdateDealRequest } from './types/Deals'
 import type { accounts, AccountCurrencyRates, AccountsMarketList, AccountTableData, AccountPieChartData } from './types/Accounts'
 import type { Bots, GetBotsStats, ShowBot } from './types/Bots'
-import type {GridBots, GridMarketOrders, GridBotProfits, GridBotShow, GridRequiredBalance} from './types/GridBots'
+import type { GridBots, GridMarketOrders, GridBotProfits, GridBotShow, GridRequiredBalance } from './types/GridBots'
 
 type currencyRates = {
     pretty_display_type?: string, // deprecated
@@ -119,7 +119,7 @@ class threeCommasAPI {
     }
 
     async updateDeal(params: UpdateDealRequest): Promise<threeCommas_Api_Deals> {
-        return await this.makeRequest('PATCH', `/public/api/ver1/deals/${params.deal_id}/update_deal?`, {...params})
+        return await this.makeRequest('PATCH', `/public/api/ver1/deals/${params.deal_id}/update_deal?`, { ...params })
     }
 
 
@@ -201,23 +201,23 @@ class threeCommasAPI {
      * Grid Bots
      */
 
-    async gridBots(params: getGridBots):Promise<GridBots[]> {
+    async gridBots(params: getGridBots): Promise<GridBots[]> {
         return await this.makeRequest('POST', `/public/api/ver1/grid_bots?`, { params })
     }
 
-    async gridBotMarketOrders(id: number):Promise<GridMarketOrders> {
+    async gridBotMarketOrders(id: number): Promise<GridMarketOrders> {
         return await this.makeRequest('POST', `/ver1/grid_bots/${id}/market_orders?`, null)
     }
 
-    async gridBotProfits(id: number):Promise<GridBotProfits[]> {
+    async gridBotProfits(id: number): Promise<GridBotProfits[]> {
         return await this.makeRequest('POST', `/ver1/grid_bots/${id}/profits?`, null)
     }
 
-    async gridBotShow(id: number):Promise<GridBotShow> {
+    async gridBotShow(id: number): Promise<GridBotShow> {
         return await this.makeRequest('POST', `/ver1/grid_bots/${id}?`, null)
     }
 
-    async gridBotRequiredBalance(id: number):Promise<GridRequiredBalance> {
+    async gridBotRequiredBalance(id: number): Promise<GridRequiredBalance> {
         return await this.makeRequest('POST', `/ver1/grid_bots/${id}/required_balances?`, null)
     }
 

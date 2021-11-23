@@ -1,13 +1,6 @@
 import type { supportedCurrencies } from '@/utils/granularity'
 
-export type TconfigValues = {
-    profiles: Record<string, Type_Profile>,
-    current: string,
-    globalSettings: Type_GlobalSettings,
-    general: {
-        version: string
-    },
-}
+
 
 export type defaultCurrency = (keyof typeof supportedCurrencies)[] | []
 
@@ -39,14 +32,16 @@ export interface Type_Profile {
     writeEnabled: boolean,
 }
 
-export interface Type_GlobalSettings {
-    notifications: Type_NotificationsSettings
-}
-
 export type Type_NotificationsSettings = {
     enabled: boolean,
     summary: boolean,
 }
+
+export type Type_GlobalSettings = {
+    notifications: Type_NotificationsSettings
+}
+
+
 
 
 export interface Type_ReservedFunds {
@@ -59,6 +54,15 @@ export interface Type_ReservedFunds {
 export interface Type_ApiKeys {
     key: string
     secret: string
+}
+
+export type TconfigValues = {
+    profiles: Record<string, Type_Profile>,
+    current: string,
+    globalSettings: Type_GlobalSettings,
+    general: {
+        version: string
+    },
 }
 
 export interface Type_ConfigContext {
