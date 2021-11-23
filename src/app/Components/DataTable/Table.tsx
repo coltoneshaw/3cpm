@@ -13,15 +13,16 @@ const initialSortBy = (localStorageSortName: string) => {
 }
 
 //@ts-ignore
-const headerProps = (props, { column }) => getStyles(props, column.align)
+const headerProps = (props, { column }) => getStyles(props, column.align, column.maxWidth)
 //@ts-ignore
-const cellProps = (props, { cell }) => getStyles(props, cell.column.align)
+const cellProps = (props, { cell }) => getStyles(props, cell.column.align, cell.column.maxWidth)
 //@ts-ignore
-const getStyles = (props, align = 'center') => [
+const getStyles = (props, align = 'center', maxWidth) => [
     props,
     {
         style: {
             ...props.style,
+            maxWidth: (maxWidth) ? maxWidth + 'px' : null,
             justifyContent: align,
             alignItems: 'center',
             display: 'flex',
@@ -91,6 +92,7 @@ function CustomTable({ columns, data, renderRowSubComponent, getHeaderProps = de
                                         style: {
                                             //@ts-ignore
                                             ...column.style,
+                                            maxWidth: (column.maxWidth) ? column.maxWidth : null,
                                             justifyContent: 'center',
                                             alignItems: 'center',
                                             display: 'flex',

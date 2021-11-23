@@ -55,7 +55,8 @@ function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns
                 </span>
             ),
             disableSortBy: true,
-            width: 30
+            width: 30,
+            maxWidth: 30
         },
         {
             Header: () => <span style={{width: '100%', textAlign: 'left', paddingLeft: '3px'}}>Bot Name</span>,
@@ -69,12 +70,14 @@ function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns
             accessor: 'pair',
             align: 'flex-start',
             width: 100,
+            maxWidth: 100,
         },
         {
             Header: 'Duration',
             id: 'created_at',
             accessor: 'created_at',
             width: 120,
+            maxWidth: 120,
             align: 'flex-end',
             Cell: ({ cell }: any) => {
                 return < span className=" monospace-cell">{getDateString(cell.value)}</span>
@@ -84,6 +87,7 @@ function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns
             Header: 'Current',
             accessor: 'current_price',
             align: 'flex-end',
+            maxWidth: 120,
             sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
             Cell: ({ cell }: any) => {
                 return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>
@@ -93,6 +97,7 @@ function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns
             Header: 'TP',
             accessor: 'take_profit_price',
             align: 'flex-end',
+            maxWidth: 120,
             sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
             Cell: ({ cell }: any) => {
                 return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>
@@ -102,6 +107,7 @@ function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns
             Header: 'Quote',
             accessor: 'bought_volume',
             align: 'flex-end',
+            maxWidth: 120,
             Cell: ({ cell }: any) => {
                 return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, false).metric}</span>
             }
@@ -110,6 +116,7 @@ function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns
             Header: 'Base',
             accessor: 'bought_amount',
             align: 'flex-end',
+            maxWidth: 120,
             Cell: ({ cell }: any) => {
                 return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, false).metric}</span>
             },
@@ -117,6 +124,7 @@ function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns
         {
             Header: 'Active SO',
             accessor: 'current_active_safety_orders',
+            maxWidth: 80,
             Cell: ({ cell }: any) => {
                 if (cell.row.original.deal_has_error == 1) return returnErrorTooltip(cell.row.original.error_message, cell.value);
                 return < span className=" monospace-cell">{cell.value}</span>
@@ -126,6 +134,7 @@ function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns
             Header: '# SO',
             accessor: 'safetyOrderString',
             minWidth: 100,
+            maxWidth: 120,
             Cell: ({ cell }: any) => {
                 if (cell.row.original.deal_has_error == 1) return returnErrorTooltip(cell.row.original.error_message, cell.value);
                 return < span className=" monospace-cell">{cell.value}</span>
@@ -137,6 +146,7 @@ function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns
             accessor: 'actual_usd_profit',
             className: 'text-center',
             width: 100,
+            maxWidth: 200,
             sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
             Cell: ({ cell }: any) => {
                 const in_profit = (cell.row.original.actual_profit_percentage > 0) ? 'green' : 'red'
@@ -149,6 +159,7 @@ function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns
             accessor: 'actual_profit_percentage',
             className: 'text-center',
             width: 100,
+            maxWidth: 120,
             sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
             Cell: ({ cell }: any) => {
                 const in_profit = (cell.row.original.actual_profit_percentage > 0) ? 'green' : 'red'
@@ -159,6 +170,7 @@ function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns
             Header: 'Unrealized',
             accessor: 'unrealized_profit',
             align: 'flex-end',
+            maxWidth: 120,
             sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
             Cell: ({ cell }: any) => {
                 return < span className=" monospace-cell" style={{ paddingLeft: '1em' }}>{formatCurrency([cell.row.original.from_currency], cell.value, false).metric}</span>
@@ -168,6 +180,7 @@ function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns
             Header: 'Funds',
             accessor: 'max_deal_funds',
             align: 'flex-end',
+            maxWidth: 120,
             Cell: ({ cell }: any) => {
                 return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>
             },
@@ -176,6 +189,7 @@ function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns
             Header: 'Deviation',
             accessor: 'max_deviation',
             align: 'flex-end',
+            maxWidth: 120,
             style: { paddingRight: '1rem' },
             Cell: ({ cell }: any) => {
                 return < span className=" monospace-cell">{cell.value}%</span>
