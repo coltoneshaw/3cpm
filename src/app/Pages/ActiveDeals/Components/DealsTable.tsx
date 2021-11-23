@@ -7,7 +7,7 @@ import { getDateString } from '@/utils/helperFunctions';
 import { parseNumber } from '@/utils/number_formatting';
 import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 import CardTooltip from '@/app/Components/Charts/DataCards/CustomToolTip';
-import { SubRowAsync } from './Components/index'
+import { SubRowAsync } from './index'
 import EditIcon from '@mui/icons-material/Edit';
 import { OpenIn3Commas } from '@/app/Components/DataTable/Components'
 
@@ -25,12 +25,10 @@ const returnErrorTooltip = (errorMessage: string, value: string) => {
 }
 
 
-function DealsTable({ data }: { data: object[] }) {
+function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns: string[] }) {
 
     const { writeEnabled } = useAppSelector(state => state.config.currentProfile);
-
     const localStorageSortName = storageItem.tables.DealsTable.sort;
-
     const [localData, updateLocalData] = useState<object[]>([]);
 
     useEffect(() => {
@@ -240,7 +238,7 @@ function DealsTable({ data }: { data: object[] }) {
 
             <div className="activeDealsTable dataTableBase">
                 <CustomTable
-                    columns={columns}
+                    columns={columns.filter(c => selectedColumns.includes(c.accessor))}
                     data={localData}
                     renderRowSubComponent={renderRowSubComponent}
                     autoResetSortBy={false}

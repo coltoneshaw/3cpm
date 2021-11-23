@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Switch, Checkbox } from '@mui/material';
 import { Delete as DeleteIcon } from '@mui/icons-material';
-import styled from 'styled-components'
+import { ColumnSelector, useColumnSelector } from '@/app/Components/DataTable/Components';
 
 import { useAppSelector } from '@/app/redux/hooks';
 import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
@@ -24,9 +24,10 @@ const EditableCell = Bots_EditableCell;
 
 interface Type_DataTable {
   localBotData: Type_Query_bots[]
-  updateLocalBotData: any
+  updateLocalBotData: any,
+  selectedColumns: string[]
 }
-const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
+const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: Type_DataTable) => {
   const localStorageSortName = storageItem.tables.BotPlanner.sort;
 
   const { metricsData: { totalBankroll } } = useAppSelector(state => state.threeCommas);
@@ -253,40 +254,36 @@ const DataTable = ({ localBotData, updateLocalBotData }: Type_DataTable) => {
 
 
   return (
+    <div className="botsTable dataTableBase">
+      <CustomTable
+        columns={columns.filter(c => selectedColumns.includes(c.accessor))}
+        data={localBotData}
+        autoResetSortBy={false}
+        // autoResetPage={false}
+        manualSortBy={true}
+        updateLocalBotData={handleEditCellChangeCommitted}
+        localStorageSortName={localStorageSortName}
+        //@ts-ignore
+        getHeaderProps={() => ({
+          style: {
+            height: '44px',
+            backgroundColor: 'var(--color-secondary-light87)',
+            zIndex: '1000',
+          }
+        })}
+        //@ts-ignore
+        getColumnProps={column => ({
 
-    <div className="boxData flex-column" style={{ padding: '1em', overflow: 'hidden' }}>
-      <div className="botsTable dataTableBase">
-        <CustomTable
-          columns={columns}
-          data={localBotData}
-          autoResetSortBy={false}
-          // autoResetPage={false}
-          manualSortBy={true}
-          updateLocalBotData={handleEditCellChangeCommitted}
-          localStorageSortName={localStorageSortName}
-          //@ts-ignore
-          getHeaderProps={() => ({
-            style: {
-              height: '44px',
-              backgroundColor: 'var(--color-secondary-light87)',
-              zIndex: '1000',
-            }
-          })}
-          //@ts-ignore
-          getColumnProps={column => ({
+        })}
+        //@ts-ignore
+        getRowProps={row => ({
 
-          })}
-          //@ts-ignore
-          getRowProps={row => ({
+        })}
+        //@ts-ignore
+        getCellProps={cellInfo => ({
 
-          })}
-          //@ts-ignore
-          getCellProps={cellInfo => ({
-
-          })}
-        />
-      </div>
-      {/* </div> */}
+        })}
+      />
     </div>
 
   );

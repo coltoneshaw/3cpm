@@ -33,10 +33,12 @@ const storageItem = {
     },
     tables: {
         DealsTable: {
-            sort: 'sort-DealsTable' // [ {id: 'value', desc: boolean}]
+            sort: 'sort-DealsTable', // [ {id: 'value', desc: boolean}],
+            columns: 'columns-DealsTable'
         },
         BotPlanner: {
-            sort: 'sort-BotPlanner'// [ {id: 'value', desc: boolean}]
+            sort: 'sort-BotPlanner', // [ {id: 'value', desc: boolean}],
+            columns: 'columns-DealsTable'
         }
     }
 }
