@@ -56,7 +56,7 @@ const Bots_EditableCell = ({
         setValue(String(initialValue))
     }, [initialValue])
 
-    return <span style={{ display: 'flex', justifyContent: 'center' }}><input value={value} onChange={onChange} onBlur={onBlur} size={size} style={{ textAlign: 'center' }} />{ending()}</span>
+    return <span style={{ display: 'flex', justifyContent: 'center' }}><input className="dataTableInput" value={value} onChange={onChange} onBlur={onBlur} size={size} style={{ textAlign: 'center' }} />{ending()}</span>
 }
 
  
@@ -84,7 +84,7 @@ const Bots_EditableCell = ({
       setValue(String(initialValue))
     }, [initialValue])
   
-    return <input value={value} onChange={onChange} onBlur={onBlur} style={{ textAlign: 'center', color: 'var(--color-text-lightbackground)' }} />
+    return <input className="dataTableInput" value={value} onChange={onChange} onBlur={onBlur} style={{ textAlign: 'center', color: 'var(--color-text-lightbackground)' }} />
   }
 
 export { Settings_EditableCell, Bots_EditableCell};
