@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
-import { updateConfig, deleteProfileByIdGlobal, storeConfigInFile, updateNestedCurrentProfile } from '@/app/redux/configActions'
+import { useAppSelector } from '@/app/redux/hooks';
+import { updateConfig, deleteProfileByIdGlobal, updateNestedCurrentProfile } from '@/app/redux/configActions'
 import { syncNewProfileData } from '@/app/redux/threeCommas/Actions'
 import { configPaths } from '@/app/redux/configSlice';
 

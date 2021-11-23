@@ -2,7 +2,7 @@
 const { contextBridge, ipcRenderer } = require('electron')
 import { defaultCurrency, Type_Profile } from '@/types/config';
 
-import {mainPreload, UpdateDealRequest, Type_UpdateFunction, getDealOrders, defaultConfig} from '@/types/preload'
+import { mainPreload, UpdateDealRequest, Type_UpdateFunction, getDealOrders, defaultConfig } from '@/types/preload'
 
 
 
@@ -36,9 +36,20 @@ async function setupContextBridge() {
         console.log('fetching Config')
         return await ipcRenderer.invoke('allConfig', value);
       },
+      profile: async (type: 'create' | 'delete', config: typeof defaultConfig, profileId: string) => {
+
+        if (type == 'create') {
+          // storing the initial config values
+          await ipcRenderer.invoke('setBulkValues', config)
+          await ipcRenderer.invoke('database-checkOrMakeTables', profileId);
+        }
+
+
+
+      },
 
       // gets the value for the current profile
-      getProfile: async (value: string, profileId: string): Promise< Type_Profile | undefined > => await ipcRenderer.invoke('allConfig', 'profiles.' + profileId + (value ? '.' + value : '')),
+      getProfile: async (value: string, profileId: string): Promise<Type_Profile | undefined> => await ipcRenderer.invoke('allConfig', 'profiles.' + profileId + (value ? '.' + value : '')),
 
       async reset(): Promise<void> {
         /**
@@ -48,28 +59,28 @@ async function setupContextBridge() {
         console.log('attempting to reset the config to default values.')
         await ipcRenderer.invoke('config-clear')
       },
-      async set(key: string, value: any):Promise<void> {
+      async set(key: string, value: any): Promise<void> {
         console.log('writing Config')
         await ipcRenderer.invoke('setStoreValue', key, value);
 
       },
 
-     bulk: async (changes: typeof defaultConfig): Promise<void> => await ipcRenderer.invoke('setBulkValues', changes)
+      bulk: async (changes: typeof defaultConfig): Promise<void> => await ipcRenderer.invoke('setBulkValues', changes)
     },
     database: {
-      async query(queryString: string) {
+      async query(profileId: string, queryString: string) {
         console.log('running database query')
         console.log(queryString)
-        return await ipcRenderer.invoke('query-database', queryString);
+        return await ipcRenderer.invoke('query-database', profileId, queryString);
       },
-      update(table: string, updateData: object[]): void {
-        ipcRenderer.invoke('update-database', table, updateData);
+      update(profileId: string, table: string, updateData: object[]): void {
+        ipcRenderer.invoke('update-database', profileId, table, updateData);
       },
-      upsert(table: string, data: any[], id: string, updateColumn: string): void {
-        ipcRenderer.invoke('upsert-database', table, data, id, updateColumn);
+      upsert(profileId: string, table: string, data: any[], id: string, updateColumn: string): void {
+        ipcRenderer.invoke('upsert-database', profileId, table, data, id, updateColumn);
       },
-      run(query: string): void {
-        ipcRenderer.invoke('run-database', query);
+      run(profileId: string, query: string): void {
+        ipcRenderer.invoke('run-database', profileId, query);
       },
       async deleteAllData(profileID?: string): Promise<void> {
         console.log('deleting all data!')
@@ -92,12 +103,12 @@ async function setupContextBridge() {
 
 
 
-async function databaseSetup() {
-  await ipcRenderer.invoke('database-checkOrMakeTables');
-}
+// async function databaseSetup() {
+//   await ipcRenderer.invoke('database-checkOrMakeTables');
+// }
 
 
-databaseSetup();
+// databaseSetup();
 setupContextBridge();
 
 export { setupContextBridge }

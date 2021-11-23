@@ -51,6 +51,7 @@ export const configSlice = createSlice({
             state.config = action.payload
         },
         setCurrentProfile: (state, action) => {
+            console.trace(action)
             state.currentProfile = action.payload
         },
         setCurrentProfileById: (state, action) => {
@@ -59,12 +60,12 @@ export const configSlice = createSlice({
             state.currentProfile = { ...newConfig.profiles[profileId] }
             state.config = { ...newConfig, current: profileId }
         },
-        storeCurrentProfile: state => {
-            const newConfig = { ...state.config }
-            const currentProfile = state.currentProfile
-            newConfig.profiles[currentProfile.id] = currentProfile
-            state.config = newConfig
-        },
+        // storeCurrentProfile: state => {
+        //     const newConfig = { ...state.config }
+        //     const currentProfile = state.currentProfile
+        //     newConfig.profiles[currentProfile.id] = currentProfile
+        //     state.config = newConfig
+        // },
         updateLastSyncTime: (state, action) => {
             const { data } = action.payload
             let newProfile = Object.assign({}, { ...state.currentProfile })

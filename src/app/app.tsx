@@ -6,7 +6,6 @@ import { HashRouter } from 'react-router-dom'
 
 import { MainWindow } from "@/app/Pages/Index"
 
-// import { ConfigProvider } from './Context/Config';
 import { useThemeProvidor } from './Context/ThemeEngine';
 
 import UpdateBanner from './Features/UpdateBanner/UpdateBanner';
@@ -29,13 +28,11 @@ const App = () => {
   useEffect(() => {
     console.log('updating the config here')
     updateConfig();
-
   }, [dispatch]);
 
   useLayoutEffect(() => {
     // if(updated) return
     if(currentProfile.id == profile.id) return
-    
     if(currentProfile && currentProfile?.statSettings?.reservedFunds.filter(a => a.is_enabled).length > 0) {
       updateAllDataQuery(currentProfile, 'fullSync');
       console.log('Changing to a new profile')
@@ -53,10 +50,6 @@ const App = () => {
           <Sidebar />
           <MainWindow />
       </div>
-
-
-
-
     </HashRouter>
   )
 }

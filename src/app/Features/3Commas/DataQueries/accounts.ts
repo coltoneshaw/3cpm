@@ -21,7 +21,7 @@ const getAccountDataFunction = async (profileData: Type_Profile) => {
                     and currency_code IN ( ${currencyString} )
                     and profile_id = '${currentProfileID}';
     `
-    let accountData: Type_Query_Accounts[] | [] = await window.ThreeCPM.Repository.Database.query(query)
+    let accountData: Type_Query_Accounts[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, query)
 
     // removed this since it seems redundant to the above query
     // .then((data: Type_Query_Accounts[]) => data.filter(row => defaultCurrency.includes(row.currency_code)))

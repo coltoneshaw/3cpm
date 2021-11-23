@@ -1,13 +1,13 @@
 import { TconfigValues, Type_Profile } from "@/types/config";
-const log = require('electron-log');
+import log from 'electron-log';
 
 //@ts-ignore
 import { version } from '#/package.json';
-const Store = require('electron-store');
-const { run } = require('@/main/Database/database')
+import Store from 'electron-store';
+import { run } from '@/main/Database/database';
 import { v4 as uuidv4 } from 'uuid';
 import { defaultConfig } from '@/utils/defaultConfig';
-
+import { deleteAllData, checkOrMakeTables } from "@/main/Database/database";
 
 const migrationToProfiles = async (config:any) => {
     // if(config.get('general.version') === 'v0.5.0') {
@@ -43,13 +43,13 @@ const migrationToProfiles = async (config:any) => {
 
     try {
         await Promise.all([
-            run(`ALTER TABLE accountData ADD profile_id VARCHAR(36)`),
-            run(`ALTER TABLE bots ADD profile_id VARCHAR(36)`),
-            run(`ALTER TABLE deals ADD profile_id VARCHAR(36)`),
+            run(id, `ALTER TABLE accountData ADD profile_id VARCHAR(36)`),
+            run(id, `ALTER TABLE bots ADD profile_id VARCHAR(36)`),
+            run(id, `ALTER TABLE deals ADD profile_id VARCHAR(36)`),
         ]).then(() => {
-            run(`UPDATE accountData SET profile_id='${id}' WHERE profile_id IS NULL`)
-            run(`UPDATE bots SET profile_id='${id}' WHERE profile_id IS NULL`)
-            run(`UPDATE deals SET profile_id='${id}' WHERE profile_id IS NULL`)
+            run(id, `UPDATE accountData SET profile_id='${id}' WHERE profile_id IS NULL`)
+            run(id, `UPDATE bots SET profile_id='${id}' WHERE profile_id IS NULL`)
+            run(id, `UPDATE deals SET profile_id='${id}' WHERE profile_id IS NULL`)
         })
     } catch (e) {
         log.error(e)
@@ -62,7 +62,7 @@ const migrationToProfiles = async (config:any) => {
 
 
 // establishing a config store.
-const config = new Store({
+export const config = new Store({
     migrations: {
         // '0.0.3': ( store: any )=>{
         //     log.info('migrating the config store to 0.0.2-RC1')
@@ -82,18 +82,21 @@ const config = new Store({
         // '0.1.1': ( store: any )=>{
         //     store.set('general.updated', true)
         // },
-        '<=0.2.0': () => {
-            // removing the bots that have been synced so they can be resynced and a new column added
-            run('ALTER TABLE bots ADD COLUMN hide boolean;')
-            run("delete from deals where status in ('failed', 'cancelled') ")
-        },
+        // '<=0.2.0': () => {
+        //     // removing the bots that have been synced so they can be resynced and a new column added
+        //     run('ALTER TABLE bots ADD COLUMN hide boolean;')
+        //     run("delete from deals where status in ('failed', 'cancelled') ")
+        // },
         '1.0.0': async (store: any) => {
             log.info('migrating the config store to 1.0.0')
             await migrationToProfiles(store);
         },
-        '1.1.0': (store: any) => {
+        '1.1.0': async (store: any) => {
             log.info('migrating the config store to 1.1.0')
             store.set('globalSettings.notifications', {enabled: true , summary: false})
+
+            // await deleteAllData();
+            // await checkOrMakeTables();
         }
     },
     defaults: <TconfigValues>defaultConfig
@@ -115,7 +118,6 @@ const getProfileConfigAll = (profileId?: string) => {
 
 
 const setProfileConfig = (key: string, value: any, profileId:string) => {
-    // if(!profileId) profileId = config.get('current')
     if(!profileId) {
         log.error('No profile ID to set the config' + key + ' - ' + value);
         return
@@ -123,13 +125,10 @@ const setProfileConfig = (key: string, value: any, profileId:string) => {
     return config.set('profiles.' + profileId + '.' + key, value)
 }
 
-const setDefaultConfig = () => {
-    config.store = defaultConfig
-}
+const setDefaultConfig = () => config.store = defaultConfig
 
 
 export {
-    config,
     getProfileConfig,
     setProfileConfig,
     setDefaultConfig,

@@ -6,6 +6,9 @@ export default class ElectronConfigRepository extends BaseElectronRepository imp
     get =  (value: 'all' | string) => {
         return this.mainPreload.config.get(value)
     }
+    profile =  (type: 'create' | 'delete', config: typeof defaultConfig, profileId: string) => {
+        return this.mainPreload.config.profile(type, config, profileId)
+    }
     getProfile = (value: string, profileId: string)  =>  {
         return this.mainPreload.config.getProfile(value, profileId)
     }

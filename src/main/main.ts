@@ -86,21 +86,21 @@ ipcMain.handle('config-clear', () =>config.clear());
 
 
 
-ipcMain.handle('query-database', (event, queryString) => {
-  return query(queryString)
+ipcMain.handle('query-database', (event, profileId:string, queryString) => {
+  return query(profileId, queryString)
 });
 
-ipcMain.handle('update-database', (event, table, updateData): void => update(table, updateData));
+ipcMain.handle('update-database', (event,  profileId:string, table, updateData): void => update(profileId, table, updateData));
 
-ipcMain.handle('upsert-database', (event, table: string, data: any[], id: string, updateColumn: string): void => upsert(table, data, id, updateColumn));
+ipcMain.handle('upsert-database', (event,  profileId:string, table: string, data: any[], id: string, updateColumn: string): void => upsert(profileId, table, data, id, updateColumn));
 
-ipcMain.handle('run-database', (event, queryString): void => run(queryString));
+ipcMain.handle('run-database', (event,  profileId:string, queryString): void => run(profileId, queryString));
 
 ipcMain.handle('database-deleteAll', async (event, profileID?: string): Promise<void> => await deleteAllData(profileID));
 
-ipcMain.handle('database-checkOrMakeTables', () => {
+ipcMain.handle('database-checkOrMakeTables', async (event, profileId:string): Promise<void> => {
   log.log('attempting to check if tables exist yet.')
-  checkOrMakeTables()
+  checkOrMakeTables(profileId)
 });
 
 

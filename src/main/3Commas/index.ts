@@ -2,6 +2,7 @@ import { update, run, query } from '@/main/Database/database';
 import { config } from '@/main/Config/config';
 import { bots, getAccountDetail, deals, getAccountSummary, getDealOrders, updateDeal } from './api';
 const log = require('electron-log');
+import type { defaultConfig } from '@/utils/defaultConfig';
 
 const { getProfileConfigAll } = require('@/main/Config/config')
 import { findAndNotifyNewDeals } from '@/main/Notifications/notifications'
@@ -34,19 +35,21 @@ async function updateAPI(type: string, options: Type_UpdateFunction, profileData
 
 async function getDealData(type: string, options: Type_UpdateFunction, profileData: Type_Profile) {
 
+  const profileId = profileData.id
   return await deals(options.offset, type, profileData)
     .then(data => {
 
       let { deals, lastSyncTime } = data
 
       if (deals.length === 0) return lastSyncTime;
-      const store = config.get('globalSettings.notifications')
+      const store: typeof defaultConfig.globalSettings.notifications = config.get('globalSettings.notifications')
       const {enabled, summary} = store
       // if notifications need to be enabled for the fullSync then the type below needs to be updated.
       if (type === 'autoSync' && enabled && options.time != undefined || options.syncCount != 0) {
         findAndNotifyNewDeals(deals, options.time, summary)
       }
-      update('deals', deals, profileData.id)
+
+      update('deals', deals.map(d => { return {...d, 'profile_id': profileId}}) , profileId)
 
       return lastSyncTime
     })
@@ -64,7 +67,7 @@ async function getAccountData(profileData: Type_Profile): Promise<void> {
     .then(async data => {
       // 2. Delete all the data in the database that exist in the API response
       const accountIds = data.map(account => account.account_id);
-      await run(`DELETE FROM accountData WHERE account_id in ( ${accountIds.join()}) and profile_id='${profileData.id}';`)
+      await run(profileData.id, `DELETE FROM accountData WHERE account_id in ( ${accountIds.join()}) and profile_id='${profileData.id}';`)
       return data
     })
     //3. Post the API response to the database.
@@ -92,10 +95,10 @@ async function getAndStoreBotData(profileData: Type_Profile): Promise<void> {
           const botIDs = data.map(bot => bot.id)
           const { id } = profileData
 
-          await run(`DELETE FROM bots WHERE id not in ( ${botIDs.join()}) and profile_id = '${id}' ;`)
+          await run(id, `DELETE FROM bots WHERE id not in ( ${botIDs.join()}) and profile_id = '${id}' ;`)
 
           // // grabbing the existing bots
-          const currentBots = await query(`select id, hide from bots where origin = 'sync' and profile_id = '${id}';`)
+          const currentBots = await query(id, `select id, hide from bots where origin = 'sync' and profile_id = '${id}';`)
 
           data = data.map(bot => {
             const current = currentBots.find(b => b.id == bot.id)

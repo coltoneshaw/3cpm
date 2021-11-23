@@ -32,7 +32,7 @@ const queryDealByPairByDay = async (profileData: Type_Profile, utcDateRange: utc
                     pair;`
 
 
-    let databaseQuery: queryDealByPairByDayQuery[] | [] = await window.ThreeCPM.Repository.Database.query(queryString);
+    let databaseQuery: queryDealByPairByDayQuery[] | [] = await window.ThreeCPM.Repository.Database.query(profileData.id, queryString);
 
     if (!databaseQuery || databaseQuery.length > 0) {
         const totalProfitSummary = databaseQuery
@@ -79,7 +79,7 @@ const queryDealByBotByDay = async (profileData: Type_Profile, utcDateRange: utcD
                     bot_id;`
 
 
-    let databaseQuery: botQueryDealByDayQuery[] | [] = await window.ThreeCPM.Repository.Database.query(queryString);
+    let databaseQuery: botQueryDealByDayQuery[] | [] = await window.ThreeCPM.Repository.Database.query(profileData.id, queryString);
 
     if (!databaseQuery || databaseQuery.length > 0) {
         const totalProfitSummary = databaseQuery
@@ -119,7 +119,7 @@ const getHistoricalProfits = async (profitArray: Type_Profit[] | [], filters: fi
             and closed_at_iso_string BETWEEN ${utcStart - daysInMilli.thirty} and ${utcStart}
             and profile_id = '${currentProfileID}';`
 
-    let sixtyDayProfit = await window.ThreeCPM.Repository.Database.query(sixtyQuery);
+    let sixtyDayProfit = await window.ThreeCPM.Repository.Database.query(currentProfileID, sixtyQuery);
     const totalDays = profitArray.length
 
     const currentWeek = profitArray
@@ -163,7 +163,7 @@ const getTotalProfit = async (profileData: Type_Profile, filters: filters): Prom
         and currency in (${filters.currency} )
         and profile_id = '${profileData.id}';`
 
-    const total = await window.ThreeCPM.Repository.Database.query(totalProfit);
+    const total = await window.ThreeCPM.Repository.Database.query(profileData.id, totalProfit);
     return total[0].final_profit
 }
 
@@ -191,7 +191,7 @@ const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utc
         ORDER BY
             closed_at asc;`
 
-    let dataArray: fetchDealDataFunctionQuery[] | [] = await window.ThreeCPM.Repository.Database.query(query)
+    let dataArray: fetchDealDataFunctionQuery[] | [] = await window.ThreeCPM.Repository.Database.query(profileData.id, query)
 
     // if no data return blank array.
     if (dataArray == null || dataArray.length === 0) {
@@ -281,7 +281,7 @@ const getActiveDealsFunction = async (profileData: Type_Profile, filters: filter
                     and currency in (${filters.currency} )
                     and profile_id = '${profileData.id}'
                     `
-    let activeDeals: Type_ActiveDeals[] | [] = await window.ThreeCPM.Repository.Database.query(query)
+    let activeDeals: Type_ActiveDeals[] | [] = await window.ThreeCPM.Repository.Database.query(profileData.id, query)
 
 
     if (activeDeals != undefined && activeDeals.length > 0) {
