@@ -17,7 +17,7 @@ const useViewRenderer = () => {
 
     useEffect(() => {
         const getSortFromStorage = getStorageItem(localStorageSortName);
-        changeView((getSortFromStorage != undefined) ? getSortFromStorage : defaultNav);
+        changeView(getSortFromStorage ?? defaultNav);
     }, [])
 
     return {

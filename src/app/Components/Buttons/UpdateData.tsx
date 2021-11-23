@@ -42,9 +42,7 @@ const UpdateDataButton = ({ style, className}: Type_ButtonProps) => {
                 // color="primary"
                 disabled={spinning}
                 className={className}
-                onClick={() => {
-                    updateAllData(1000, currentProfile, 'fullSync', handleClick)
-                }}
+                onClick={() => updateAllData(1000, currentProfile, 'fullSync', handleClick)}
                 disableElevation
                 // startIcon={}
                 style={style}

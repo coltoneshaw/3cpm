@@ -36,7 +36,7 @@ const useColumnSelector = (incomingColumns: { id: string, name: string }[], name
 
     useLayoutEffect(() => {
         const storageColumns = getStorageItem(localStorageSortName);
-        updateSelectedColumns((!storageColumns) ? storageColumns : incomingColumns.map(c => c.id));
+        updateSelectedColumns(storageColumns ?? incomingColumns.map(c => c.id));
     }, [])
 
     const handleChange = (columns: string[]) => {

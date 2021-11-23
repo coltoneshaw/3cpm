@@ -239,7 +239,6 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
         await updateThreeCData(type, options, profileData)
             .then(async (lastSyncTime) => {
                 await updateAllDataQuery(profileData, type)
-
                 return lastSyncTime;
             })
             .then((lastSyncTime) => {

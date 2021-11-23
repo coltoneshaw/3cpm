@@ -1,8 +1,8 @@
 import threeCommasAPI from './3commaslib';
-const log = require('electron-log');
-import { Type_API_bots, Type_Deals_API, Type_MarketOrders } from '@/types/3Commas'
-import {Bots} from './types/Bots'
-import { getProfileConfig, setProfileConfig, getProfileConfigAll } from '@/main/Config/config';
+import log from 'electron-log';
+import { Type_MarketOrders } from '@/types/3Commas'
+import { Bots } from './types/Bots'
+import { setProfileConfig } from '@/main/Config/config';
 
 import {
   calc_dealHours,
@@ -14,7 +14,7 @@ import {
 } from '@/utils/formulas';
 
 import { Type_Profile } from "@/types/config";
-import {threeCommas_Api_Deals, UpdateDealRequest} from './types/Deals';
+import { threeCommas_Api_Deals, UpdateDealRequest } from './types/Deals';
 
 
 
@@ -25,10 +25,10 @@ import {threeCommas_Api_Deals, UpdateDealRequest} from './types/Deals';
  * 
  * @description - required at the moment so when you make a config change on the frontend you're not using old data.
  */
-const threeCapi = (profileData?: Type_Profile, apiKey?: string, apiSecret?: string, mode?: string):threeCommasAPI | false => {
+const threeCapi = (profileData?: Type_Profile, apiKey?: string, apiSecret?: string, mode?: string): threeCommasAPI | false => {
 
   if (!apiKey || !apiSecret || !mode) {
-    if(!profileData) return false
+    if (!profileData) return false
     apiKey = profileData.apis.threeC.key
     apiSecret = profileData.apis.threeC.secret
     mode = profileData.apis.threeC.mode
@@ -173,7 +173,7 @@ async function getDealOrders(profileData: Type_Profile, deal_id: number) {
       const rate = (order.rate != 0) ? +order.rate : +order.average_price;
 
       // total is blank for active deals. Calculating the total to be used within the app.
-      if(order.status_string === 'Active' && order.rate && order.quantity) order.total = rate * order.quantity
+      if (order.status_string === 'Active' && order.rate && order.quantity) order.total = rate * order.quantity
       return {
         ...order,
         average_price: +order.average_price, // this is zero on sell orders
@@ -217,18 +217,17 @@ async function getDealsUpdate(perSyncOffset: number, type: string, profileData: 
     activeDealIDs = newActiveDealIds;
   }
 
-  const {deals, lastSyncTime} = await getDealsThatAreUpdated(api, perSyncOffset, {id: profileData.id, lastSyncTime: profileData.syncStatus.deals.lastSyncTime})
+  const { deals, lastSyncTime } = await getDealsThatAreUpdated(api, perSyncOffset, { id: profileData.id, lastSyncTime: profileData.syncStatus.deals.lastSyncTime })
 
-  return { deals: [ ...deals, ...activeDeals], lastSyncTime: lastSyncTime }
+  return { deals: [...deals, ...activeDeals], lastSyncTime: lastSyncTime }
 }
 
-async function getActiveDeals(api: threeCommasAPI, perSyncOffset = 300 ) {
+async function getActiveDeals(api: threeCommasAPI, perSyncOffset = 300) {
   const response = await api.getDeals({ limit: perSyncOffset, scope: 'active' })
   return response
 }
 
-async function getDealsThatAreUpdated(api: threeCommasAPI, perSyncOffset: number, {id, lastSyncTime}: {id: string, lastSyncTime: number | null}) {
-
+async function getDealsThatAreUpdated(api: threeCommasAPI, perSyncOffset: number, { id, lastSyncTime }: { id: string, lastSyncTime: number | null }) {
   let responseArray = [];
   let response: threeCommas_Api_Deals[];
   let offsetMax = 250000;
@@ -238,7 +237,7 @@ async function getDealsThatAreUpdated(api: threeCommasAPI, perSyncOffset: number
 
   lastSyncTime = (lastSyncTime) ? lastSyncTime : 0;
 
-  api.getDeals
+  // api.getDeals
 
   for (let offset = 0; offset < offsetMax; offset += perOffset) {
 
@@ -250,7 +249,7 @@ async function getDealsThatAreUpdated(api: threeCommasAPI, perSyncOffset: number
     oldestDate = new Date(response[response.length - 1].updated_at).getTime()
 
 
-    if (offset == 0)  newLastSyncTime = new Date(response[0].updated_at).getTime()
+    if (offset == 0) newLastSyncTime = new Date(response[0].updated_at).getTime()
 
 
     log.debug({
@@ -279,10 +278,10 @@ async function getDealsThatAreUpdated(api: threeCommasAPI, perSyncOffset: number
 
 
 async function deals(offset: number, type: string, profileData: Type_Profile) {
-  let {deals, lastSyncTime} = await getDealsUpdate(offset, type, profileData);
+  let { deals, lastSyncTime } = await getDealsUpdate(offset, type, profileData);
   let dealArray = [];
 
-  if(!deals || deals.length === 0) return { deals: [], lastSyncTime}
+  if (!deals || deals.length === 0) return { deals: [], lastSyncTime }
 
 
   for (let deal of deals) {
