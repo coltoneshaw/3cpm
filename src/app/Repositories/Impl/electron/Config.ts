@@ -15,9 +15,6 @@ export default class ElectronConfigRepository extends BaseElectronRepository imp
     set = async (key: string, value: any) => {
         await this.mainPreload.config.set(key, value)
     }
-    // setProfile(key: string, value: any): any {
-    //     return this.mainPreload.config.setProfile(key, value)
-    // }
     bulk = async (changes: typeof defaultConfig) => {
         await this.mainPreload.config.bulk(changes)
     }

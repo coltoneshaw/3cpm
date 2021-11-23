@@ -84,7 +84,7 @@ const Bots_EditableCell = ({
       setValue(String(initialValue))
     }, [initialValue])
   
-    return <input className="dataTableInput" value={value} onChange={onChange} onBlur={onBlur} style={{ textAlign: 'center', color: 'var(--color-text-lightbackground)' }} />
+    return <input className="dataTableInput" type="number" value={value} onChange={onChange} onBlur={onBlur} style={{ textAlign: 'center', color: 'var(--color-text-lightbackground)' }} />
   }
 
 export { Settings_EditableCell, Bots_EditableCell};
