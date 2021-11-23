@@ -219,7 +219,7 @@ async function getDealsUpdate(perSyncOffset: number, type: string, profileData: 
 
   const {deals, lastSyncTime} = await getDealsThatAreUpdated(api, perSyncOffset, {id: profileData.id, lastSyncTime: profileData.syncStatus.deals.lastSyncTime})
 
-  return { deals: [...activeDeals, ...deals], lastSyncTime: lastSyncTime }
+  return { deals: [ ...deals, ...activeDeals], lastSyncTime: lastSyncTime }
 }
 
 async function getActiveDeals(api: threeCommasAPI, perSyncOffset = 300 ) {
