@@ -17,10 +17,10 @@
 * [Setup a dev build](developers/setup-a-dev-build/README.md)
   * [Packaging the application](developers/setup-a-dev-build/packaging-the-application.md)
 
----
+***
 
 * [Changelog](changelog.md)
 * [Troubleshooting](troubleshooting/README.md)
   * [Migrate to v1](troubleshooting/migrate-to-v1.md)
   * [Error Syncing](troubleshooting/error-syncing.md)
-
+* [Donate](https://www.buymeacoffee.com/ColtonS)

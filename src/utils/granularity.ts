@@ -83,6 +83,14 @@ const supportedCurrencies = {
         // pegged to USD
         rounding: 2
     },
+    'UST' : {
+        name: "TerraUSD",
+        symbol: "$",
+        value: "UST",
+        type: "usd",
+        // pegged to USD
+        rounding: 2
+    },
     'GBP' : {
         name: "British pound sterling ",
         symbol: "£",
