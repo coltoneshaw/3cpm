@@ -16,20 +16,19 @@ import { updateConfig } from '@/app/redux/configActions';
 import { updateAllDataQuery } from './redux/threeCommas/Actions';
 
 const App = () => {
-  // const classes = useStyles();
 
   const themeEngine = useThemeProvidor();
-  const {currentProfile} = useAppSelector(state => state.config)
-  // const [updated, updateUpdated] = useState(() => false)
+  const currentProfile = useAppSelector(state => state.config.currentProfile)
   const [profile, updateLocalProfile] = useState( () => currentProfile)
   const { styles } = themeEngine
   
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
   useEffect(() => {
     console.log('updating the config here')
     updateConfig();
   }, [dispatch]);
 
+  console.error('page is rerendering~')
   useLayoutEffect(() => {
     // if(updated) return
     if(currentProfile.id == profile.id) return

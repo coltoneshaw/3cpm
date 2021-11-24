@@ -31,8 +31,7 @@ export const chooseDatabase = (profileId: string) => new Database(path.join(appD
         newRow[normalizeData(item)] = normalizeData(row[item])
     })
 
-    const key = profileId + '-' + newRow.id
-    return {key, ...newRow}
+    return newRow
 })
 
 function update(table: string, data: any[], profileId: string): void {
