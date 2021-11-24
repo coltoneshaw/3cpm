@@ -92,10 +92,6 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
                     is_enabled
                 }
             })
-
-        // updateReservedFunds(reservedFundsArray)
-
-
     }
 
 }

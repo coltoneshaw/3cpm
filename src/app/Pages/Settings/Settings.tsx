@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Settings.scss'
-import { useAppSelector } from '@/app/redux/hooks';
+import { useAppSelector , useAppDispatch} from '@/app/redux/hooks';
+import { setEditingProfile } from "@/app/Pages/Settings/Redux/settingsSlice";
 
 // @ts-ignore
 import { version } from '#/package.json';
@@ -25,25 +26,21 @@ import { ProfileNameEditor } from '@/app/Features/Profiles/Components/Index'
 import { ChangelogModal, ToastNotifcations } from '@/app/Features/Index';
 import WriteModeSettings from "@/app/Pages/Settings/Components/WriteModeSettings";
 
-export const defaultTempProfile = {
-    key: '',
-    secret: '',
-    mode: '',
-    defaultCurrency: [] as any[],
-    name: '',
-    reservedFunds: [] as any[],
-    startDate: 0,
-    writeEnabled: false,
-}
 
 
 const SettingsPage = () => {
+    const dispatch = useAppDispatch()
+
     const { currentProfile } = useAppSelector(state => state.config);
     const [open, setOpen] = useState(false);
     const handleClose = (event: any, reason: string) => {
         if (reason === 'clickaway') return;
         setOpen(false);
     };
+
+    useEffect( () => {
+        dispatch(setEditingProfile(currentProfile))
+    }, [currentProfile])
 
     // changelog state responsible for opening / closing the changelog
     const [openChangelog, setOpenChangelog] = useState(false);
@@ -52,30 +49,12 @@ const SettingsPage = () => {
         setOpenChangelog(true);
     };
 
-    const [tempProfile, updateTempProfile] = useState(() => defaultTempProfile)
-
-    useEffect(() => {
-        updateTempProfile(() => {
-            const { apis: { threeC } , general, statSettings, name, writeEnabled} = currentProfile
-            return {
-                key: threeC.key,
-                secret: threeC.secret,
-                mode: threeC.mode,
-                defaultCurrency: general.defaultCurrency as typeof general.defaultCurrency,
-                name,
-                reservedFunds: statSettings.reservedFunds,
-                startDate: statSettings.startDate,
-                writeEnabled: writeEnabled
-            }
-        })
-    }, [currentProfile])
 
     return (
         <>
             <div className="settings-div boxData flex-column" style={{ margin: "auto" }}>
-                <ProfileNameEditor tempProfile={tempProfile} updateTempProfile={updateTempProfile} />
-
-                <ApiSettings tempProfile={tempProfile} updateTempProfile={updateTempProfile}/>
+                <ProfileNameEditor />
+                <ApiSettings />
 
                 <div className="flex-column settings-child">
                     <h2 className="text-center ">General Settings:</h2>
@@ -85,8 +64,8 @@ const SettingsPage = () => {
                             flexBasis: "50%"
                         }}>
                             <p className="subText">The selected currency below will control what the <strong>entire application</strong> is filtered by. ex: if you select USD and also have USDT deals you will not see the USDT deals displayed. You currently cannot mix currencies except USD pegged.</p>
-                            <CurrencySelector tempProfile={tempProfile} updateTempProfile={updateTempProfile}/>
-                            <StartDatePicker tempProfile={tempProfile} updateTempProfile={updateTempProfile}/>
+                            <CurrencySelector />
+                            <StartDatePicker />
                         </div>
                         <div style={{
                             marginLeft: "15px",
@@ -95,7 +74,7 @@ const SettingsPage = () => {
 
 
                             <p className="subText">Once you've tested the API keys be sure to enable an account below. In reserved funds you can set aside funds to be added / removed from DCA calculations. ex: ( -4000 will be added, 4000 will be removed.) Double click in the reserved fund box to update the value.</p>
-                            <ReservedBankroll tempProfile={tempProfile} updateTempProfile={updateTempProfile}/>
+                            <ReservedBankroll />
 
                         </div>
 
@@ -103,9 +82,9 @@ const SettingsPage = () => {
 
                 </div>
 
-                <WriteModeSettings tempProfile={tempProfile} updateTempProfile={updateTempProfile}/>
+                <WriteModeSettings />
 
-                <SaveDeleteButtons setOpen={setOpen} tempProfile={tempProfile} />
+                <SaveDeleteButtons setOpen={setOpen} />
 
                 {/* These buttons still need to be wired up, but for now they are displayed. */}
                 <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ margin: 'auto' }}>

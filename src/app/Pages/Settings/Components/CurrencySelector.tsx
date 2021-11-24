@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { formatCurrency, supportedCurrencies } from '@/utils/granularity';
 
-import { formatCurrency, supportedCurrencies } from '@/utils/granularity'
+import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
+import { configPaths } from "@/app/redux/globalFunctions";
+import { updateEditProfileByPath } from "@/app/Pages/Settings/Redux/settingsSlice";
 
-import {
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    ListItemText,
-    Checkbox,
-    Input,
-    ListSubheader
+import { 
+    FormControl, InputLabel, MenuItem, Select,
+    ListItemText, Checkbox, ListSubheader
 } from '@mui/material';
 
 const returnCurrencyMenuItems = (currencyArray: typeof supportedCurrencies) => {
@@ -33,17 +30,11 @@ const returnCurrencyMenuItems = (currencyArray: typeof supportedCurrencies) => {
 
 }
 
-import type { defaultTempProfile } from '@/app/Pages/Settings/Settings'
-
-const CurrencySelector = ({ tempProfile, updateTempProfile }: { tempProfile: typeof defaultTempProfile, updateTempProfile: CallableFunction }) => {
-
-
-    const updateTempCurrency = (newCurrency: any[]) => {
-        updateTempProfile((prevState: typeof defaultTempProfile) => {
-            let newState = { ...prevState }
-            newState.defaultCurrency = newCurrency
-            return newState
-        })
+const CurrencySelector = () => {
+    const defaultCurrency = useAppSelector(state => state.settings.editingProfile.general.defaultCurrency);
+    const dispatch = useAppDispatch()
+    const handleChange = (data: any) => {
+        dispatch(updateEditProfileByPath({ data, path: configPaths.general.defaultCurrency }))
     }
 
     const { usd, crypto } = returnCurrencyMenuItems(supportedCurrencies)
@@ -58,16 +49,16 @@ const CurrencySelector = ({ tempProfile, updateTempProfile }: { tempProfile: typ
         if (isUSD) {
             const isAllUsd = e.target.value.every((v: string) => usdNames.includes(v));
             if (!isAllUsd) {
-                updateTempCurrency([])
+                handleChange([])
                 return alert('Warning. You cannot mix currencies that are not USD based.')
             }
-            updateTempCurrency([...e.target.value])
+            handleChange([...e.target.value])
             return
         }
 
         // selecting only the last value so there are not multiple crypto currencies selected at a time.
         const selected = (e.target.value.length > 1) ? [e.target.value.pop()] : [...e.target.value];
-        updateTempCurrency(selected)
+        handleChange(selected)
     }
 
     const [open, setOpen] = useState(false);
@@ -83,9 +74,9 @@ const CurrencySelector = ({ tempProfile, updateTempProfile }: { tempProfile: typ
                 id="currency"
                 name="currency"
                 label="Stat / Metric Currency"
-                value={tempProfile.defaultCurrency}
+                value={defaultCurrency}
                 onChange={onChange}
-                renderValue={() => (tempProfile.defaultCurrency.length > 0) ? tempProfile.defaultCurrency.join(', ') : ""}
+                renderValue={() => (defaultCurrency.length > 0) ? defaultCurrency.join(', ') : ""}
                 style={{
                     marginRight: '15px',
                     width: '100%'
@@ -100,7 +91,9 @@ const CurrencySelector = ({ tempProfile, updateTempProfile }: { tempProfile: typ
                 {usd.map(c => {
                     return (
                         <MenuItem value={c.value} key={c.value}>
-                            <Checkbox checked={tempProfile.defaultCurrency.indexOf(c.value as keyof typeof supportedCurrencies) > - 1} />
+
+                            {/* @ts-ignore */}
+                            <Checkbox checked={defaultCurrency.indexOf(c.value) > - 1} />
                             <ListItemText primary={c.value + ` (${c.name})`} />
                         </MenuItem>
                     )

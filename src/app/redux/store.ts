@@ -1,12 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import configSlice from './configSlice'
 import threeCommasSlice from './threeCommas/threeCommasSlice'
-
+import settingsSlice from '../Pages/Settings/Redux/settingsSlice'
 
 const store = configureStore({
   reducer: {
     config: configSlice,
-    threeCommas: threeCommasSlice
+    threeCommas: threeCommasSlice,
+    settings: settingsSlice
   },
   devTools​: true
 })
