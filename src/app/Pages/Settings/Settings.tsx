@@ -39,7 +39,6 @@ export const defaultTempProfile = {
 
 const SettingsPage = () => {
     const { currentProfile } = useAppSelector(state => state.config);
-
     const [open, setOpen] = useState(false);
     const handleClose = (event: any, reason: string) => {
         if (reason === 'clickaway') return;

@@ -3,7 +3,6 @@ import { config } from '@/main/Config/config';
 // import isDev from 'electron-is-dev'; // New Import
 const log = require('electron-log');
 
-
 const path = require("path");
 const isDev = !app.isPackaged;
 
@@ -11,9 +10,13 @@ import { menu } from './menu';
 
 const { update, query, checkOrMakeTables, run, deleteAllData, upsert } = require('@/main/Database/database');
 
-let win;
+let win: BrowserWindow;
 
-
+const {
+  default: installExtension,
+  REDUX_DEVTOOLS,
+  REACT_DEVELOPER_TOOLS
+} = require("electron-devtools-installer");
 
 const createWindow = (): void => {
   win = new BrowserWindow({
@@ -36,9 +39,21 @@ const createWindow = (): void => {
 
   let loadURL = `file://${__dirname}/index.html`
   if (isDev) {
-    win.webContents.openDevTools();
+
+    // Errors are thrown if the dev tools are opened
+    // before the DOM is ready
+    win.webContents.once("dom-ready", async () => {
+        await installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS])
+            .then((name:any) => console.log(`Added Extension:  ${name}`))
+            .catch((err:any) => console.log("An error occurred: ", err))
+            .finally( () => win.webContents.openDevTools() )
+
+    });
     loadURL = 'http://localhost:9000';
-  }
+
+}
+
+
   win.loadURL(loadURL);
 }
 

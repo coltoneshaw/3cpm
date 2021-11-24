@@ -3,12 +3,12 @@ import configSlice from './configSlice'
 import threeCommasSlice from './threeCommas/threeCommasSlice'
 
 
-
 const store = configureStore({
   reducer: {
     config: configSlice,
     threeCommas: threeCommasSlice
-  }
+  },
+  devTools​: true
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
