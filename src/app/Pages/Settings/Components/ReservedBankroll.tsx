@@ -3,26 +3,29 @@ import { Switch } from '@mui/material';
 
 import { CustomTable, Settings_EditableCell } from '@/app/Components/DataTable/Index';
 const EditableCell = Settings_EditableCell;
-import { Type_ReservedFunds } from '@/types/config';
+// import { Type_ReservedFunds } from '@/types/config';
+import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
+import { configPaths } from "@/app/redux/globalFunctions";
+import { updateEditProfileByPath } from "@/app/Pages/Settings/Redux/settingsSlice";
 
 
+// import type { defaultTempProfile } from '@/app/Pages/Settings/Settings'
+const ReservedBankroll = () => {
 
-import type { defaultTempProfile } from '@/app/Pages/Settings/Settings'
-const ReservedBankroll = ({ tempProfile, updateTempProfile }: { tempProfile: typeof defaultTempProfile, updateTempProfile: CallableFunction }) => {
+  const reservedFunds = useAppSelector(state => state.settings.editingProfile.statSettings.reservedFunds);
+  const dispatch = useAppDispatch()
+  const handleChange = (data: any) => {
+    dispatch(updateEditProfileByPath({ data, path: configPaths.statSettings.reservedFunds }))
+  }
 
-  const [reservedFunds, updateReservedFunds] = useState<Type_ReservedFunds[]>(() => tempProfile.reservedFunds)
+  const [localReservedFunds, updateLocalReservedFunds ] = useState(() => reservedFunds)
 
   useEffect(() => {
-    if(tempProfile.reservedFunds != reservedFunds) updateReservedFunds(tempProfile.reservedFunds)
-  }, [tempProfile.reservedFunds])
+    handleChange(localReservedFunds);
+  }, [localReservedFunds]);
 
   useEffect(() => {
-    updateTempProfile((prevState: typeof defaultTempProfile) => {
-      let newState = { ...prevState }
-      newState.reservedFunds = reservedFunds
-      return newState
-    })
-
+    updateLocalReservedFunds(reservedFunds);
   }, [reservedFunds])
 
 
@@ -55,31 +58,24 @@ const ReservedBankroll = ({ tempProfile, updateTempProfile }: { tempProfile: typ
 
 
   const handleOnOff = (e: any) => {
-
-    updateReservedFunds(prevState => (
-      prevState.map(row => {
-        let newRow = { ...row }
-        if (e.target.name == newRow.id) {
-          newRow.is_enabled = !newRow.is_enabled
-        }
-        return newRow
-      })
-    ))
+    updateLocalReservedFunds( prevState => prevState.map(row => {
+      let newRow = { ...row }
+      if (e.target.name == newRow.id) newRow.is_enabled = !newRow.is_enabled
+      return newRow
+    })
+    );
   }
 
   const handleEditCellChangeCommitted = (id: number, column: string, value: string) => {
-
-    updateReservedFunds(prevState => (
-      prevState.map(row => {
-        const newRow = { ...row }
-        if (id == newRow.id) {
-          //@ts-ignore
-          newRow[column] = value
-
-        }
-        return newRow
-      })
-    ))
+    updateLocalReservedFunds( prevState => prevState.map(row => {
+      const newRow = { ...row }
+      if (id == newRow.id) {
+        //@ts-ignore
+        newRow[column] = value
+      }
+      return newRow
+    })
+    )
   }
 
   return (

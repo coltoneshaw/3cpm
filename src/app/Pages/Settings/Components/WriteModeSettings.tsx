@@ -1,12 +1,17 @@
 import React from "react";
-import {defaultTempProfile} from "@/app/Pages/Settings/Settings";
 import {FormControlLabel, FormGroup, Switch} from "@mui/material";
 
-function WriteModeSettings ({tempProfile, updateTempProfile}: {tempProfile: typeof defaultTempProfile, updateTempProfile: CallableFunction}) {
+import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
+import { configPaths } from "@/app/redux/globalFunctions";
+import { updateEditProfileByPath } from "@/app/Pages/Settings/Redux/settingsSlice";
+
+function WriteModeSettings () {
+
+    const writeEnabled = useAppSelector(state => state.settings.editingProfile.writeEnabled);
+    const dispatch = useAppDispatch()
     function toggleWriteEnabled() {
-        updateTempProfile((old: typeof defaultTempProfile) => {
-            return {...old, writeEnabled: !old.writeEnabled}
-        })
+        dispatch(updateEditProfileByPath({ data: !writeEnabled, path: configPaths.writeEnabled }))
+
     }
 
     return (<div className="flex-column settings-child">
@@ -19,7 +24,7 @@ function WriteModeSettings ({tempProfile, updateTempProfile}: {tempProfile: type
 
                     <FormGroup>
                         <FormControlLabel control={ <Switch
-                            checked={tempProfile.writeEnabled ?? false}
+                            checked={writeEnabled?? false}
                             color="primary"
                             onClick={toggleWriteEnabled}
                             value={true}

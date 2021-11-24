@@ -1,44 +1,39 @@
-import { getTime, parseISO, formatISO, isValid, startOfDay, addMinutes } from 'date-fns'
-import { utcToZonedTime } from 'date-fns-tz';
-
 import React, { useState, useEffect } from 'react';
+import { isValid, startOfDay, addMinutes } from 'date-fns'
+
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { TextField, FormControl } from '@mui/material';
 
-import type { defaultTempProfile } from '@/app/Pages/Settings/Settings'
+import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
+import { configPaths } from "@/app/redux/globalFunctions";
+import { updateEditProfileByPath } from "@/app/Pages/Settings/Redux/settingsSlice";
 
-export default function StartDatePicker({ tempProfile, updateTempProfile }: { tempProfile: typeof defaultTempProfile, updateTempProfile: CallableFunction }) {
+export default function StartDatePicker() {
+
+  const startDate = useAppSelector(state => state.settings.editingProfile.statSettings.startDate);
+  const dispatch = useAppDispatch()
+
 
   const handleDateChange = (date: Date | null) => {
     if (date != undefined && isValid(new Date(date))) {
       const newDate = startOfDay(addMinutes(new Date(date), new Date().getTimezoneOffset())).getTime();
-      updateTempProfile((prevState: typeof defaultTempProfile) => {
-        let newState = { ...prevState }
-        newState.startDate = newDate
-        return newState
-    })
+      dispatch(updateEditProfileByPath({ data: newDate, path: configPaths.statSettings.startDate }))
     }
   };
-
-  const modifyDate = (date: number) => {
-    const adjustedTime = date + ((new Date()).getTimezoneOffset() * 60000)
-    return new Date(adjustedTime).toUTCString()
-  }
-
-
+  
   return (
-    <FormControl style={{ width: "100%"}} className="settings-datePicker">
-        <DesktopDatePicker
-          label="Stats Start Date"
-          views={['day']}
-          inputFormat="MM/dd/yyyy"
-          value={tempProfile.startDate}
-          onChange={handleDateChange}
-          renderInput={(params) => (
-            <TextField {...params} helperText={params?.inputProps?.placeholder} />
-          )}
-          className="desktopPicker"
-        />
+    <FormControl style={{ width: "100%" }} className="settings-datePicker">
+      <DesktopDatePicker
+        label="Stats Start Date"
+        views={['day']}
+        inputFormat="MM/dd/yyyy"
+        value={startDate}
+        onChange={handleDateChange}
+        renderInput={(params) => (
+          <TextField {...params} helperText={params?.inputProps?.placeholder} />
+        )}
+        className="desktopPicker"
+      />
 
     </FormControl>
 

@@ -36,11 +36,11 @@ async function setupContextBridge() {
         console.log('fetching Config')
         return await ipcRenderer.invoke('allConfig', value);
       },
-      profile: async (type: 'create' | 'delete', config: typeof defaultConfig, profileId: string) => {
+      profile: async (type: 'create' | 'delete', newProfile: Type_Profile, profileId: string) => {
 
         if (type == 'create') {
           // storing the initial config values
-          await ipcRenderer.invoke('setBulkValues', config)
+          await ipcRenderer.invoke('setStoreValue', 'profiles.' + profileId, newProfile);
           await ipcRenderer.invoke('database-checkOrMakeTables', profileId);
         }
 

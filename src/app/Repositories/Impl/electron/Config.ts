@@ -1,13 +1,14 @@
 import BaseElectronRepository from "@/app/Repositories/Impl/electron/Base";
 import { ConfigRepository } from '@/app/Repositories/interfaces';
+import { Type_Profile } from "@/types/config";
 import type { defaultConfig } from "@/utils/defaultConfig";
 
 export default class ElectronConfigRepository extends BaseElectronRepository implements ConfigRepository {
     get =  (value: 'all' | string) => {
         return this.mainPreload.config.get(value)
     }
-    profile =  (type: 'create' | 'delete', config: typeof defaultConfig, profileId: string) => {
-        return this.mainPreload.config.profile(type, config, profileId)
+    profile =  (type: 'create' | 'delete', profileData: Type_Profile, profileId: string) => {
+        return this.mainPreload.config.profile(type, profileData, profileId)
     }
     getProfile = (value: string, profileId: string)  =>  {
         return this.mainPreload.config.getProfile(value, profileId)

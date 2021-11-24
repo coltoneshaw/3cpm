@@ -14,7 +14,7 @@ declare global {
 
 export interface config {
     get: <T extends 'all' | string>(value: T) => Promise<T extends 'all' ? typeof defaultConfig : T extends string ? any : never>,
-    profile: (type: 'create' | 'delete', config: typeof defaultConfig, profileId: string) => Promise<void>,
+    profile: (type: 'create' | 'delete', newProfile: Type_Profile, profileId: string) => Promise<void>,
     getProfile: (value: string, profileId: string) => Promise< Type_Profile | undefined >,
     reset: () => Promise<void>,
     set: (key: string, value: any) => Promise<void>,

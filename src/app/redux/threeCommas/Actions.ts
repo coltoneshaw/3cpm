@@ -261,21 +261,21 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
 }
 
 
-const syncNewProfileData = async (offset: number = 1000) => {
+const syncNewProfileData = async (offset: number = 1000, editingProfile: Type_Profile) => {
     // const updatedProfile = {...profileData, syncStatus: { deals: {lastSyncTime: null}}}
-    const profileData = store.getState().config.currentProfile
+    // const profileData = store.getState().settings.editingProfile
 
-    if (!preSyncCheck(profileData)) return
+    if (!preSyncCheck(editingProfile)) return
 
     store.dispatch(setIsSyncing(true))
 
     const options = { syncCount: 0, summary: false, notifications: false, time: 0, offset }
     let success;
     try {
-        await window.ThreeCPM.Repository.Config.profile('create', store.getState().config.config, profileData.id)
+        await window.ThreeCPM.Repository.Config.profile('create', editingProfile, editingProfile.id)
             .then(async () => {
-                await updateThreeCData('newProfile', options, profileData)
-                    .then(async () => await updateAllDataQuery(profileData, 'fullSync'))
+                await updateThreeCData('newProfile', options, editingProfile)
+                    .then(async () => await updateAllDataQuery(editingProfile, 'fullSync'))
             })
 
         success = true;

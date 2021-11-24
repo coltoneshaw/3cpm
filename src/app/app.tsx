@@ -11,7 +11,7 @@ import { useThemeProvidor } from './Context/ThemeEngine';
 import UpdateBanner from './Features/UpdateBanner/UpdateBanner';
 
 
-import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
+import { useAppSelector } from '@/app/redux/hooks';
 import { updateConfig } from '@/app/redux/configActions';
 import { updateAllDataQuery } from './redux/threeCommas/Actions';
 
@@ -22,20 +22,17 @@ const App = () => {
   const [profile, updateLocalProfile] = useState( () => currentProfile)
   const { styles } = themeEngine
   
-  // const dispatch = useAppDispatch()
   useEffect(() => {
     console.log('updating the config here')
     updateConfig();
-  }, [dispatch]);
+  }, []);
 
   console.error('page is rerendering~')
   useLayoutEffect(() => {
-    // if(updated) return
     if(currentProfile.id == profile.id) return
     if(currentProfile && currentProfile?.statSettings?.reservedFunds.filter(a => a.is_enabled).length > 0) {
       updateAllDataQuery(currentProfile, 'fullSync');
       console.log('Changing to a new profile')
-      // updateUpdated(true)
       updateLocalProfile(currentProfile)
     }
 
