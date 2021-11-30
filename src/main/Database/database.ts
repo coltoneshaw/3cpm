@@ -4,12 +4,13 @@ import log from 'electron-log';
 import { query, run, normalizeData } from "./helper";
 import { checkOrMakeTables } from './initializeDatabase'
 import path from "path";
+import fsExtra from 'fs-extra';
 import Database from 'better-sqlite3';
 
 const appDataPath = app.getPath('userData');
 
 
-export const chooseDatabase = (profileId: string) => new Database(path.join(appDataPath, profileId + '.sqlite3'));
+export const chooseDatabase = (profileId: string) => new Database(path.join(appDataPath, 'databases', profileId + '.sqlite3'));
 
 /********************************************
  * 
@@ -25,7 +26,7 @@ export const chooseDatabase = (profileId: string) => new Database(path.join(appD
  * @description Inserting data into a table. Data coming in needs to be an array of objects.
  */
 
- const normalizedData = (data:any, profileId:string) => data.map((row:any) => {
+ const normalizedData = (data:any) => data.map((row:any) => {
     let newRow: any = {};
     Object.keys(row).forEach(item => {
         newRow[normalizeData(item)] = normalizeData(row[item])
@@ -34,14 +35,14 @@ export const chooseDatabase = (profileId: string) => new Database(path.join(appD
     return newRow
 })
 
-function update(table: string, data: any[], profileId: string): void {
+const update = (table: string, data: any[], profileId: string): void => {
     const db = chooseDatabase(profileId)
     if (data.length == 0) {
         log.log('no data to write')
         return
     }
 
-    const newData = normalizedData(data, profileId)
+    const newData = normalizedData(data)
     const KEYS = Object.keys(newData[0]).map(e => normalizeData(e)).join()
     const valueKey = Object.keys(newData[0]).map(key => '@' + key).map(e => normalizeData(e)).join();
     const insert = db.prepare(`INSERT OR REPLACE INTO ${table} (${KEYS}) VALUES (${valueKey})`)
@@ -100,25 +101,18 @@ function upsert(table: string, data: any[], id: string, updateColumn: string, pr
 async function deleteAllData(profileID?: string): Promise<void> {
 
     if (!profileID) {
-        // truncating the table
-        // await Promise.all([run(`DELETE FROM bots;'`),
-        // run(`DELETE FROM accountData;`),
-        // run(`DELETE FROM deals;'`)]);
-        // log.info('deleting all database info.');
+        fsExtra.emptyDirSync(path.join(appDataPath, 'databases'));
+        log.info('deleting all database info.');
         return
     }
-    log.info('deleting all database info for ' + profileID)
-    await Promise.all([
-        run(profileID, `DELETE
-            FROM bots
-            WHERE profile_id = '${profileID}'`),
-        run(profileID, `DELETE
-            FROM accountData
-            WHERE profile_id = '${profileID}'`),
-        run(profileID, `DELETE
-            FROM deals
-            WHERE profile_id = '${profileID}'`)]);
-    log.info('database info deleted for ' + profileID)
+    log.info('attempting to delete all database info for ' + profileID)
+
+    fsExtra.remove(path.join(appDataPath, 'databases', profileID + '.sqlite3'), err => {
+        if (err) return log.error('unable to delete database for ' + profileID + err)
+        log.info('database info deleted for ' + profileID)
+      })
+
+    
 
 }
 

@@ -1,13 +1,13 @@
-import {chooseDatabase} from './database'
+import { chooseDatabase } from './database'
 
-async function query(profileId:string, query: string) {
+const query = async (profileId: string, query: string): Promise<any[]> => {
     const db = chooseDatabase(profileId)
     const row = db.prepare(query)
     return row.all()
 }
 
 
-function run(profileId:string, query: string):void {
+const run = (profileId: string, query: string): void => {
     const db = chooseDatabase(profileId)
     const stmt = db.prepare(query);
     stmt.run()
@@ -21,8 +21,4 @@ function normalizeData(data: any) {
 }
 
 
-export {
-    query,
-    run,
-    normalizeData
-}
+export { query, run, normalizeData }

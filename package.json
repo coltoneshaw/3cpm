@@ -88,6 +88,7 @@
     "electron-fetch": "^1.7.4",
     "electron-log": "^4.4.1",
     "electron-store": "^8.0.0",
+    "fs-extra": "^10.0.0",
     "material-ui-popup-state": "^1.9.3",
     "moment": "^2.29.1",
     "react-redux": "^7.2.5",
