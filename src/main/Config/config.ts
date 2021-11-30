@@ -1,13 +1,11 @@
 import { TconfigValues, Type_Profile } from "@/types/config";
 import log from 'electron-log';
 
-//@ts-ignore
-import { version } from '#/package.json';
 import Store from 'electron-store';
 import { run } from '@/main/Database/database';
 import { v4 as uuidv4 } from 'uuid';
 import { defaultConfig } from '@/utils/defaultConfig';
-import { deleteAllData, checkOrMakeTables } from "@/main/Database/database";
+import { convertToProfileDatabases } from "./migrations/2.0.0";
 
 const migrationToProfiles = async (config:any) => {
     // if(config.get('general.version') === 'v0.5.0') {
@@ -60,43 +58,28 @@ const migrationToProfiles = async (config:any) => {
     
 }
 
-
 // establishing a config store.
-export const config = new Store({
+export const config = new Store<TconfigValues>({
     migrations: {
-        // '0.0.3': ( store: any )=>{
-        //     log.info('migrating the config store to 0.0.2-RC1')
-        //     store.set('statSettings.account_id', []);
-        //     migrateCurrencyToArray(store)
-        // },
-        // '0.0.4': ( store: any )=>{
-        //     log.info('migrating the config store to 0.0.4')
-        //     log.log('adding a reserved funds array.')
-        //     store.set('statSettings.reservedFunds', []);
-        // },
-        // '0.1.0': ( store: any )=>{
-        //     log.info('migrating the config store to 0.1.0')
-        //     run('drop table bots;')
-        //     store.set('general.updated', true)
-        // },
-        // '0.1.1': ( store: any )=>{
-        //     store.set('general.updated', true)
-        // },
-        // '<=0.2.0': () => {
-        //     // removing the bots that have been synced so they can be resynced and a new column added
-        //     run('ALTER TABLE bots ADD COLUMN hide boolean;')
-        //     run("delete from deals where status in ('failed', 'cancelled') ")
-        // },
-        '1.0.0': async (store: any) => {
+        '1.0.0': async (store) => {
             log.info('migrating the config store to 1.0.0')
             await migrationToProfiles(store);
         },
-        '1.1.0': async (store: any) => {
-            log.info('migrating the config store to 1.1.0')
+        '2.0.0': async (store) => {
+            log.info('migrating the config store to 2.0.0')
             store.set('globalSettings.notifications', {enabled: true , summary: false})
 
-            // await deleteAllData();
-            // await checkOrMakeTables();
+            const profileIds = Object.keys(store.store.profiles)
+            const resetLastSyncTime = async (profileIds: string[]) => {
+                if (!profileIds || profileIds.length === 0) return
+                profileIds.forEach(profileId => {
+                    store.set(`profiles.${profileId}.syncStatus.deals.lastSyncTime`, null)
+                })
+            }
+
+            await resetLastSyncTime(profileIds)
+            await convertToProfileDatabases(profileIds)
+
         }
     },
     defaults: <TconfigValues>defaultConfig
