@@ -103,11 +103,11 @@ async function setupContextBridge() {
 
 
 
-// async function databaseSetup() {
-//   await ipcRenderer.invoke('database-checkOrMakeTables');
-// }
+async function preloadCheck() {
+  await ipcRenderer.invoke('preload-check');
+}
 
-
+preloadCheck();
 // databaseSetup();
 setupContextBridge();
 

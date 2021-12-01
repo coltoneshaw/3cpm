@@ -58,7 +58,7 @@ export interface Type_ApiKeys {
 
 export type TconfigValues = {
     profiles: Record<string, Type_Profile>,
-    current: string,
+    current: string | 'default',
     globalSettings: Type_GlobalSettings,
     general: {
         version: string
