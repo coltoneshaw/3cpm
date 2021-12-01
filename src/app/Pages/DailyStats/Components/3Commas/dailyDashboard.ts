@@ -27,7 +27,6 @@ const queryDealByPairByDay = async (profileData: Type_Profile, utcDateRange: utc
                     and account_id in (${filters.accounts} )
                     and currency in (${filters.currency} )
                     and closed_at_iso_string BETWEEN ${utcDateRange.utcStartDate} and ${utcDateRange.utcEndDate}
-                    and profile_id = '${profileData.id}'
                 GROUP BY 
                     pair;`
 
@@ -74,7 +73,6 @@ const queryDealByBotByDay = async (profileData: Type_Profile, utcDateRange: utcD
                     and account_id in (${filters.accounts} )
                     and currency in (${filters.currency} )
                     and closed_at_iso_string BETWEEN ${utcDateRange.utcStartDate} and ${utcDateRange.utcEndDate}
-                    and profile_id = '${profileData.id}'
                 GROUP BY 
                     bot_id;`
 
@@ -116,8 +114,7 @@ const getHistoricalProfits = async (profitArray: Type_Profit[] | [], filters: fi
             or finished = 1 
             and account_id in (${filters.accounts} )
             and currency in (${filters.currency} )
-            and closed_at_iso_string BETWEEN ${utcStart - daysInMilli.thirty} and ${utcStart}
-            and profile_id = '${currentProfileID}';`
+            and closed_at_iso_string BETWEEN ${utcStart - daysInMilli.thirty} and ${utcStart};`
 
     let sixtyDayProfit = await window.ThreeCPM.Repository.Database.query(currentProfileID, sixtyQuery);
     const totalDays = profitArray.length
@@ -160,8 +157,7 @@ const getTotalProfit = async (profileData: Type_Profile, filters: filters): Prom
         closed_at != null 
         or finished = 1 
         and account_id in (${filters.accounts} )
-        and currency in (${filters.currency} )
-        and profile_id = '${profileData.id}';`
+        and currency in (${filters.currency} );`
 
     const total = await window.ThreeCPM.Repository.Database.query(profileData.id, totalProfit);
     return total[0].final_profit
@@ -185,7 +181,6 @@ const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utc
             and account_id in (${filters.accounts} )
             and currency in (${filters.currency} )
             and closed_at_iso_string BETWEEN ${utcStart} and ${utcDateRange.utcEndDate}
-            and profile_id = '${profileData.id}'
         GROUP BY
             closed_at_str
         ORDER BY
@@ -279,7 +274,7 @@ const getActiveDealsFunction = async (profileData: Type_Profile, filters: filter
                     finished = 0 
                     and account_id in (${filters.accounts} )
                     and currency in (${filters.currency} )
-                    and profile_id = '${profileData.id}'
+                    
                     `
     let activeDeals: Type_ActiveDeals[] | [] = await window.ThreeCPM.Repository.Database.query(profileData.id, query)
 

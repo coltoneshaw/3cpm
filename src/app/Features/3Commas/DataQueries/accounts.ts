@@ -19,7 +19,6 @@ const getAccountDataFunction = async (profileData: Type_Profile) => {
                 WHERE
                     account_id IN ( ${accountIdString} )
                     and currency_code IN ( ${currencyString} )
-                    and profile_id = '${currentProfileID}';
     `
     let accountData: Type_Query_Accounts[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, query)
 

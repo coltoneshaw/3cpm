@@ -67,7 +67,7 @@ async function getAccountData(profileData: Type_Profile): Promise<void> {
     .then(async data => {
       // 2. Delete all the data in the database that exist in the API response
       const accountIds = data.map(account => account.account_id);
-      await run(profileData.id, `DELETE FROM accountData WHERE account_id in ( ${accountIds.join()}) and profile_id='${profileData.id}';`)
+      await run(profileData.id, `DELETE FROM accountData WHERE account_id in ( ${accountIds.join()});`)
       return data
     })
     //3. Post the API response to the database.
@@ -95,10 +95,10 @@ async function getAndStoreBotData(profileData: Type_Profile): Promise<void> {
           const botIDs = data.map(bot => bot.id)
           const { id } = profileData
 
-          await run(id, `DELETE FROM bots WHERE id not in ( ${botIDs.join()}) and profile_id = '${id}' ;`)
+          await run(id, `DELETE FROM bots WHERE id not in ( ${botIDs.join()});`)
 
           // // grabbing the existing bots
-          const currentBots = await query(id, `select id, hide from bots where origin = 'sync' and profile_id = '${id}';`)
+          const currentBots = await query(id, `select id, hide from bots where origin = 'sync';`)
 
           data = data.map(bot => {
             const current = currentBots.find(b => b.id == bot.id)
