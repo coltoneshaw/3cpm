@@ -67,10 +67,10 @@ export type threeCommas_Api_Deals = {
     martingale_step_coefficient: string
     stop_loss_percentage: string
     error_message: string | null
-    profit_currency: string
-    stop_loss_type: string
-    safety_order_volume_type: string
-    base_order_volume_type: string
+    profit_currency: 'quote_currency' | 'base_currency'
+    stop_loss_type: 'stop_loss' | 'stop_loss_and_disable_bot'
+    safety_order_volume_type: 'quote_currency' | 'percent'
+    base_order_volume_type: 'quote_currency' | 'percent'
     from_currency: "AUD" | "BIDR" | "BNB" | "BRL" | "BTC" | "BUSD" | "BVND" | "DAI" | "ETH" | "EUR" | "GBP" | "IDRT" | "NGN" | "RUB" | "TRX" | "TRY" | "TUSD" | "UAH" | "USD" | "USDC" | "USDT" | "USDP" | "VAI" | "XRP"
     to_currency: string
     current_price: string

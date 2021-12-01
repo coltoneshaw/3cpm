@@ -41,9 +41,9 @@ export type Bots = {
         profit_currency: 'quote_currency' | 'base_currency',
         min_price: null | 'quote_currency',
         max_price: null | 'quote_currency',
-        stop_loss_type: 'stop_loss',
-        safety_order_volume_type: 'quote_currency' | 'base_currency',
-        base_order_volume_type: 'quote_currency' | 'base_currency',
+        stop_loss_type: 'stop_loss' | 'stop_loss_and_disable_bot'
+        safety_order_volume_type: 'quote_currency' | 'percent',
+        base_order_volume_type: 'quote_currency' | 'percent',
         account_name: string,
         trailing_deviation: string,
         finished_deals_profit_usd: string,

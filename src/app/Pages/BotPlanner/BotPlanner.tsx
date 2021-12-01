@@ -13,7 +13,7 @@ import './BotPlanner.scss';
 import { calc_dropMetrics } from '@/utils/formulas'
 import { Type_Query_bots } from '@/types/3Commas';
 
-const blankObject = {
+const blankObject: Type_Query_bots = {
     id: Math.random().toString(16).slice(2),
     origin: 'custom',
     name: 'edit me',
@@ -41,7 +41,8 @@ const blankObject = {
     take_profit_type: '',
     strategy: 'long',
     stop_loss_percentage: 0,
-    safety_order_volume_type: '',
+    safety_order_volume_type: 'quote_currency',
+    base_order_volume_type: 'quote_currency',
     profit_currency: '',
     account_name: 'Fake Bot',
     account_id: 111111111,
@@ -146,7 +147,7 @@ const BotPlannerPage = () => {
 
 
     const addToTable = () => {
-        updateLocalBotData((prevState: Type_Query_bots[]) => {
+        updateLocalBotData(prevState => {
             return [blankObject, ...prevState]
         })
     }
