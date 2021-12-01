@@ -4,13 +4,11 @@ import { bots, getAccountDetail, deals, getAccountSummary, getDealOrders, update
 const log = require('electron-log');
 import type { defaultConfig } from '@/utils/defaultConfig';
 
-const { getProfileConfigAll } = require('@/main/Config/config')
 import { findAndNotifyNewDeals } from '@/main/Notifications/notifications'
 
 
-import { Type_Deals_API, Type_Query_Accounts, Type_API_bots, Type_UpdateFunction } from '@/types/3Commas'
+import { Type_UpdateFunction } from '@/types/3Commas'
 import { Type_Profile } from '@/types/config'
-import { UpdateDealRequest } from "@/main/3Commas/types/Deals";
 
 /**
  * 
@@ -35,7 +33,6 @@ async function updateAPI(type: string, options: Type_UpdateFunction, profileData
 
 async function getDealData(type: string, options: Type_UpdateFunction, profileData: Type_Profile) {
 
-  const profileId = profileData.id
   return await deals(options.offset, type, profileData)
     .then(data => {
 
@@ -49,7 +46,7 @@ async function getDealData(type: string, options: Type_UpdateFunction, profileDa
         findAndNotifyNewDeals(deals, options.time, summary)
       }
 
-      update('deals', deals, profileId)
+      update('deals', deals, profileData.id)
 
       return lastSyncTime
     })

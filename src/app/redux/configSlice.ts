@@ -1,4 +1,4 @@
-import { TconfigValues, Type_Profile, Type_ReservedFunds } from '@/types/config';
+import { TconfigValues, Type_Profile } from '@/types/config';
 import { defaultConfig, defaultProfile } from '@/utils/defaultConfig';
 import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';

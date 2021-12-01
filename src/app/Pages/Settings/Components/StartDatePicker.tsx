@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { isValid, startOfDay, addMinutes } from 'date-fns'
 
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
@@ -29,9 +29,7 @@ export default function StartDatePicker() {
         inputFormat="MM/dd/yyyy"
         value={startDate}
         onChange={handleDateChange}
-        renderInput={(params) => (
-          <TextField {...params} helperText={params?.inputProps?.placeholder} />
-        )}
+        renderInput={(params) => <TextField {...params} helperText={params?.inputProps?.placeholder} />}
         className="desktopPicker"
       />
 

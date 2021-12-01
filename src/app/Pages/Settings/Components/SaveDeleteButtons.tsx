@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { useAppSelector } from '@/app/redux/hooks';
-import { updateConfig, deleteProfileByIdGlobal, updateNestedCurrentProfile } from '@/app/redux/configActions'
+import { updateConfig, deleteProfileByIdGlobal } from '@/app/redux/configActions'
 import { syncNewProfileData } from '@/app/redux/threeCommas/Actions'
-import { configPaths } from '@/app/redux/globalFunctions';
-
 
 import { Button } from '@mui/material';
 
