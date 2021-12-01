@@ -2,7 +2,7 @@ import { Type_Profile } from '@/types/config';
 import { defaultProfile } from '@/utils/defaultConfig';
 import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import { updateProfileByPath, configPaths } from '@/app/redux/globalFunctions';
+import { updateProfileByPath } from '@/app/redux/globalFunctions';
 const initialState = {
     editingProfile: defaultProfile
 }
@@ -19,7 +19,6 @@ export const settingsSlice = createSlice({
             const newProfile = updateProfileByPath(data, Object.assign({}, { ...state.editingProfile }), path)
             state.editingProfile = newProfile
         },
-        // this is my bug
         addEditingProfile: state => {
             state.editingProfile = { ...defaultProfile, id: uuidv4() }
         },

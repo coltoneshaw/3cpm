@@ -103,6 +103,8 @@ export const useDailyState = () => {
     // should these get stored in redux? Maybe after they're queried
 
     useEffect(() => {
+
+        // temp fix for a refresh creating a new database with the default config ID
         if(config.current === 'default') return
         const currencyString = (currency) ? currency.map((b: string) => "'" + b + "'") : ""
         const accountIdString = accounts.map(a => a.id)

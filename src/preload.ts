@@ -36,7 +36,7 @@ async function setupContextBridge() {
         console.log('fetching Config')
         return await ipcRenderer.invoke('allConfig', value);
       },
-      profile: async (type: 'create' | 'delete', newProfile: Type_Profile, profileId: string) => {
+      profile: async (type: 'create', newProfile: Type_Profile, profileId: string) => {
 
         if (type == 'create') {
           // storing the initial config values
