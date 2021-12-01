@@ -36,7 +36,7 @@ const getPairList = async (updatePairs: Function, updatePairFilters: Function, w
 
     // selecting the pair data and sorting by profit for easier viewing.
 
-    window.ThreeCPM.Repository.Database.query(currentProfileID, `select pair, sum(actual_profit) as total_profit from deals WHERE ${wheres} and  profile_id = '${currentProfileID}'  and from_currency in (${currencyString}) and account_id in (${accountIdString}) group by pair order by total_profit desc;`)
+    window.ThreeCPM.Repository.Database.query(currentProfileID, `select pair, sum(actual_profit) as total_profit from deals WHERE ${wheres} and from_currency in (${currencyString}) and account_id in (${accountIdString}) group by pair order by total_profit desc;`)
         .then((result: { pair: string }[]) => {
             updatePairs(result.map(pair => ({ pair: pair.pair, opacity: 1 })))
             let storedPairs = getStorageItem(storageItem.charts.pairByDateFilter)

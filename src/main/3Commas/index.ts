@@ -49,7 +49,7 @@ async function getDealData(type: string, options: Type_UpdateFunction, profileDa
         findAndNotifyNewDeals(deals, options.time, summary)
       }
 
-      update('deals', deals.map(d => { return {...d, 'profile_id': profileId}}) , profileId)
+      update('deals', deals, profileId)
 
       return lastSyncTime
     })
