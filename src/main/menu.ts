@@ -3,7 +3,7 @@ import { app, Menu, dialog, BrowserWindow } from 'electron';
 const isMac = process.platform === 'darwin'
 import log from 'electron-log';
 
-import { deleteAllData } from '@/main/Database/database';
+import { deleteAllData, checkOrMakeTables } from '@/main/Database/database';
 import { setDefaultConfig, getProfileConfigAll, setProfileConfig } from '@/main/Config/config';
 
 const { win } = require('@/main/main')
@@ -171,7 +171,10 @@ const template = [
 
           // 2. Delete the database for everything pertaining to that profile
           await deleteAllData(currentProfileConfig.id)
-          // 3. resync the database for the profile
+          
+          // 3. create the new table
+          await checkOrMakeTables(currentProfileConfig.id)
+
 
           const options = {
             type: 'question',
