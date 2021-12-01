@@ -97,9 +97,7 @@ ipcMain.handle('config-clear', () =>config.clear());
 
 
 
-ipcMain.handle('query-database', (event, profileId:string, queryString) => {
-  return query(profileId, queryString)
-});
+ipcMain.handle('query-database', async (event, profileId:string, queryString) => await query(profileId, queryString) );
 
 ipcMain.handle('update-database', (event,  profileId:string, table, updateData): void => update(profileId, table, updateData));
 

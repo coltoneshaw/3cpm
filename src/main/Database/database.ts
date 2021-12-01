@@ -107,7 +107,7 @@ async function deleteAllData(profileID?: string): Promise<void> {
     }
     log.info('attempting to delete all database info for ' + profileID)
 
-    fsExtra.remove(path.join(appDataPath, 'databases', profileID + '.sqlite3'), err => {
+    await fsExtra.remove(path.join(appDataPath, 'databases', profileID + '.sqlite3'), err => {
         if (err) return log.error('unable to delete database for ' + profileID + err)
         log.info('database info deleted for ' + profileID)
       })
