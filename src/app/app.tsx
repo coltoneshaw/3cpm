@@ -23,11 +23,9 @@ const App = () => {
   const { styles } = themeEngine
   
   useEffect(() => {
-    console.log('updating the config here')
     updateConfig();
   }, []);
 
-  console.error('page is rerendering~')
   useLayoutEffect(() => {
     if(currentProfile.id == profile.id) return
     if(currentProfile && currentProfile?.statSettings?.reservedFunds.filter(a => a.is_enabled).length > 0) {

@@ -1,22 +1,13 @@
 import { app, BrowserWindow, ipcMain, shell, Menu } from 'electron';
 import { config } from '@/main/Config/config';
-// import isDev from 'electron-is-dev'; // New Import
-const log = require('electron-log');
-
-const path = require("path");
+import log from 'electron-log';
+import path from "path";
 const isDev = !app.isPackaged;
-
 import { menu } from './menu';
-
-const { update, query, checkOrMakeTables, run, deleteAllData, upsert } = require('@/main/Database/database');
-
+import { update, query, checkOrMakeTables, run, deleteAllData, upsert } from '@/main/Database/database';
 let win: BrowserWindow;
 
-const {
-  default: installExtension,
-  REDUX_DEVTOOLS,
-  REACT_DEVELOPER_TOOLS
-} = require("electron-devtools-installer");
+import { default as installExtension, REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 
 const createWindow = (): void => {
   win = new BrowserWindow({
@@ -81,6 +72,11 @@ ipcMain.handle('open-external-link', (event, link) => {
   shell.openExternal(link)
 });
 
+ipcMain.handle('preload-check', (event, link) => {
+  preloadCheck()
+});
+
+
 ipcMain.handle('allConfig', (event, value:string ) => {
   if (value  != 'all') return config.get(value)
   return config.store
@@ -107,7 +103,7 @@ ipcMain.handle('query-database', (event, profileId:string, queryString) => {
 
 ipcMain.handle('update-database', (event,  profileId:string, table, updateData): void => update(profileId, table, updateData));
 
-ipcMain.handle('upsert-database', (event,  profileId:string, table: string, data: any[], id: string, updateColumn: string): void => upsert(profileId, table, data, id, updateColumn));
+ipcMain.handle('upsert-database', (event,  profileId:string, table: string, data: any[], id: string, updateColumn: string): void => upsert(table, data, id, updateColumn, profileId));
 
 ipcMain.handle('run-database', (event,  profileId:string, queryString): void => run(profileId, queryString));
 
@@ -167,6 +163,7 @@ ipcMain.handle('binance-getCoins', async (event) => {
 });
 
 import { fetchVersions } from '../app/Features/UpdateBanner/UpdateApiFetch';
+import { preloadCheck } from './precheck';
 
 ipcMain.handle('pm-versions', async (event) => {
   return await fetchVersions()
