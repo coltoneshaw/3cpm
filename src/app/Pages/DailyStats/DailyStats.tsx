@@ -35,7 +35,7 @@ const DailyStats = () => {
                         label="Date"
                         value={value}
                         onChange={handleChange}
-                        maxDate={new Date( moment.utc(value).startOf("day").valueOf())}
+                        maxDate={new Date( moment.utc(new Date()).startOf("day").valueOf())}
                         renderInput={(params) => <TextField {...params} />}
                     />
                 </Grid>
