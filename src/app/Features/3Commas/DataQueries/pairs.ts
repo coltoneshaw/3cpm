@@ -32,7 +32,6 @@ const fetchPairPerformanceMetrics = async (profileData: Type_Profile, oDate?: Da
             closed_at is not null
             and account_id in (${accountIdString})
             and currency in (${currencyString})
-            and profile_id = '${currentProfileID}'
             ${fromSQL} ${toSQL}
         GROUP BY
             pair;`
@@ -75,7 +74,6 @@ const getSelectPairDataByDate = async (profileData: Type_Profile, pairs: string[
             and from_currency IN ( ${currencyString} )
             and pair in (${pairString})
             and closed_at_iso_string > ${startString}
-            and profile_id = '${currentProfileID}'
             and pair in (${pairString}) ${fromSQL} ${toSQL}
         GROUP BY
             date, pair;

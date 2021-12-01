@@ -26,7 +26,6 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
             and account_id in ( ${accountIdString} )
             and currency in (${currencyString} )
             and closed_at_iso_string > ${startString}
-            and profile_id = '${currentProfileID}'
         GROUP BY
             closed_at_str
         ORDER BY
@@ -126,7 +125,6 @@ const fetchPerformanceDataFunction = async (profileData: Type_Profile, oDate?: D
                     and account_id in (${accountIdString} )
                     and currency in (${currencyString} )
                     and closed_at_iso_string > ${startString}
-                    and profile_id = '${currentProfileID}'
                     ${fromSQL} ${toSQL}
                 GROUP BY 
                     performance_id;`
@@ -168,7 +166,6 @@ const getActiveDealsFunction = async (profileData: Type_Profile) => {
                     finished = 0 
                     and account_id in (${accountIdString} )
                     and currency in (${currencyString} )
-                    and profile_id = '${currentProfileID}'
                     `
     let activeDeals: Type_ActiveDeals[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, query)
 
@@ -223,7 +220,6 @@ const fetchSoData = async (currentProfile: Type_Profile, oDate?: DateRange) => {
                 account_id in (${accountIdString} )
                 and currency in (${currencyString} )
                 and closed_at_iso_string > ${startString}
-                and profile_id = '${currentProfileID}'
                 ${fromSQL} ${toSQL}
             group by 
                 completed_safety_orders_count;`
