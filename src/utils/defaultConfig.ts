@@ -106,7 +106,7 @@ const defaultProfile:Type_Profile = {
 const defaultConfig: TconfigValues = {
 
     profiles: Object.assign({[currentId]: defaultProfile}), 
-    current: currentId,
+    current: 'default',
     globalSettings: {
         notifications: {
             enabled: true,

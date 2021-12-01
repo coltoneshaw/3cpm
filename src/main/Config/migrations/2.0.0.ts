@@ -13,6 +13,7 @@ const appDataPath = app.getPath('userData');
 export const convertToProfileDatabases = async (profileIds: string[]) => {
     if (!profileIds || profileIds.length === 0) return
 
+    await fsExtra.mkdir(path.join(appDataPath, 'databases'));
     for (let profileId of profileIds) {
         log.info(`Converting ${profileId} to it's own database`)
         checkOrMakeTables(profileId)

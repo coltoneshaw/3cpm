@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import moment from "moment";
 import { isValid } from 'date-fns'
 import { useAppSelector } from '@/app/redux/hooks';
@@ -66,6 +66,7 @@ type filters = {
 const oneMilliHour = 86400000
 
 export const queryDayDashboard = async (utcEndDate: number, profileData: Type_Profile, filters: filters) => {
+
     const utcStartDate = utcEndDate - oneMilliHour - 1
     const utcDateRange = { utcEndDate, utcStartDate }
     const [ pairDay, botDay, dailyProfit, totalProfit, activeDeals] = await Promise.all([ 
@@ -82,7 +83,7 @@ export const queryDayDashboard = async (utcEndDate: number, profileData: Type_Pr
 
 
 export const useDailyState = () => {
-    const { currentProfile } = useAppSelector(state => state.config);
+    const { currentProfile, config } = useAppSelector(state => state.config);
 
     const defaultCurrency = currentProfile.general.defaultCurrency;
     const reservedFunds = currentProfile.statSettings.reservedFunds
@@ -102,6 +103,7 @@ export const useDailyState = () => {
     // should these get stored in redux? Maybe after they're queried
 
     useEffect(() => {
+        if(config.current === 'default') return
         const currencyString = (currency) ? currency.map((b: string) => "'" + b + "'") : ""
         const accountIdString = accounts.map(a => a.id)
         queryDayDashboard(utcEndDate, currentProfile, { currency: currencyString, accounts: accountIdString })
