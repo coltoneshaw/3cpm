@@ -16,7 +16,6 @@ export const settingsSlice = createSlice({
         },
         updateEditProfileByPath: (state, action: { payload: { data: string | {} | [], path: any}}) => {
             const { data, path } = action.payload
-            console.log(data)
             const newProfile = updateProfileByPath(data, Object.assign({}, { ...state.editingProfile }), path)
             state.editingProfile = newProfile
         },
