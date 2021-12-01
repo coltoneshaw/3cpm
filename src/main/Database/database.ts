@@ -77,7 +77,7 @@ function upsert(table: string, data: any[], id: string, updateColumn: string, pr
 
     const insertMany = db.transaction((dataArray) => {
         for (const row of dataArray) {
-            const statement = db.prepare(`UPDATE ${table} SET ${updateColumn} = ${row[updateColumn]} where ${id} = ${row[id]} AND profile_id = '${config.get('current')}';`)
+            const statement = db.prepare(`UPDATE ${table} SET ${updateColumn} = ${row[updateColumn]} where ${id} = ${row[id]}';`)
             statement.run(row)
         }
     });

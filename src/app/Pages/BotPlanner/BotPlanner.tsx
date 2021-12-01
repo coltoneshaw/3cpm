@@ -162,13 +162,13 @@ const BotPlannerPage = () => {
         // Needs to have the logic thought through again. There seems to be reduncant calls here.
         const customBotIds = customBots.map(bot => bot.id);
         if (customBotIds.length === 0) {
-            window.ThreeCPM.Repository.Database.run(currentProfile.id, `DELETE from bots where origin = 'custom' AND profile_id = '${currentProfile.id}'`)
+            window.ThreeCPM.Repository.Database.run(currentProfile.id, `DELETE from bots where origin = 'custom'`)
         } else {
-            window.ThreeCPM.Repository.Database.query(currentProfile.id, `select * from bots where origin = 'custom' AND profile_id = '${currentProfile.id}';`)
+            window.ThreeCPM.Repository.Database.query(currentProfile.id, `select * from bots where origin = 'custom';`)
                 .then((table: Type_Query_bots[]) => {
                     for (let row of table) {
                         if (!customBotIds.includes(row.id)) {
-                            window.ThreeCPM.Repository.Database.run(currentProfile.id, `DELETE from bots where id = '${row.id}' AND profile_id = '${currentProfile.id}'`)
+                            window.ThreeCPM.Repository.Database.run(currentProfile.id, `DELETE from bots where id = '${row.id}'`)
                         }
                     }
                 });

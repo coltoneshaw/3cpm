@@ -1,5 +1,5 @@
 import { query, chooseDatabase } from "./database";
-
+import log from 'electron-log';
 
 
 function initializeBotsTable(db: any) {
@@ -46,8 +46,7 @@ function initializeBotsTable(db: any) {
             drawdown NUMBER,
             maxCoveragePercent NUMBER,
             maxSoReached NUMBER,
-            hide BOOLEAN,
-            profile_id VARCHAR(36)
+            hide BOOLEAN
             )`);
 
     stmt.run();
@@ -139,8 +138,7 @@ function initializeDealTable(db: any) {
             currency TEXT,
             max_deal_funds NUMBER,
             profitPercent NUMBER,
-            impactFactor NUMBER,
-            profile_id TEXT
+            impactFactor NUMBER
             )`);
 
     stmt.run();
@@ -160,25 +158,30 @@ function initializeAccountTable(db: any) {
             on_orders NUMBER,
             btc_value NUMBER,
             usd_value NUMBER,
-            market_code TEXT,
-            profile_id TEXT
+            market_code TEXT
             )`);
 
     stmt.run();
 
 }
 
-function initialDatabaseSetup(profileId:string) {
-    const db = chooseDatabase(profileId)
-    initializeDealTable(db);
-    initializeAccountTable(db);
-    initializeBotsTable(db);
+function initialDatabaseSetup(profileId: string) {
+    const db = chooseDatabase(profileId);
+    try {
+        initializeDealTable(db);
+        initializeAccountTable(db);
+        initializeBotsTable(db);
+        log.debug('Completed initial database setup.')
+    } catch (err) {
+        log.error('Unable to run the initial database setup', err)
+    }
+
 }
 
 async function checkOrMakeTables(profileId: string) {
 
     // checking if the tables exist.
-    const existingTables = await query(profileId,"SELECT name FROM sqlite_master WHERE type='table';")
+    const existingTables = await query(profileId, "SELECT name FROM sqlite_master WHERE type='table';")
 
     if (existingTables.length == 0) {
         await initialDatabaseSetup(profileId)
