@@ -9,6 +9,10 @@ let win: BrowserWindow;
 
 import { default as installExtension, REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 
+import contextMenu from 'electron-context-menu';
+
+contextMenu();
+
 const createWindow = (): void => {
   win = new BrowserWindow({
     width: 1500,
@@ -16,6 +20,7 @@ const createWindow = (): void => {
     title: "Bot Portfolio Manager",
     // icon: path.join(__dirname, '../assets/icons/icon.png'),
     webPreferences: {
+      spellcheck: true,
       nodeIntegration: false, // is default value after Electron v5
       contextIsolation: true, // protect against prototype pollution
       enableRemoteModule: false, // turn off remote
