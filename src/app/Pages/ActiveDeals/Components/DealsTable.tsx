@@ -84,6 +84,16 @@ function DealsTable({ data, selectedColumns }: { data: object[], selectedColumns
             }
         },
         {
+            Header: 'Average Price',
+            accessor: 'bought_average_price',
+            align: 'flex-end',
+            maxWidth: 120,
+            sortType: (rowA: any, rowB: any, columnId: string) => sortMe(rowA, rowB, columnId),
+            Cell: ({ cell }: any) => {
+                return < span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>
+            }
+        },
+        {
             Header: 'Current',
             accessor: 'current_price',
             align: 'flex-end',

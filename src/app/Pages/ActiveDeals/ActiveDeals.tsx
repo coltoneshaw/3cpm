@@ -24,6 +24,10 @@ const columnList = [
         name: 'Duration'
     },
     {
+        id: 'bought_average_price',
+        name: 'Average Price'
+    },
+    {
         id: 'current_price',
         name: 'Current Price'
     },

@@ -32,22 +32,25 @@ const OrderTimeline = ({ row, ordersData }: { row: { original: Type_Deals }, ord
         average_price: row.original.current_price,
     }
 
-    const { max_safety_orders, safety_order_volume, martingale_step_coefficient, martingale_volume_coefficient, completed_safety_orders_count, safety_order_step_percentage } = row.original
+    const { max_safety_orders, safety_order_volume, martingale_step_coefficient, martingale_volume_coefficient, safety_order_step_percentage } = row.original
     const basePrice = ordersData.find(o => o.deal_order_type === 'Base') || { rate: 0 };
+    // const baseSafety = ordersData.find(o => o.deal_order_type === 'Safety') || { rate: 0 };
     const placedSafeties = ordersData.filter(o => o.deal_order_type === 'Safety' && o.status_string != 'Cancelled');
 
 
-    const safetyArray = calc_SafetyArray(safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, martingale_step_coefficient, safety_order_step_percentage)
+    const safetyArray = calc_SafetyArray(safety_order_volume, max_safety_orders, martingale_volume_coefficient, martingale_step_coefficient, safety_order_step_percentage)
         .filter(so => so.so_count > placedSafeties.length)
         .map(so => {
             const rate = basePrice.rate - ((so.deviation / 100) * basePrice.rate)
+            const quantity = so.volume / rate;
+            
             return {
                 order_id: so.so_count + 'safety',
                 order_type: 'BUY',
                 deal_order_type: 'Safety',
                 status_string: 'Future',
                 rate,
-                quantity: so.volume / rate,
+                quantity,
                 total: so.volume,
                 created_at: '',
                 updated_at: '',

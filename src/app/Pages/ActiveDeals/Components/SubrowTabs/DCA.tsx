@@ -1,11 +1,17 @@
 import { Grid, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { parseNumber } from '@/utils/number_formatting'
-import { formatCurrency, supportedCurrencies } from '@/utils/granularity'
 
-const calcTpPrice = (currentPrice: number, tpPrice: number) => ((tpPrice - currentPrice) / currentPrice) * 100
 
-const calculate = (addFunds: number, atPrice: number, tpPercent: number, ordersData: any) => {
+type calc = {
+    addFunds: number
+    atPrice: number
+    tpPercent: number
+}
+
+const exchangeFee = 0.001
+
+const calcNew = ({addFunds, atPrice, tpPercent}: calc, ordersData: any, currentPrice: string) => {
     const filteredData = ordersData.filter((r: any) => r.order_type === 'BUY' && r.status_string === 'Filled')
     const totalCrypto = filteredData.reduce((r: number, c: any) => {
         return r + parseFloat(c.quantity)
@@ -17,41 +23,54 @@ const calculate = (addFunds: number, atPrice: number, tpPercent: number, ordersD
     }, 0) + addFunds
 
     const average = totalSpent / totalCrypto
-    const tpAt = average + (average * tpPercent / 100)
+    const tpAt = ( average * ( ( tpPercent / 100) + exchangeFee ) ) + average
 
     return {
         average,
         tpAt,
-        gainRequired: calcTpPrice(atPrice, tpAt)
+        gainRequired: ( ( ( tpAt / average ) - 1) + ((average / +currentPrice) -1) ) * 100
     }
+}
+
+
+type row = {
+    bought_average_price: number,
+    take_profit: number
+    current_price: number
+}
+
+const calcOriginal = ({ bought_average_price, take_profit, current_price}: row ) => {
+    const average = bought_average_price;
+    const tpPercent = take_profit / 100;
+    const tpAt = average * ( 1 + tpPercent + exchangeFee);
+    return {
+        average, 
+        tpAt,
+        gainRequired: ( ( ( tpAt / average ) - 1) + ((average / current_price) -1) ) * 100
+    }
+
 }
 
 function DCA({ row, ordersData }: any) {
 
 
-    const origCalc = calculate(0, row.original.current_price, row.original.take_profit, ordersData)
-
+    const origCalc = calcOriginal(row.original)
     const [newCalc, setNewCalc] = useState(() => ({ average: origCalc.average, tpAt: origCalc.tpAt, gainRequired: origCalc.gainRequired }))
 
     const [addFunds, setAddFundsField] = useState<number>(0);
     const [atPrice, setAtPrice] = useState<number>(parseFloat(row.original.current_price));
     const [tpPercent, setTpPercent] = useState<number>(parseFloat(row.original.take_profit));
 
-
-    // const formatCurrencyLocally = (value:number) =>  formatCurrency([row.original.from_currency], value).metric
-
     useEffect(() => {
         if (isNaN(addFunds)) {
             setAddFundsField(0)
             return
         }
-        setNewCalc(calculate(addFunds, atPrice, tpPercent, ordersData))
+
+        // It's receiving the price in atPrice and using that as the TP price, I believe
+        setNewCalc(calcNew({ addFunds, atPrice, tpPercent }, ordersData, row.original.current_price))
 
     }, [addFunds, atPrice, tpPercent])
-
-
-
-
 
     return (
         <div className="flex-column" style={{ width: '100%' }}>
@@ -80,9 +99,9 @@ function DCA({ row, ordersData }: any) {
                     <tr>
                         <th></th>
                         <th>Buy average</th>
-                        <th >Take Profit At</th>
-                        <th >Take Profit percent</th>
-                        <th>Gain to TP</th>
+                        <th>Take profit at</th>
+                        <th>Take profit percent</th>
+                        <th>Distance from TP</th>
                     </tr>
                 </thead>
                 <tbody className="dcaCalcTable">
