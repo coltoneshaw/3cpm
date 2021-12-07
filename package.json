@@ -44,6 +44,7 @@
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.1.8",
     "@types/react-table": "^7.7.2",
+    "@types/react-window": "^1.8.5",
     "@types/styled-components": "^5.1.12",
     "@types/uuid": "^8.3.1",
     "babel-loader": "^8.2.2",
@@ -92,6 +93,7 @@
     "material-ui-popup-state": "^1.9.3",
     "moment": "^2.29.1",
     "react-redux": "^7.2.5",
+    "react-window": "^1.8.6",
     "uuid": "^3.4.0"
   },
   "build": {

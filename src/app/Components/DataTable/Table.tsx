@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 
 import { useTable, useSortBy, useExpanded, useFlexLayout, HeaderGroup, HeaderProps } from 'react-table'
 import { setStorageItem, getStorageItem } from '@/app/Features/LocalStorage/LocalStorage';
+import { FixedSizeList } from 'react-window'
 
 import './Table.scss'
-const defaultPropGetter = () => ({})
+const defaultPropGetter = ({ }: any) => ({})
 
 
 const initialSortBy = (localStorageSortName: string) => {
@@ -31,10 +32,28 @@ const getStyles = (props, align = 'center', maxWidth) => [
     },
 ]
 
+const scrollbarWidth = () => {
+    // thanks too https://davidwalsh.name/detect-scrollbar-width
+    const scrollDiv = document.createElement('div')
+    scrollDiv.setAttribute('style', 'width: 100px; height: 100px; overflow: scroll; position:absolute; top:-9999px;')
+    document.body.appendChild(scrollDiv)
+    const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth
+    document.body.removeChild(scrollDiv)
+    return scrollbarWidth
+}
+
 
 // Expose some prop getters for headers, rows and cells, or more if you want!
-// @ts-ignore
-function CustomTable({ columns, data, renderRowSubComponent, getHeaderProps = defaultPropGetter, getColumnProps = defaultPropGetter, getRowProps = defaultPropGetter, getCellProps = cellProps, updateLocalBotData, updateReservedFunds, localStorageSortName, }) {
+const CustomTable = ({
+    // @ts-ignore
+    columns, data,
+    // @ts-ignore
+    renderRowSubComponent,
+    getHeaderProps = defaultPropGetter, getColumnProps = defaultPropGetter,
+    // @ts-ignore
+    getRowProps = defaultPropGetter, getCellProps = cellProps,
+    // @ts-ignore
+    updateLocalBotData, updateReservedFunds, localStorageSortName, }) => {
 
     const defaultColumn = React.useMemo(
         () => ({
@@ -45,9 +64,11 @@ function CustomTable({ columns, data, renderRowSubComponent, getHeaderProps = de
         []
     )
 
+    const scrollBarSize = React.useMemo(() => scrollbarWidth(), [])
+
 
     //@ts-ignore
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, visibleColumns, state: { sortBy } } = useTable(
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, visibleColumns, totalColumnsWidth, state: { sortBy } } = useTable(
         {
             columns, data,
             //@ts-ignore
@@ -63,6 +84,30 @@ function CustomTable({ columns, data, renderRowSubComponent, getHeaderProps = de
         useExpanded,
         useFlexLayout
     );
+
+    const RenderRow = useCallback(({ index, style }) => {
+        const row = rows[index]
+        prepareRow(row)
+        const rowProps = row.getRowProps(getRowProps(row));
+        return (
+            <>
+                <div {...rowProps} className="tr" key={row.id}>
+                    {row.cells.map(cell => {
+                        return (
+                            <div  {...cell.getCellProps(cellProps)} className="td" >
+                                {cell.render('Cell')}
+
+                            </div>
+                        )
+                    })}
+                </div>
+
+                { // @ts-ignore
+                    row.isExpanded && renderRowSubComponent({ row, visibleColumns })
+                }
+            </>
+        )
+    }, [prepareRow, rows])
 
 
 
@@ -129,30 +174,14 @@ function CustomTable({ columns, data, renderRowSubComponent, getHeaderProps = de
                 ))}
             </div>
             <div {...getTableBodyProps()} className="tbody">
-                {rows.map((row) => {
-                    prepareRow(row)
-                    //@ts-ignore
-                    const rowProps = row.getRowProps(getRowProps(row));
-
-                    return (
-                        <>
-                            <div {...rowProps} className="tr" key={row.id}>
-                                {row.cells.map(cell => {
-                                    return (
-                                        <div  {...cell.getCellProps(cellProps)} className="td" >
-                                            {cell.render('Cell')}
-
-                                        </div>
-                                    )
-                                })}
-                            </div>
-
-                            { // @ts-ignore
-                                row.isExpanded && renderRowSubComponent({ row, visibleColumns })
-                            }
-                        </>
-                    )
-                })}
+                <FixedSizeList
+                    height={600}
+                    itemCount={rows.length}
+                    itemSize={35}
+                    width={totalColumnsWidth + scrollBarSize}
+                >
+                    {RenderRow}
+                </FixedSizeList>
             </div>
         </div>
     )
