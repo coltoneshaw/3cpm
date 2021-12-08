@@ -9,7 +9,7 @@ import {
 import { initialState } from '@/app/redux/threeCommas/initialState'
 
 import { updateLastSyncTime } from '@/app/redux/config/configSlice'
-
+import { updateBannerData } from '@/app/Features/UpdateBanner/redux/bannerSlice'
 import type { Type_Profile, Type_ReservedFunds } from '@/types/config';
 import type { Type_Query_bots, Type_Query_PerfArray } from '@/types/3Commas'
 import dotProp from 'dot-prop';
@@ -252,11 +252,8 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
             })
 
     } catch (error) {
-
         console.error(error)
-        if(type != 'autoSync'){
-            alert('Error updating your data. Check the console for more information.')
-        }
+        store.dispatch( updateBannerData({show: true, message: 'Error updating your data. Check the console for more information.', type: 'apiError'}))
     } finally {
         if (callback) callback()
         store.dispatch(setIsSyncing(false))

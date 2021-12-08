@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-type banner = 'updateVersion' | ''
+export type banner = 'updateVersion' | '' | 'apiError'
 
 const initialState = {
     show: false,
