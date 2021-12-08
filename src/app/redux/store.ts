@@ -1,13 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit'
-import configSlice from './config/configSlice'
-import threeCommasSlice from './threeCommas/threeCommasSlice'
-import settingsSlice from '../Pages/Settings/Redux/settingsSlice'
+import configSlice from '@/app/redux/config/configSlice'
+import threeCommasSlice from '@/app/redux/threeCommas/threeCommasSlice'
+import settingsSlice from '@/app/Pages/Settings/Redux/settingsSlice'
+import bannerSlice from '@/app/Features/UpdateBanner/redux/bannerSlice'
 
 const store = configureStore({
   reducer: {
     config: configSlice,
     threeCommas: threeCommasSlice,
-    settings: settingsSlice
+    settings: settingsSlice,
+    banner: bannerSlice
   },
   devTools​: true
 })

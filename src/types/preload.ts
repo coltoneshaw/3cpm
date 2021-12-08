@@ -47,7 +47,7 @@ export interface binance {
     coinData: () => Promise< BinanceTicketPrice | false >
 }
 export interface pm {
-    versions: () => Promise<Type_GithubRelease | false >
+    versions: () => Promise<Type_GithubRelease[] | false >
 }
 
 interface mainPreload {
