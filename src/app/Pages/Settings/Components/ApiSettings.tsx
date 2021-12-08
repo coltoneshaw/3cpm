@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
-import { updateReservedFundsArray } from '@/app/redux/configActions';
+import { updateReservedFundsArray } from '@/app/redux/config/configActions';
 import { configPaths } from "@/app/redux/globalFunctions";
 import { updateEditProfileByPath } from "@/app/Pages/Settings/Redux/settingsSlice";
 

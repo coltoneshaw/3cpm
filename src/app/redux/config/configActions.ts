@@ -1,11 +1,11 @@
-import { setConfig, setCurrentProfile, updateCurrentProfileByPath, deleteProfileById, updateNotificationsSettings } from '@/app/redux/configSlice'
+import { setConfig, setCurrentProfile, updateCurrentProfileByPath, deleteProfileById, updateNotificationsSettings } from '@/app/redux/config/configSlice'
 import {setSyncData} from '@/app/redux/threeCommas/threeCommasSlice'
 
 import { TconfigValues, Type_NotificationsSettings, Type_Profile, Type_ReservedFunds } from '@/types/config';
 
 import { removeDuplicatesInArray } from '@/utils/helperFunctions';
 
-import store from './store'
+import store from '../store'
 
 const updateConfig = async () => {
 

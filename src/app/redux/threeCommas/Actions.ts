@@ -8,7 +8,7 @@ import {
 } from '@/app/redux/threeCommas/threeCommasSlice'
 import { initialState } from '@/app/redux/threeCommas/initialState'
 
-import { updateLastSyncTime } from '@/app/redux/configSlice'
+import { updateLastSyncTime } from '@/app/redux/config/configSlice'
 
 import type { Type_Profile, Type_ReservedFunds } from '@/types/config';
 import type { Type_Query_bots, Type_Query_PerfArray } from '@/types/3Commas'
@@ -252,8 +252,11 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
             })
 
     } catch (error) {
+
         console.error(error)
-        alert('Error updating your data. Check the console for more information.')
+        if(type != 'autoSync'){
+            alert('Error updating your data. Check the console for more information.')
+        }
     } finally {
         if (callback) callback()
         store.dispatch(setIsSyncing(false))

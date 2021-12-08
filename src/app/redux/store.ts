@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import configSlice from './configSlice'
+import configSlice from './config/configSlice'
 import threeCommasSlice from './threeCommas/threeCommasSlice'
 import settingsSlice from '../Pages/Settings/Redux/settingsSlice'
 

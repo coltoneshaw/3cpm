@@ -2,7 +2,7 @@ import { TconfigValues, Type_Profile } from '@/types/config';
 import { defaultConfig, defaultProfile } from '@/utils/defaultConfig';
 import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import { updateProfileByPath } from './globalFunctions';
+import { updateProfileByPath } from '@/app/redux/globalFunctions';
 
 // Define the initial state using that type
 const initialState = {

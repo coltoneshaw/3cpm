@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAppSelector } from '@/app/redux/hooks';
-import { updateConfig, deleteProfileByIdGlobal } from '@/app/redux/configActions'
+import { updateConfig, deleteProfileByIdGlobal } from '@/app/redux/config/configActions'
 import { syncNewProfileData } from '@/app/redux/threeCommas/Actions'
 
 import { Button } from '@mui/material';

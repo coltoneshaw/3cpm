@@ -12,7 +12,7 @@ import UpdateBanner from './Features/UpdateBanner/UpdateBanner';
 
 
 import { useAppSelector } from '@/app/redux/hooks';
-import { updateConfig } from '@/app/redux/configActions';
+import { updateConfig } from '@/app/redux/config/configActions';
 import { updateAllDataQuery } from './redux/threeCommas/Actions';
 
 const App = () => {
