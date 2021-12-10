@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Type_Query_bots } from '@/types/3Commas'
 import { Type_ReservedFunds } from '@/types/config';
-
+import Input from '@mui/material/Input';
 
 interface Cell {
     value: {
@@ -28,7 +28,12 @@ const Bots_EditableCell = ({
     const [size, setSize] = useState(() => String(initialValue).length * 1.5)
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setValue(e.target.value)
+
+        let inputValue = e.target.value
+
+        if (column == 'take_profit' ) inputValue = e.target.value.slice(0, -1)
+        // if (column == 'max_safety_orders') inputValue = e.target.value.slice(0, -4)
+        setValue(inputValue)
         setSize(e.target.value.length)
     }
 
@@ -38,13 +43,9 @@ const Bots_EditableCell = ({
     }
 
     const ending = () => {
-        if (column == 'safety_order_volume' || column == 'base_order_volume') {
-            return ''
-        } else if (column == 'take_profit') {
-            return <span>%</span>
-        } else if (column == 'max_safety_orders') {
-            return <span> SOs</span>
-        }
+        if (column == 'take_profit') return '%'
+        // if (column == 'max_safety_orders') return ' SOs'
+        return ''
     }
 
     useEffect(() => {
@@ -56,35 +57,36 @@ const Bots_EditableCell = ({
         setValue(String(initialValue))
     }, [initialValue])
 
-    return <span style={{ display: 'flex', justifyContent: 'center' }}><input className="dataTableInput" value={value} onChange={onChange} onBlur={onBlur} size={size} style={{ textAlign: 'center' }} />{ending()}</span>
+
+    return <input className="dataTableInput" value={value + ending()} onChange={onChange} onBlur={onBlur} size={size} style={{ textAlign: 'center', width: '92%' }} />
 }
 
- 
-  // Create an editable cell renderer
-  const Settings_EditableCell = ({
+
+// Create an editable cell renderer
+const Settings_EditableCell = ({
     value: initialValue,
     row: { original },
     column: { id: column },
     updateReservedFunds, // This is a custom function that we supplied to our table instance
-  }: Cell) => {
+}: Cell) => {
     // We need to keep and update the state of the cell normally
     const [value, setValue] = useState(String(initialValue))
     // const [size, setSize] = useState(() => String(initialValue).length * 1.5)
-  
+
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValue(e.target.value)
+        setValue(e.target.value)
     }
-  
+
     // We'll only update the external data when the input is blurred
     const onBlur = () => {
-      updateReservedFunds(original.id, column, value, original)
+        updateReservedFunds(original.id, column, value, original)
     }
-  
-    useEffect(() => {
-      setValue(String(initialValue))
-    }, [initialValue])
-  
-    return <input className="dataTableInput" type="number" value={value} onChange={onChange} onBlur={onBlur} style={{ textAlign: 'center', color: 'var(--color-text-lightbackground)' }} />
-  }
 
-export { Settings_EditableCell, Bots_EditableCell};
+    useEffect(() => {
+        setValue(String(initialValue))
+    }, [initialValue])
+
+    return <input className="dataTableInput" type="number" value={value} onChange={onChange} onBlur={onBlur} style={{ textAlign: 'center', color: 'var(--color-text-lightbackground)' }} />
+}
+
+export { Settings_EditableCell, Bots_EditableCell };
