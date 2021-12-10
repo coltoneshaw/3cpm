@@ -229,28 +229,18 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
         syncCount = 0
         time = 0
     }
-    const options = {
-        syncCount,
-        time,
-        offset
-    }
+    const options = { syncCount, time, offset }
 
     try {
-        await updateThreeCData(type, options, profileData)
-            .then(async (lastSyncTime) => {
-                await updateAllDataQuery(profileData, type)
-                return lastSyncTime;
-            })
-            .then((lastSyncTime) => {
-                store.dispatch(setSyncData({
-                    syncCount: (type === 'autoSync') ? options.syncCount + 1 : 0,
-                    // don't override syncOptions.time in case of a fullSync
-                    // because there might be a concurrent autoSync running
-                    time: (type === 'autoSync') ? originalTime + 15000 : originalTime
-                }))
-                store.dispatch(updateLastSyncTime({ data: lastSyncTime }))
-            })
-
+        const lastSyncTime = await updateThreeCData(type, options, profileData)
+        await updateAllDataQuery(profileData, type)
+        store.dispatch(setSyncData({
+            syncCount: (type === 'autoSync') ? options.syncCount + 1 : 0,
+            // don't override syncOptions.time in case of a fullSync
+            // because there might be a concurrent autoSync running
+            time: (type === 'autoSync') ? originalTime + 15000 : originalTime
+        }))
+        store.dispatch(updateLastSyncTime({ data: lastSyncTime }))
     } catch (error) {
         console.error(error)
         store.dispatch( updateBannerData({show: true, message: 'Error updating your data. Check the console for more information.', type: 'apiError'}))
@@ -262,8 +252,6 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
 
 
 const syncNewProfileData = async (offset: number = 1000, editingProfile: Type_Profile) => {
-    // const updatedProfile = {...profileData, syncStatus: { deals: {lastSyncTime: null}}}
-    // const profileData = store.getState().settings.editingProfile
 
     if (!preSyncCheck(editingProfile)) return
 
@@ -273,10 +261,8 @@ const syncNewProfileData = async (offset: number = 1000, editingProfile: Type_Pr
     let success;
     try {
         await window.ThreeCPM.Repository.Config.profile('create', editingProfile, editingProfile.id)
-            .then(async () => {
-                await updateThreeCData('newProfile', options, editingProfile)
-                    .then(async () => await updateAllDataQuery(editingProfile, 'fullSync'))
-            })
+        await updateThreeCData('newProfile', options, editingProfile)
+        updateAllDataQuery(editingProfile, 'fullSync')
 
         success = true;
     } catch (error) {
@@ -293,17 +279,18 @@ const syncNewProfileData = async (offset: number = 1000, editingProfile: Type_Pr
 
 
 
-const updateAllDataQuery = (profileData: Type_Profile, type: string) => {
+const updateAllDataQuery = async (profileData: Type_Profile, type: string) => {
 
     // if the type if fullSync this will store the bot data. If we store the bot data in the redux state it will overwrite any user changes. 
-    Promise.all([
+    await Promise.all([
         fetchAndStoreBotData(profileData, type === 'fullSync'),
         fetchAndStoreProfitData(profileData),
         fetchAndStorePerformanceData(profileData),
         fetchAndStoreActiveDeals(profileData),
         fetchAndStoreAccountData(profileData)
     ])
-        .then(() => calculateMetrics())
+
+    calculateMetrics();
 
 
 }
