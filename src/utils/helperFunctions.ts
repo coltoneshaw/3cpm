@@ -100,8 +100,7 @@ const getDateString = (created_at: string) => {
 }
 
 function getLang() {
-  if (navigator.languages != undefined)
-    return navigator.languages[0];
+  if (navigator.languages != undefined) return navigator.languages[0];
   return navigator.language;
 }
 
