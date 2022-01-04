@@ -16,13 +16,8 @@ type params = {
     type: 'pair' | 'bot_name'
 }
 
-const dataFilter = ({ data = [] }: params) => {
-    let lengthAdjustedData = [...data].sort(dynamicSort('-totalProfit'));
-    let indexFilter = data.length > 5;
+const dataFilter = ({ data = [] }: params) => [...data].sort(dynamicSort('-totalProfit')).filter((p, index) => index < 5)
 
-    if (indexFilter) lengthAdjustedData.filter((pair, index) => index < 5)
-    return lengthAdjustedData
-}
 
 const PairBar = (params: params) => {
     const { data = [], defaultCurrency, type } = params
