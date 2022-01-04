@@ -1,7 +1,8 @@
 import React from 'react';
-import { isValid, startOfDay, addMinutes } from 'date-fns'
+import { isValid } from 'date-fns'
+import moment from "moment";
 
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import DateTimePicker from '@mui/lab/DateTimePicker';
 import { TextField, FormControl } from '@mui/material';
 
 import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
@@ -13,23 +14,20 @@ export default function StartDatePicker() {
   const startDate = useAppSelector(state => state.settings.editingProfile.statSettings.startDate);
   const dispatch = useAppDispatch()
 
+  const returnTodayUtcEnd = (date: Date) => moment.utc(date).endOf("day").valueOf();
 
   const handleDateChange = (date: Date | null) => {
-    if (date != undefined && isValid(new Date(date))) {
-      const newDate = startOfDay(addMinutes(new Date(date), new Date().getTimezoneOffset())).getTime();
-      dispatch(updateEditProfileByPath({ data: newDate, path: configPaths.statSettings.startDate }))
-    }
+    if (date != undefined && isValid(date))dispatch(updateEditProfileByPath({ data: moment(date).valueOf(), path: configPaths.statSettings.startDate }))
   };
-  
+
   return (
     <FormControl style={{ width: "100%" }} className="settings-datePicker">
-      <DesktopDatePicker
-        label="Stats Start Date"
-        views={['day']}
-        inputFormat="MM/dd/yyyy"
+      <DateTimePicker
+        label="Start Date"
         value={startDate}
         onChange={handleDateChange}
-        renderInput={(params) => <TextField {...params} helperText={params?.inputProps?.placeholder} />}
+        maxDate={new Date( returnTodayUtcEnd(new Date()) )}
+        renderInput={(params) => <TextField {...params} />}
         className="desktopPicker"
       />
 

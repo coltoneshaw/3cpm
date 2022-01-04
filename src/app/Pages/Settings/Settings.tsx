@@ -65,6 +65,8 @@ const SettingsPage = () => {
                         }}>
                             <p className="subText">The selected currency below will control what the <strong>entire application</strong> is filtered by. ex: if you select USD and also have USDT deals you will not see the USDT deals displayed. You currently cannot mix currencies except USD pegged.</p>
                             <CurrencySelector />
+
+                            <p className="subText">The selected time below will modify what displays in all historical charts. This time is in your local timezone, so if 3Commas rolls over at 8pm for you set it to your start date to the date at 8pm.</p>
                             <StartDatePicker />
                         </div>
                         <div style={{
