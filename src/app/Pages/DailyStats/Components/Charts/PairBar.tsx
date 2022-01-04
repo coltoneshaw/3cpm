@@ -44,6 +44,10 @@ const PairBar = (params: params) => {
                     dataKey={type}
                     minTickGap={-200}
                     axisLine={false}
+                    angle={45}
+                    height={75}
+                    textAnchor="start"
+                    fontSize=".75em"
                 />
 
                 <YAxis tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)} />
