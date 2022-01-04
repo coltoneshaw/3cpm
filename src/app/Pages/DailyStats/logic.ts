@@ -50,12 +50,7 @@ const blankDashboard = {
     }
 }
 
-const returnTodayUtcEnd = (date: Date) => {
-    // if (!date) date = new Date();
-    return moment.utc(date)
-        .endOf("day")
-        .valueOf();
-}
+const returnTodayUtcEnd = (date: Date) => moment.utc(date).endOf("day").valueOf();
 
 
 type filters = {
@@ -63,11 +58,12 @@ type filters = {
     currency: string[] | string
 }
 
-const oneMilliHour = 86400000
+const oneMillisecondDay = 86400000
 
 export const queryDayDashboard = async (utcEndDate: number, profileData: Type_Profile, filters: filters) => {
 
-    const utcStartDate = utcEndDate - oneMilliHour - 1
+    // removing a day, then adding a millisecond to round to the beginning of the UTC day
+    const utcStartDate = utcEndDate - oneMillisecondDay + 1
     const utcDateRange = { utcEndDate, utcStartDate }
     const [ pairDay, botDay, dailyProfit, totalProfit, activeDeals] = await Promise.all([ 
         queryDealByPairByDay(profileData, utcDateRange, filters), 
