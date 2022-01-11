@@ -1,5 +1,42 @@
 # Changelog
 
+## v2.0.0
+
+#### You will have to resync each profile for this update (The little update button in the app). The entire data storage logic has been changed and your old database is no longer compatible.&#x20;
+
+#### Known Issues:
+
+* Disable auto-sync while you're creating a profile or you will get API errors until the new profile has 3Commas keys added to it.
+
+#### New Features
+
+* Add copy today stats button
+* Abstract backend electron from the application for web portability.
+* Added write mode to update deal TP. Future possibilities coming.
+* Added an Open in 3C button to deals and bots.
+* Added API error banner to display instead of the alert.
+* Added Snapshot dashboard that allows a combination of currencies, accounts, and displays statistics centered around profit.
+* Implemented the ability to show/hide specific columns.
+* Added UST
+
+#### Enhancements
+
+* Improved the 3C API handler.
+* Reworked entire data storage logic to break profiles into set databases.
+* Improved table layout to flex, should be more stable on all screen sizes.
+
+#### Bugs
+
+* Max Active Deals column was not editable on the bot planner
+* Fixed notification settings that did not persist on reload.
+* Bot API calls only pulled 100 bots at a time, improved this to pull all bots.
+* Fix tooltips that were hidden behind elements.
+* Improved reliability of the auto refresh function.
+* Multiple profiles would rewrite old deals causing a loss of data.
+* Fixed reserved funds stored as a string instead of a number.
+
+
+
 ## v1.0.0
 
 This is the largest release of the 3C Portfolio Manager to date! It includes a huge amount of fixes, a completely rebuild application state, improved performance and so much more. Be sure to read the full changelog to for all the new changes, including the one breaking change.
@@ -29,11 +66,11 @@ This is the largest release of the 3C Portfolio Manager to date! It includes a h
 * TTP has been added to the active deals bot name hover.
 * Active deals with an error have the `Active SO` and `# SO` in bold red with a tooltip hover to see the specific error message.
 * Adjusted wording on deal notifications if you lost money.
-* Reset all data is moved under Menu &gt; Help &gt; Delete All
-* Added a clear all local storage under Menu &gt; Edit
+* Reset all data is moved under Menu > Help > Delete All
+* Added a clear all local storage under Menu > Edit
 * Adjusted metrics to be ordered the same across stats.
 * Dynamic chart height for bot / pair performance based on the number of data points.
-* Improved overall chart formatting \(highlighting, colors, bar width, etc.\)
+* Improved overall chart formatting (highlighting, colors, bar width, etc.)
 * Adjusted tooltips and headers for better clarity.
 
 #### Bugs
@@ -67,7 +104,7 @@ This is the largest release of the 3C Portfolio Manager to date! It includes a h
 
 #### Enhancements
 
-* Updates the overall style of active deals \(removed top header, normalized number width\)
+* Updates the overall style of active deals (removed top header, normalized number width)
 
 #### Bug Fixes
 
@@ -123,7 +160,7 @@ This is the largest release of the 3C Portfolio Manager to date! It includes a h
 
 #### New Features
 
-* Pair performance by Date within Settings &gt; Performance monitor. This allows you to compare profits on up to 8 pairs at a time by date.
+* Pair performance by Date within Settings > Performance monitor. This allows you to compare profits on up to 8 pairs at a time by date.
 * All UI filters / settings now persist upon refresh!
 * Unrealized profit KPI on active deals.
 * Added EUR to the currency selector
@@ -164,7 +201,7 @@ This is the largest release of the 3C Portfolio Manager to date! It includes a h
 * **9 - Improved readability of the tables in dark mode - Thanks @vdmsmnk!**
 * Adjusted the Y axis to avg deal for Bot Performance scatter.
 * Risk speedometer now caps at 350%'
-* Migrated the data tables from DataGrid \(Material-UI\) to React-table and made these a bit more responsive. This also fixed a bug with multiple scroll bars.
+* Migrated the data tables from DataGrid (Material-UI) to React-table and made these a bit more responsive. This also fixed a bug with multiple scroll bars.
 
 #### Bugs
 
@@ -256,11 +293,11 @@ This is the largest release of the 3C Portfolio Manager to date! It includes a h
   * API key test so you can verify easily if you've properly uploaded the keys
   * Reserved funds that you can set per account
   * Auto updating data when you save settings. This prevents the need to manually refresh anything. The only downside is the initial load can take some time. Added a fun loader.
-  * Added GBP to currency options \(use with caution at the moment\)
+  * Added GBP to currency options (use with caution at the moment)
   * Now resetting the config will also clear the database.
 * KPI tooltip descriptions. These are dynamic descriptions on each KPI that help understand where the numbers are coming from!
 * Added toast notifications when syncing / saving and removed alerts.
-* Added basic responsiveness to the containers. 
+* Added basic responsiveness to the containers.&#x20;
 * Donate button.
 * Bug Fixes:
   * Issue with calculations when using multiple accounts. This should be resolved
@@ -286,7 +323,7 @@ This is the largest release of the 3C Portfolio Manager to date! It includes a h
 * conditional routing rules based on if API keys are set up or not.
 * Spinning icons when the data is updating.
 * Added a rough description of API key perms needed to the settings page
-* Increased pie chart size \(praise\), added formatting to the tooltips
+* Increased pie chart size (praise), added formatting to the tooltips
 
 ## v0.0.1-RC1
 
@@ -303,4 +340,3 @@ This is the largest release of the 3C Portfolio Manager to date! It includes a h
 * moved asset files around
 * fixed a bug in the length of the name array for filters causing an error
 * added columns to the bots table
-
