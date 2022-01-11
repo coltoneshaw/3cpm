@@ -1,5 +1,5 @@
 
-const mostRecent = 'v1.0.0'
+const mostRecent = 'v2.0.0'
 
 
 const versionInformation = [
@@ -281,6 +281,34 @@ const versionInformation = [
             'Dynamic chart height for bot / pair performance based on the number of data points.',
             'Improved overall chart formatting (highlighting, colors, bar width, etc.)',
             'Adjusted tooltips and headers for better clarity.',
+        ]
+    },
+    {
+        version: 'v2.0.0',
+        link: 'https://docs.3cpm.io/changelog#v-2-0-0',
+        enhancements: [
+            'Improved the 3C API handler.',
+            'Reworked entire data storage logic to break profiles into set databases.',
+            'Improved table layout to flex, should be more stable on all screen sizes.'
+        ],
+        bugs: [
+            'Max Active Deals column was not editable on the bot planner.',
+            'Fixed notification settings that did not persist on reload.',
+            'Bot API calls only pulled 100 bots at a time, improved this to pull all bots.',
+            'Fix tooltips that were hidden behind elements.',
+            'Improved reliability of the auto refresh function.',
+            'Multiple profiles would rewrite old deals causing a loss of data.',
+            'Fixed reserved funds storing as a string instead of number.'
+        ],
+        new: [
+            'Add copy today stats button.',
+            'Abstract backend electron from the application for web portability.',
+            'Added write mode to update deal TP. Future possibilities coming.',
+            'Added a Open in 3C button to deals and bots.',
+            'Added API error banner to display instead of the alert.',
+            'Added Snapshot dashboard that allows a combination of currencies, accounts, and displays statistics centered around profit.',
+            'Implemented the ability to show/hide specific columns.',
+            'Added UST'
         ]
     },
 ]
