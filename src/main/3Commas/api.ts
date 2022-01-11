@@ -1,8 +1,8 @@
-const threeCommasAPI = require('./3commaslib');
-const log = require('electron-log');
-import { Type_API_bots, Type_Deals_API, Type_MarketOrders } from '@/types/3Commas'
-
-import { getProfileConfig, setProfileConfig, getProfileConfigAll } from '@/main/Config/config';
+import threeCommasAPI from './3commaslib';
+import log from 'electron-log';
+import { Type_MarketOrders } from '@/types/3Commas'
+import { Bots } from './types/Bots'
+import { setProfileConfig } from '@/main/Config/config';
 
 import {
   calc_dealHours,
@@ -13,42 +13,33 @@ import {
   calc_maxInactiveFunds
 } from '@/utils/formulas';
 
-import { Type_Profile } from "@/types/config"
+import { Type_Profile } from "@/types/config";
+import { threeCommas_Api_Deals, UpdateDealRequest } from './types/Deals';
 
 
-
-const returnProfileData = (profileData?: Type_Profile) => {
-  if (!profileData) profileData = getProfileConfigAll();
-  return profileData;
-}
 
 /**
  * 
- * @param {object} config This is the config stringat the time of calling this function.
+ * @param {object} config This is the config string at the time of calling this function.
  * @returns the 3Commas API object.
  * 
  * @description - required at the moment so when you make a config change on the frontend you're not using old data.
  */
-const threeCapi = (profileData?: Type_Profile, key?: string, secret?: string, mode?: string) => {
+const threeCapi = (profileData?: Type_Profile, apiKey?: string, apiSecret?: string, mode?: string): threeCommasAPI | false => {
 
-  if (!key || !secret || !mode) {
-    const profile = returnProfileData(profileData)
-    key = profile.apis.threeC.key
-    secret = profile.apis.threeC.secret
-    mode = profile.apis.threeC.mode
+  if (!apiKey || !apiSecret || !mode) {
+    if (!profileData) return false
+    apiKey = profileData.apis.threeC.key
+    apiSecret = profileData.apis.threeC.secret
+    mode = profileData.apis.threeC.mode
   }
 
-
-  if (key == null || secret == null || mode == null) {
+  if (apiKey == null || apiSecret == null || mode == null) {
     log.error('missing API keys or mode')
     return false
   }
 
-  return new threeCommasAPI({
-    apiKey: key,
-    apiSecret: secret,
-    mode: mode,
-  })
+  return new threeCommasAPI({ apiKey, apiSecret, mode, })
 }
 
 
@@ -57,23 +48,17 @@ async function bots(profileData: Type_Profile) {
   if (!api) return [];
 
   let responseArray = [];
-  let response: Type_API_bots[];
+  let response: Bots[];
   let offsetMax = 5000;
-  let perOffset = 1000;
-
-
+  let perOffset = 100;
 
   for (let offset = 0; offset < offsetMax; offset += perOffset) {
-    response = await api.getBots({ limit: 1000, sort_by: 'updated_at', order_direction: 'desc', offset });
-
+    response = await api.getBots({ limit: 100, sort_by: 'updated_at', sort_direction: 'desc', offset });
     if (response.length > 0) { responseArray.push(...response) }
     if (response.length != perOffset) break
-
   }
-  // added this to be the max amount of bots returned. Eventually this needs to be handled in a loop
-  // however, the chances of 1000+ bots is a bit low.
 
-  responseArray = responseArray.map(bot => {
+  return responseArray.map(bot => {
     let {
       id, account_id, account_name, is_enabled,
       max_safety_orders, active_safety_orders_count,
@@ -82,17 +67,15 @@ async function bots(profileData: Type_Profile) {
       base_order_volume, safety_order_volume, base_order_volume_type,
       safety_order_step_percentage, type,
       martingale_volume_coefficient, martingale_step_coefficient,
-      martingale_coefficient, safety_order_volume_type,
+      safety_order_volume_type,
       profit_currency, finished_deals_profit_usd,
       finished_deals_count, pairs, trailing_deviation,
       active_deals_usd_profit, stop_loss_percentage,
-      strategy,
+      strategy
     } = bot
 
-    let maxDealFunds = calc_DealMaxFunds_bot(max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient)
-    let max_inactive_funds = calc_maxInactiveFunds(maxDealFunds, max_active_deals, active_deals_count)
-
-
+    const maxDealFunds = calc_DealMaxFunds_bot(max_safety_orders, +base_order_volume, +safety_order_volume, +martingale_volume_coefficient)
+    const max_inactive_funds = calc_maxInactiveFunds(maxDealFunds, max_active_deals, active_deals_count)
 
     return {
       id,
@@ -113,7 +96,6 @@ async function bots(profileData: Type_Profile) {
       finished_deals_count,
       finished_deals_profit_usd,
       is_enabled,
-      martingale_coefficient,
       martingale_volume_coefficient,
       martingale_step_coefficient,
       max_active_deals,
@@ -137,9 +119,6 @@ async function bots(profileData: Type_Profile) {
       maxCoveragePercent: null
     }
   })
-
-
-  return responseArray
 }
 
 /**
@@ -153,43 +132,39 @@ async function getMarketOrders(deal_id: number, profileData: Type_Profile) {
   if (!api) return false
 
   // this is the /market_orders endpoint.
-  let apiCall = await api.getDealSafetyOrders(deal_id)
+  let apiCall = await api.getDealSafetyOrders(String(deal_id))
 
   let manualSOs = []
 
   for (let order of apiCall) {
     let { deal_order_type, status_string, quantity, quantity_remaining, total, rate, average_price } = order
-
-    // deal_order_type - values [ Active, Filled, Cancelled ]
     if (deal_order_type === "Manual Safety") {
-      manualSOs.push({
-        deal_order_type, status_string, quantity, quantity_remaining, total, rate, average_price
-      })
+      manualSOs.push({ deal_order_type, status_string, quantity, quantity_remaining, total, rate, average_price })
     }
   }
   return {
-    filled: <[] | Type_MarketOrders[]>manualSOs.filter(deal => deal.status_string === 'Filled'),
-    failed: <[] | Type_MarketOrders[]>manualSOs.filter(deal => deal.status_string === 'Cancelled'),
-    active: <[] | Type_MarketOrders[]>manualSOs.filter(deal => deal.status_string === 'Active')
+    filled: manualSOs.filter(deal => deal.status_string === 'Filled'),
+    failed: manualSOs.filter(deal => deal.status_string === 'Cancelled'),
+    active: manualSOs.filter(deal => deal.status_string === 'Active')
   }
 
 }
 
+
+// TODO this can be merged with gerMarketOrders
 /**
  * @param profileData
  * @param {number} deal_id The deal id of an active deal
  *
- * @param onlyManual
  * @description Fetching market orders for bots that are active and have active market orders
  * @api_docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/deals_api.md#deal-safety-orders-permission-bots_read-security-signed
  */
 async function getDealOrders(profileData: Type_Profile, deal_id: number) {
   const api = threeCapi(profileData)
-  if (!api) return false
+  if (!api) return []
 
   // this is the /market_orders endpoint.
-
-  const data = await api.getDealSafetyOrders(deal_id)
+  const data = await api.getDealSafetyOrders(String(deal_id))
 
   return (!data) ? [] :
     data.map((order: Type_MarketOrders) => {
@@ -198,7 +173,7 @@ async function getDealOrders(profileData: Type_Profile, deal_id: number) {
       const rate = (order.rate != 0) ? +order.rate : +order.average_price;
 
       // total is blank for active deals. Calculating the total to be used within the app.
-      if(order.status_string === 'Active' && order.rate && order.quantity) order.total = rate * order.quantity
+      if (order.status_string === 'Active' && order.rate && order.quantity) order.total = rate * order.quantity
       return {
         ...order,
         average_price: +order.average_price, // this is zero on sell orders
@@ -211,12 +186,6 @@ async function getDealOrders(profileData: Type_Profile, deal_id: number) {
 
 }
 
-async function getActiveDeals(profileData?: Type_Profile) {
-  const api = threeCapi(profileData)
-  if (!api) return []
-  const response: Type_Deals_API[] = await api.getDeals({ limit: 500, scope: 'active' })
-  return response
-}
 
 // This may need to be looked at a bit. But for now it's just an array that runs and stores the active deals.
 let activeDealIDs = <number[]>[]
@@ -234,66 +203,54 @@ async function getDealsUpdate(perSyncOffset: number, type: string, profileData: 
     lastSyncTime: profileData.syncStatus.deals.lastSyncTime
   }
 
-  let activeDeals = <[] | Type_Deals_API[]>[]
+  let activeDeals = <[] | threeCommas_Api_Deals[]>[]
 
   if (type === 'autoSync') {
-    activeDeals = await getActiveDeals()
+    activeDeals = await getActiveDeals(api, perSyncOffset)
     const newActiveDealIds = activeDeals.map(deal => deal.id)
+
+    // this logic is if the active deals match, just return since nothing has changed. 
+    // if they don't match go and fetch all the deals.
     if (activeDealIDs === newActiveDealIds) {
-      return {
-        deals: [...activeDeals],
-        lastSyncTime: profileData.syncStatus.deals.lastSyncTime
-      }
+      return { deals: activeDeals, lastSyncTime: profileData.syncStatus.deals.lastSyncTime }
     }
     activeDealIDs = newActiveDealIds;
   }
 
-  const updatedDeals = await getDealsThatAreUpdated(perSyncOffset, profileData)
+  const { deals, lastSyncTime } = await getDealsThatAreUpdated(api, perSyncOffset, { id: profileData.id, lastSyncTime: profileData.syncStatus.deals.lastSyncTime })
 
-  return {
-    deals: [...activeDeals, ...updatedDeals.deals],
-    lastSyncTime: updatedDeals.lastSyncTime
-  }
+  return { deals: [...deals, ...activeDeals], lastSyncTime: lastSyncTime }
 }
 
+async function getActiveDeals(api: threeCommasAPI, perSyncOffset = 300) {
+  const response = await api.getDeals({ limit: perSyncOffset, scope: 'active' })
+  return response
+}
 
-// TODO - refactor to not create it's own API instance here.
-async function getDealsThatAreUpdated(perSyncOffset: number, profileData: Type_Profile) {
-  const api = threeCapi(profileData)
-  if (!api) return {
-    deals: [],
-    lastSyncTime: null
-  }
-
+async function getDealsThatAreUpdated(api: threeCommasAPI, perSyncOffset: number, { id, lastSyncTime }: { id: string, lastSyncTime: number | null }) {
   let responseArray = [];
-  let response: Type_Deals_API[];
+  let response: threeCommas_Api_Deals[];
   let offsetMax = 250000;
   let perOffset = (perSyncOffset) ? perSyncOffset : 1000;
   let oldestDate;
   let newLastSyncTime;
 
+  lastSyncTime = (lastSyncTime) ? lastSyncTime : 0;
 
-  // converting the incoming dateUTC to the right format in case it's not done properly.
-  let lastSyncTime = (profileData.syncStatus.deals.lastSyncTime) ? profileData.syncStatus.deals.lastSyncTime : 0;
-
+  // api.getDeals
 
   for (let offset = 0; offset < offsetMax; offset += perOffset) {
 
-    // can look into using the from tag to filter on the last created deal.
     // this now filters out any deals that were cancelled or failed due a bug in how 3C reports that data.
     response = await api.getDeals({ limit: perOffset, order: 'updated_at', order_direction: 'desc', offset, scope: 'active, completed, finished' })
-
-    // limiting the offset to just 5000 here. This can be adjusted but made for some issues with writing to Sheets.
     if (response.length > 0) { responseArray.push(...response) }
 
     // this pulls the oldest date of the final item in the array.
     oldestDate = new Date(response[response.length - 1].updated_at).getTime()
 
 
-    if (offset == 0) {
-      // desc order, so this is the most recent last sync time.
-      newLastSyncTime = new Date(response[0].updated_at).getTime()
-    }
+    if (offset == 0) newLastSyncTime = new Date(response[0].updated_at).getTime()
+
 
     log.debug({
       'responseArrayLength': responseArray.length,
@@ -307,34 +264,25 @@ async function getDealsThatAreUpdated(perSyncOffset: number, profileData: Type_P
       lastSyncTime
     })
 
-    // breaking out of the loop if it's not a full payload OR the oldest deal is oldest deal comes before the last sync time.
-    // This is not needed if 3C gives us the ability to sync based on an updatedAt date.
     if (response.length != perOffset || oldestDate <= lastSyncTime) { break; }
 
   }
 
   log.info('Response data Length: ' + responseArray.length)
-
-  // updating the last sync time if it's actually changed.
-  if (lastSyncTime != newLastSyncTime) { setProfileConfig('syncStatus.deals.lastSyncTime', newLastSyncTime, profileData.id) }
-
+  if (lastSyncTime != newLastSyncTime) { setProfileConfig('syncStatus.deals.lastSyncTime', newLastSyncTime ?? 0, id) }
   return {
     deals: responseArray,
-    lastSyncTime: (lastSyncTime != newLastSyncTime) ? newLastSyncTime : lastSyncTime
+    lastSyncTime: (lastSyncTime != newLastSyncTime) ? newLastSyncTime ?? 0 : lastSyncTime
   }
 }
 
 
 async function deals(offset: number, type: string, profileData: Type_Profile) {
-  let {deals, lastSyncTime} = await getDealsUpdate(offset, type, profileData);
+  let { deals, lastSyncTime } = await getDealsUpdate(offset, type, profileData);
   let dealArray = [];
 
-  if(!deals || deals.length === 0){
-    return {
-      deals,
-      lastSyncTime
-    }
-  }
+  if (!deals || deals.length === 0) return { deals: [], lastSyncTime }
+
 
   for (let deal of deals) {
     const {
@@ -375,21 +323,15 @@ async function deals(offset: number, type: string, profileData: Type_Profile) {
       // updated this value to be accurate based on what's actually been completed
       completed_manual_safety_orders_count: market_order_data.filled.length,
 
-      max_deal_funds: (activeDeal) ? calc_maxDealFunds_Deals(bought_volume, base_order_volume, safety_order_volume, max_safety_orders, completed_safety_orders_count, martingale_volume_coefficient, market_order_data.active) : null,
-      profitPercent: (activeDeal) ? null : ((final_profit_percentage / 100) / +deal_hours).toFixed(3),
-      impactFactor: (activeDeal) ? (((bought_average_price - current_price) / bought_average_price) * (415 / (bought_volume ** 0.618))) / (actual_usd_profit / actual_profit) : null,
+      max_deal_funds: (activeDeal) ? calc_maxDealFunds_Deals(+bought_volume, +base_order_volume, +safety_order_volume, +max_safety_orders, completed_safety_orders_count, +martingale_volume_coefficient, market_order_data.active) : null,
+      profitPercent: (activeDeal) ? null : ((+final_profit_percentage / 100) / +deal_hours).toFixed(3),
+      impactFactor: (activeDeal) ? (((+bought_average_price - +current_price) / +bought_average_price) * (415 / (Number(bought_volume) ** 0.618))) / (+actual_usd_profit / +actual_profit) : null,
       closed_at_iso_string: (activeDeal) ? null : new Date(closed_at).getTime(),
-      final_profit: +final_profit,
-      final_profit_percentage: +final_profit_percentage
+      // final_profit: +final_profit,
+      // final_profit_percentage: +final_profit_percentage
     }
 
-
-    dealArray.push({
-      ...deal,
-      ...tempObject
-    })
-
-
+    dealArray.push({ ...deal, ...tempObject })
   }
 
   return {
@@ -401,28 +343,24 @@ async function deals(offset: number, type: string, profileData: Type_Profile) {
 
 /**
  *
- * @returns
- *
+ * @returns - Account data for enabled accounts on the profile.
+ * 
  * @docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/accounts_api.md#information-about-all-user-balances-on-specified-exchange--permission-accounts_read-security-signed
  */
 async function getAccountDetail(profileData: Type_Profile) {
   const api = threeCapi(profileData)
-  if (!api) return false
+  if (!api) return []
 
   let accountData = await api.accounts()
-
   let array = [];
-
   const accountIDs = profileData.statSettings.reservedFunds.filter(a => a.is_enabled).map(a => a.id)
 
   for (let account of accountData.filter((a: any) => accountIDs.includes(a.id))) {
-    // log.info('syncing the account ', account.id)
 
     // this loads the account balances from the exchange to 3C ensuring the numbers are updated
-    await api.accountLoadBalances(account.id);
-
+    await api.accountLoadBalances(String(account.id));
     // this is where we get the coins and position per account.
-    let data = await api.accountTableData(account.id)
+    let data = await api.accountTableData(String(account.id))
 
     const { name: account_name, exchange_name, market_code } = account
     // Load data into new array with only the columns we want and format them
@@ -449,9 +387,11 @@ async function getAccountDetail(profileData: Type_Profile) {
   return array
 }
 
+
+// TODO replace this with the get account detail function with some conditional logic
 async function getAccountSummary(profileData?: Type_Profile, key?: string, secret?: string, mode?: string) {
   let api = threeCapi(profileData, key, secret, mode)
-  if (!api) return false
+  if (!api) return []
   let accountData = await api.accounts()
 
   let array = []
@@ -464,6 +404,13 @@ async function getAccountSummary(profileData?: Type_Profile, key?: string, secre
   return array;
 }
 
+async function updateDeal(profileData: Type_Profile, deal: UpdateDealRequest) {
+  let api = threeCapi(profileData)
+  if (!api) return false
+
+  return await api.updateDeal(deal)
+}
+
 
 
 export {
@@ -472,5 +419,6 @@ export {
   deals,
   bots,
   getAccountSummary,
-  getDealOrders
+  getDealOrders,
+  updateDeal
 }

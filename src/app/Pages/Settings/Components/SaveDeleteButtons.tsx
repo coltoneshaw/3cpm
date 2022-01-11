@@ -1,25 +1,24 @@
 import React, { useState } from 'react';
-import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
-import { updateConfig, deleteProfileByIdGlobal, storeConfigInFile, updateNestedCurrentProfile } from '@/app/redux/configActions'
+import { useAppSelector } from '@/app/redux/hooks';
+import { updateConfig, deleteProfileByIdGlobal } from '@/app/redux/config/configActions'
 import { syncNewProfileData } from '@/app/redux/threeCommas/Actions'
-import { configPaths } from '@/app/redux/configSlice';
-
 
 import { Button } from '@mui/material';
 
 
 import LoaderIcon from '@/app/Components/icons/Loading/Loading'
-import type {defaultTempProfile} from '@/app/Pages/Settings/Settings'
+import { Type_Profile } from '@/types/config';
 
 interface SubmitButtons {
     setOpen: any
-    tempProfile: typeof defaultTempProfile,
 }
 
-const checkProfileIsValid = (tempProfile: typeof defaultTempProfile) => {
-    const {key, mode, secret, reservedFunds, name, startDate, defaultCurrency} = tempProfile
+const checkProfileIsValid = (tempProfile: Type_Profile) => {
+    const { defaultCurrency} = tempProfile.general
+    const { key, mode, secret} = tempProfile.apis.threeC
+    const { reservedFunds, startDate } = tempProfile.statSettings
     if (!key || !mode || !secret) return { status: false, message: 'Missing 3Commas API information' }
-    if (!name) return { status: false, message: 'Missing a valid profile name' }
+    if (!tempProfile.name) return { status: false, message: 'Missing a valid profile name' }
     if (!reservedFunds) return { status: false, message: 'Missing accounts. Make sure to click "Test API Keys" and enable an account.' }
     if (reservedFunds.filter(account => account.is_enabled).length == 0) return { status: false, message: 'Missing an enabled account under reserved funds.' }
     if (!startDate) return { status: false, message: 'Missing a start date' }
@@ -29,8 +28,9 @@ const checkProfileIsValid = (tempProfile: typeof defaultTempProfile) => {
 
 }
 
-const SaveDeleteButtons = ({ setOpen, tempProfile }: SubmitButtons) => {
+const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
     const { currentProfile, config } = useAppSelector(state => state.config);
+    const editingProfile = useAppSelector(state => state.settings.editingProfile);
 
     const { isSyncing } = useAppSelector(state => state.threeCommas);
     const [, setLoaderIcon] = useState(false)
@@ -38,32 +38,23 @@ const SaveDeleteButtons = ({ setOpen, tempProfile }: SubmitButtons) => {
     const callback = () => setOpen(true)
 
     const setProfileConfig = async () => {
-        const { status, message } = checkProfileIsValid(tempProfile)
+        const { status, message } = checkProfileIsValid(editingProfile)
         if (status) {
-            const {key, mode, secret, reservedFunds, name, startDate, defaultCurrency} = tempProfile
-            updateNestedCurrentProfile(reservedFunds, configPaths.statSettings.reservedFunds);
-            updateNestedCurrentProfile({key, mode, secret}, configPaths.apis.threeC.main);
-            updateNestedCurrentProfile(name, configPaths.name);
-            updateNestedCurrentProfile(startDate, configPaths.statSettings.startDate);
-            updateNestedCurrentProfile(defaultCurrency, configPaths.general.defaultCurrency);
-
             setLoaderIcon(true)
             try {
 
                 // saving the config here so the update function below can work properly
                 //updating the current profile's data
-                const update = await syncNewProfileData(1000);
+                const update = await syncNewProfileData(1000, editingProfile);
                 if (update) {
-                    //@ts-ignore
-                    await electron.config.set('current', currentProfile.id)
+                    await window.ThreeCPM.Repository.Config.set('current', currentProfile.id)
                     updateConfig();
                     callback();
                 }
             } catch (error) {
 
                 // if there is an error storing the current profile, the data from the database gets deleted.
-                //@ts-ignore
-                await electron.database.deleteAllData(currentProfile.id)
+                await window.ThreeCPM.Repository.Database.deleteAllData(currentProfile.id)
                 console.error(error)
                 alert('There was an error storing your profile data. Please try again. If the issue persists look at the documentation for additional guidance.')
             } finally {

@@ -1,10 +1,10 @@
-const { app, Menu, dialog, BrowserWindow } = require('electron')
+import { app, Menu, dialog, BrowserWindow } from 'electron';
 
 const isMac = process.platform === 'darwin'
-const log = require('electron-log');
+import log from 'electron-log';
 
-const { deleteAllData } = require('@/main/Database/database');
-const { setDefaultConfig, getProfileConfigAll, setProfileConfig } = require('@/main/Config/config')
+import { deleteAllData, checkOrMakeTables } from '@/main/Database/database';
+import { setDefaultConfig, getProfileConfigAll, setProfileConfig } from '@/main/Config/config';
 
 const { win } = require('@/main/main')
 
@@ -153,8 +153,7 @@ const template = [
 
           const data = await dialog.showMessageBoxSync(win, options)
           if (data === 1) {
-            deleteAllData()
-              .then(setDefaultConfig())
+            deleteAllData().then(() => setDefaultConfig())
             log.info('deleting all data as selected by the menu bar')
 
             BrowserWindow.getAllWindows().forEach(window => window.reload())
@@ -166,15 +165,16 @@ const template = [
         label: 'Reset Current Profile',
         click: async () => {
           const currentProfileConfig = await getProfileConfigAll();
-          console.log(currentProfileConfig)
 
           // 1. reset the lastSyncTime in the current profile
           await setProfileConfig('syncStatus.deals.lastSyncTime', null, currentProfileConfig.id)
 
           // 2. Delete the database for everything pertaining to that profile
           await deleteAllData(currentProfileConfig.id)
-          // 3. resync the database for the profile
-          // updateAPI('fullSync', 1000, currentProfileConfig)
+          
+          // 3. create the new table
+          await checkOrMakeTables(currentProfileConfig.id)
+
 
           const options = {
             type: 'question',

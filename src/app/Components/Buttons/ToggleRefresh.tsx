@@ -55,7 +55,9 @@ const ToggleRefreshButton = ({ style, className }: Type_ButtonProps) => {
     useEffect(() => {
         if (!autoRefresh || isSyncing) return
 
+        // TODO - resolve the TS error for timeout
         if (counter > 0) {
+            // @ts-ignore
             setActualTimeout(setTimeout(() => {
                 setCounter(prevState =>  Math.max(prevState - refreshRate, 0))
             }, refreshRate));

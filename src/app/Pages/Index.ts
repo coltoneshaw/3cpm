@@ -4,6 +4,7 @@ import SettingsPage from "@/app/Pages/Settings/Settings"
 import StatsPage from "@/app/Pages/Stats/Stats"
 import ActiveDealsPage from "@/app/Pages/ActiveDeals/ActiveDeals";
 import MainWindow from "./MainWindow";
+import DailyStats from '@/app/Pages/DailyStats/DailyStats'
 
 export {
     BotPlannerPage,
@@ -11,5 +12,6 @@ export {
     SettingsPage,
     StatsPage,
     ActiveDealsPage,
-    MainWindow
+    MainWindow,
+    DailyStats
 }

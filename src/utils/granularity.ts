@@ -83,6 +83,14 @@ const supportedCurrencies = {
         // pegged to USD
         rounding: 2
     },
+    'UST' : {
+        name: "TerraUSD",
+        symbol: "$",
+        value: "UST",
+        type: "usd",
+        // pegged to USD
+        rounding: 2
+    },
     'GBP' : {
         name: "British pound sterling ",
         symbol: "£",
@@ -178,11 +186,13 @@ const supportedCurrencies = {
 
 
 const formatCurrency = (currencyCode:(keyof typeof supportedCurrencies)[], value:number, activeDeals?:boolean) =>{
+    // this can happen when the app is loading
+    if (currencyCode.length === 0) return {metric: value, symbol: '', extendedSymbol: ''}
 
     // checking if an invalid currency exists in the array and not moving forward
-    if(currencyCode.length === 0 || currencyCode.some( (cur:string) => !Object.keys(supportedCurrencies).includes(cur) )){
-        console.error('No matching currency code found.')
-        return {metric: 'error', symbol: ''}
+    if(currencyCode.some( (cur:string) => !Object.keys(supportedCurrencies).includes(cur) )){
+        console.error('No matching currency code found.', currencyCode)
+        return {metric: value, symbol: '', extendedSymbol: ''}
     }
 
     // if(!round) return parseNumber(value, 0 )
@@ -191,7 +201,8 @@ const formatCurrency = (currencyCode:(keyof typeof supportedCurrencies)[], value
 
     return {
         metric: parseNumber(value, currencyValues.rounding, activeDeals ),
-        symbol: currencyValues.symbol
+        symbol: currencyValues.symbol,
+        extendedSymbol: currencyValues.value
     }
 }
 

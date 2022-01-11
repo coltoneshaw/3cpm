@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
-// @ts-ignore
-import { version } from '#/package.json';
 
+import { openLink } from '@/utils/helperFunctions';
+import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
+import { updateBannerData, banner } from './redux/bannerSlice'
 import './UpdateBanner.scss';
 
 import Close from '@mui/icons-material/Close';
@@ -10,50 +11,29 @@ let latestLink = 'https://github.com/coltoneshaw/3c-portfolio-manager/releases'
 
 const UpdateBanner = () => {
 
-    const [show, changeShow] = useState(false)
-    const [latestVersion, updateLatestVersion] = useState('')
+    const { show, message, type } = useAppSelector(state => state.banner)
+    const dispatch = useAppDispatch()
 
+    const returnBannerElement = (type: banner, message: string) => {
+        if (type == 'updateVersion') {
+            return (<p> There is a new update available! Click <a onClick={() => openLink(latestLink + '/tag/' + message)}>here</a> to download {message}.</p>)
+        }
 
-    const hideBanner = () => {
-        changeShow( false )
+        return <p>{message}</p>
     }
-
-    const openVersionLink = () => {
-        // @ts-ignore
-        electron.general.openLink(latestLink)
-    }
-
-    useEffect(() => {
-
-        // @ts-ignore
-        electron.pm.versions()
-            .then((versionData:any) => {
-
-                if(versionData == undefined || versionData[0] == undefined){
-                    return
-                }
-
-                // check to see if this is a beta version or a full release before displaying
-                const currentVersion = versionData.filter((release:any) => !release.prerelease)[0]
-                updateLatestVersion(currentVersion.tag_name)
-                latestLink = currentVersion.html_url
-                if("v" + version != currentVersion.tag_name) changeShow(true)
-
-            })
-    }, []) 
-
-    // 1. Query the api to see if the version matches
-
-    
 
     const renderBanner = () => {
-        if(show) {
+        if (show) {
             return (
-                <div className="update-mainDiv">
-
-                    {/* @ts-ignore */}
-                <p> There is a new update available! Click <a  onClick={() => openVersionLink()} >here</a> to download {latestVersion}.</p>
-                <Close className="closeIcon" onClick={ () => hideBanner()}/>
+                <div 
+                    className="update-mainDiv"
+                    style={{
+                        backgroundColor: (type === 'apiError') ? 'var(--color-red)' : '#93C5FD',
+                        color: (type === 'apiError') ? 'white' : undefined
+                    }}
+                >
+                    {returnBannerElement(type, message)}
+                    <Close className="closeIcon" onClick={() => dispatch(updateBannerData({ show: false, message: '', type: '' }))} />
                 </div>
             )
         }
@@ -61,9 +41,7 @@ const UpdateBanner = () => {
 
     return (
         <>
-       {
-           renderBanner()
-        }
+            {renderBanner()}
         </>
     )
 }

@@ -1,131 +1,31 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Switch } from '@mui/material';
 
-import { CustomTable } from '@/app/Components/DataTable/Index'
-import styled from 'styled-components'
-import { Type_ReservedFunds } from '@/types/config';
+import { CustomTable, Settings_EditableCell } from '@/app/Components/DataTable/Index';
+const EditableCell = Settings_EditableCell;
+// import { Type_ReservedFunds } from '@/types/config';
+import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
+import { configPaths } from "@/app/redux/globalFunctions";
+import { updateEditProfileByPath } from "@/app/Pages/Settings/Redux/settingsSlice";
 
 
-const Styles = styled.div`
+// import type { defaultTempProfile } from '@/app/Pages/Settings/Settings'
+const ReservedBankroll = () => {
 
-  table {
-    border-spacing: 0;
-    background-color: var(--color-background-light);
-    color: var(--color-text-lightbackground);
-    font-size: .875em;
-
-    th,
-    td {
-      margin: 0;
-      padding: 0.2rem .2rem .5rem .5rem;
-    }
-
-    thead {
-      background-color: var(--color-secondary-light87);
-      .darkHeader {
-        background-color: var(--color-secondary-light75);
-      }
-    }
-
-    
-    tbody{
-
-      input {
-        font-size: .875rem;
-        padding: 0;
-        margin: 0;
-        border: 0;
-        background-color: var(--color-background-light);
-      }
-
-        tr {
-            :nth-child(2n+2) {
-                background-color: var(--color-secondary-light87);
-
-                input {
-                  background-color: var(--color-secondary-light87);
-                }
-            }
-    
-            :hover {
-              input {
-                background-color: var(--color-secondary-light25) !important;
-                color: var(--color-text-darkbackground) !important;
-              }
-                background-color: var(--color-secondary-light25);
-                color: var(--color-text-darkbackground);
-
-                .MuiSwitch-thumb {
-                  background-color: darkgrey !important;
-                }
-            }
-        };
-
-        }
-    }
-
-    
-  }
-`
-
-interface Cell {
-  value: {
-    initialValue: string
-  }
-  row: {
-    original: Type_ReservedFunds,
-  }
-  column: {
-    id: string
-  }
-  updateReservedFunds: any
-}
-
-// Create an editable cell renderer
-const EditableCell = ({
-  value: initialValue,
-  row: { original },
-  column: { id: column },
-  updateReservedFunds, // This is a custom function that we supplied to our table instance
-}: Cell) => {
-  // We need to keep and update the state of the cell normally
-  const [value, setValue] = useState(String(initialValue))
-  // const [size, setSize] = useState(() => String(initialValue).length * 1.5)
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value)
-
-
+  const reservedFunds = useAppSelector(state => state.settings.editingProfile.statSettings.reservedFunds);
+  const dispatch = useAppDispatch()
+  const handleChange = (data: any) => {
+    dispatch(updateEditProfileByPath({ data, path: configPaths.statSettings.reservedFunds }))
   }
 
-  // We'll only update the external data when the input is blurred
-  const onBlur = () => {
-    updateReservedFunds(original.id, column, value, original)
-  }
+  const [localReservedFunds, updateLocalReservedFunds ] = useState(() => reservedFunds)
 
   useEffect(() => {
-    setValue(String(initialValue))
-  }, [initialValue])
-
-  return <input value={value} onChange={onChange} onBlur={onBlur} style={{ textAlign: 'center', color: 'var(--color-text-lightbackground)' }} />
-}
-
-import type { defaultTempProfile } from '@/app/Pages/Settings/Settings'
-const ReservedBankroll = ({ tempProfile, updateTempProfile }: { tempProfile: typeof defaultTempProfile, updateTempProfile: CallableFunction }) => {
-
-  const [reservedFunds, updateReservedFunds] = useState<Type_ReservedFunds[]>(() => tempProfile.reservedFunds)
+    handleChange(localReservedFunds);
+  }, [localReservedFunds]);
 
   useEffect(() => {
-    if(tempProfile.reservedFunds != reservedFunds) updateReservedFunds(tempProfile.reservedFunds)
-  }, [tempProfile.reservedFunds])
-
-  useEffect(() => {
-    updateTempProfile((prevState: typeof defaultTempProfile) => {
-      let newState = { ...prevState }
-      newState.reservedFunds = reservedFunds
-      return newState
-    })
-
+    updateLocalReservedFunds(reservedFunds);
   }, [reservedFunds])
 
 
@@ -158,38 +58,30 @@ const ReservedBankroll = ({ tempProfile, updateTempProfile }: { tempProfile: typ
 
 
   const handleOnOff = (e: any) => {
-
-    updateReservedFunds(prevState => (
-      prevState.map(row => {
-        let newRow = { ...row }
-        if (e.target.name == newRow.id) {
-          newRow.is_enabled = !newRow.is_enabled
-        }
-        return newRow
-      })
-    ))
+    updateLocalReservedFunds( prevState => prevState.map(row => {
+      let newRow = { ...row }
+      if (e.target.name == newRow.id) newRow.is_enabled = !newRow.is_enabled
+      return newRow
+    })
+    );
   }
 
   const handleEditCellChangeCommitted = (id: number, column: string, value: string) => {
-
-    updateReservedFunds(prevState => (
-      prevState.map(row => {
-        const newRow = { ...row }
-        if (id == newRow.id) {
-          //@ts-ignore
-          newRow[column] = value
-
-        }
-        return newRow
-      })
-    ))
+    updateLocalReservedFunds( prevState => prevState.map(row => {
+      const newRow = { ...row }
+      if (id == newRow.id) {
+        //@ts-ignore
+        newRow[column] = value
+      }
+      return newRow
+    })
+    )
   }
 
   return (
     <div style={{ display: 'flex', overflow: "none", width: "100%", alignSelf: "center" }}>
       <div className="settings-dataGrid"   >
-
-        <Styles>
+        <div className="dataTableBase">
           <CustomTable
             columns={columns}
             data={reservedFunds}
@@ -197,14 +89,16 @@ const ReservedBankroll = ({ tempProfile, updateTempProfile }: { tempProfile: typ
             getHeaderProps={() => ({
               style: {
                 height: '44px',
-              },
+                backgroundColor: 'var(--color-secondary-light87)',
+                zIndex: '1000',
+              }
             })}
             getColumnProps={() => ({})}
             getRowProps={() => ({})}
             //@ts-ignore
             getCellProps={cellInfo => ({})}
           />
-        </Styles>
+        </div>
       </div>
     </div>
   );

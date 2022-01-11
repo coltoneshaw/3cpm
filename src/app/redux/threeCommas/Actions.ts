@@ -8,8 +8,8 @@ import {
 } from '@/app/redux/threeCommas/threeCommasSlice'
 import { initialState } from '@/app/redux/threeCommas/initialState'
 
-import { updateLastSyncTime } from '@/app/redux/configSlice'
-
+import { updateLastSyncTime } from '@/app/redux/config/configSlice'
+import { updateBannerData } from '@/app/Features/UpdateBanner/redux/bannerSlice'
 import type { Type_Profile, Type_ReservedFunds } from '@/types/config';
 import type { Type_Query_bots, Type_Query_PerfArray } from '@/types/3Commas'
 import dotProp from 'dot-prop';
@@ -48,14 +48,13 @@ const dispatch_setBalanceData = (data: typeof initialState.balanceData) => store
 
 const fetchAndStoreBotData = async (currentProfile: Type_Profile, update: boolean) => {
     try {
-        // @ts-ignore
         await botQuery(currentProfile)
-            .then((result: Type_Query_bots[]) => {
+            .then(result => {
                 // if (!result) return
-                if (update) dispatch_setBotData(result)
+                if (update && result.length > 0) dispatch_setBotData(result)
                 const inactiveBotFunds = result.filter(b => b.is_enabled === 1).map(r => r.enabled_inactive_funds)
                 // pull enabled_inactive_funds from the bots and add it to metrics.
-                dispatch_setMetricsData({ inactiveBotFunds: (inactiveBotFunds.length > 0) ? inactiveBotFunds.reduce((sum, funds) => sum + funds) : 0})
+                dispatch_setMetricsData({ inactiveBotFunds: (inactiveBotFunds.length > 0) ? inactiveBotFunds.reduce((sum, funds) => sum + funds) : 0 })
 
             })
     } catch (error) {
@@ -113,7 +112,7 @@ const fetchAndStorePerformanceData = async (profileData: Type_Profile) => {
             console.log('getting SO performance metrics')
             dispatch_setPerformanceData({ safety_order: data })
         }))
-    
+
     await Promise.all([pair_bot(), bot(), pair(), so()])
 }
 
@@ -159,7 +158,7 @@ const calculateMetrics = () => {
     const LOCAL_maxRisk = undefToZero(maxRisk + inactiveBotFunds)
 
     // Position = available + on orders.
-    const reservedFundsTotal = (reservedFundsArray.length) ? reservedFundsArray.filter(account => account.is_enabled).map(account => account.reserved_funds).reduce((sum: number, item: number) => sum + item) : 0
+    const reservedFundsTotal = (reservedFundsArray.length) ? reservedFundsArray.filter(account => account.is_enabled).map(account => Number(account.reserved_funds)).reduce((sum, item) => sum + item) : 0
     const availableBankroll = LOCAL_position - LOCAL_on_orders - reservedFundsTotal
     const totalInDeals = LOCAL_on_orders + LOCAL_totalBoughtVolume
     const totalBankroll = LOCAL_position + LOCAL_totalBoughtVolume - reservedFundsTotal
@@ -223,36 +222,28 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
     const syncOptions = store.getState().threeCommas.syncOptions
     store.dispatch(setIsSyncing(true))
 
-    let time = (syncOptions.time) ? syncOptions.time : 0;
-    let syncCount = (syncOptions.syncCount) ? syncOptions.syncCount : 0;
-    if(type === 'fullSync') syncCount = 0;
-    const options = {
-        syncCount,
-        summary: (syncOptions.summary) ? syncOptions.summary : false,
-        notifications: (syncOptions.notifications) ? syncOptions.notifications : false,
-        time,
-        offset
+    const originalTime = syncOptions.time || new Date().getTime()
+    let time = originalTime
+    let syncCount = syncOptions.syncCount || 0
+    if (type === 'fullSync') {
+        syncCount = 0
+        time = 0
     }
+    const options = { syncCount, time, offset }
 
     try {
-        await updateThreeCData(type, options, profileData)
-            .then(async (lastSyncTime) => {
-                await updateAllDataQuery(profileData, type)
-
-                return lastSyncTime;
-            })
-            .then((lastSyncTime) => {
-                store.dispatch(setSyncData({
-                    syncCount:(type === 'autoSync') ? options.syncCount + 1 : 0,
-                    time: (type === 'autoSync') ? options.time + 15000 : 0
-                }))
-                store.dispatch(updateLastSyncTime({data: lastSyncTime }))
-
-            })
-
+        const lastSyncTime = await updateThreeCData(type, options, profileData)
+        await updateAllDataQuery(profileData, type)
+        store.dispatch(setSyncData({
+            syncCount: (type === 'autoSync') ? options.syncCount + 1 : 0,
+            // don't override syncOptions.time in case of a fullSync
+            // because there might be a concurrent autoSync running
+            time: (type === 'autoSync') ? originalTime + 15000 : originalTime
+        }))
+        store.dispatch(updateLastSyncTime({ data: lastSyncTime }))
     } catch (error) {
         console.error(error)
-        alert('Error updating your data. Check the console for more information.')
+        store.dispatch( updateBannerData({show: true, message: 'Error updating your data. Check the console for more information.', type: 'apiError'}))
     } finally {
         if (callback) callback()
         store.dispatch(setIsSyncing(false))
@@ -260,23 +251,19 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
 }
 
 
-const syncNewProfileData = async (offset: number = 1000) => {
-    // const updatedProfile = {...profileData, syncStatus: { deals: {lastSyncTime: null}}}
-    const profileData = store.getState().config.currentProfile
+const syncNewProfileData = async (offset: number = 1000, editingProfile: Type_Profile) => {
 
-    if (!preSyncCheck(profileData)) return
+    if (!preSyncCheck(editingProfile)) return
 
     store.dispatch(setIsSyncing(true))
 
     const options = { syncCount: 0, summary: false, notifications: false, time: 0, offset }
     let success;
-
-
     try {
-        //@ts-ignore
-        await electron.config.set(null, store.getState().config.config)
-        await updateThreeCData('newProfile', options, profileData)
-            .then(async () => updateAllDataQuery(profileData, 'fullSync'))
+        await window.ThreeCPM.Repository.Config.profile('create', editingProfile, editingProfile.id)
+        await updateThreeCData('newProfile', options, editingProfile)
+        updateAllDataQuery(editingProfile, 'fullSync')
+
         success = true;
     } catch (error) {
         console.error(error)
@@ -292,17 +279,18 @@ const syncNewProfileData = async (offset: number = 1000) => {
 
 
 
-const updateAllDataQuery = (profileData: Type_Profile, type: string) => {
+const updateAllDataQuery = async (profileData: Type_Profile, type: string) => {
 
     // if the type if fullSync this will store the bot data. If we store the bot data in the redux state it will overwrite any user changes. 
-    Promise.all([
+    await Promise.all([
         fetchAndStoreBotData(profileData, type === 'fullSync'),
         fetchAndStoreProfitData(profileData),
         fetchAndStorePerformanceData(profileData),
         fetchAndStoreActiveDeals(profileData),
         fetchAndStoreAccountData(profileData)
     ])
-        .then(() => calculateMetrics())
+
+    calculateMetrics();
 
 
 }
@@ -314,7 +302,7 @@ const refreshFunction = (method: string, offset?: number) => {
     // updating the refresh function here to 15000 instead of 50. The update bar doesn't work anymore
     const refreshRate = 15000
 
-    if(!store.getState().threeCommas.autoRefresh) return
+    if (!store.getState().threeCommas.autoRefresh) return
     switch (method) {
         case 'stop':
             store.dispatch(setAutoRefresh(false))
@@ -327,7 +315,7 @@ const refreshFunction = (method: string, offset?: number) => {
                     return
                 }
 
-                if(!store.getState().threeCommas.autoRefresh) return
+                if (!store.getState().threeCommas.autoRefresh) return
                 updateAllData(offset, profileData, 'autoSync', undefined)
                     .then(() => {
                         refreshFunction('run', offset)

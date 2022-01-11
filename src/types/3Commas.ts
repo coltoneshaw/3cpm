@@ -1,4 +1,4 @@
-export interface Type_Query_PerfArray {
+export type Type_Query_PerfArray = {
     performance_id: string
     bot_name: string
     pair: string[]
@@ -11,15 +11,7 @@ export interface Type_Query_PerfArray {
     percentTotalProfit: number
 }
 
-export interface Type_Pair_Performance_Metrics {
-    pair:string
-    avg_completed_so: number
-    total_profit: number
-    number_of_deals: number
-    avg_profit: number
-    bought_volume: number
-    avg_deal_hours: number
-}
+export type Type_Pair_Performance_Metrics = fetchPairPerformanceMetrics;
 
 export type Type_SoDistributionArray = {
     completed_safety_orders_count: number // the actual SO level. 0 = BO.
@@ -30,23 +22,13 @@ export type Type_SoDistributionArray = {
 }
 
 export type Type_Performance_Metrics = {
-    pair_bot?: Type_Query_PerfArray[]
-    bot?: Type_Bot_Performance_Metrics[]
-    pair?: Type_Pair_Performance_Metrics[]
-    safety_order?: Type_SoDistributionArray[]
+    pair_bot?: Type_Query_PerfArray[] | []
+    bot?: Type_Bot_Performance_Metrics[] | []
+    pair?: Type_Pair_Performance_Metrics[] | []
+    safety_order?: Type_SoDistributionArray[] | []
 }
 
-export interface Type_Bot_Performance_Metrics {
-    bot_name: string
-    bot_id: number
-    avg_completed_so: number
-    total_profit: number
-    number_of_deals: number
-    avg_profit: number
-    bought_volume: number
-    avg_deal_hours: number
-    type: string
-}
+export type Type_Bot_Performance_Metrics = fetchBotPerformanceMetrics
 
 export type Type_Query_DealData = {
     final_profit: number,
@@ -115,10 +97,10 @@ export type Type_Deals = {
     martingale_step_coefficient: number
     stop_loss_percentage: number
     error_message: string
-    profit_currency: string
-    stop_loss_type: string
-    safety_order_volume_type: string
-    base_order_volume_type: string
+    profit_currency: 'quote_currency' | 'base_currency'
+    stop_loss_type: 'stop_loss' | 'stop_loss_and_disable_bot'
+    safety_order_volume_type: 'quote_currency' | 'percent'
+    base_order_volume_type: 'quote_currency' | 'percent'
     from_currency: "AUD" | "BIDR" | "BNB" | "BRL" | "BTC" | "BUSD" | "BVND" | "DAI" | "ETH" | "EUR" | "GBP" | "IDRT" | "NGN" | "RUB" | "TRX" | "TRY" | "TUSD" | "UAH" | "USD" | "USDC" | "USDT" | "USDP" | "VAI" | "XRP"
     to_currency: string
     current_price: number
@@ -137,7 +119,7 @@ export type Type_Deals = {
     trailing_deviation: number
     trailing_max_price: number
     tsl_max_price: number
-    strategy: string
+    strategy: 'long' | 'short'
     reserved_quote_funds: string
     reserved_base_funds: string
     realized_actual_profit_usd: number
@@ -185,7 +167,9 @@ export type Type_bots ={
     active_deals_usd_profit?: number
     active_safety_orders_count?: number
     base_order_volume: number
-    base_order_volume_type?: string
+    safety_order_volume: number
+    base_order_volume_type: 'quote_currency' | 'percent'
+    safety_order_volume_type: 'quote_currency' | 'percent'
     created_at?: string
     updated_at?: string
     enabled_active_funds?: number
@@ -206,8 +190,6 @@ export type Type_bots ={
     max_safety_orders: number
     profit_currency: string
     safety_order_step_percentage: number
-    safety_order_volume: number
-    safety_order_volume_type: string
     stop_loss_percentage: number
     strategy: string
     take_profit: number
@@ -274,8 +256,6 @@ export type Type_MarketOrders = {
 export interface Type_UpdateFunction{
     offset: number
     time:number
-    summary: boolean
-    notifications: boolean
     syncCount: number
 }
 
@@ -334,11 +314,11 @@ export interface Type_UpdateFunction{
     martingale_step_coefficient: number
     stop_loss_percentage: number
     error_message: string
-    profit_currency: string
-    stop_loss_type: string
-    safety_order_volume_type: string
-    base_order_volume_type: string
-    from_currency: string
+    profit_currency: 'quote_currency' | 'base_currency'
+    stop_loss_type: 'stop_loss' | 'stop_loss_and_disable_bot'
+    safety_order_volume_type: 'quote_currency' | 'percent'
+    base_order_volume_type: 'quote_currency' | 'percent'
+    from_currency: "AUD" | "BIDR" | "BNB" | "BRL" | "BTC" | "BUSD" | "BVND" | "DAI" | "ETH" | "EUR" | "GBP" | "IDRT" | "NGN" | "RUB" | "TRX" | "TRY" | "TUSD" | "UAH" | "USD" | "USDC" | "USDT" | "USDP" | "VAI" | "XRP"
     to_currency: string
     current_price: number
     take_profit_price: number

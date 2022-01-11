@@ -1,17 +1,16 @@
-import { setConfig, setCurrentProfile, updateCurrentProfileByPath, deleteProfileById } from '@/app/redux/configSlice'
+import { setConfig, setCurrentProfile, updateCurrentProfileByPath, deleteProfileById, updateNotificationsSettings } from '@/app/redux/config/configSlice'
 import {setSyncData} from '@/app/redux/threeCommas/threeCommasSlice'
 
-import { TconfigValues, Type_Profile, Type_ReservedFunds } from '@/types/config';
+import { TconfigValues, Type_NotificationsSettings, Type_Profile, Type_ReservedFunds } from '@/types/config';
 
 import { removeDuplicatesInArray } from '@/utils/helperFunctions';
 
-import store from './store'
+import store from '../store'
 
 const updateConfig = async () => {
 
-    //@ts-ignore
-    await electron.config.get()
-        .then((config: any) => {
+    await window.ThreeCPM.Repository.Config.get('all')
+        .then(config => {
             store.dispatch(setConfig(config));
             updateCurrentProfile(config.profiles[config.current])
         })
@@ -19,8 +18,7 @@ const updateConfig = async () => {
 
 const storeConfigInFile = async () => {
     try {
-        //@ts-ignore
-        await electron.config.set(null, store.getState().config.config)
+        await window.ThreeCPM.Repository.Config.bulk(store.getState().config.config)
         updateConfig()
         return true
     } catch (e) {
@@ -33,6 +31,7 @@ const updateCurrentProfile = (profileData: Type_Profile) => {
     store.dispatch(setCurrentProfile(profileData));
     // setting this to zero here to prevent a spam of notifications with auto sync enabled. 
     store.dispatch(setSyncData({syncCount: 0, time: 0}))
+
 }
 
 /**
@@ -46,10 +45,9 @@ const updateNestedCurrentProfile = (data: string | {} | [], path: string) => {
 
 const updateReservedFundsArray = async (key: string, secret: string, mode: string,  reservedFunds: Type_ReservedFunds[]) => {
 
-    // @ts-ignore
-    const accountSummary = await electron.api.getAccountData(undefined, key, secret, mode)
+    const accountSummary = await window.ThreeCPM.Repository.API.getAccountData(undefined, key, secret, mode)
 
-    if (accountSummary !== undefined || accountSummary.length > 0) {
+    if (accountSummary != undefined) {
 
         const prevState = <any[]>[];
 
@@ -94,10 +92,6 @@ const updateReservedFundsArray = async (key: string, secret: string, mode: strin
                     is_enabled
                 }
             })
-
-        // updateReservedFunds(reservedFundsArray)
-
-
     }
 
 }
@@ -116,8 +110,7 @@ const deleteProfileByIdGlobal = (config: TconfigValues, profileId:string, setOpe
         store.dispatch(deleteProfileById({ profileId }))
         storeConfigInFile();
 
-        //@ts-ignore
-        electron.database.deleteAllData(profileId)
+        window.ThreeCPM.Repository.Database.deleteAllData(profileId)
 
         // delete the profile command
         // route the user back to a their default profile OR route the user to a new blank profile..?
@@ -127,12 +120,16 @@ const deleteProfileByIdGlobal = (config: TconfigValues, profileId:string, setOpe
     }
 }
 
-
+const updateNotificationsSettingsGlobal = async (settings: Partial<Type_NotificationsSettings>) => {
+    store.dispatch(updateNotificationsSettings(settings))
+    await storeConfigInFile()
+}
 
 export {
     updateConfig,
     updateReservedFundsArray,
     updateNestedCurrentProfile,
     storeConfigInFile,
-    deleteProfileByIdGlobal
+    deleteProfileByIdGlobal,
+    updateNotificationsSettingsGlobal,
 }

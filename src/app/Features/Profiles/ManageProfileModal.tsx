@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { useAppSelector } from '@/app/redux/hooks';
-import { deleteProfileByIdGlobal } from '@/app/redux/configActions'
+import { deleteProfileByIdGlobal } from '@/app/redux/config/configActions'
 
 import {
     Dialog,

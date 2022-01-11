@@ -1,8 +1,9 @@
-
-import SyncToggles from "./SyncToggles";
+import DealsTable from "./DealsTable";
+import NotificationsSettings from "./NotificationsSettings";
 import SubRowAsync from "./Subrow";
 
 export {
-    SyncToggles,
-    SubRowAsync
+    NotificationsSettings,
+    SubRowAsync,
+    DealsTable
 }

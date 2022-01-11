@@ -1,38 +1,38 @@
-import React, { useEffect, useState } from 'react';
-
-import { updateReservedFundsArray, updateNestedCurrentProfile } from '@/app/redux/configActions';
+import React from 'react';
+import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
+import { updateReservedFundsArray } from '@/app/redux/config/configActions';
+import { configPaths } from "@/app/redux/globalFunctions";
+import { updateEditProfileByPath } from "@/app/Pages/Settings/Redux/settingsSlice";
 
 import { TextField, Button, InputLabel, FormControl, MenuItem, Select } from '@mui/material';
 
-import { Type_ReservedFunds } from '@/types/config'
-import type {defaultTempProfile} from '@/app/Pages/Settings/Settings'
+import { Type_ReservedFunds } from '@/types/config';
 
-const ApiSettings = ({tempProfile, updateTempProfile}: {tempProfile: typeof defaultTempProfile, updateTempProfile: CallableFunction}) => {
+const validKeys = ["key", 'secret', 'mode'];
+
+const ApiSettings = () => {
+
+    const editingProfile = useAppSelector(state => state.settings.editingProfile);
+    const threeC = editingProfile.apis.threeC
+    const dispatch = useAppDispatch();
 
 
     const handleChange = (e: any) => {
-        const validKeys = ["key", 'secret', 'mode']
-
         if (!e.target.name || !validKeys.includes(e.target.name)) {
             console.debug('Failed to change API setting due to invalid config path.')
             console.debug(e)
             return
         }
-        updateTempProfile((prevState: typeof defaultTempProfile) => {
-            let newState = { ...prevState }
 
-            //@ts-ignore
-            newState[e.target.name as keyof typeof prevState] = e.target.value
-            return newState
-        })
+        const updateData = {...threeC}
+
+        //@ts-ignore
+        updateData[e.target.name] = e.target.value
+        dispatch(updateEditProfileByPath({ data: updateData, path: configPaths.apis.threeC.main}))
     }
 
     const handleUpdatingReservedFunds = (reservedFunds: Type_ReservedFunds[]) => {
-        updateTempProfile((prevState: typeof defaultTempProfile) => {
-            let newState = { ...prevState }
-            newState.reservedFunds = reservedFunds
-            return newState
-        })
+        dispatch(updateEditProfileByPath({ data: reservedFunds, path: configPaths.statSettings.reservedFunds}));
     }
 
 
@@ -45,7 +45,7 @@ const ApiSettings = ({tempProfile, updateTempProfile}: {tempProfile: typeof defa
                     id="key"
                     label="Key"
                     name="key"
-                    value={tempProfile.key}
+                    value={threeC.key}
                     onChange={handleChange}
                     className="settings-left"
                     style={{
@@ -57,7 +57,7 @@ const ApiSettings = ({tempProfile, updateTempProfile}: {tempProfile: typeof defa
                     id="secret"
                     label="Secret"
                     name="secret"
-                    value={tempProfile.secret}
+                    value={threeC.secret}
                     onChange={handleChange}
                     type="password"
                     style={{
@@ -75,7 +75,7 @@ const ApiSettings = ({tempProfile, updateTempProfile}: {tempProfile: typeof defa
                         id="mode"
                         name="mode"
                         label="Mode"
-                        value={tempProfile.mode}
+                        value={threeC.mode}
                         onChange={handleChange}
                         style={{
                             marginRight: '15px'
@@ -92,12 +92,11 @@ const ApiSettings = ({tempProfile, updateTempProfile}: {tempProfile: typeof defa
                 disableElevation
                 onClick={
                     async () => {
-                        // @ts-ignore
-                        let key = tempProfile.key
-                        let secret = tempProfile.secret
-                        let mode = tempProfile.mode
+                        let key = threeC.key
+                        let secret = threeC.secret
+                        let mode = threeC.mode
                         try {
-                            const reservedFunds = await updateReservedFundsArray(key, secret, mode, tempProfile.reservedFunds)
+                            const reservedFunds = await updateReservedFundsArray(key, secret, mode, editingProfile.statSettings.reservedFunds)
                             handleUpdatingReservedFunds(reservedFunds ?? [])
                         } catch (error) {
                             alert('there was an error testing the API keys. Check the console for more information.')

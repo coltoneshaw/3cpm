@@ -2,6 +2,8 @@
     "git.ignoreLimitWarning": true,
     "liveServer.settings.port": 5501,
     "cSpell.words": [
-        "preload"
-    ]
+        "preload",
+        "uuidv"
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

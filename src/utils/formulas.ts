@@ -177,12 +177,17 @@ const calc_dropMetrics = (bankRoll:number, botData:Type_Query_bots[]) => {
      });
 }
 
-const calc_SafetyArray = (safety_order_volume:number , max_safety_orders:number , completed_safety_orders:number , martingale_volume_coefficient:number, martingale_step_coefficient:number, safety_order_step_percentage:number  ) => {
+type safetyArray = {
+    so_count: number
+    deviation: number
+    volume: number
+}
+const calc_SafetyArray = (safety_order_volume:number , max_safety_orders:number, martingale_volume_coefficient:number, martingale_step_coefficient:number, safety_order_step_percentage:number) => {
     // setting the initial drawdown value.
     let drawdown = +safety_order_step_percentage
     let prevDeviation = +safety_order_step_percentage
 
-    const safetyArray = <any[]>[]
+    const safetyArray = <safetyArray[]>[]
 
     safetyArray.push({
         so_count: 1,
@@ -193,6 +198,7 @@ const calc_SafetyArray = (safety_order_volume:number , max_safety_orders:number 
     for (let so_count = 2; so_count <= +max_safety_orders; so_count++) {
         let so_deviation = (prevDeviation * martingale_step_coefficient);
         const volume = safety_order_volume * martingale_volume_coefficient ** (so_count - 1)
+
 
         drawdown += so_deviation
         prevDeviation = so_deviation
@@ -205,6 +211,7 @@ const calc_SafetyArray = (safety_order_volume:number , max_safety_orders:number 
 
         safetyArray.push(safetyObject)
     }
+
     return safetyArray
 }
 
