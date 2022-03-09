@@ -11,7 +11,7 @@ const store = configureStore({
     settings: settingsSlice,
     banner: bannerSlice
   },
-  devTools​: true
+  devTools: true
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

@@ -96,8 +96,8 @@ type data = threeCommas_Api_Deals & {
 
     // if summary enabled and more than one deal exists.
     if (summary && closedDeals.length > 1) {
-        // @ts-ignore
-        const totalProfit = closedDeals.map(deal => deal.final_profit).reduce((sum, profit) => sum + profit);
+
+        const totalProfit = closedDeals.map(deal => Number(deal.final_profit)).reduce((sum, profit) => sum + profit);
         const pairs = closedDeals.map(deal => deal.pair)
         const moneyBags = ("💰".repeat(closedDeals.length))
         const ifRich = (+totalProfit > 0) ? "rich" : "poor"
