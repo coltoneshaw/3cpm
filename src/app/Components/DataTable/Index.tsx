@@ -1,11 +1,11 @@
-import formatDeals from "./FormatDeals";
-import CustomTable from "./Table";
-import {Bots_EditableCell, Settings_EditableCell, OpenIn3Commas} from './Components'
+import formatDeals from './FormatDeals';
+import CustomTable from './Table';
+import { BotsEditableCell, SettingsEditableCell, OpenIn3Commas } from './Components';
 
 export {
-    formatDeals,
-    CustomTable,
-    Bots_EditableCell,
-    Settings_EditableCell,
-    OpenIn3Commas
-}
+  formatDeals,
+  CustomTable,
+  BotsEditableCell,
+  SettingsEditableCell,
+  OpenIn3Commas,
+};

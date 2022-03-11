@@ -1,9 +1,9 @@
-import { query, chooseDatabase } from "./database";
 import log from 'electron-log';
-
+// eslint-disable-next-line import/no-cycle
+import { query, chooseDatabase } from './database';
 
 function initializeBotsTable(db: any) {
-    const stmt = db.prepare(`
+  const stmt = db.prepare(`
         CREATE TABLE bots (
             id NUMBER PRIMARY KEY UNIQUE, 
             origin TEXT,
@@ -49,16 +49,15 @@ function initializeBotsTable(db: any) {
             hide BOOLEAN
             )`);
 
-    stmt.run();
-
+  stmt.run();
 }
 
 /**
- * TODO 
+ * TODO
  * - Swap the  profitPercent table to be hourly_per_unit_profit_percent since this is divided by the hours.
  */
 function initializeDealTable(db: any) {
-    const stmt = db.prepare(`
+  const stmt = db.prepare(`
         CREATE TABLE deals (
             id NUMBER PRIMARY KEY UNIQUE, 
             type TEXT, 
@@ -141,12 +140,11 @@ function initializeDealTable(db: any) {
             impactFactor NUMBER
             )`);
 
-    stmt.run();
-
+  stmt.run();
 }
 
 function initializeAccountTable(db: any) {
-    const stmt = db.prepare(`
+  const stmt = db.prepare(`
         CREATE TABLE accountData (
             id NUMBER PRIMARY KEY UNIQUE,
             account_id NUMBER,
@@ -161,39 +159,42 @@ function initializeAccountTable(db: any) {
             market_code TEXT
             )`);
 
-    stmt.run();
-
+  stmt.run();
 }
 
 function initialDatabaseSetup(profileId: string) {
-    const db = chooseDatabase(profileId);
-    try {
-        initializeDealTable(db);
-        initializeAccountTable(db);
-        initializeBotsTable(db);
-        log.debug('Completed initial database setup.')
-    } catch (err) {
-        log.error('Unable to run the initial database setup', err)
-    }
-
+  const db = chooseDatabase(profileId);
+  try {
+    initializeDealTable(db);
+    initializeAccountTable(db);
+    initializeBotsTable(db);
+    log.debug('Completed initial database setup.');
+  } catch (err) {
+    log.error('Unable to run the initial database setup', err);
+  }
 }
 
 async function checkOrMakeTables(profileId: string) {
+  // checking if the tables exist.
+  const existingTables = await query(
+    profileId,
+    "SELECT name FROM sqlite_master WHERE type='table';",
+  );
 
-    // checking if the tables exist.
-    const existingTables = await query(profileId, "SELECT name FROM sqlite_master WHERE type='table';")
+  if (existingTables.length === 0) {
+    await initialDatabaseSetup(profileId);
+    return;
+  }
 
-    if (existingTables.length == 0) {
-        await initialDatabaseSetup(profileId)
-        return
-    }
-
-    const tableNames = existingTables.map(table => table.name)
-    if (!tableNames.includes('deals')) await initializeDealTable(profileId)
-    if (!tableNames.includes('accountData')) await initializeAccountTable(profileId)
-    if (!tableNames.includes('bots')) await initializeBotsTable(profileId)
+  const tableNames = existingTables.map((table) => table.name);
+  if (!tableNames.includes('deals')) await initializeDealTable(profileId);
+  if (!tableNames.includes('accountData')) {
+    await initializeAccountTable(profileId);
+  }
+  if (!tableNames.includes('bots')) await initializeBotsTable(profileId);
 }
 
 export {
-    checkOrMakeTables
-}
+  // eslint-disable-next-line import/prefer-default-export
+  checkOrMakeTables,
+};

@@ -1,91 +1,86 @@
-import type { supportedCurrencies } from '@/utils/granularity'
+import type { supportedCurrencies } from '@/utils/granularity';
 
-
-
-export type defaultCurrency = (keyof typeof supportedCurrencies)[] | []
+export type defaultCurrency = (keyof typeof supportedCurrencies)[] | [];
 
 export interface Type_Profile {
-    id: string
-    name: string,
-    apis: {
-        threeC: {
-            key: string,
-            secret: string,
-            mode: string,
-        }
-    },
-    general: {
-        defaultCurrency: defaultCurrency
-        globalLimit: number
-        updated: boolean
-    },
-    syncStatus: {
-        deals: {
-            lastSyncTime: number 
-        }
-    },
-    statSettings: {
-        startDate: number
-        account_id: number[],
-        reservedFunds: Type_ReservedFunds[]
-    },
-    writeEnabled: boolean,
+  id: string
+  name: string,
+  apis: {
+    threeC: {
+      key: string,
+      secret: string,
+      mode: string,
+    }
+  },
+  general: {
+    defaultCurrency: defaultCurrency
+    globalLimit: number
+    updated: boolean
+  },
+  syncStatus: {
+    deals: {
+      lastSyncTime: number
+    }
+  },
+  statSettings: {
+    startDate: number
+    account_id: number[],
+    reservedFunds: Type_ReservedFunds[]
+  },
+  writeEnabled: boolean,
 }
 
 export type Type_NotificationsSettings = {
-    enabled: boolean,
-    summary: boolean,
-}
+  enabled: boolean,
+  summary: boolean,
+};
 
 export type Type_GlobalSettings = {
-    notifications: Type_NotificationsSettings
-}
-
-
-
+  notifications: Type_NotificationsSettings
+};
 
 export interface Type_ReservedFunds {
-    id: number
-    account_name: string
-    reserved_funds: string | number
-    is_enabled: boolean
+  id: number
+  account_name: string
+  reserved_funds: string | number
+  is_enabled: boolean
 }
 
 export interface Type_ApiKeys {
-    key: string
-    secret: string
+  key: string
+  secret: string
 }
 
 export type TconfigValues = {
-    profiles: Record<string, Type_Profile>,
-    current: string | 'default',
-    globalSettings: Type_GlobalSettings,
-    general: {
-        version: string
-    },
-}
+  profiles: Record<string, Type_Profile>,
+  current: string | 'default',
+  globalSettings: Type_GlobalSettings,
+  general: {
+    version: string
+  },
+};
 
 export interface Type_ConfigContext {
-    config: TconfigValues
-    currentProfile: Type_Profile
-    updateConfig: any
-    setConfigBulk: any
-    reset: any
-    state: {
-        accountID: number[]
-        updateAccountID: any
-        date: number
-        updateDate: any
-        currency: string[]
-        updateCurrency: any
-        updateApiData: any
-        apiData: { key: string, secret: string, mode: string }
-        reservedFunds: Type_ReservedFunds[],
-        updateReservedFunds: any
-        currentProfileId: string
-        updateCurrentProfileId: any
-    },
-    actions: {
-        fetchAccountsForRequiredFunds: any
-    }
+  config: TconfigValues
+  currentProfile: Type_Profile
+  updateConfig: any
+  setConfigBulk: any
+  reset: any
+  state: {
+    accountID: number[]
+    updateAccountID: any
+    date: number
+    updateDate: any
+    currency: string[]
+    updateCurrency: any
+    updateApiData: any
+    apiData: { key: string, secret: string, mode: string }
+    reservedFunds: Type_ReservedFunds[],
+    updateReservedFunds: any
+    currentProfileId: string
+    updateCurrentProfileId: any
+  },
+  actions: {
+    fetchAccountsForRequiredFunds: any
+  }
 }

@@ -1,161 +1,115 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
-import { useTable, useSortBy, useExpanded, useFlexLayout, HeaderGroup, HeaderProps } from 'react-table'
-import { setStorageItem, getStorageItem } from '@/app/Features/LocalStorage/LocalStorage';
+import {
+  useTable, useSortBy, useExpanded, useFlexLayout,
+  TableCommonProps,
+  TableOptions,
+} from 'react-table';
+import TableHeader from './TableParts/HeaderGroup';
+import TableBody from './TableParts/Body';
+import './Table.scss';
+import type { ActiveDeals, Type_Query_bots } from '@/types/3Commas';
+import { SubRowAsync } from '@/app/Pages/ActiveDeals/Components';
+import { initialSortBy, setSortStorage } from './utils';
 
-import './Table.scss'
-const defaultPropGetter = () => ({})
-
-
-const initialSortBy = (localStorageSortName: string) => {
-    const getSortFromStorage = getStorageItem(localStorageSortName);
-    return (getSortFromStorage != undefined) ? getSortFromStorage : [];
+interface TableType extends TableOptions<{}> {
+  renderRowSubComponent?: typeof SubRowAsync | undefined,
+  columns: any[],
+  data: ActiveDeals[] | any[]
+  customHeaderProps?: TableCommonProps,
+  customColumnProps?: TableCommonProps,
+  customRowProps?: TableCommonProps,
+  customCellProps?: TableCommonProps
+  localStorageSortName?: string,
+  updateLocalBotData?: React.Dispatch<React.SetStateAction<Type_Query_bots[]>>,
+  updateReservedFunds?: (id: number, column: string, value: string) => void,
 }
 
-//@ts-ignore
-const headerProps = (props, { column }) => getStyles(props, column.align, column.maxWidth)
-//@ts-ignore
-const cellProps = (props, { cell }) => getStyles(props, cell.column.align, cell.column.maxWidth)
-//@ts-ignore
-const getStyles = (props, align = 'center', maxWidth) => [
-    props,
-    {
-        style: {
-            ...props.style,
-            maxWidth: (maxWidth) ? maxWidth + 'px' : null,
-            justifyContent: align,
-            alignItems: 'center',
-            display: 'flex',
-            // flexDirection: (type === 'cell') ? 'column' : 'row'
-        },
-    },
-]
-
+const blankCustomProps = { style: {}, className: '', role: undefined };
+const tableState: TableType = {
+  customHeaderProps: blankCustomProps,
+  customColumnProps: blankCustomProps,
+  customRowProps: blankCustomProps,
+  customCellProps: blankCustomProps,
+  data: [],
+  columns: [],
+  renderRowSubComponent: undefined,
+  localStorageSortName: undefined,
+  updateLocalBotData: undefined,
+  updateReservedFunds: undefined,
+};
 
 // Expose some prop getters for headers, rows and cells, or more if you want!
-// @ts-ignore
-function CustomTable({ columns, data, renderRowSubComponent, getHeaderProps = defaultPropGetter, getColumnProps = defaultPropGetter, getRowProps = defaultPropGetter, getCellProps = cellProps, updateLocalBotData, updateReservedFunds, localStorageSortName, }) {
+const CustomTable: React.FC<typeof tableState> = ({
+  columns, data,
+  renderRowSubComponent = undefined,
+  updateLocalBotData, updateReservedFunds, localStorageSortName,
+  customHeaderProps = blankCustomProps,
+  customColumnProps = blankCustomProps,
+  customRowProps = blankCustomProps,
+  customCellProps = blankCustomProps,
+}) => {
+  const defaultColumn = React.useMemo(
+    () => ({
+      // When using the useFlexLayout:
+      minWidth: 30, // minWidth is only used as a limit for resizing
+      width: 100, // width is used for both the flex-basis and flex-grow
+    }),
+    [],
+  );
 
-    const defaultColumn = React.useMemo(
-        () => ({
-            // When using the useFlexLayout:
-            minWidth: 30, // minWidth is only used as a limit for resizing
-            width: 100, // width is used for both the flex-basis and flex-grow
-        }),
-        []
-    )
+  const {
+    getTableProps, getTableBodyProps, headerGroups, rows,
+    prepareRow,
+    visibleColumns,
+    state: { sortBy },
+  } = useTable(
+    {
+      columns,
+      data,
+      autoResetSortBy: false,
+      updateLocalBotData,
+      updateReservedFunds,
+      autoResetExpanded: false,
+      initialState: {
+        sortBy: initialSortBy(localStorageSortName),
+      },
+      defaultColumn,
+    },
+    useSortBy,
+    useExpanded,
+    useFlexLayout,
+  );
 
+  useEffect(() => {
+    if (sortBy !== undefined) setSortStorage(sortBy, localStorageSortName);
+  }, [sortBy]);
 
-    //@ts-ignore
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, visibleColumns, state: { sortBy } } = useTable(
-        {
-            columns, data,
-            //@ts-ignore
-            autoResetSortBy: false,
-            updateLocalBotData,
-            updateReservedFunds,
-            autoResetExpanded: false,
-            //@ts-ignore
-            initialState: { sortBy: initialSortBy(localStorageSortName) },
-            defaultColumn,
-        },
-        useSortBy,
-        useExpanded,
-        useFlexLayout
-    );
+  const tableProps = getTableProps();
 
+  return (
+    <div
+      style={tableProps.style}
+      className={`dealsTable table ${tableProps.className}`}
+      role={tableProps.role}
+    >
+      <TableHeader
+        headerGroups={headerGroups}
+        customColumnProps={customColumnProps}
+        customHeaderProps={customHeaderProps}
+      />
+      <TableBody
+        bodyProps={getTableBodyProps()}
+        customCellProps={customCellProps}
+        customRowProps={customRowProps}
+        prepareRow={prepareRow}
+        visibleColumns={visibleColumns}
+        renderRowSubComponent={renderRowSubComponent || undefined}
+        rows={rows}
+      />
 
+    </div>
+  );
+};
 
-
-    useEffect(() => {
-        if (sortBy != undefined) setSortStorage(sortBy)
-    }, [sortBy]);
-
-
-    const setSortStorage = (sort: object[]) => {
-        setStorageItem(localStorageSortName, sort)
-    }
-
-
-    return (
-        <div {...getTableProps()} className="dealsTable table">
-            <div style={{ textAlign: 'center' }} className="thead">
-                {headerGroups.map(headerGroup => (
-                    <div {...headerGroup.getHeaderGroupProps()} className="tr" key={headerGroup.id}>
-                        {headerGroup.headers.map((column) => (
-
-                            <div  // Return an array of prop objects and react-table will merge them appropriately
-                                {...column.getHeaderProps([
-                                    {
-                                        //@ts-ignore
-                                        className: column.className,
-                                        style: {
-                                            //@ts-ignore
-                                            ...column.style,
-                                            maxWidth: (column.maxWidth) ? column.maxWidth : null,
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            textAlign: 'center !important',
-                                            padding: '5px 0',
-                                            height: '44px',
-                                        },
-                                    },
-
-                                    //@ts-ignore
-                                    getColumnProps(column),
-                                    //@ts-ignore
-                                    getHeaderProps(column),
-
-                                    // this automatically sorts the data by what's in the columns
-                                    //@ts-ignore
-                                    column.getSortByToggleProps()
-                                ])}
-                                className="th"
-                            >
-                                {column.render('Header')}
-                                {/* @ts-ignore */}
-                                {column.canSort && (
-                                    <span style={{ paddingLeft: '.5em' }}>
-                                        {//@ts-ignore
-                                            column.isSorted ? column.isSortedDesc ? ' 🔽' : ' 🔼' : ''}
-                                    </span>
-                                )}
-
-                            </div>
-                        ))}
-                    </div>
-                ))}
-            </div>
-            <div {...getTableBodyProps()} className="tbody">
-                {rows.map((row) => {
-                    prepareRow(row)
-                    //@ts-ignore
-                    const rowProps = row.getRowProps(getRowProps(row));
-
-                    return (
-                        <>
-                            <div {...rowProps} className="tr" key={row.id}>
-                                {row.cells.map(cell => {
-                                    return (
-                                        <div  {...cell.getCellProps(cellProps)} className="td" >
-                                            {cell.render('Cell')}
-
-                                        </div>
-                                    )
-                                })}
-                            </div>
-
-                            { // @ts-ignore
-                                row.isExpanded && renderRowSubComponent({ row, visibleColumns })
-                            }
-                        </>
-                    )
-                })}
-            </div>
-        </div>
-    )
-}
-
-export default CustomTable
+export default CustomTable;

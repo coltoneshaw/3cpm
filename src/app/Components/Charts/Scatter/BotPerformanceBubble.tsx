@@ -1,199 +1,217 @@
 import React, { useEffect, useState } from 'react';
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis } from 'recharts';
-import { InputLabel, MenuItem, FormControl, Select } from '@mui/material';
+import {
+  ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, ZAxis,
+} from 'recharts';
+import {
+  InputLabel, MenuItem, FormControl, Select,
+} from '@mui/material';
 
-import { currencyTooltipFormatter, yAxisWidth, currencyTickFormatter } from '@/app/Components/Charts/formatting'
+import { currencyTooltipFormatter, yAxisWidth, currencyTickFormatter } from '@/app/Components/Charts/formatting';
 
-import { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts'
-import { Type_Bot_Performance_Metrics } from '@/types/3Commas';
-import { parseNumber } from '@/utils/number_formatting';
+import { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts';
+import { BotPerformanceMetrics } from '@/types/3Commas';
+import { parseNumber } from '@/utils/numberFormatting';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
 import { dynamicSort } from '@/utils/helperFunctions';
 
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
+const colors = ['#DBEAFE', '#BFDBFE', '#93C5FD', '#60A5FA', '#3B82F6', '#2563EB', '#1D4ED8', '#1E40AF', '#1E3A8A'];
 
-const colors = ["#DBEAFE", "#BFDBFE", "#93C5FD", "#60A5FA", "#3B82F6", "#2563EB", "#1D4ED8", "#1E40AF", "#1E3A8A"]
+const filterData = (data: BotPerformanceMetrics[], filter: String) => {
+  let localData = [...data].sort(dynamicSort('-total_profit'));
+  const { length } = localData;
+  const fiftyPercent = length / 2;
+  const twentyPercent = length / 5;
 
+  if (filter === 'top20') {
+    localData = localData.sort(dynamicSort('-total_profit'));
+    return localData.filter((bot, index) => index < twentyPercent);
+  } if (filter === 'top50') {
+    localData = localData.sort(dynamicSort('-total_profit'));
+    return localData.filter((bot, index) => index < fiftyPercent);
+  } if (filter === 'bottom50') {
+    localData = localData.sort(dynamicSort('total_profit'));
+    return localData.filter((bot, index) => index < fiftyPercent);
+  } if (filter === 'bottom20') {
+    localData = localData.sort(dynamicSort('total_profit'));
+    return localData.filter((bot, index) => index < twentyPercent);
+  }
+  return localData;
+};
 
-const filterData = (data: Type_Bot_Performance_Metrics[], filter: String) => {
-    let localData = [...data].sort(dynamicSort('-total_profit'));
-    const length = localData.length;
-    const fiftyPercent = length / 2
-    const twentyPercent = length / 5
+const getPosition = (localData: BotPerformanceMetrics[]) =>
+  // localData = localData.sort(dynamicSort(metric))
 
-    if (filter === 'top20') {
-        localData = localData.sort(dynamicSort('-total_profit'));
-        return localData.filter((bot, index) => index < twentyPercent)
-    } else if (filter === 'top50') {
-        localData = localData.sort(dynamicSort('-total_profit'));
-        return localData.filter((bot, index) => index < fiftyPercent)
-    } else if (filter === 'bottom50') {
-        localData = localData.sort(dynamicSort('total_profit'));
-        return localData.filter((bot, index) => index < fiftyPercent)
-    } else if (filter === 'bottom20') {
-        localData = localData.sort(dynamicSort('total_profit'));
-        return localData.filter((bot, index) => index < twentyPercent)
-    }
-    return localData;
-}
-
-const getPosition = (localData: Type_Bot_Performance_Metrics[]) => {
-    // localData = localData.sort(dynamicSort(metric))
-
-    return localData.map((entry, index) => {
-        // @ts-ignore
-        return <Cell key={entry.bot_id} fill={colors[index % colors.length]} opacity={.8} />
-    })
-
-}
-
+  localData.map((entry, index) =>
+    // @ts-ignore
+    <Cell key={entry.bot_id} fill={colors[index % colors.length]} opacity={0.8} />);
 const BotPerformanceBubble = ({ data = [], defaultCurrency }: Type_BotPerformanceCharts) => {
+  const yWidth = yAxisWidth(defaultCurrency);
+  // const labelSpacing = (0 + Number(yWidth)) / 1.5 ?? 45
+  const [filter, setFilter] = useState('all');
 
-    const yWidth = yAxisWidth(defaultCurrency)
-    // const labelSpacing = (0 + Number(yWidth)) / 1.5 ?? 45
-    const [filter, setFilter] = useState('all');
+  const defaultFilter = 'all';
+  const localStorageFilterName = storageItem.charts.BotPerformanceBubble.filter;
 
-    const defaultFilter = 'all';
-    const localStorageFilterName = storageItem.charts.BotPerformanceBubble.filter
+  useEffect(() => {
+    const getFilterFromStorage = getStorageItem(localStorageFilterName);
+    setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
+  }, []);
 
-    useEffect(() => {
-        const getFilterFromStorage = getStorageItem(localStorageFilterName);
-        setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
-    }, [])
+  const handleChange = (event: any) => {
+    const selectedFilter = (event.target.value != undefined) ? event.target.value : defaultFilter;
+    setFilter(selectedFilter);
+    setStorageItem(localStorageFilterName, selectedFilter);
+  };
 
+  const renderChart = () => {
+    if (data.length === 0) {
+      return (<NoData />);
+    }
 
-    const handleChange = (event: any) => {
-        const selectedFilter = (event.target.value != undefined) ? event.target.value : defaultFilter;
-        setFilter(selectedFilter);
-        setStorageItem(localStorageFilterName, selectedFilter)
-    };
+    // sort this by the index
+    const localData = filterData([...data], filter);
 
+    return (
+      <ResponsiveContainer width="100%" height="100%" minHeight="400px">
 
-    const renderChart = () => {
-        if (data.length === 0) {
-            return (<NoData />)
-        }
+        <ScatterChart
+          width={400}
+          height={400}
+          margin={{
+            top: 20,
+            right: 20,
+            bottom: 20,
+            left: 20,
+          }}
+        >
+          <CartesianGrid opacity={0.3} />
 
-        // sort this by the index
-        let localData = filterData([...data], filter);
-
-        return (<ResponsiveContainer width="100%" height="100%" minHeight="400px">
-
-            <ScatterChart
-                width={400}
-                height={400}
-                margin={{
-                    top: 20,
-                    right: 20,
-                    bottom: 20,
-                    left: 20,
-                }}
-            >
-                <CartesianGrid opacity={.3} />
-
-                {/*
+          {/*
                         X - Average Deal Hours
                         Y - Average Hourly Profit
                         Z - Number of deals completed
                         Cell Color - Base Order Start
 
                      */}
-                <XAxis
-                    type="number"
-                    dataKey="avg_deal_hours"
-                    height={50}
-                    name="Avg Deal Hours"
-                    tickCount={9}
-                    allowDataOverflow={false}
-                    allowDecimals={false}
+          <XAxis
+            type="number"
+            dataKey="avg_deal_hours"
+            height={50}
+            name="Avg Deal Hours"
+            tickCount={9}
+            allowDataOverflow={false}
+            allowDecimals={false}
+          >
+            <Label value="Avg. Deal Hours" offset={0} position="insideBottom" />
+          </XAxis>
 
+          <YAxis
+            type="number"
+            dataKey="total_profit"
+            name="Total Profit"
+            allowDataOverflow={false}
+            allowDecimals
+            width={yWidth}
+            tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)}
+          />
 
-                >
-                    <Label value="Avg. Deal Hours" offset={0} position="insideBottom" />
-                </XAxis>
+          {/* Range is lowest number and highest number. */}
+          <ZAxis
+            type="number"
+            dataKey="number_of_deals"
+            range={[Math.min(...localData.map((deal) => deal.number_of_deals)) + 200, Math.max(...localData.map((deal) => deal.number_of_deals)) + 200]}
+            name="# of Deals Completed"
+          />
 
-                <YAxis
-                    type="number"
-                    dataKey="total_profit"
-                    name="Total Profit"
-                    allowDataOverflow={false}
-                    allowDecimals={true}
-                    width={yWidth}
-                    tickFormatter={(value: any) => currencyTickFormatter(value, defaultCurrency)}
-                />
+          {/* TODO - pass the custom props down properly here.  */}
+          {/* @ts-ignore */}
+          <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
+          <Scatter name="Deal Performance" data={localData}>
+            {getPosition(localData)}
+          </Scatter>
+        </ScatterChart>
+      </ResponsiveContainer>
+    );
+  };
 
-                {/* Range is lowest number and highest number. */}
-                <ZAxis type="number" dataKey="number_of_deals"
-                    range={[Math.min(...localData.map(deal => deal.number_of_deals)) + 200, Math.max(...localData.map(deal => deal.number_of_deals)) + 200]}
-                    name="# of Deals Completed" />
+  return (
+    <div className="boxData" style={{ position: 'relative' }}>
+      <p style={{
+        position: 'absolute', left: '-1.5em', top: '45%', margin: 0, transform: 'rotate(-90deg)',
+      }}
+      >
+        Total Profit
+      </p>
 
-
-                {/* TODO - pass the custom props down properly here.  */}
-                {/* @ts-ignore */}
-                <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
-                <Scatter name="Deal Performance" data={localData}>
-                    {  getPosition(localData)  }
-                </Scatter>
-            </ScatterChart>
-        </ResponsiveContainer>)
-    }
-
-    return (
-        <div className="boxData" style={{ position: "relative" }}>
-            <p style={{ position: 'absolute', left: `-1.5em`, top: '45%', margin: 0, transform: 'rotate(-90deg)' }}>Total Profit</p>
-
-            <div style={{ position: "relative" }}>
-                <h3 className="chartTitle">Bot Performance Scatter</h3>
-                <div style={{ position: "absolute", right: 0, top: 0, height: "50px", zIndex: 5 }}>
-                    <FormControl  >
-                        <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
-                        <Select
-                            variant="standard"
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={filter}
-                            onChange={handleChange}
-                            style={{ width: "150px" }}
-                        >
-                            <MenuItem value="all">All</MenuItem>
-                            <MenuItem value="top20">Top 20%</MenuItem>
-                            <MenuItem value="top50">Top 50%</MenuItem>
-                            <MenuItem value="bottom50">Bottom 50%</MenuItem>
-                            <MenuItem value="bottom20">Bottom 20%</MenuItem>
-                        </Select>
-                    </FormControl>
-                </div>
-
-
-
-
-            </div>
-            {renderChart()}
+      <div style={{ position: 'relative' }}>
+        <h3 className="chartTitle">Bot Performance Scatter</h3>
+        <div style={{
+          position: 'absolute', right: 0, top: 0, height: '50px', zIndex: 5,
+        }}
+        >
+          <FormControl>
+            <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
+            <Select
+              variant="standard"
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={filter}
+              onChange={handleChange}
+              style={{ width: '150px' }}
+            >
+              <MenuItem value="all">All</MenuItem>
+              <MenuItem value="top20">Top 20%</MenuItem>
+              <MenuItem value="top50">Top 50%</MenuItem>
+              <MenuItem value="bottom50">Bottom 50%</MenuItem>
+              <MenuItem value="bottom20">Bottom 20%</MenuItem>
+            </Select>
+          </FormControl>
         </div>
-    )
-}
 
+      </div>
+      {renderChart()}
+    </div>
+  );
+};
 
-function CustomTooltip({ active, payload, formatter }: Type_Tooltip) {
-    if (!active || payload.length == 0 || payload[0] == undefined) {
-        return null
-    }
+var CustomTooltip = ({ active, payload, formatter }: Type_Tooltip) => {
+  if (!active || payload.length == 0 || payload[0] == undefined) {
+    return null;
+  }
 
-    const data: Type_Bot_Performance_Metrics = payload[0].payload
-    const { total_profit, bot_name, avg_deal_hours, bought_volume, number_of_deals } = data
-    return (
-        <div className="tooltip">
-            <h4>{bot_name}</h4>
-            <p><strong>Total Profit:</strong> {formatter(total_profit)}</p>
-            <p><strong>Average Deal Hours:</strong> {parseNumber(avg_deal_hours, 2)}</p>
-            <p><strong># of Deals:</strong> {number_of_deals}</p>
-            <p><strong>Bought Volume:</strong> {formatter(bought_volume)}</p>
+  const data: BotPerformanceMetrics = payload[0].payload;
+  const {
+    total_profit, bot_name, avg_deal_hours, bought_volume, number_of_deals,
+  } = data;
+  return (
+    <div className="tooltip">
+      <h4>{bot_name}</h4>
+      <p>
+        <strong>Total Profit:</strong>
+        {' '}
+        {formatter(total_profit)}
+      </p>
+      <p>
+        <strong>Average Deal Hours:</strong>
+        {' '}
+        {parseNumber(avg_deal_hours, 2)}
+      </p>
+      <p>
+        <strong># of Deals:</strong>
+        {' '}
+        {number_of_deals}
+      </p>
+      <p>
+        <strong>Bought Volume:</strong>
+        {' '}
+        {formatter(bought_volume)}
+      </p>
 
-        </div>
-    )
-}
-
+    </div>
+  );
+};
 
 export default BotPerformanceBubble;

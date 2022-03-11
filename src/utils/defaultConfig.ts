@@ -1,126 +1,122 @@
 import { sub, getTime } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
-import {TconfigValues, Type_Profile} from '@/types/config';
+import { TconfigValues, Type_Profile } from '@/types/config';
 
-//@ts-ignore
+// @ts-ignore
 import { version } from '#/package.json';
 
-
 const configSchema = {
-    apis: {
-        type: "object",
+  apis: {
+    type: 'object',
+    properties: {
+      threeC: {
+        type: 'object',
         properties: {
-            threeC: {
-                type: "object",
-                properties: {
-                    key: {
-                        type: ["string", "null"],
-                        default: ""
-                    },
-                    secret: {
-                        type: ["string", "null"],
-                        default: ""
-                    },
-                    mode: {
-                        type: ["string"],
-                        default: "real"
-                    }
-                }
-            }
-        }
+          key: {
+            type: ['string', 'null'],
+            default: '',
+          },
+          secret: {
+            type: ['string', 'null'],
+            default: '',
+          },
+          mode: {
+            type: ['string'],
+            default: 'real',
+          },
+        },
+      },
     },
-    general: {
-        type: "object",
+  },
+  general: {
+    type: 'object',
+    properties: {
+      defaultCurrency: {
+        type: 'array',
+      },
+      globalLimit: {
+        type: 'number',
+        default: 250000,
+      },
+    },
+  },
+  syncStatus: {
+    type: 'object',
+    properties: {
+      deals: {
+        type: 'object',
         properties: {
-            defaultCurrency: {
-                type: "array"
-            },
-            globalLimit: {
-                type: "number",
-                default: 250000
-            }
-        }
+          lastSyncTime: {
+            type: ['number', 'null'],
+            minimum: 0,
+          },
+        },
+      },
     },
-    syncStatus: {
-        type: "object",
-        properties: {
-            deals: {
-                type: "object",
-                properties: {
-                    "lastSyncTime": {
-                        type: ["number", "null"],
-                        minimum: 0
-                    }
-                } 
-            }
-        }  
-    },
-    statSettings: {
-        type: "object",
-        properties: {
-            startDate: {
-                type: "number",
-                default: "",
-            },
-            account_id: {
-                type: ["array"],
+  },
+  statSettings: {
+    type: 'object',
+    properties: {
+      startDate: {
+        type: 'number',
+        default: '',
+      },
+      account_id: {
+        type: ['array'],
 
-            }
-        }
+      },
     },
-    writeEnabled: {type: "boolean", default: false}
-}
+  },
+  writeEnabled: { type: 'boolean', default: false },
+};
 
+const currentId = uuidv4();
 
-const currentId = uuidv4()
-
-const defaultProfile:Type_Profile = {
-    name: "New profile",
-    id: currentId,
-    apis: {
-        threeC: {
-            key: "",
-            secret: "",
-            mode: "real",
-        }
+const defaultProfile: Type_Profile = {
+  name: 'New profile',
+  id: currentId,
+  apis: {
+    threeC: {
+      key: '',
+      secret: '',
+      mode: 'real',
     },
-    general: {
-        defaultCurrency: [],
-        globalLimit: 250000,
-        updated : false,
+  },
+  general: {
+    defaultCurrency: [],
+    globalLimit: 250000,
+    updated: false,
+  },
+  syncStatus: {
+    deals: {
+      lastSyncTime: 0,
     },
-    syncStatus: {
-        deals: {
-            lastSyncTime: 0,
-        }
-    },
-    statSettings: {
-        startDate: getTime(sub(new Date(), { days: 90 })),
-        account_id: [],
-        reservedFunds: []
-    },
-    writeEnabled: false,
-}
-
+  },
+  statSettings: {
+    startDate: getTime(sub(new Date(), { days: 90 })),
+    account_id: [],
+    reservedFunds: [],
+  },
+  writeEnabled: false,
+};
 
 const defaultConfig: TconfigValues = {
 
-    profiles: Object.assign({[currentId]: defaultProfile}), 
-    current: 'default',
-    globalSettings: {
-        notifications: {
-            enabled: true,
-            summary: false,
-        },
+  profiles: { [currentId]: defaultProfile },
+  current: 'default',
+  globalSettings: {
+    notifications: {
+      enabled: true,
+      summary: false,
     },
-    general: {
-        version : version
-    },
-}
-
+  },
+  general: {
+    version,
+  },
+};
 
 export {
-    defaultProfile,
-    defaultConfig,
-    configSchema,
-}
+  defaultProfile,
+  defaultConfig,
+  configSchema,
+};

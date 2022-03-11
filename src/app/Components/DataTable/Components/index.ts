@@ -1,9 +1,10 @@
-import OpenIn3Commas from "./OpenIn3Commas";
-import {Bots_EditableCell, Settings_EditableCell} from "./EditableCell";
-import { ColumnSelector, useColumnSelector } from "./ColumnSelector";
+import OpenIn3Commas from './OpenIn3Commas';
+import { BotsEditableCell, SettingsEditableCell } from './EditableCell';
+import { ColumnSelector, useColumnSelector } from './ColumnSelector';
+
 export {
-    OpenIn3Commas,
-    Bots_EditableCell,
-    Settings_EditableCell,
-    ColumnSelector, useColumnSelector
-}
+  OpenIn3Commas,
+  BotsEditableCell,
+  SettingsEditableCell,
+  ColumnSelector, useColumnSelector,
+};

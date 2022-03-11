@@ -1,65 +1,92 @@
-import {Type_MarketOrders, Type_Query_bots} from '@/types/3Commas'
-
+import { Type_MarketOrders, Type_Query_bots } from '@/types/3Commas';
 
 /**
- * 
- * @param {number} max_safety_orders mstc - the max SOs configured for the bot
- * @param {number} safety_order_step_percentage sos - the price deviation from the original buy.
- * @param {number} martingale_step_coefficient ss - the value that you multiply all SOs past the first by.
+ *
+ * @param {number} mstc max_safety_orders - the max SOs configured for the bot
+ * @param sos safety_order_step_percentage - the price deviation from the original buy.
+ * @param ss martingale_step_coefficient - the value that you multiply all SOs past the first by.
  * @returns number formatted toFixed(2) that represents a percent. Does not need to be multiplied by 100.
  */
-const calc_deviation = (max_safety_orders:number , safety_order_step_percentage:number , martingale_step_coefficient:number ) => {
+const calcDeviation = (mstc: number, sos: number, ss: number) => {
+  // setting the initial drawdown value.
+  let drawdown = +sos;
+  let prevDeviation = +sos;
 
-    // setting the initial drawdown value.
-    let drawdown = +safety_order_step_percentage
-    let prevDeviation = +safety_order_step_percentage
+  for (let soCount = 2; soCount <= +mstc; soCount += 1) {
+    const soDeviation = (prevDeviation * ss);
+    drawdown += soDeviation;
+    prevDeviation = soDeviation;
+  }
+  return drawdown;
+};
 
-    for (let so_count = 2; so_count <= +max_safety_orders; so_count++) {
-        let so_deviation = (prevDeviation * martingale_step_coefficient)
-        drawdown += so_deviation
-        prevDeviation = so_deviation
-    }
-    return parseInt( drawdown.toFixed(2) )
+/**
+ *
+ * @param mstc max_safety_orders - the max SOs configured for the bot
+ * @param bo base_order_volume - the buy order.
+ * @param so safety_order_volume - the safety order
+ * @param os martingale_volume_coefficient - the volume each SO will be multiplied by
+ * @returns maxTotal that a single bot deal can consume
+ */
+function botPerDealMaxFunds(mstc: number, bo: number, so: number, os: number) {
+  let maxTotal = +bo;
+  for (let soCount = 0; soCount < mstc; soCount += 1) {
+    maxTotal += so * os ** soCount;
+  }
+  return maxTotal;
+}
+/**
+ *
+ * @param maxDealFunds max possible funds per bot deal
+ * @param mad max active deals for the bot
+ * @returns total of max active * max funds
+ */
+function calcBotMaxFunds(maxDealFunds: number, mad: number) {
+  return maxDealFunds * mad;
 }
 
 /**
- * 
- * @param {number} max_safety_orders mstc - the max SOs configured for the bot
- * @param {number} base_order_volume bo - the buy order.
- * @param {number} safety_order_volume so - the safety order
- * @param {number} martingale_volume_coefficient os - the volume each SO will be multiplied by
- * @returns maxTotal that a single bot deal can consume
+ *
+ * @param moneyAvailable Total bankroll to be useable
+ * @param mstc max_safety_orders - the max SOs configured for the deal
+ * @param bo base_order_volume - the buy order.
+ * @param so safety_order_volume - the safety order
+ * @param os martingale_volume_coefficient os - the volume each SO will be multiplied by
+ * @returns Max SO that you can reach with funds provided
  */
-function calc_DealMaxFunds_bot(max_safety_orders:number , base_order_volume:number , safety_order_volume:number , martingale_volume_coefficient:number ) {
-    let maxTotal = +base_order_volume
-    for (let so_count = 0; so_count < max_safety_orders; so_count++)
-        maxTotal += safety_order_volume * martingale_volume_coefficient ** so_count
-    return maxTotal
-}
+function calcMaxSOReached(
+  moneyAvailable: number,
+  mstc: number,
+  bo: number,
+  so: number,
+  os: number,
+) {
+  let maxTotal = bo + so;
+  let soCount = 2;
 
-function calc_maxBotFunds(maxDealFunds:number , max_active_deals:number ) {
-    return maxDealFunds * max_active_deals
-}
+  for (soCount; soCount <= mstc; soCount += 1) {
+    let newTotal = os ** (soCount - 1);
+    newTotal *= so;
+    maxTotal += newTotal;
 
-
-
-function calc_maxSOReached(moneyAvailable:number, max_safety_orders:number, base_order_volume:number, safety_order_volume:number, martingale_volume_coefficient:number) {
-    let maxTotal = base_order_volume + safety_order_volume
-    let so_count = 2
-
-    for (so_count; so_count <= max_safety_orders; so_count++) {
-        maxTotal += safety_order_volume * martingale_volume_coefficient ** (so_count - 1)
-
-        if (maxTotal > moneyAvailable) {
-            return so_count - 1
-        }
+    if (maxTotal > moneyAvailable) {
+      return soCount - 1;
     }
-    return so_count - 1
+  }
+  return soCount - 1;
 }
 
-
-const calc_dropCoverage = (totalFundsAvailable:number, bot:Type_Query_bots ) => {
-    /*
+/**
+ *
+ * @param totalFundsAvailable Total funds available, usually bankroll
+ * @param bot bot info from the database
+ * @returns Max coverage percent (deviation) and the max SO reached with that deviation
+ */
+const calcDropCoverage = (
+  totalFundsAvailable: number,
+  bot: Type_Query_bots,
+) => {
+  /*
     take the total bankroll / total enabled bots = money available for this bot
 
     calculate how many SOs I can fill based on that money available for the bot
@@ -73,156 +100,196 @@ const calc_dropCoverage = (totalFundsAvailable:number, bot:Type_Query_bots ) => 
     - Make this return the funds available so they can be used in other calculations.
     */
 
-    const {
-        safety_order_step_percentage,
-        martingale_step_coefficient,
-        max_safety_orders,
-        base_order_volume,
-        safety_order_volume,
-        martingale_volume_coefficient
-    } = bot
+  const {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    safety_order_step_percentage,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    martingale_step_coefficient,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    max_safety_orders,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    base_order_volume,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    safety_order_volume,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    martingale_volume_coefficient,
+  } = bot;
 
-    const maxSoReached = calc_maxSOReached(+totalFundsAvailable, +max_safety_orders, +base_order_volume, +safety_order_volume, +martingale_volume_coefficient)
+  const maxSoReached = calcMaxSOReached(
+    +totalFundsAvailable,
+    +max_safety_orders,
+    +base_order_volume,
+    +safety_order_volume,
+    +martingale_volume_coefficient,
+  );
 
-    const maxCoveragePercent = calc_deviation(+maxSoReached, +safety_order_step_percentage, +martingale_step_coefficient)
+  const maxCoveragePercent = calcDeviation(
+    +maxSoReached,
+    +safety_order_step_percentage,
+    +martingale_step_coefficient,
+  );
 
-    return {
-        maxCoveragePercent,
-        maxSoReached
-    }
-}
-
-
+  return {
+    maxCoveragePercent,
+    maxSoReached,
+  };
+};
 
 /**
- * 
+ *
  * @param {number} maxDealFunds calculated using one of the maxDealFunds calcs
- * @param {number} max_active_deals total number of active deals a bot is allowed
+ * @param {number} mad max_active_deals total number of active deals a bot is allowed
  * @param {number} active_deals_count how many deals are currently active
  * @returns the total max funds of bots that have inactive deals.
- * 
+ *
  */
-function calc_maxInactiveFunds(maxDealFunds:number , max_active_deals:number , active_deals_count:number ) {
-
-    // using this metric as a max because max_active_deals is a bot config setting and can be lower than the current active deals.
-    // this causes a negative to be introduced and skews max_inactive_funds to a negative value.
-    return maxDealFunds * (Math.max(max_active_deals, active_deals_count) - active_deals_count)
+function calcBotMaxInactiveFunds(
+  maxDealFunds: number,
+  mad: number,
+  active_deals_count: number,
+) {
+  // using this metric as a max because max_active_deals is a bot config setting and can be lower than the current active deals.
+  // this causes a negative to be introduced and skews max_inactive_funds to a negative value.
+  const maxActiveOrCount = Math.max(mad, active_deals_count);
+  const maxDeals = maxActiveOrCount - active_deals_count;
+  return maxDealFunds * maxDeals;
 }
 
 /**
- * 
+ *
  * @param {number} bought_volume total volume bought
- * @param {number} base_order_volume bo - total that is purchased for a base order
- * @param {number} safety_order_volume so - total that is purchased for the initial SO
- * @param {number} max_safety_orders mstc - max safety orders allowed
- * @param {number} completed_safety_orders total amount of SOs that have been completed.
- * @param {number} martingale_volume_coefficient os - the volume each SO will be multiplied by
+ * @param {number} bo base_order_volume - total that is purchased for a base order
+ * @param {number} so safety_order_volume - total that is purchased for the initial SO
+ * @param {number} mstc max_safety_orders - max safety orders allowed
+ * @param {number} completedSOs completed_safety_orders total amount of SOs that have been completed.
+ * @param {number} os martingale_volume_coefficient - the volume each SO will be multiplied by
  * @param {object} market_order_data object that contains each market order ( manual safety trade / add funds )
  * @returns maxTotal - this is the total amount of funds that a single deal can consume.
  */
-function calc_maxDealFunds_Deals(bought_volume:number , base_order_volume:number , safety_order_volume:number , max_safety_orders:number , completed_safety_orders:number , martingale_volume_coefficient:number , market_order_data:Type_MarketOrders[] | undefined ) {
-    let maxTotal;
+function calcDealMaxFunds(
+  boughtVolume: number,
+  bo: number,
+  so: number,
+  mstc: number,
+  completedSOs: number,
+  os: number,
+  market_order_data: Type_MarketOrders[] | undefined,
+) {
+  let maxTotal = +bo;
 
-    
-    if (+bought_volume > 0)
-        maxTotal = +bought_volume;
-    else
-        maxTotal = +base_order_volume
+  if (+boughtVolume > 0) maxTotal = +boughtVolume;
 
-    for (let so_count = completed_safety_orders + 1; so_count <= max_safety_orders; so_count++) {
-        maxTotal += safety_order_volume * martingale_volume_coefficient ** (so_count - 1)
+  for (let soCount = completedSOs + 1; soCount <= mstc; soCount += 1) {
+    maxTotal += so * os ** (soCount - 1);
+  }
+
+  // add unfilled manual safety orders
+  // TODO - Add typedef for market Orders
+  if (!(typeof market_order_data === 'undefined')) {
+    for (const order of market_order_data) {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { quantity_remaining, rate } = order;
+      maxTotal += quantity_remaining * +rate;
     }
-
-    // add unfilled manual safety orders
-    // TODO - Add typedef for market Orders
-    if (!(typeof market_order_data === 'undefined')) {
-        for (let order of market_order_data) {
-            let {quantity_remaining, rate} = order
-                maxTotal += quantity_remaining * +rate
-        }
-    }
-    return maxTotal
+  }
+  return maxTotal;
 }
 
 /**
- * 
- * @param {string} created_at the time the deal was created at
- * @param {string} closed_at time the deal closed
+ *
+ * @param {string} createdAt the time the deal was created at. ISO string
+ * @param {string} closedAt time the deal closed. ISO string
  * @returns hours as a number, fixed to 2.
  */
-const calc_dealHours = (created_at:any, closed_at:string ) => {
+const calcDealHours = (createdAt: string, closedAt: string) => {
+  const endDate = closedAt === null ? Date.now() : Date.parse(closedAt);
+  const milliseconds = Math.abs(Date.parse(createdAt) - endDate);
+  const hours = milliseconds / 36e5;
+  return +hours.toFixed(2);
+};
 
-    created_at = Date.parse(created_at)
-
-    let endDate = closed_at === null ? Date.now() : Date.parse(closed_at);
-    let milliseconds = Math.abs(created_at - endDate);
-    const hours = milliseconds / 36e5;
-    return +hours.toFixed(2)
-}
-const calc_dropMetrics = (bankRoll:number, botData:Type_Query_bots[]) => {
-    /**
+const calcDropMetrics = (bankRoll: number, botData: Type_Query_bots[]) => {
+  /**
      * This function is responsible for taking the bot data, bankroll and outputting the new bot array with the metrics added.
      */
-    if(botData == undefined || botData.length === 0) return [];
+  if (botData === undefined || botData.length === 0) return [];
 
-     const enabledBots = botData.filter(bot => bot.is_enabled && !bot.hide)
-     const fundsAvailable = bankRoll / enabledBots.length
-    return botData.map(bot => {
-         const dropMetrics = calc_dropCoverage(fundsAvailable, bot)
-         return {
-             ...bot,
-             ...dropMetrics,
-             riskPercent: bot.max_funds / bankRoll
-         }
-     });
-}
+  const enabledBots = botData.filter((bot) => bot.is_enabled && !bot.hide);
+  const fundsAvailable = bankRoll / enabledBots.length;
+  return botData.map((bot) => {
+    const dropMetrics = calcDropCoverage(fundsAvailable, bot);
+    return {
+      ...bot,
+      ...dropMetrics,
+      riskPercent: bot.max_funds / bankRoll,
+    };
+  });
+};
 
-type safetyArray = {
-    so_count: number
-    deviation: number
-    volume: number
-}
-const calc_SafetyArray = (safety_order_volume:number , max_safety_orders:number, martingale_volume_coefficient:number, martingale_step_coefficient:number, safety_order_step_percentage:number) => {
-    // setting the initial drawdown value.
-    let drawdown = +safety_order_step_percentage
-    let prevDeviation = +safety_order_step_percentage
+type SafetyArray = {
+  soCount: number
+  deviation: number
+  volume: number
+};
 
-    const safetyArray = <safetyArray[]>[]
+/**
+ * @param so safety_order_volume - total that is purchased for the initial SO
+ * @param ss martingale_step_coefficient - the value that you multiply all SOs past the first by.
+ * @param sos safety_order_step_percentage - the price deviation from the original buy.
+ * @param mstc max_safety_orders - the max SOs configured for the deal
+ * @param os martingale_volume_coefficient os - the volume each SO will be multiplied by
+ * @returns
+ */
+const calcSafetyArray = (
+  so: number,
+  mstc: number,
+  os: number,
+  ss: number,
+  sos: number,
+) => {
+  // setting the initial drawdown value.
+  let drawdown = +sos;
+  let prevDeviation = +sos;
 
-    safetyArray.push({
-        so_count: 1,
-        deviation: prevDeviation,
-        volume: safety_order_volume
-    })
+  const safetyArray = <SafetyArray[]>[];
 
-    for (let so_count = 2; so_count <= +max_safety_orders; so_count++) {
-        let so_deviation = (prevDeviation * martingale_step_coefficient);
-        const volume = safety_order_volume * martingale_volume_coefficient ** (so_count - 1)
+  safetyArray.push({
+    soCount: 1,
+    deviation: prevDeviation,
+    volume: so,
+  });
 
+  for (let soCount = 2; soCount <= +mstc; soCount += 1) {
+    const soDeviation = (prevDeviation * ss);
+    const volume = so * os ** (soCount - 1);
 
-        drawdown += so_deviation
-        prevDeviation = so_deviation
+    drawdown += soDeviation;
+    prevDeviation = soDeviation;
 
-        const safetyObject = {
-            so_count,
-            deviation: drawdown,
-            volume
-        }
+    const safetyObject = {
+      soCount,
+      deviation: drawdown,
+      volume,
+    };
 
-        safetyArray.push(safetyObject)
-    }
+    safetyArray.push(safetyObject);
+  }
 
-    return safetyArray
-}
+  return safetyArray;
+};
 
 export {
-    calc_deviation,
-    calc_DealMaxFunds_bot,
-    calc_maxInactiveFunds,
-    calc_maxDealFunds_Deals,
-    calc_dealHours,
-    calc_maxBotFunds,
-    calc_dropCoverage,
-    calc_dropMetrics,
-    calc_SafetyArray
-}
+  calcDeviation,
+  botPerDealMaxFunds,
+  calcBotMaxInactiveFunds,
+  calcDealMaxFunds,
+  calcDealHours,
+  calcBotMaxFunds,
+  calcDropMetrics,
+  calcSafetyArray,
+};
+
+export const exportedForTesting = {
+  calcMaxSOReached,
+  calcDropCoverage,
+};

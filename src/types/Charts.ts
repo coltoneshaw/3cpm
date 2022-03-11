@@ -1,53 +1,54 @@
-import { Type_Profit, Type_Query_PerfArray, Type_ActiveDeals, Type_MetricData, Type_Bot_Performance_Metrics, Type_Pair_Performance_Metrics, Type_SoDistributionArray } from '@/types/3Commas';
+import {
+  ProfitArray, QueryPerformanceArray, ActiveDeals, Type_MetricData, BotPerformanceMetrics, PairPerformanceMetrics, SODistributionArray,
+} from '@/types/3Commas';
 
-import type {defaultCurrency} from '@/types/config'
+import type { defaultCurrency } from '@/types/config';
+
 export interface Type_SoDistribution {
-    data: Type_ActiveDeals[]
-    metrics: Type_MetricData
-    defaultCurrency: defaultCurrency
+  data: ActiveDeals[]
+  metrics: Type_MetricData
+  defaultCurrency: defaultCurrency
 }
 
 export type Type_SoDealDis = {
-    defaultCurrency: defaultCurrency
-    data: Type_SoDistributionArray[] | undefined
-}
+  defaultCurrency: defaultCurrency
+  data: SODistributionArray[] | undefined
+};
 
-
-export interface Type_ProfitChart {
-    data: Type_Profit[]
-    X: string
-    defaultCurrency: defaultCurrency
+export interface ProfitArrayChart {
+  data: ProfitArray[]
+  X: string
+  defaultCurrency: defaultCurrency
 }
 
 export interface Type_Pair_Performance {
-    data: Type_Pair_Performance_Metrics[] | undefined | []
-    defaultCurrency: defaultCurrency
+  data: PairPerformanceMetrics[] | undefined | []
+  defaultCurrency: defaultCurrency
 
 }
 
-
-export interface Type_Tooltip  {
-    active: boolean
-    payload: any[]
-    label: string,
-    formatter: Function
+export interface Type_Tooltip {
+  active: boolean
+  payload: any[]
+  label: string,
+  formatter: Function
 }
 
-export interface Type_DealPerformanceCharts{
-    data: Type_Query_PerfArray[] | undefined | []
-    defaultCurrency: defaultCurrency
-
-}
-
-export interface Type_BotPerformanceCharts{
-    data: Type_Bot_Performance_Metrics[] | undefined | []
-    defaultCurrency: defaultCurrency
+export interface Type_DealPerformanceCharts {
+  data: QueryPerformanceArray[] | undefined | []
+  defaultCurrency: defaultCurrency
 
 }
 
-export interface Type_ActiveDealCharts{
-    // title: string
-    data: Type_ActiveDeals[]
-    defaultCurrency: defaultCurrency
+export interface Type_BotPerformanceCharts {
+  data: BotPerformanceMetrics[] | undefined | []
+  defaultCurrency: defaultCurrency
+
+}
+
+export interface Type_ActiveDealCharts {
+  // title: string
+  data: ActiveDeals[]
+  defaultCurrency: defaultCurrency
 
 }

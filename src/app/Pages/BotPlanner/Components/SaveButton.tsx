@@ -1,44 +1,44 @@
-import React from "react";
-import { ToastNotifcations } from '@/app/Features/Index'
+import React from 'react';
 import { Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
+import { ToastNotifcations } from '@/app/Features/Index';
 
-interface Type_SaveButton {
-    saveFunction: any
-    className: string
+interface TypeSaveButton {
+  saveFunction: any
+  className: string
 }
 
-const SaveButton = ({saveFunction, className} : Type_SaveButton ) => {
+const SaveButton = ({ saveFunction, className }: TypeSaveButton) => {
+  const [open, setOpen] = React.useState(false);
 
-    const [open, setOpen] = React.useState(false);
+  const handleClose = (event: any, reason: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
 
-    const handleClose = (event: any, reason: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
+    setOpen(false);
+  };
 
-        setOpen(false);
-    };
+  return (
+    <>
+      <Button
+        startIcon={<SaveIcon />}
+        onClick={() => {
+          saveFunction();
+          setOpen(true);
+        }}
+        className={className}
+      >
+        Save table data
+      </Button>
+      <ToastNotifcations
+        open={open}
+        handleClose={handleClose}
+        message="Sync finished."
+      />
 
-
-    return (
-        <>
-        <Button
-            startIcon={<SaveIcon />}
-            onClick={() => {
-                saveFunction()
-                setOpen(true)
-            }}
-
-            className={className}
-
-        >
-            Save table data
-        </Button>
-        <ToastNotifcations open={open} handleClose={handleClose} message="Sync finished." />
-
-        </>
-    )
-}
+    </>
+  );
+};
 
 export default SaveButton;

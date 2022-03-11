@@ -1,7 +1,7 @@
-import UpdateDataButton from "./UpdateData";
-import ToggleRefreshButton from "./ToggleRefresh";
+import UpdateDataButton from './UpdateData';
+import ToggleRefreshButton from './ToggleRefresh';
 
 export {
-    UpdateDataButton,
-    ToggleRefreshButton
-}
+  UpdateDataButton,
+  ToggleRefreshButton,
+};

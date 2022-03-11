@@ -1,74 +1,67 @@
-import { tryParseJSON_ } from "@/utils/helperFunctions"
-
+import { tryParseJSON } from '@/utils/helperFunctions';
 
 const storageItem = {
-    navigation: {
-        homePage: 'homePage', // the home page the application navigates to
-        statsPage: 'nav-statsPage'
+  navigation: {
+    homePage: 'homePage', // the home page the application navigates to
+    statsPage: 'nav-statsPage',
+  },
+  settings: {
+    displayMode: 'displayMode', // the dark mode switcher. Values are 'lightMode' and 'darkMode',
+    coinPriceArray: 'coinPriceArray',
+  },
+  charts: {
+    pairByDateFilter: 'pairByDateFilter',
+    BotPerformanceBubble: {
+      filter: 'filter-botPerformanceBubble', // filter for the bot bubble - values are 'all' , top20, top50, bottom50, bottom20
     },
-    settings: {
-        displayMode: 'displayMode', // the dark mode switcher. Values are 'lightMode' and 'darkMode',
-        coinPriceArray: 'coinPriceArray'
+    DealPerformanceBubble: {
+      sort: 'sort-dealPerformanceBubble', // percentTotalProfit , number_of_deals , percentTotalVolume
+      filter: 'filter-dealPerformanceBubble', // filter for the bot bubble - values are 'all' , top20, top50, bottom50, bottom20
     },
-    charts:{
-        pairByDateFilter: 'pairByDateFilter',
-        BotPerformanceBubble:{
-            filter: 'filter-botPerformanceBubble'// filter for the bot bubble - values are 'all' , top20, top50, bottom50, bottom20
-        },
-        DealPerformanceBubble:{
-            sort: 'sort-dealPerformanceBubble', // percentTotalProfit , number_of_deals , percentTotalVolume
-            filter: 'filter-dealPerformanceBubble'// filter for the bot bubble - values are 'all' , top20, top50, bottom50, bottom20
-        },
-        PairPerformanceBar: {
-            sort: 'sort-pairPerformanceBar', // -total_profit, -bought_volume, -avg_deal_hours
-            filter: 'filter-pairPerformanceBar', // all, top20, top50, bottom50, bottom20
-        },
-        BotPerformanceBar: {
-            sort: 'sort-BotPerformanceBar', // -total_profit, -bought_volume, -avg_deal_hours
-            filter: 'filter-BotPerformanceBar', // all, top20, top50, bottom50, bottom20
-        },
-        ProfitByDay: {
-            sort: 'sort-ProfitByDay' //day , month, year
-        }
+    PairPerformanceBar: {
+      sort: 'sort-pairPerformanceBar', // -total_profit, -bought_volume, -avg_deal_hours
+      filter: 'filter-pairPerformanceBar', // all, top20, top50, bottom50, bottom20
     },
-    tables: {
-        DealsTable: {
-            sort: 'sort-DealsTable', // [ {id: 'value', desc: boolean}],
-            columns: 'columns-DealsTable' // array of accessor ids from react-table
-        },
-        BotPlanner: {
-            sort: 'sort-BotPlanner', // [ {id: 'value', desc: boolean}],
-            columns: 'columns-DealsTable'// array of accessor ids from react-table
-        }
-    }
-}
+    BotPerformanceBar: {
+      sort: 'sort-BotPerformanceBar', // -total_profit, -bought_volume, -avg_deal_hours
+      filter: 'filter-BotPerformanceBar', // all, top20, top50, bottom50, bottom20
+    },
+    ProfitByDay: {
+      sort: 'sort-ProfitByDay', // day , month, year
+    },
+  },
+  tables: {
+    DealsTable: {
+      sort: 'sort-DealsTable', // [ {id: 'value', desc: boolean}],
+      columns: 'columns-DealsTable', // array of accessor ids from react-table
+    },
+    BotPlanner: {
+      sort: 'sort-BotPlanner', // [ {id: 'value', desc: boolean}],
+      columns: 'columns-DealsTable', // array of accessor ids from react-table
+    },
+  },
+};
 
-const setStorageItem = (id:string, value:string | [] | object) => {
+const setStorageItem = (id: string, value: string | [] | object) => {
+  if (typeof value === 'object') value = JSON.stringify(value);
 
-    if(typeof value === 'object') value = JSON.stringify(value)
+  localStorage.setItem(id, value);
+};
 
+const getStorageItem = (id: string) => {
+  const storageItem = localStorage.getItem(id);
 
-    localStorage.setItem(id, value)
+  const parsed = (storageItem != undefined) ? tryParseJSON(storageItem) : undefined;
 
-}
+  if (parsed) {
+    return parsed;
+  }
 
-const getStorageItem = (id:string) => {
-
-    const storageItem = localStorage.getItem(id)
-
-    const parsed = (storageItem != undefined) ? tryParseJSON_(storageItem) : undefined
-
-    if(parsed){
-        return parsed
-    }
-
-    return storageItem
-}
-
-
+  return storageItem;
+};
 
 export {
-    storageItem,
-    setStorageItem,
-    getStorageItem
-}
+  storageItem,
+  setStorageItem,
+  getStorageItem,
+};
