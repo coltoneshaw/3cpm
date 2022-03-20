@@ -51,9 +51,9 @@ const UpdateDataButton: React.FC<typeof defaultProps> = ({ style, className }) =
         disabled={spinning}
         className={className}
         onClick={() => updateAllData(
-          1000,
           currentProfile,
           'fullSync',
+          1000,
           handleClick,
         )}
         disableElevation

@@ -1,4 +1,4 @@
-import { Type_MarketOrders, Type_Query_bots } from '@/types/3Commas';
+import { Type_MarketOrders, Type_Query_bots } from '@/types/3CommasApi';
 
 /**
  *

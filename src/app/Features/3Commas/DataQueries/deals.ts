@@ -1,9 +1,10 @@
 import { getFiltersQueryString } from '@/app/Features/3Commas/queryString';
 import { Type_Profile } from '@/types/config';
-import type { ProfitArray, QueryPerformanceArray, ActiveDeals } from '@/types/3Commas';
+import type { ProfitArray, QueryPerformanceArray, ActiveDeals } from '@/types/3CommasApi';
 import { getDatesBetweenTwoDates } from '@/utils/helperFunctions';
 import { initDate, DateRangeToSQLString } from '@/app/Features/3Commas/3Commas';
 import type { DateRange } from '@/types/Date';
+import { FetchDealDataFunctionQuery, FetchPerformanceData, FetchSoData } from '../Type_3Commas';
 
 // Filtering by only closed.
 // This can most likely be moved to the performance dashboard or upwards to the app header.
@@ -32,7 +33,8 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
         ORDER BY
             closed_at asc;`;
 
-  const dataArray: fetchDealDataFunctionQuery[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, query);
+  const dataArray: FetchDealDataFunctionQuery[] | [] = await window.ThreeCPM.Repository.Database
+    .query(currentProfileID, query);
 
   // if no data return blank array.
   if (dataArray == null || dataArray.length === 0) {
@@ -48,7 +50,10 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
     };
   }
 
-  const { days } = getDatesBetweenTwoDates(new Date(startString).toISOString().split('T')[0], new Date().toISOString().split('T')[0]);
+  const { days } = getDatesBetweenTwoDates(
+    new Date(startString).toISOString().split('T')[0],
+    new Date().toISOString().split('T')[0],
+  );
   const profitArray: ProfitArray[] = [];
   const totalDealHours = dataArray.map((deal) => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours);
 
@@ -60,14 +65,16 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
     let profit = {
       utc_date: day,
       profit: 0,
-      runningSum: (index == 0) ? 0 : profitArray[index - 1].runningSum,
+      runningSum: (index === 0) ? 0 : profitArray[index - 1].runningSum,
       total_deals: 0,
     };
     if (filteredData) {
       profit = {
         utc_date: day,
         profit: filteredData.final_profit,
-        runningSum: (index == 0) ? filteredData.final_profit : profitArray[index - 1].runningSum + filteredData.final_profit,
+        runningSum: (index === 0)
+          ? filteredData.final_profit
+          : profitArray[index - 1].runningSum + filteredData.final_profit,
         total_deals: filteredData.total_deals,
       };
     }
@@ -76,7 +83,10 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
 
   const totalProfit = (profitArray.length > 0) ? +profitArray[profitArray.length - 1].runningSum : 0;
   const averageDailyProfit = (profitArray.length > 0) ? totalProfit / (profitArray.length) : 0;
-  const totalClosedDeals = (profitArray.length > 0) ? profitArray.map((day) => day.total_deals).reduce((sum: number, total_deals: number) => sum + total_deals) : 0;
+  const totalClosedDeals = (profitArray.length > 0)
+    ? profitArray.map((day) => day.total_deals)
+      .reduce((sum: number, total_deals: number) => sum + total_deals)
+    : 0;
   const averageDealHours = (profitArray.length > 0) ? totalDealHours / totalClosedDeals : 0;
 
   return {
@@ -91,7 +101,10 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
   };
 };
 
-const fetchPerformanceDataFunction = async (profileData: Type_Profile, oDate?: DateRange): Promise<QueryPerformanceArray[] | []> => {
+const fetchPerformanceDataFunction = async (
+  profileData: Type_Profile,
+  oDate?: DateRange,
+): Promise<QueryPerformanceArray[] | []> => {
   const filtersQueryString = await getFiltersQueryString(profileData);
   const {
     currencyString, accountIdString, startString, currentProfileID,
@@ -126,7 +139,8 @@ const fetchPerformanceDataFunction = async (profileData: Type_Profile, oDate?: D
                 GROUP BY 
                     performance_id;`;
 
-  const databaseQuery: fetchPerformanceData[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, queryString);
+  const databaseQuery: FetchPerformanceData[] | [] = await window.ThreeCPM.Repository.Database
+    .query(currentProfileID, queryString);
 
   if (databaseQuery == null || databaseQuery.length > 0) {
     const totalProfitSummary = databaseQuery
@@ -138,6 +152,7 @@ const fetchPerformanceDataFunction = async (profileData: Type_Profile, oDate?: D
       .reduce((sum: number, item: number) => sum + item);
 
     return databaseQuery.map((perfData) => {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { bought_volume, total_profit } = perfData;
       return {
         ...perfData,
@@ -165,8 +180,9 @@ const getActiveDealsFunction = async (profileData: Type_Profile) => {
                     `;
   let activeDeals: ActiveDeals[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, query);
 
-  if (activeDeals != undefined && activeDeals.length > 0) {
+  if (activeDeals !== undefined && activeDeals.length > 0) {
     activeDeals = activeDeals.map((row: ActiveDeals) => {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const so_volume_remaining = row.max_deal_funds - row.bought_volume;
       return {
         ...row,
@@ -177,8 +193,12 @@ const getActiveDealsFunction = async (profileData: Type_Profile) => {
     return {
       activeDeals,
       metrics: {
-        totalBoughtVolume: activeDeals.map((deal: ActiveDeals) => deal.bought_volume).reduce((sum: number, item: number) => sum + item),
-        maxRisk: activeDeals.map((deal: ActiveDeals) => deal.max_deal_funds).reduce((sum: number, item: number) => sum + item),
+        totalBoughtVolume: activeDeals
+          .map((deal: ActiveDeals) => deal.bought_volume)
+          .reduce((sum: number, item: number) => sum + item),
+        maxRisk: activeDeals
+          .map((deal: ActiveDeals) => deal.max_deal_funds)
+          .reduce((sum: number, item: number) => sum + item),
       },
 
     };
@@ -219,9 +239,9 @@ const fetchSoData = async (currentProfile: Type_Profile, oDate?: DateRange) => {
             group by 
                 completed_safety_orders_count;`;
 
-  const data: fetchSoData[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, query);
+  const data: FetchSoData[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, query);
 
-  if (!data || data.length == 0) {
+  if (!data || data.length === 0) {
     return [];
   }
 

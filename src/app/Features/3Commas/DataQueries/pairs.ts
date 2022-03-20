@@ -1,23 +1,24 @@
+import moment from 'moment';
 import { getFiltersQueryString } from '@/app/Features/3Commas/queryString';
 import { initDate, DateRangeToSQLString } from '@/app/Features/3Commas/3Commas';
-import { Type_Profile } from '@/types/config'
-import type { DateRange } from "@/types/Date";
+import { Type_Profile } from '@/types/config';
+import type { DateRange } from '@/types/Date';
 
-import moment from "moment";
-import { Type_Pair_By_Date } from '@/types/3Commas'
-
-
+import { Type_Pair_By_Date } from '@/types/3CommasApi';
+import { FetchPairPerformanceMetrics } from '../Type_3Commas';
 
 const fetchPairPerformanceMetrics = async (profileData: Type_Profile, oDate?: DateRange) => {
-    const filtersQueryString = await getFiltersQueryString(profileData);
-    const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
+  const filtersQueryString = await getFiltersQueryString(profileData);
+  const {
+    currencyString, accountIdString, startString, currentProfileID,
+  } = filtersQueryString;
 
-    let date = initDate(startString, oDate);
-    const [fromDateStr, toDateStr] = DateRangeToSQLString(date)
-    const fromSQL = `and closed_at >= '${fromDateStr}'`
-    const toSQL = `and closed_at < '${toDateStr}'`
+  const date = initDate(startString, oDate);
+  const [fromDateStr, toDateStr] = DateRangeToSQLString(date);
+  const fromSQL = `and closed_at >= '${fromDateStr}'`;
+  const toSQL = `and closed_at < '${toDateStr}'`;
 
-    const queryString = `
+  const queryString = `
         SELECT 
                 pair,
                sum(final_profit)                                                         as total_profit,
@@ -34,15 +35,16 @@ const fetchPairPerformanceMetrics = async (profileData: Type_Profile, oDate?: Da
             and currency in (${currencyString})
             ${fromSQL} ${toSQL}
         GROUP BY
-            pair;`
+            pair;`;
 
-    let databaseQuery: fetchPairPerformanceMetrics[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, queryString);
+  const databaseQuery: FetchPairPerformanceMetrics[] | [] = await window.ThreeCPM.Repository.Database
+    .query(currentProfileID, queryString);
 
-    if (databaseQuery == null || databaseQuery.length > 0) {
-        return databaseQuery
-    }
-    return []
-}
+  if (databaseQuery == null || databaseQuery.length > 0) {
+    return databaseQuery;
+  }
+  return [];
+};
 
 /**
  *
@@ -50,19 +52,20 @@ const fetchPairPerformanceMetrics = async (profileData: Type_Profile, oDate?: Da
  *
  * @description This is used to see pairs on a per date bases in charts. This is not used in the DataContext state. This reports based on the usd_final_profit only
  */
-const getSelectPairDataByDate = async (profileData: Type_Profile, pairs: string[], oDate: DateRange,) => {
-    const filtersQueryString = await getFiltersQueryString(profileData);
-    const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
+const getSelectPairDataByDate = async (profileData: Type_Profile, pairs: string[], oDate: DateRange) => {
+  const filtersQueryString = await getFiltersQueryString(profileData);
+  const {
+    currencyString, accountIdString, startString, currentProfileID,
+  } = filtersQueryString;
 
-    const pairString = (pairs) ? pairs.map((b: string) => "'" + b + "'") : ""
+  const pairString = (pairs) ? pairs.map((b: string) => `'${b}'`) : '';
 
+  const date = initDate(startString, oDate);
+  const [fromDateStr, toDateStr] = DateRangeToSQLString(date);
+  const fromSQL = `and closed_at >= '${fromDateStr}'`;
+  const toSQL = `and closed_at < '${toDateStr}'`;
 
-    let date = initDate(startString, oDate);
-    const [fromDateStr, toDateStr] = DateRangeToSQLString(date)
-    const fromSQL = `and closed_at >= '${fromDateStr}'`
-    const toSQL = `and closed_at < '${toDateStr}'`
-
-    const query = `
+  const query = `
         SELECT substr(closed_at, 0, 11) as date,
             pair,
             sum(final_profit) as profit
@@ -77,38 +80,35 @@ const getSelectPairDataByDate = async (profileData: Type_Profile, pairs: string[
             and pair in (${pairString}) ${fromSQL} ${toSQL}
         GROUP BY
             date, pair;
-    `
+    `;
 
+  const pairData: Array<Type_Pair_By_Date> | [] = await window.ThreeCPM.Repository.Database
+    .query(currentProfileID, query);
 
-    let pairData: Array<Type_Pair_By_Date> | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, query);
+  const currentDate = moment(date.from).clone();
 
+  const result = [];
+  while (currentDate.isSameOrBefore(date.to)) {
+    const formattedCurrent = currentDate.format('YYYY-MM-DD');
+    const filteredData = pairData.filter((deal) => deal.date === formattedCurrent);
 
-    let currentDate = moment(date.from).clone();
-
-    let result = [];
-    while (currentDate.isSameOrBefore(date.to)) {
-        const formattedCurrent = currentDate.format('YYYY-MM-DD')
-        const filteredData = pairData.filter(deal => deal.date === formattedCurrent)
-
-        interface subDateObject {
-            pair: number
-        }
-
-        const subDateObject = <any>{ date: formattedCurrent };
-        pairs.forEach(pair => {
-            const filteredForPair = filteredData.find(deal => deal.pair === pair)
-            subDateObject[pair as keyof subDateObject] = (filteredForPair != undefined) ? filteredForPair.profit : 0
-        })
-
-        result.push(subDateObject);
-        currentDate.add(1, 'days');
+    interface SubDateObject {
+      pair: number
     }
-    return result
 
-}
+    const subDateObject = <any>{ date: formattedCurrent };
+    pairs.forEach((pair) => {
+      const filteredForPair = filteredData.find((deal) => deal.pair === pair);
+      subDateObject[pair as keyof SubDateObject] = (filteredForPair !== undefined) ? filteredForPair.profit : 0;
+    });
+
+    result.push(subDateObject);
+    currentDate.add(1, 'days');
+  }
+  return result;
+};
 
 export {
-    fetchPairPerformanceMetrics,
-    getSelectPairDataByDate
-}
-
+  fetchPairPerformanceMetrics,
+  getSelectPairDataByDate,
+};

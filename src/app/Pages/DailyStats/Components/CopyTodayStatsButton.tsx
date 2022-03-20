@@ -1,16 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import {
-  Button, ButtonGroup, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popover,
+  Button, ButtonGroup,
 } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import { ToastNotifcations } from '@/app/Features/Index';
-import { Type_MetricData, ProfitArray } from '@/types/3Commas';
-import { defaultCurrency } from '@/types/config';
+import { Type_MetricData } from '@/types/3CommasApi';
 import { formatCurrency } from '@/utils/granularity';
 
-interface Type_ButtonProps {
+interface ButtonPropsType {
   style?: object,
   className?: string
   metricsData: Type_MetricData
@@ -19,12 +17,12 @@ interface Type_ButtonProps {
 }
 const CopyTodayStatsButton = ({
   metricsData, todayProfit, style, className, activeDealReserve,
-}: Type_ButtonProps) => {
+}: ButtonPropsType) => {
   const anchorRef = useRef<HTMLDivElement>(null);
   const [isToastOpen, setToastOpen] = useState(false);
-  const [isSubmenuOpen, setSubmenuOpen] = useState(false);
+  // const [isSubmenuOpen, setSubmenuOpen] = useState(false);
 
-  const copyStatsToClipboard = (yesterday?: boolean) => {
+  const copyStatsToClipboard = () => {
     const todaysProfit = formatCurrency(['USD'], todayProfit);
     const bankRoll = formatCurrency(['USD'], metricsData.totalBankroll);
 
@@ -43,26 +41,25 @@ const CopyTodayStatsButton = ({
     setToastOpen(false);
   };
 
-  // submenu
-  const copyYesterdayStats = () => {
-    setSubmenuOpen(false);
-    copyStatsToClipboard(true);
-  };
+  // // submenu
+  // const copyYesterdayStats = () => {
+  //   setSubmenuOpen(false);
+  //   copyStatsToClipboard(true);
+  // };
 
-  const handleToggle = () => {
-    setSubmenuOpen((prevOpen) => !prevOpen);
-  };
+  // const handleToggle = () => {
+  //   setSubmenuOpen((prevOpen) => !prevOpen);
+  // };
 
-  const handleClose = (event: Event) => {
-    if (
-      anchorRef.current
-      && anchorRef.current.contains(event.target as HTMLElement)
-    ) {
-      return;
-    }
-
-    setSubmenuOpen(false);
-  };
+  // const handleClose = (event: Event) => {
+  //   if (
+  //     anchorRef.current
+  //     && anchorRef.current.contains(event.target as HTMLElement)
+  //   ) {
+  //     return;
+  //   }
+  //   setSubmenuOpen(false);
+  // };
 
   return (
     < >

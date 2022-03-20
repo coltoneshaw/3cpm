@@ -1,7 +1,7 @@
-import SidebarLink from "./SidebarLink";
-import SidebarNav from "./SidebarNav";
+import SidebarLink from './SidebarLink';
+import SidebarNav from './SidebarNav';
 
 export {
-    SidebarLink,
-    SidebarNav
-}
+  SidebarLink,
+  SidebarNav,
+};

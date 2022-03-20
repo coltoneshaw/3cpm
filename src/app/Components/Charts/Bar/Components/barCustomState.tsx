@@ -4,7 +4,7 @@ import {
   setStorageItem,
   getStorageItem, storageItem,
 } from '@/app/Features/LocalStorage/LocalStorage';
-import { BotPerformanceMetrics, PairPerformanceMetrics } from '@/types/3Commas';
+import { BotPerformanceMetrics, PairPerformanceMetrics } from '@/types/3CommasApi';
 import { dynamicSort } from '@/utils/helperFunctions';
 import { filterData } from '@/app/Components/Charts/formatting';
 

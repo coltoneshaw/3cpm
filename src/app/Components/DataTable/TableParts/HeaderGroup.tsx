@@ -92,6 +92,7 @@ const TableHeader: React.FC<TypeTableHeader> = ({
       textAlign: 'center',
     }}
     className="thead"
+    key="test"
   >
     {RenderHeaderGroup(
       headerGroups,

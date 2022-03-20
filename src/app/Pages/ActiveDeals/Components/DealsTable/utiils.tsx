@@ -10,7 +10,15 @@ export const returnErrorTooltip = (errorMessage: string, value: string) => (
     </>
   )}
   >
-    <span className=" monospace-cell" style={{ color: 'var(--color-red)', fontWeight: 700 }}>{value}</span>
+    <span
+      className=" monospace-cell"
+      style={{
+        color: 'var(--color-red)',
+        fontWeight: 700,
+      }}
+    >
+      {value}
+    </span>
   </CardTooltip>
 );
 
@@ -18,4 +26,8 @@ export const sortMe = (
   rowA: TableRow,
   rowB: TableRow,
   columnId: keyof TableRow['original'],
-) => ((rowA.original[columnId] > rowB.original[columnId]) ? -1 : 1);
+) => {
+  const first = rowA.original[columnId];
+  const second = rowB.original[columnId];
+  return ((first && second && first > second) ? -1 : 1);
+};

@@ -1,5 +1,5 @@
-import PairPerformanceByDate from "./PairByDay";
+import PairPerformanceByDate from './PairByDay';
 
 export {
-    PairPerformanceByDate
-}
+  PairPerformanceByDate,
+};

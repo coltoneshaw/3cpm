@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Type_Query_bots } from '@/types/3Commas';
+import { Type_Query_bots } from '@/types/3CommasApi';
 import { Type_ReservedFunds } from '@/types/config';
 
 interface Cell {

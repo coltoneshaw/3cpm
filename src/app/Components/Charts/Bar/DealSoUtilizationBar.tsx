@@ -9,13 +9,13 @@ import { dynamicSort } from '@/utils/helperFunctions';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 import { currencyTooltipFormatter } from '@/app/Components/Charts/formatting';
 
-import type { ActiveDeals } from '@/types/3Commas';
-import type { Type_Tooltip, Type_ActiveDealCharts } from '@/types/Charts';
+import type { ActiveDeals } from '@/types/3CommasApi';
+import type { TooltipType, Type_ActiveDealCharts } from '@/types/Charts';
 
-const CustomTooltip: React.FC<Type_Tooltip> = ({
+const CustomTooltip: React.FC<TooltipType<number, string>> = ({
   active, payload, label, formatter,
 }) => {
-  if (!active || !payload || !payload[0] || !payload[0].undefined) return null;
+  if (!active || !payload || !payload[0] || !payload[0]?.payload) return null;
 
   const deal: ActiveDeals = payload[0].payload;
 

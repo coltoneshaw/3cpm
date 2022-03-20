@@ -43,19 +43,17 @@ const storageItem = {
 };
 
 const setStorageItem = (id: string, value: string | [] | object) => {
-  if (typeof value === 'object') value = JSON.stringify(value);
+  let storageValue = value;
+  if (typeof storageValue === 'object') storageValue = JSON.stringify(value);
 
-  localStorage.setItem(id, value);
+  localStorage.setItem(id, storageValue);
 };
 
 const getStorageItem = (id: string) => {
-  const storageItem = localStorage.getItem(id);
+  const savedStorageItem = localStorage.getItem(id);
 
-  const parsed = (storageItem != undefined) ? tryParseJSON(storageItem) : undefined;
-
-  if (parsed) {
-    return parsed;
-  }
+  const parsed = (savedStorageItem) ? tryParseJSON(savedStorageItem) : undefined;
+  if (parsed) return parsed;
 
   return storageItem;
 };

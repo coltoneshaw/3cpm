@@ -1,5 +1,5 @@
-import MaxRiskSpeedometer from "./MaxRiskPercent";
+import MaxRiskSpeedometer from './MaxRiskPercent';
 
 export {
-    MaxRiskSpeedometer
+  MaxRiskSpeedometer,
 };

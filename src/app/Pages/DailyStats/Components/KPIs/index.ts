@@ -1,5 +1,5 @@
-import RoiMetrics from "./Roi";
+import RoiMetrics from './Roi';
 
 export {
-    RoiMetrics
-}
+  RoiMetrics,
+};

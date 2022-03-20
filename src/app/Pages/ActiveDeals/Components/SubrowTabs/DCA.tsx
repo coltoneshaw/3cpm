@@ -1,9 +1,9 @@
 import { Grid, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { parseNumber } from '@/utils/numberFormatting';
-import { ActiveDeals, Type_MarketOrders } from '@/types/3Commas';
+import { ActiveDeals, Type_MarketOrders } from '@/types/3CommasApi';
 
-type calc = {
+type Calc = {
   addFunds: number
   atPrice: number
   tpPercent: number
@@ -18,19 +18,19 @@ type CalcObject = {
   totalProfit: number
 };
 
-type row = {
+type Row = {
   original: ActiveDeals
 };
 
 type DCAType = {
-  row: row,
+  row: Row,
   ordersData: Type_MarketOrders[] | []
 };
 
 const exchangeFee = 0.001;
 
 const calcNew = (
-  { addFunds, atPrice, tpPercent }: calc,
+  { addFunds, atPrice, tpPercent }: Calc,
   ordersData: Type_MarketOrders[],
   currentPrice: number,
   bought_volume: number,
@@ -67,7 +67,7 @@ const calcOriginal = ({
   };
 };
 
-const dcaTableData = (row: row, calc: calc, ordersData: Type_MarketOrders[]): CalcObject[] => {
+const dcaTableData = (row: Row, calc: Calc, ordersData: Type_MarketOrders[]): CalcObject[] => {
   const original = calcOriginal(row.original);
   const newData = calcNew(calc, ordersData, row.original.current_price, row.original.bought_volume);
   const diff = {
@@ -145,7 +145,9 @@ const DCA = ({ row, ordersData }: DCAType) => {
       >
         <thead>
           <tr>
-            <th />
+            <th
+              aria-label="header"
+            />
             <th>Buy average</th>
             <th>Take profit at</th>
             <th>Take profit percent</th>
@@ -154,20 +156,20 @@ const DCA = ({ row, ordersData }: DCAType) => {
           </tr>
         </thead>
         <tbody className="dcaCalcTable">
-          {calcObject.map((row) => (
-            <tr key={row.name}>
-              <td>{row.name}</td>
-              <td className=" monospace-cell">{parseNumber(row.average, 6)}</td>
-              <td className=" monospace-cell">{parseNumber(row.tpAt, 6)}</td>
+          {calcObject.map((r) => (
+            <tr key={r.name}>
+              <td>{r.name}</td>
+              <td className=" monospace-cell">{parseNumber(r.average, 6)}</td>
+              <td className=" monospace-cell">{parseNumber(r.tpAt, 6)}</td>
               <td className=" monospace-cell">
-                {parseNumber(row.tpPercent, 2)}
+                {parseNumber(r.tpPercent, 2)}
                 %
               </td>
               <td className=" monospace-cell">
-                {parseNumber(row.gainRequired, 2)}
+                {parseNumber(r.gainRequired, 2)}
                 %
               </td>
-              <td className=" monospace-cell">{parseNumber(row.totalProfit, 2)}</td>
+              <td className=" monospace-cell">{parseNumber(r.totalProfit, 2)}</td>
             </tr>
           ))}
         </tbody>

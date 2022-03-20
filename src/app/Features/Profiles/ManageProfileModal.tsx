@@ -1,108 +1,102 @@
-import React, { useState } from "react";
-
-import { useAppSelector } from '@/app/redux/hooks';
-import { deleteProfileByIdGlobal } from '@/app/redux/config/configActions'
+import React from 'react';
 
 import {
-    Dialog,
-    DialogContent,
+  Dialog,
+  DialogContent,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Delete from '@mui/icons-material/Delete';
+import { deleteProfileByIdGlobal } from '@/app/redux/config/configActions';
+import { useAppSelector } from '@/app/redux/hooks';
 // import AddIcon from '@mui/icons-material/Add';
 
 // import TextField from '@mui/material/TextField';
-import { TconfigValues } from '@/types/config'
+import { TconfigValues, Type_Profile } from '@/types/config';
 
-import { useThemeProvidor } from "@/app/Context/ThemeEngine";
+import { useThemeProvidor } from '@/app/Context/ThemeEngine';
 
-interface Type_profileModal {
-    open: boolean
-    setOpen: any
-    profiles: TconfigValues["profiles"] | {}
-    currentProfileId:string
+interface ProfileModalProps {
+  open: boolean
+  setOpen: any
+  profiles: TconfigValues['profiles'] | {}
+  // currentProfileId: string
 }
 
-const ManageProfileModal = ({ open, setOpen, profiles }:Type_profileModal ) => {
+const returnMappedProfiles = (profiles: TconfigValues['profiles'] | {}, config: TconfigValues) => {
+  if (!profiles || profiles === {}) return null;
 
-    const {config} = useAppSelector(state => state.config)
-
-    // TODO
-    // - Add an edit button
-    // - setup the delete button to properly delete the profile. Possibly trigger a warning
-    // - add a set Current Profile button that controls the state in the back.
-
-    
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const theme = useThemeProvidor()
-    const { styles } = theme
-
-    const returnProfilesMapped = () => {
-
-        if(!profiles) return <></>
-
-
-       return Object.keys(profiles).map(p => {
-
-            // @ts-ignore
-            // TODO - need to go back and make this a key of profiles properly
-            const mappedProf = profiles[p]
-            
-            return (
-            <div className="flex-row selectedCoinDiv" key={p}>
-                <p style={{ flexBasis: '90%' }}>{mappedProf.name}</p>
-                <Delete
-                    style={{
-                        flexBasis: '10%',
-                        cursor: 'pointer'
-                    }}
-                    onClick={() => {
-                        deleteProfileByIdGlobal(config, p, undefined)
-                    }}
-                />
-            </div>
-        )})
-
-    }
-
+  return Object.keys(profiles).map((p) => {
+    const mappedProf: Type_Profile = profiles[p as keyof typeof profiles];
 
     return (
-        <Dialog
-            fullWidth={false}
-            maxWidth="md"
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="max-width-dialog-title"
-            style={{
-
-                color: 'var(--color-text-lightbackground)',
-                padding: 0,
-                ...styles,
-
-            }}
+      <div className="flex-row selectedCoinDiv" key={p}>
+        <p
+          style={
+            { flexBasis: '90%' }
+          }
         >
-            <DialogContent style={{ padding: 0 }}>
-                <div className="flex-row addCoinModal">
-                    <CloseIcon className="closeIcon" onClick={handleClose} />
+          {mappedProf.name}
+        </p>
+        <Delete
+          style={{
+            flexBasis: '10%',
+            cursor: 'pointer',
+          }}
+          onClick={() => {
+            deleteProfileByIdGlobal(config, p, undefined);
+          }}
+        />
+      </div>
+    );
+  });
+};
 
-                    <div className="flex-column" style={{
-                        width: '100%'
-                    }}>
-                        <h2 style={{ textAlign: 'center' }}>Profiles</h2>
+const ManageProfileModal: React.FC<ProfileModalProps> = ({ open, setOpen, profiles }) => {
+  const { config } = useAppSelector((state) => state.config);
 
-                        { returnProfilesMapped() }
+  // TODO
+  // - Add an edit button
+  // - setup the delete button to properly delete the profile. Possibly trigger a warning
+  // - add a set Current Profile button that controls the state in the back.
 
-                    </div>
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-                </div>
+  const theme = useThemeProvidor();
+  const { styles } = theme;
 
-            </DialogContent>
+  return (
+    <Dialog
+      fullWidth={false}
+      maxWidth="md"
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="max-width-dialog-title"
+      style={{
 
-        </Dialog>
-    )
-}
+        color: 'var(--color-text-lightbackground)',
+        padding: 0,
+        ...styles,
+
+      }}
+    >
+      <DialogContent style={{ padding: 0 }}>
+        <div className="flex-row addCoinModal">
+          <CloseIcon className="closeIcon" onClick={handleClose} />
+          <div
+            className="flex-column"
+            style={{
+              width: '100%',
+            }}
+          >
+            <h2 style={{ textAlign: 'center' }}>Profiles</h2>
+            {returnMappedProfiles(profiles, config)}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export default ManageProfileModal;

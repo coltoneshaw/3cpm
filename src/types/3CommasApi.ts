@@ -1,3 +1,5 @@
+import { FetchBotPerformanceMetrics, FetchPairPerformanceMetrics } from '@/app/Features/3Commas/Type_3Commas';
+
 export type QueryPerformanceArray = {
   performance_id: string
   bot_name: string
@@ -11,7 +13,7 @@ export type QueryPerformanceArray = {
   percentTotalProfit: number
 };
 
-export type PairPerformanceMetrics = fetchPairPerformanceMetrics;
+export type PairPerformanceMetrics = FetchPairPerformanceMetrics;
 
 export type SODistributionArray = {
   completed_safety_orders_count: number // the actual SO level. 0 = BO.
@@ -28,7 +30,7 @@ export type PerformanceMetrics = {
   safety_order?: SODistributionArray[] | []
 };
 
-export type BotPerformanceMetrics = fetchBotPerformanceMetrics;
+export type BotPerformanceMetrics = FetchBotPerformanceMetrics;
 
 export type DealDataQuery = {
   final_profit: number,
@@ -45,7 +47,6 @@ export type ProfitArray = {
   total_deals: number
 
 };
-
 export type Deals = {
   id: number // in use
   type: string // in use
@@ -59,7 +60,7 @@ export type Deals = {
   created_at: string // in use
   updated_at: string // in use
   closed_at: string // in use
-  closed_at_iso_string: number // in use
+  closed_at_iso_string: number | null // in use
   finished: boolean // in use
   current_active_safety_orders_count: boolean // in use
   current_active_safety_orders: number // in use
@@ -136,7 +137,7 @@ export type ActiveDeals = Deals & {
 
 export type Type_Query_Accounts = {
   currency_code: string
-  id: number
+  id: number | string
   account_id: number
   account_name: string
   exchange_name: string
@@ -145,7 +146,7 @@ export type Type_Query_Accounts = {
   on_orders: number
   btc_value: number
   usd_value: number
-  market_code: number
+  market_code: string
 };
 
 export type Type_Pair_By_Date = {
@@ -173,7 +174,8 @@ export type Type_bots = {
   enabled_inactive_funds: number
   finished_deals_count?: number
   finished_deals_profit_usd?: number
-  from_currency: string
+  // TODO - Fix this to pull the currencyKeys
+  from_currency: 'AUD' | 'BIDR' | 'BNB' | 'BRL' | 'BTC' | 'BUSD' | 'BVND' | 'DAI' | 'ETH' | 'EUR' | 'GBP' | 'IDRT' | 'NGN' | 'RUB' | 'TRX' | 'TRY' | 'TUSD' | 'UAH' | 'USD' | 'USDC' | 'USDT' | 'USDP' | 'VAI' | 'XRP'
   is_enabled: number | boolean
 
   // TODO -- all of these are null in the database. Why?
@@ -248,18 +250,22 @@ export type Type_MarketOrders = {
   cancellable: boolean
   created_at: string // ISO string
   updated_at: string // ISO string
+};
 
+export type ManualSOs = {
+  deal_order_type: string;
+  status_string: string,
+  quantity: number,
+  quantity_remaining: number,
+  total: number,
+  rate: number,
+  average_price: number,
 };
 export interface Type_UpdateFunction {
   offset: number
   time: number
   syncCount: number
 }
-
-/** ********************************************************
- *
- *
- */
 
 export interface Type_Deals_API {
   id: number // in use
@@ -274,7 +280,7 @@ export interface Type_Deals_API {
   created_at: string // in use
   updated_at: string // in use
   closed_at: string // in use
-  closed_at_iso_string: number // in use
+  closed_at_iso_string: number | null // in use
   finished: boolean // in use
   current_active_safety_orders_count: boolean // in use
   current_active_safety_orders: number // in use

@@ -1,226 +1,207 @@
-import crypto from "crypto";
+import crypto from 'crypto';
 import fetch from 'electron-fetch';
 import log from 'electron-log';
-import type { threeCommas_Api_Deals, MarketOrders, GetDeal, UpdateDealRequest } from './types/Deals'
-import type { accounts, AccountCurrencyRates, AccountsMarketList, AccountTableData, AccountPieChartData } from './types/Accounts'
-import type { Bots, GetBotsStats, ShowBot } from './types/Bots'
-import type { GridBots, GridMarketOrders, GridBotProfits, GridBotShow, GridRequiredBalance } from './types/GridBots'
+import type {
+  Deals3CAPI, MarketOrders3CAPI, GetDeal3CAPI,
+} from '@/types/3CommasAPI/Deals';
+import type {
+  Accounts3CAPI, AccountCurrencyRates3CAPI, AccountsMarketList3CAPI, AccountTableData3CAPI, AccountPieChartData3CAPI,
+} from '@/types/3CommasAPI/Accounts';
+import type { Bots3CAPI, GetBotsStats3CAPI, ShowBot3CAPI } from '@/types/3CommasAPI/Bots';
+import type {
+  GridBots3CAPI, GridMarketOrders3CAPI, GridBotProfits3CAPI, GridBotShow3CAPI, GridRequiredBalance3CAPI,
+} from '@/types/3CommasAPI/GridBots';
 
-type currencyRates = {
-    pretty_display_type?: string, // deprecated
-    market_code: 'binance' | 'binance_us'
-    pair: string // EX: USDT_BTC
-}
+import type {
+  CurrencyRatesParams, GetBotsParams, GetBotStatsParams, GridBotParams, UpdateDealRequest,
+} from './types';
 
-type getBots = {
-    limit?: number, // max limit 100
-    offset?: number,
-    from?: string,
-    account_id?: number,
-    scope?: 'enabled' | 'disabled',
-    strategy?: 'long' | 'short',
-    sort_by?: 'profit' | 'created_at' | 'updated_at',
-    sort_direction?: 'asc' | 'desc',
-    quote?: string
-}
+class ThreeCommasAPI {
+  private url: any;
 
-type getGridBots = {
-    account_ids: number[],
-    account_types: string[],
-    state: 'enabled' | 'disabled',
-    sort_by?: 'current_profit' | 'profit' | 'bot_id' | 'pair' | 'created_at' | 'updated_at',
-    sort_direction?: 'asc' | 'desc',
-    limit?: 10, // max limit 100
-    offset?: number,
-    from?: string,
-    base?: string,
-    quote?: string
-}
+  private apiKey: string;
 
+  private apiSecret: string;
 
+  private mode: string;
 
+  constructor(opts = { apiKey: '', apiSecret: '', mode: 'real' }) {
+    this.url = 'https://api.3commas.io';
+    this.apiKey = opts.apiKey;
+    this.apiSecret = opts.apiSecret;
 
-class threeCommasAPI {
+    this.mode = opts.mode ?? 'real';
+  }
 
-    private _url: any;
-    private _apiKey: string;
-    private _apiSecret: string;
-    private _mode: "paper" | "real";
+  generateSignature(requestUri: string, reqData: string) {
+    const request = requestUri + reqData;
+    return crypto.createHmac('sha256', this.apiSecret).update(request).digest('hex');
+  }
 
-    constructor(opts = { apiKey: '', apiSecret: '', mode: '' }) {
-        this._url = 'https://api.3commas.io'
-        this._apiKey = opts.apiKey
-        this._apiSecret = opts.apiSecret
-
-        // @ts-ignore
-        this._mode = opts.mode ?? 'real'
+  async makeRequest(method: string, path: string, params: {} | null) {
+    if (!this.apiKey || !this.apiSecret) {
+      return new Error('missing api key or secret');
     }
 
-    generateSignature(requestUri: string, reqData: string) {
-        const request = requestUri + reqData
-        return crypto.createHmac('sha256', this._apiSecret).update(request).digest('hex')
+    const u = new URLSearchParams();
+    if (params) {
+      Object.keys(params).forEach((key) => {
+        u.append(key, params[key as keyof typeof params]);
+      });
     }
 
-    async makeRequest(method: string, path: string, params: any) {
-        if (!this._apiKey || !this._apiSecret) {
-            return new Error('missing api key or secret')
-        }
+    const sig = this.generateSignature(path, u.toString());
 
-        let u = new URLSearchParams();
-        for (const key in params)
-            u.append(key, params[key]);
+    try {
+      const response = await fetch(
+        `${this.url}${path}${u.toString()}`,
+        {
+          method,
+          timeout: 30000,
+          headers: {
+            APIKEY: this.apiKey,
+            Signature: sig,
+            'Forced-Mode': this.mode,
+          },
+        },
+      );
 
+      if (response.status >= 400) {
+        console.error('API call is in error:', response.status, 'url', `${this.url}${path}${u.toString()}`);
+      }
 
-        const sig = this.generateSignature(path, u.toString())
-
-        try {
-            let response = await fetch(
-                `${this._url}${path}${u.toString()}`,
-                {
-                    method: method,
-                    timeout: 30000,
-                    headers: {
-                        'APIKEY': this._apiKey,
-                        'Signature': sig,
-                        'Forced-Mode': this._mode
-                    }
-                }
-            )
-
-            if (response.status >= 400) {
-                console.error("API call is in error:", response.status, "url", `${this._url}${path}${u.toString()}`)
-            }
-
-
-            return await response.json()
-        } catch (e) {
-            log.error("error making api request", e);
-            return false
-        }
+      return await response.json();
+    } catch (e) {
+      log.error('error making api request', e);
+      return false;
     }
+  }
 
-    /**
+  /**
      * Deals methods
      */
 
-    async getDeals(params: any): Promise<threeCommas_Api_Deals[]> {
-        return await this.makeRequest('GET', '/public/api/ver1/deals?', params)
-    }
+  async getDeals(params: any): Promise<Deals3CAPI[]> {
+    return this.makeRequest('GET', '/public/api/ver1/deals?', params);
+  }
 
-    /**
+  /**
      * @returns a single deal data plus bot events for that deal.
      */
-    async getDeal(deal_id: string): Promise<GetDeal> {
-        return await this.makeRequest('GET', `/public/api/ver1/deals/${deal_id}/show?`, { deal_id })
-    }
+  async getDeal(deal_id: string): Promise<GetDeal3CAPI> {
+    return this.makeRequest('GET', `/public/api/ver1/deals/${deal_id}/show?`, { deal_id });
+  }
 
-    async getDealSafetyOrders(deal_id: string): Promise<MarketOrders[]> {
-        return await this.makeRequest('GET', `/public/api/ver1/deals/${deal_id}/market_orders?`, { deal_id })
-    }
+  async getDealSafetyOrders(deal_id: string): Promise<MarketOrders3CAPI[]> {
+    return this.makeRequest('GET', `/public/api/ver1/deals/${deal_id}/market_orders?`, { deal_id });
+  }
 
-    async updateDeal(params: UpdateDealRequest): Promise<threeCommas_Api_Deals> {
-        return await this.makeRequest('PATCH', `/public/api/ver1/deals/${params.deal_id}/update_deal?`, { ...params })
-    }
+  async updateDeal(params: UpdateDealRequest): Promise<Deals3CAPI> {
+    return this.makeRequest('PATCH', `/public/api/ver1/deals/${params.deal_id}/update_deal?`, { ...params });
+  }
 
-
-    /**
+  /**
      * Bots methods
      */
 
-    /**
-     * 
+  /**
+     *
      * @apidocs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/bots_api.md#user-bots-permission-bots_read-security-signed
      */
-    async getBots(params: getBots): Promise<Bots[]> {
-        return await this.makeRequest('GET', `/public/api/ver1/bots?`, params)
-    }
+  async getBots(params: GetBotsParams): Promise<Bots3CAPI[]> {
+    return this.makeRequest('GET', '/public/api/ver1/bots?', params);
+  }
 
-    async getBotsStats(params: { account_id?: string, bot_id?: null | string }): Promise<GetBotsStats> {
-        return await this.makeRequest('GET', `/public/api/ver1/bots/stats?`, params)
-    }
+  async getBotsStats(params: GetBotStatsParams): Promise<GetBotsStats3CAPI> {
+    return this.makeRequest('GET', '/public/api/ver1/bots/stats?', params);
+  }
 
-    /**
-     * 
+  /**
+     *
      * @returns Returns the same data as the bot endpoint but includes all the currently active deals.
      * @apidocs https://github.com/3commas-io/3commas-official-api-docs/blob/master/bots_api.md#bot-info-permission-bots_read-security-signed
      */
-    async botShow(params: { bot_id: string, include_events?: boolean }): Promise<ShowBot> {
-        return await this.makeRequest('GET', `/public/api/ver1/bots/${params.bot_id}/show?`, params)
-    }
+  async botShow(params: {
+    bot_id: string,
+    include_events?: boolean
+  }): Promise<ShowBot3CAPI> {
+    return this.makeRequest('GET', `/public/api/ver1/bots/${params.bot_id}/show?`, params);
+  }
 
-
-    /**
+  /**
      * Accounts methods
      */
 
+  async accounts(): Promise<Accounts3CAPI[]> {
+    return this.makeRequest('GET', '/public/api/ver1/accounts?', {});
+  }
 
-    async accounts(): Promise<accounts[]> {
-        return await this.makeRequest('GET', `/public/api/ver1/accounts?`, null)
-    }
+  async accountsCurrencyRates(options: CurrencyRatesParams): Promise<AccountCurrencyRates3CAPI[]> {
+    return this.makeRequest(
+      'GET',
+      '/public/api/ver1/accounts/currency_rates?',
+      { ...options, pair: options.pair.toUpperCase() },
+    );
+  }
 
-    async accountsCurrencyRates(options: currencyRates): Promise<AccountCurrencyRates[]> {
-        return await this.makeRequest('GET', `/public/api/ver1/accounts/currency_rates?`, { ...options, pair: options.pair.toUpperCase() })
-    }
-
-    /**
-     * 
+  /**
+     *
      * @returns All specific market codes that 3commas supports
      */
-    async accountsMarketList(): Promise<AccountsMarketList[]> {
-        return await this.makeRequest('GET', `/public/api/ver1/accounts/market_list?`, null)
-    }
+  async accountsMarketList(): Promise<AccountsMarketList3CAPI[]> {
+    return this.makeRequest('GET', '/public/api/ver1/accounts/market_list?', {});
+  }
 
-    /**
-     * 
+  /**
+     *
      * @returns All pairs that are supported on a specific market code.
      */
-    async accountsMarketPairs(market_code: string): Promise<string[]> {
-        return await this.makeRequest('GET', `/public/api/ver1/accounts/market_pairs?`, { market_code })
-    }
+  async accountsMarketPairs(market_code: string): Promise<string[]> {
+    return this.makeRequest('GET', '/public/api/ver1/accounts/market_pairs?', { market_code });
+  }
 
-    /**
+  /**
      * @description Updates the data from the exchange into 3Commas then returns it.
      * @returns Same data as the /accounts endpoint
      */
-    async accountLoadBalances(account_id: string): Promise<accounts[]> {
-        return await this.makeRequest('POST', `/public/api/ver1/accounts/${account_id}/load_balances?`, { account_id })
-    }
+  async accountLoadBalances(account_id: string): Promise<Accounts3CAPI[]> {
+    return this.makeRequest('POST', `/public/api/ver1/accounts/${account_id}/load_balances?`, { account_id });
+  }
 
-    async accountPieChartData(account_id: string): Promise<AccountPieChartData[]> {
-        return await this.makeRequest('POST', `/public/api/ver1/accounts/${account_id}/pie_chart_data?`, { account_id })
-    }
+  async accountPieChartData(account_id: string): Promise<AccountPieChartData3CAPI[]> {
+    return this.makeRequest('POST', `/public/api/ver1/accounts/${account_id}/pie_chart_data?`, { account_id });
+  }
 
-    /**
+  /**
      * @returns Array containing AccountTableData for every pair on the account
      */
-    async accountTableData(account_id: string): Promise<AccountTableData[]> {
-        return await this.makeRequest('POST', `/public/api/ver1/accounts/${account_id}/account_table_data?`, { account_id })
-    }
+  async accountTableData(account_id: string): Promise<AccountTableData3CAPI[]> {
+    return this.makeRequest('POST', `/public/api/ver1/accounts/${account_id}/account_table_data?`, { account_id });
+  }
 
-    /**
+  /**
      * Grid Bots
      */
 
-    async gridBots(params: getGridBots): Promise<GridBots[]> {
-        return await this.makeRequest('POST', `/public/api/ver1/grid_bots?`, { params })
-    }
+  async gridBots(params: GridBotParams): Promise<GridBots3CAPI[]> {
+    return this.makeRequest('POST', '/public/api/ver1/grid_bots?', { params });
+  }
 
-    async gridBotMarketOrders(id: number): Promise<GridMarketOrders> {
-        return await this.makeRequest('POST', `/ver1/grid_bots/${id}/market_orders?`, null)
-    }
+  async gridBotMarketOrders(id: number): Promise<GridMarketOrders3CAPI> {
+    return this.makeRequest('POST', `/ver1/grid_bots/${id}/market_orders?`, null);
+  }
 
-    async gridBotProfits(id: number): Promise<GridBotProfits[]> {
-        return await this.makeRequest('POST', `/ver1/grid_bots/${id}/profits?`, null)
-    }
+  async gridBotProfits(id: number): Promise<GridBotProfits3CAPI[]> {
+    return this.makeRequest('POST', `/ver1/grid_bots/${id}/profits?`, null);
+  }
 
-    async gridBotShow(id: number): Promise<GridBotShow> {
-        return await this.makeRequest('POST', `/ver1/grid_bots/${id}?`, null)
-    }
+  async gridBotShow(id: number): Promise<GridBotShow3CAPI> {
+    return this.makeRequest('POST', `/ver1/grid_bots/${id}?`, null);
+  }
 
-    async gridBotRequiredBalance(id: number): Promise<GridRequiredBalance> {
-        return await this.makeRequest('POST', `/ver1/grid_bots/${id}/required_balances?`, null)
-    }
-
+  async gridBotRequiredBalance(id: number): Promise<GridRequiredBalance3CAPI> {
+    return this.makeRequest('POST', `/ver1/grid_bots/${id}/required_balances?`, null);
+  }
 }
 
-export default threeCommasAPI
+export default ThreeCommasAPI;

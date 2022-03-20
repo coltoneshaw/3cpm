@@ -8,14 +8,14 @@ import SubRowAsync from './Subrow';
 import { useAppSelector } from '@/app/redux/hooks';
 import EditDeal from '@/app/Pages/ActiveDeals/Components/EditDeal';
 import {
-  IdCell, IdHeader, formattedHeader, openIn3c,
-  numberCell,
+  IdCell, IdHeader, openIn3c,
   tablePill,
   editCell,
 } from './columns';
+import { numberCell, formattedHeader } from '@/app/Components/DataTable/Components/columns';
 import { TableRow, TableColumn, TableCell } from './dealstableTypes';
 import { returnErrorTooltip, sortMe } from './utiils';
-import type { ActiveDeals } from '@/types/3Commas';
+import type { ActiveDeals } from '@/types/3CommasApi';
 
 const DealsTable = ({ data, selectedColumns }: { data: ActiveDeals[] | [], selectedColumns: string[] }) => {
   const { writeEnabled } = useAppSelector((state) => state.config.currentProfile);
@@ -64,7 +64,7 @@ const DealsTable = ({ data, selectedColumns }: { data: ActiveDeals[] | [], selec
       align: 'flex-end',
       maxWidth: 120,
       sortType: (rowA: TableRow, rowB: TableRow, columnId: keyof TableRow['original']) => sortMe(rowA, rowB, columnId),
-      Cell: ({ cell }: TableCell) => numberCell(undefined, true, cell),
+      Cell: ({ cell }: TableCell) => numberCell(cell.value, true, cell.row.original.from_currency),
     },
     {
       Header: 'Current',
@@ -72,7 +72,7 @@ const DealsTable = ({ data, selectedColumns }: { data: ActiveDeals[] | [], selec
       align: 'flex-end',
       maxWidth: 120,
       sortType: (rowA: TableRow, rowB: TableRow, columnId: keyof TableRow['original']) => sortMe(rowA, rowB, columnId),
-      Cell: ({ cell }: TableCell) => numberCell(undefined, true, cell),
+      Cell: ({ cell }: TableCell) => numberCell(cell.value, true, cell.row.original.from_currency),
     },
     {
       Header: 'TP',
@@ -80,21 +80,21 @@ const DealsTable = ({ data, selectedColumns }: { data: ActiveDeals[] | [], selec
       align: 'flex-end',
       maxWidth: 120,
       sortType: (rowA: TableRow, rowB: TableRow, columnId: keyof TableRow['original']) => sortMe(rowA, rowB, columnId),
-      Cell: ({ cell }: TableCell) => numberCell(undefined, true, cell),
+      Cell: ({ cell }: TableCell) => numberCell(cell.value, true, cell.row.original.from_currency),
     },
     {
       Header: 'Quote',
       accessor: 'bought_volume',
       align: 'flex-end',
       maxWidth: 120,
-      Cell: ({ cell }: TableCell) => numberCell(undefined, true, cell),
+      Cell: ({ cell }: TableCell) => numberCell(cell.value, true, cell.row.original.from_currency),
     },
     {
       Header: 'Base',
       accessor: 'bought_amount',
       align: 'flex-end',
       maxWidth: 120,
-      Cell: ({ cell }: TableCell) => numberCell(undefined, true, cell),
+      Cell: ({ cell }: TableCell) => numberCell(cell.value, true, cell.row.original.from_currency),
     },
     {
       Header: 'Active SO',
@@ -144,14 +144,19 @@ const DealsTable = ({ data, selectedColumns }: { data: ActiveDeals[] | [], selec
       align: 'flex-end',
       maxWidth: 120,
       sortType: (rowA: TableRow, rowB: TableRow, columnId: keyof TableRow['original']) => sortMe(rowA, rowB, columnId),
-      Cell: ({ cell }: TableCell) => numberCell(undefined, true, cell, { paddingLeft: '1em' }),
+      Cell: ({ cell }: TableCell) => numberCell(
+        cell.value,
+        true,
+        cell.row.original.from_currency,
+        { paddingLeft: '1em' },
+      ),
     },
     {
       Header: 'Funds',
       accessor: 'max_deal_funds',
       align: 'flex-end',
       maxWidth: 120,
-      Cell: ({ cell }: TableCell) => numberCell(undefined, true, cell),
+      Cell: ({ cell }: TableCell) => numberCell(cell.value, true, cell.row.original.from_currency),
     },
     {
       Header: 'Deviation',

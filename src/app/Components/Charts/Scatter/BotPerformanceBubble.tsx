@@ -8,8 +8,8 @@ import {
 
 import { currencyTooltipFormatter, yAxisWidth, currencyTickFormatter } from '@/app/Components/Charts/formatting';
 
-import { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts';
-import { BotPerformanceMetrics } from '@/types/3Commas';
+import { TooltipType, BotPerformanceChartsType } from '@/types/Charts';
+import { BotPerformanceMetrics } from '@/types/3CommasApi';
 import { parseNumber } from '@/utils/numberFormatting';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
@@ -41,15 +41,49 @@ const filterData = (data: BotPerformanceMetrics[], filter: String) => {
   return localData;
 };
 
-const getPosition = (localData: BotPerformanceMetrics[]) =>
-  // localData = localData.sort(dynamicSort(metric))
+const CustomTooltip = ({ active, payload, formatter }: TooltipType<number, string>) => {
+  if (!active || !payload || !payload[0]?.payload) return null;
 
-  localData.map((entry, index) =>
-    // @ts-ignore
-    <Cell key={entry.bot_id} fill={colors[index % colors.length]} opacity={0.8} />);
-const BotPerformanceBubble = ({ data = [], defaultCurrency }: Type_BotPerformanceCharts) => {
+  const data: BotPerformanceMetrics = payload[0].payload;
+  const {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    total_profit, bot_name, avg_deal_hours, bought_volume, number_of_deals,
+  } = data;
+  return (
+    <div className="tooltip">
+      <h4>{bot_name}</h4>
+      <p>
+        <strong>Total Profit: </strong>
+        {formatter(total_profit)}
+      </p>
+      <p>
+        <strong>Average Deal Hours: </strong>
+        {parseNumber(avg_deal_hours, 2)}
+      </p>
+      <p>
+        <strong># of Deals: </strong>
+        {number_of_deals}
+      </p>
+      <p>
+        <strong>Bought Volume: </strong>
+        {formatter(bought_volume)}
+      </p>
+
+    </div>
+  );
+};
+
+const getPosition = (localData: BotPerformanceMetrics[]) => localData
+  .map((entry, index) => (
+    <Cell
+      key={entry.bot_id}
+      fill={colors[index % colors.length]}
+      opacity={0.8}
+    />
+  ));
+
+const BotPerformanceBubble: React.FC<BotPerformanceChartsType> = ({ data = [], defaultCurrency }) => {
   const yWidth = yAxisWidth(defaultCurrency);
-  // const labelSpacing = (0 + Number(yWidth)) / 1.5 ?? 45
   const [filter, setFilter] = useState('all');
 
   const defaultFilter = 'all';
@@ -57,19 +91,17 @@ const BotPerformanceBubble = ({ data = [], defaultCurrency }: Type_BotPerformanc
 
   useEffect(() => {
     const getFilterFromStorage = getStorageItem(localStorageFilterName);
-    setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
+    setFilter((getFilterFromStorage !== undefined) ? getFilterFromStorage : defaultFilter);
   }, []);
 
   const handleChange = (event: any) => {
-    const selectedFilter = (event.target.value != undefined) ? event.target.value : defaultFilter;
+    const selectedFilter = (event.target.value !== undefined) ? event.target.value : defaultFilter;
     setFilter(selectedFilter);
     setStorageItem(localStorageFilterName, selectedFilter);
   };
 
   const renderChart = () => {
-    if (data.length === 0) {
-      return (<NoData />);
-    }
+    if (!data) return (<NoData />);
 
     // sort this by the index
     const localData = filterData([...data], filter);
@@ -122,13 +154,22 @@ const BotPerformanceBubble = ({ data = [], defaultCurrency }: Type_BotPerformanc
           <ZAxis
             type="number"
             dataKey="number_of_deals"
-            range={[Math.min(...localData.map((deal) => deal.number_of_deals)) + 200, Math.max(...localData.map((deal) => deal.number_of_deals)) + 200]}
+            range={[
+              Math.min(...localData.map((deal) => deal.number_of_deals)) + 200,
+              Math.max(...localData.map((deal) => deal.number_of_deals)) + 200,
+            ]}
             name="# of Deals Completed"
           />
 
           {/* TODO - pass the custom props down properly here.  */}
-          {/* @ts-ignore */}
-          <Tooltip content={<CustomTooltip formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)} />} cursor={{ strokeDasharray: '3 3' }} />
+          <Tooltip
+            content={(
+              <CustomTooltip
+                formatter={(value: any) => currencyTooltipFormatter(value, defaultCurrency)}
+              />
+            )}
+            cursor={{ strokeDasharray: '3 3' }}
+          />
           <Scatter name="Deal Performance" data={localData}>
             {getPosition(localData)}
           </Scatter>
@@ -173,43 +214,6 @@ const BotPerformanceBubble = ({ data = [], defaultCurrency }: Type_BotPerformanc
 
       </div>
       {renderChart()}
-    </div>
-  );
-};
-
-var CustomTooltip = ({ active, payload, formatter }: Type_Tooltip) => {
-  if (!active || payload.length == 0 || payload[0] == undefined) {
-    return null;
-  }
-
-  const data: BotPerformanceMetrics = payload[0].payload;
-  const {
-    total_profit, bot_name, avg_deal_hours, bought_volume, number_of_deals,
-  } = data;
-  return (
-    <div className="tooltip">
-      <h4>{bot_name}</h4>
-      <p>
-        <strong>Total Profit:</strong>
-        {' '}
-        {formatter(total_profit)}
-      </p>
-      <p>
-        <strong>Average Deal Hours:</strong>
-        {' '}
-        {parseNumber(avg_deal_hours, 2)}
-      </p>
-      <p>
-        <strong># of Deals:</strong>
-        {' '}
-        {number_of_deals}
-      </p>
-      <p>
-        <strong>Bought Volume:</strong>
-        {' '}
-        {formatter(bought_volume)}
-      </p>
-
     </div>
   );
 };

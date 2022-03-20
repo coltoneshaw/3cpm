@@ -1,16 +1,22 @@
 import { Type_Profile } from '@/types/config';
-import type { ActiveDeals, ProfitArray, QueryPerformanceArray } from '@/types/3Commas';
+import type { ActiveDeals, ProfitArray } from '@/types/3CommasApi';
+import type { QueryDealByPairByDayReturn, BotQueryDealByDayReturn } from './type_dailydashboard';
+import type { FetchDealDataFunctionQuery } from '@/app/Features/3Commas/Type_3Commas';
 import type { utcDateRange } from '@/types/Date';
 import { getDatesBetweenTwoDates } from '@/utils/helperFunctions';
 
 import { daysInMilli } from '@/app/Pages/DailyStats/logic';
 
-type filters = {
+type Filters = {
   accounts: number[] | [],
   currency: string[] | string
 };
 
-const queryDealByPairByDay = async (profileData: Type_Profile, utcDateRange: utcDateRange, filters: filters): Promise<queryDealByPairByDayReturn[] | []> => {
+const queryDealByPairByDay = async (
+  profileData: Type_Profile,
+  utcDateRange: utcDateRange,
+  filters: Filters,
+): Promise<QueryDealByPairByDayReturn[] | []> => {
   const queryString = `
                 SELECT 
                     pair,
@@ -29,7 +35,8 @@ const queryDealByPairByDay = async (profileData: Type_Profile, utcDateRange: utc
                 GROUP BY 
                     pair;`;
 
-  const databaseQuery: queryDealByPairByDayQuery[] | [] = await window.ThreeCPM.Repository.Database.query(profileData.id, queryString);
+  const databaseQuery: QueryDealByPairByDayReturn[] | [] = await window.ThreeCPM.Repository.Database
+    .query(profileData.id, queryString);
 
   if (!databaseQuery || databaseQuery.length > 0) {
     const totalProfitSummary = databaseQuery
@@ -53,7 +60,11 @@ const queryDealByPairByDay = async (profileData: Type_Profile, utcDateRange: utc
   return [];
 };
 
-const queryDealByBotByDay = async (profileData: Type_Profile, utcDateRange: utcDateRange, filters: filters): Promise<botQueryDealByDayReturn[] | []> => {
+const queryDealByBotByDay = async (
+  profileData: Type_Profile,
+  utcDateRange: utcDateRange,
+  filters: Filters,
+): Promise<BotQueryDealByDayReturn[] | []> => {
   const queryString = `
                 SELECT 
                     bot_name,
@@ -73,7 +84,8 @@ const queryDealByBotByDay = async (profileData: Type_Profile, utcDateRange: utcD
                 GROUP BY 
                     bot_id;`;
 
-  const databaseQuery: botQueryDealByDayQuery[] | [] = await window.ThreeCPM.Repository.Database.query(profileData.id, queryString);
+  const databaseQuery: BotQueryDealByDayReturn[] | [] = await window.ThreeCPM.Repository.Database
+    .query(profileData.id, queryString);
 
   if (!databaseQuery || databaseQuery.length > 0) {
     const totalProfitSummary = databaseQuery
@@ -97,7 +109,12 @@ const queryDealByBotByDay = async (profileData: Type_Profile, utcDateRange: utcD
   return [];
 };
 
-const getHistoricalProfits = async (profitArray: ProfitArray[] | [], filters: filters, currentProfileID: string, utcStart: number) => {
+const getHistoricalProfits = async (
+  profitArray: ProfitArray[] | [],
+  filters: Filters,
+  currentProfileID: string,
+  utcStart: number,
+) => {
   const sixtyQuery = `
         SELECT 
             sum(final_profit) as final_profit
@@ -139,7 +156,7 @@ const getHistoricalProfits = async (profitArray: ProfitArray[] | [], filters: fi
   };
 };
 
-const getTotalProfit = async (profileData: Type_Profile, filters: filters): Promise<number> => {
+const getTotalProfit = async (profileData: Type_Profile, filters: Filters): Promise<number> => {
   const totalProfit = `
     SELECT 
         sum(final_profit) as final_profit
@@ -155,7 +172,7 @@ const getTotalProfit = async (profileData: Type_Profile, filters: filters): Prom
   return total[0].final_profit;
 };
 
-const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utcDateRange, filters: filters) => {
+const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utcDateRange, filters: Filters) => {
   const profitData: ProfitArray[] | [] = [];
   const utcStart = utcDateRange.utcStartDate - daysInMilli.thirty;
 
@@ -177,7 +194,8 @@ const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utc
         ORDER BY
             closed_at asc;`;
 
-  const dataArray: fetchDealDataFunctionQuery[] | [] = await window.ThreeCPM.Repository.Database.query(profileData.id, query);
+  const dataArray: FetchDealDataFunctionQuery[] | [] = await window.ThreeCPM.Repository.Database
+    .query(profileData.id, query);
 
   // if no data return blank array.
   if (dataArray == null || dataArray.length === 0) {
@@ -204,7 +222,10 @@ const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utc
     };
   }
 
-  const { days } = getDatesBetweenTwoDates(new Date(utcStart).toISOString().split('T')[0], new Date(utcDateRange.utcEndDate).toISOString().split('T')[0]);
+  const { days } = getDatesBetweenTwoDates(
+    new Date(utcStart).toISOString().split('T')[0],
+    new Date(utcDateRange.utcEndDate).toISOString().split('T')[0],
+  );
   const profitArray: ProfitArray[] = [];
   const totalDealHours = dataArray.map((deal) => deal.deal_hours).reduce((sum: number, hours: number) => sum + hours);
 
@@ -216,14 +237,16 @@ const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utc
     let profit = {
       utc_date: day,
       profit: 0,
-      runningSum: (index == 0) ? 0 : profitArray[index - 1].runningSum,
+      runningSum: (index === 0) ? 0 : profitArray[index - 1].runningSum,
       total_deals: 0,
     };
     if (filteredData) {
       profit = {
         utc_date: day,
         profit: filteredData.final_profit,
-        runningSum: (index == 0) ? filteredData.final_profit : profitArray[index - 1].runningSum + filteredData.final_profit,
+        runningSum: (index === 0)
+          ? filteredData.final_profit
+          : profitArray[index - 1].runningSum + filteredData.final_profit,
         total_deals: filteredData.total_deals,
       };
     }
@@ -232,7 +255,11 @@ const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utc
 
   const totalProfit = (profitArray.length > 0) ? +profitArray[profitArray.length - 1].runningSum : 0;
   const averageDailyProfit = (profitArray.length > 0) ? totalProfit / (profitArray.length) : 0;
-  const totalClosedDeals = (profitArray.length > 0) ? profitArray.map((day) => day.total_deals).reduce((sum: number, total_deals: number) => sum + total_deals) : 0;
+  const totalClosedDeals = (profitArray.length > 0)
+    ? profitArray
+      .map((day) => day.total_deals)
+      .reduce((sum: number, total_deals: number) => sum + total_deals)
+    : 0;
   const averageDealHours = (profitArray.length > 0) ? totalDealHours / totalClosedDeals : 0;
   const historical = await getHistoricalProfits(profitArray, filters, profileData.id, utcStart);
 
@@ -250,7 +277,7 @@ const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utc
   };
 };
 
-const getActiveDealsFunction = async (profileData: Type_Profile, filters: filters) => {
+const getActiveDealsFunction = async (profileData: Type_Profile, filters: Filters) => {
   const query = `
                 SELECT
                     * 
@@ -264,8 +291,9 @@ const getActiveDealsFunction = async (profileData: Type_Profile, filters: filter
                     `;
   let activeDeals: ActiveDeals[] | [] = await window.ThreeCPM.Repository.Database.query(profileData.id, query);
 
-  if (activeDeals != undefined && activeDeals.length > 0) {
+  if (activeDeals !== undefined && activeDeals.length > 0) {
     activeDeals = activeDeals.map((row: ActiveDeals) => {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const so_volume_remaining = row.max_deal_funds - row.bought_volume;
       return {
         ...row,
@@ -276,8 +304,12 @@ const getActiveDealsFunction = async (profileData: Type_Profile, filters: filter
     return {
       activeDeals,
       metrics: {
-        totalBoughtVolume: activeDeals.map((deal: ActiveDeals) => deal.bought_volume).reduce((sum: number, item: number) => sum + item),
-        maxRisk: activeDeals.map((deal: ActiveDeals) => deal.max_deal_funds).reduce((sum: number, item: number) => sum + item),
+        totalBoughtVolume: activeDeals
+          .map((deal: ActiveDeals) => deal.bought_volume)
+          .reduce((sum: number, item: number) => sum + item),
+        maxRisk: activeDeals
+          .map((deal: ActiveDeals) => deal.max_deal_funds)
+          .reduce((sum: number, item: number) => sum + item),
       },
 
     };

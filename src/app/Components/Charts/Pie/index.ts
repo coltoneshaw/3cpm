@@ -1,5 +1,5 @@
-import BalancePie from "./BalancePie";
+import BalancePie from './BalancePie';
 
 export {
-    BalancePie
-}
+  BalancePie,
+};

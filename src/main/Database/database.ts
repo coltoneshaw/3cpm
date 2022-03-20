@@ -45,11 +45,10 @@ const update = (table: string, data: any[], profileId: string): void => {
     .map((key) => `@${key}`)
     .map((e) => normalizeData(e))
     .join();
-  const insert = db
-    .prepare(`INSERT OR REPLACE INTO ${table} (${KEYS}) VALUES (${valueKey})`);
+  const insert = db.prepare(`INSERT OR REPLACE INTO ${table} (${KEYS}) VALUES (${valueKey})`);
 
   const insertMany = db.transaction((dataArray) => {
-    for (const row of dataArray) insert.run(row);
+    dataArray.forEach((row: any) => insert.run(row));
   });
 
   insertMany(newData);
@@ -79,14 +78,11 @@ function upsert(
   });
 
   const insertMany = db.transaction((dataArray) => {
-    for (const row of dataArray) {
+    dataArray.forEach((row: any) => {
       const statement = db
-        .prepare(
-          // eslint-disable-next-line max-len
-          `UPDATE ${table} SET ${updateColumn} = ${row[updateColumn]} where ${id} = ${row[id]}';`,
-        );
+        .prepare(`UPDATE ${table} SET ${updateColumn} = ${row[updateColumn]} where ${id} = ${row[id]}';`);
       statement.run(row);
-    }
+    });
   });
   insertMany(normalizedDataArray);
 }

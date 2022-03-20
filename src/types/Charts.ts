@@ -1,6 +1,10 @@
 import {
+  TooltipProps,
+} from 'recharts';
+
+import {
   ProfitArray, QueryPerformanceArray, ActiveDeals, Type_MetricData, BotPerformanceMetrics, PairPerformanceMetrics, SODistributionArray,
-} from '@/types/3Commas';
+} from '@/types/3CommasApi';
 
 import type { defaultCurrency } from '@/types/config';
 
@@ -26,21 +30,18 @@ export interface Type_Pair_Performance {
   defaultCurrency: defaultCurrency
 
 }
-
-export interface Type_Tooltip {
-  active: boolean
-  payload: any[]
-  label: string,
-  formatter: Function
-}
-
+export declare type TooltipType<
+  A extends string | number,
+  B extends string | number> = TooltipProps<A, B> & {
+    formatter: (value: any, defaultCurrency?: defaultCurrency) => string
+  };
 export interface Type_DealPerformanceCharts {
   data: QueryPerformanceArray[] | undefined | []
   defaultCurrency: defaultCurrency
 
 }
 
-export interface Type_BotPerformanceCharts {
+export interface BotPerformanceChartsType {
   data: BotPerformanceMetrics[] | undefined | []
   defaultCurrency: defaultCurrency
 

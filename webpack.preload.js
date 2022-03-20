@@ -1,8 +1,7 @@
 const path = require('path');
 
-
 module.exports = {
-  externals: {'better-sqlite3': 'commonjs2 better-sqlite3', '3commas-api-node': 'commonjs2 3commas-api-node' },
+  externals: { 'better-sqlite3': 'commonjs2 better-sqlite3', '3commas-api-node': 'commonjs2 3commas-api-node' },
   // Build Mode
   mode: 'development',
   // Electron Entrypoint
@@ -10,21 +9,23 @@ module.exports = {
   target: 'electron-main',
   resolve: {
     alias: {
-      ['@']: path.resolve(__dirname, 'src'),
-      ['#']: path.resolve(__dirname, '.')
-
+      '@': path.resolve(__dirname, 'src'),
+      '#': path.resolve(__dirname, '.'),
     },
     extensions: ['.tsx', '.ts', '.js'],
+  },
+  optimization: {
+    minimize: false,
   },
   module: {
     rules: [{
       test: /\.ts$/,
       include: /src/,
-      use: [{ loader: 'ts-loader' }]
-    }]
+      use: [{ loader: 'ts-loader' }],
+    }],
   },
   output: {
-    path: __dirname + '/dist',
-    filename: 'preload.js'
-  }
-}
+    path: `${__dirname}/dist`,
+    filename: 'preload.js',
+  },
+};

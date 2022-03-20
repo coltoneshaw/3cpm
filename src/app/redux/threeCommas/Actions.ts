@@ -12,12 +12,13 @@ import { initialState } from '@/app/redux/threeCommas/initialState';
 import { updateLastSyncTime } from '@/app/redux/config/configSlice';
 import { updateBannerData } from '@/app/Features/UpdateBanner/redux/bannerSlice';
 import type { Type_Profile, Type_ReservedFunds } from '@/types/config';
-import type { Type_Query_bots, QueryPerformanceArray } from '@/types/3Commas';
+import type { QueryPerformanceArray } from '@/types/3CommasApi';
 
 // Utilities
 import {
   fetchDealDataFunction, fetchPerformanceDataFunction, getActiveDealsFunction,
-  fetchBotPerformanceMetrics, fetchPairPerformanceMetrics, botQuery, getAccountDataFunction, updateThreeCData, fetchSoData,
+  fetchBotPerformanceMetrics, fetchPairPerformanceMetrics, botQuery,
+  getAccountDataFunction, updateThreeCData, fetchSoData,
 } from '@/app/Features/3Commas/3Commas';
 
 /*
@@ -27,15 +28,29 @@ import {
  * Each has a strict accepted object that's defined in threeCommas/initialState.
  */
 
-const dispatch_setBotData = (data: typeof initialState.botData) => store.dispatch(setData({ type: 'botData', data: data ?? initialState.botData }));
-const dispatch_setProfitData = (data: typeof initialState.profitData) => store.dispatch(setData({ type: 'profitData', data: data ?? initialState.profitData }));
+const dispatchSetBotData = (data: typeof initialState.botData) => {
+  store.dispatch(setData({ type: 'botData', data: data ?? initialState.botData }));
+};
+const dispatchSetProfitData = (data: typeof initialState.profitData) => {
+  store.dispatch(setData({ type: 'profitData', data: data ?? initialState.profitData }));
+};
 
 // TODO - Need this to properly know when something is undefined.
-const dispatch_setMetricsData = (data: any) => store.dispatch(setData({ type: 'metricsData', data: data ?? initialState.metricsData }));
-const dispatch_setPerformanceData = (data: typeof initialState.performanceData) => store.dispatch(setData({ type: 'performanceData', data: data ?? initialState.performanceData }));
-const dispatch_setActiveDeals = (data: typeof initialState.activeDeals) => store.dispatch(setData({ type: 'activeDeals', data: data ?? initialState.activeDeals }));
-const dispatch_setAccountData = (data: typeof initialState.accountData) => store.dispatch(setData({ type: 'accountData', data: data ?? initialState.accountData }));
-const dispatch_setBalanceData = (data: typeof initialState.balanceData) => store.dispatch(setData({ type: 'balanceData', data: data ?? initialState.balanceData }));
+const dispatchSetMetricsData = (data: any) => {
+  store.dispatch(setData({ type: 'metricsData', data: data ?? initialState.metricsData }));
+};
+const dispatchSetPerformanceData = (data: typeof initialState.performanceData) => {
+  store.dispatch(setData({ type: 'performanceData', data: data ?? initialState.performanceData }));
+};
+const dispatchSetActiveDeals = (data: typeof initialState.activeDeals) => {
+  store.dispatch(setData({ type: 'activeDeals', data: data ?? initialState.activeDeals }));
+};
+const dispatchSetAccountData = (data: typeof initialState.accountData) => {
+  store.dispatch(setData({ type: 'accountData', data: data ?? initialState.accountData }));
+};
+const dispatchSetBalanceData = (data: typeof initialState.balanceData) => {
+  store.dispatch(setData({ type: 'balanceData', data: data ?? initialState.balanceData }));
+};
 
 /*
  *
@@ -49,10 +64,12 @@ const fetchAndStoreBotData = async (currentProfile: Type_Profile, update: boolea
     await botQuery(currentProfile)
       .then((result) => {
         // if (!result) return
-        if (update && result.length > 0) dispatch_setBotData(result);
+        if (update && result.length > 0) dispatchSetBotData(result);
         const inactiveBotFunds = result.filter((b) => b.is_enabled === 1).map((r) => r.enabled_inactive_funds);
         // pull enabled_inactive_funds from the bots and add it to metrics.
-        dispatch_setMetricsData({ inactiveBotFunds: (inactiveBotFunds.length > 0) ? inactiveBotFunds.reduce((sum, funds) => sum + funds) : 0 });
+        dispatchSetMetricsData({
+          inactiveBotFunds: (inactiveBotFunds.length > 0) ? inactiveBotFunds.reduce((sum, funds) => sum + funds) : 0,
+        });
       });
   } catch (error) {
     console.error(error);
@@ -64,50 +81,62 @@ const fetchAndStoreProfitData = async (profileData: Type_Profile) => {
     .then((data) => {
       if (!data) return;
       const { profitData, metrics } = data;
-      dispatch_setProfitData(profitData);
-      dispatch_setMetricsData(metrics);
+      dispatchSetProfitData(profitData);
+      dispatchSetMetricsData(metrics);
     });
 };
 
 const fetchAndStorePerformanceData = async (profileData: Type_Profile) => {
-  const pair_bot = async () => fetchPerformanceDataFunction(profileData, undefined)
+  const pairBot = async () => fetchPerformanceDataFunction(profileData, undefined)
     .then(((data: QueryPerformanceArray[]) => {
       if (!data || data.length === 0) return;
       console.log('updated Performance Data!');
 
-      dispatch_setPerformanceData({ pair_bot: data });
+      dispatchSetPerformanceData({ pair_bot: data });
 
       const metrics = {
-        boughtVolume: (data.length > 0) ? data.map((deal) => deal.bought_volume).reduce((sum: number, item: number) => sum + item) : 0,
-        totalProfit_perf: (data.length > 0) ? data.map((deal) => deal.total_profit).reduce((sum: number, item: number) => sum + item) : 0,
-        totalDeals: (data.length > 0) ? data.map((deal) => deal.number_of_deals).reduce((sum: number, item: number) => sum + item) : 0,
+        boughtVolume: (data.length > 0)
+          ? data
+            .map((deal) => deal.bought_volume)
+            .reduce((sum: number, item: number) => sum + item)
+          : 0,
+        totalProfit_perf: (data.length > 0)
+          ? data
+            .map((deal) => deal.total_profit)
+            .reduce((sum: number, item: number) => sum + item)
+          : 0,
+        totalDeals: (data.length > 0)
+          ? data
+            .map((deal) => deal.number_of_deals)
+            .reduce((sum: number, item: number) => sum + item)
+          : 0,
       };
 
-      dispatch_setMetricsData(metrics);
+      dispatchSetMetricsData(metrics);
     }));
 
   const bot = async () => fetchBotPerformanceMetrics(profileData, undefined)
     .then(((data) => {
       if (!data) return;
       console.log('getting bot performance metrics');
-      dispatch_setPerformanceData({ bot: data });
+      dispatchSetPerformanceData({ bot: data });
     }));
 
   const pair = async () => fetchPairPerformanceMetrics(profileData, undefined)
     .then(((data) => {
       if (!data) return;
       console.log('getting bot performance metrics');
-      dispatch_setPerformanceData({ pair: data });
+      dispatchSetPerformanceData({ pair: data });
     }));
 
   const so = async () => fetchSoData(profileData, undefined)
     .then(((data) => {
       if (!data) return;
       console.log('getting SO performance metrics');
-      dispatch_setPerformanceData({ safety_order: data });
+      dispatchSetPerformanceData({ safety_order: data });
     }));
 
-  await Promise.all([pair_bot(), bot(), pair(), so()]);
+  await Promise.all([pairBot(), bot(), pair(), so()]);
 };
 
 const fetchAndStoreActiveDeals = async (profileData: Type_Profile) => {
@@ -117,8 +146,8 @@ const fetchAndStoreActiveDeals = async (profileData: Type_Profile) => {
       console.log('updated active deals and related metrics!');
       const { activeDeals, metrics } = data;
 
-      dispatch_setActiveDeals(activeDeals);
-      dispatch_setMetricsData({ ...metrics, activeDealCount: activeDeals.length });
+      dispatchSetActiveDeals(activeDeals);
+      dispatchSetMetricsData({ ...metrics, activeDealCount: activeDeals.length });
     });
 };
 
@@ -127,11 +156,11 @@ const fetchAndStoreAccountData = async (profileData: Type_Profile) => {
     .then((data) => {
       if (!data || !data.accountData || data.accountData.length === 0) return;
       const { accountData, balance } = data;
-      dispatch_setAccountData(accountData);
+      dispatchSetAccountData(accountData);
 
       // this data may be in more spots than needed.
-      dispatch_setBalanceData(balance);
-      dispatch_setMetricsData(balance);
+      dispatchSetBalanceData(balance);
+      dispatchSetMetricsData(balance);
     });
 };
 
@@ -140,29 +169,33 @@ const undefToZero = (value: number | undefined) => ((value) || 0);
 const calculateMetrics = () => {
   const { config, threeCommas } = store.getState();
   const {
-    maxRisk, totalBoughtVolume, position, on_orders, inactiveBotFunds,
+    maxRisk, totalBoughtVolume, position, on_orders: onOrders, inactiveBotFunds,
   } = threeCommas.metricsData;
   const reservedFundsArray = <Type_ReservedFunds[]>config.currentProfile.statSettings.reservedFunds;
 
-  const LOCAL_on_orders = undefToZero(on_orders);
-  const LOCAL_position = undefToZero(position);
-  const LOCAL_totalBoughtVolume = undefToZero(totalBoughtVolume);
-  const LOCAL_maxRisk = undefToZero(maxRisk + inactiveBotFunds);
+  const localOnOrders = undefToZero(onOrders);
+  const localPosition = undefToZero(position);
+  const localTotalBoughtVolume = undefToZero(totalBoughtVolume);
+  const localMaxRisk = undefToZero(maxRisk + inactiveBotFunds);
 
   // Position = available + on orders.
-  const reservedFundsTotal = (reservedFundsArray.length) ? reservedFundsArray.filter((account) => account.is_enabled).map((account) => Number(account.reserved_funds)).reduce((sum, item) => sum + item) : 0;
-  const availableBankroll = LOCAL_position - LOCAL_on_orders - reservedFundsTotal;
-  const totalInDeals = LOCAL_on_orders + LOCAL_totalBoughtVolume;
-  const totalBankroll = LOCAL_position + LOCAL_totalBoughtVolume - reservedFundsTotal;
+  const reservedFundsTotal = (reservedFundsArray.length)
+    ? reservedFundsArray
+      .filter((account) => account.is_enabled)
+      .map((account) => Number(account.reserved_funds))
+      .reduce((sum, item) => sum + item) : 0;
+  const availableBankroll = localPosition - localOnOrders - reservedFundsTotal;
+  const totalInDeals = localOnOrders + localTotalBoughtVolume;
+  const totalBankroll = localPosition + localTotalBoughtVolume - reservedFundsTotal;
 
   console.log({
-    maxRiskPercent: Number(((LOCAL_maxRisk / totalBankroll) * 100).toFixed(0)),
+    maxRiskPercent: Number(((localMaxRisk / totalBankroll) * 100).toFixed(0)),
     bankrollAvailable: Number(((1 - ((totalInDeals) / totalBankroll)) * 100).toFixed(0)),
     totalBankroll,
     availableBankroll,
     totalInDeals,
     reservedFundsArray,
-    totalMaxRisk: LOCAL_maxRisk,
+    totalMaxRisk: localMaxRisk,
     maxRisk,
     inactiveBotFunds,
   });
@@ -171,17 +204,29 @@ const calculateMetrics = () => {
 
   // TODO - May need to remove the `toFixed` here.
 
-  dispatch_setMetricsData({
-    maxRiskPercent: Number(((LOCAL_maxRisk / totalBankroll) * 100).toFixed(0)),
+  dispatchSetMetricsData({
+    maxRiskPercent: Number(((localMaxRisk / totalBankroll) * 100).toFixed(0)),
     bankrollAvailable: Number(((1 - ((totalInDeals) / totalBankroll)) * 100).toFixed(0)),
     totalBankroll,
     availableBankroll,
     totalInDeals,
     reservedFundsTotal,
-    totalMaxRisk: LOCAL_maxRisk,
+    totalMaxRisk: localMaxRisk,
   });
 };
 
+const updateAllDataQuery = async (profileData: Type_Profile, type: string) => {
+  // if the type if fullSync this will store the bot data. If we store the bot data in the redux state it will overwrite any user changes.
+  await Promise.all([
+    fetchAndStoreBotData(profileData, type === 'fullSync'),
+    fetchAndStoreProfitData(profileData),
+    fetchAndStorePerformanceData(profileData),
+    fetchAndStoreActiveDeals(profileData),
+    fetchAndStoreAccountData(profileData),
+  ]);
+
+  calculateMetrics();
+};
 /**
  *
  * Syncing Logic functions
@@ -203,7 +248,12 @@ const preSyncCheck = (profileData: Type_Profile) => {
   return profileData;
 };
 
-const updateAllData = async (offset: number = 1000, profileData: Type_Profile, type: 'autoSync' | 'fullSync', callback?: CallableFunction) => {
+const updateAllData = async (
+  profileData: Type_Profile,
+  type: 'autoSync' | 'fullSync',
+  offset: number = 1000,
+  callback?: CallableFunction,
+) => {
   if (!preSyncCheck(profileData)) return;
 
   const { syncOptions } = store.getState().threeCommas;
@@ -230,15 +280,19 @@ const updateAllData = async (offset: number = 1000, profileData: Type_Profile, t
     store.dispatch(updateLastSyncTime({ data: lastSyncTime }));
   } catch (error) {
     console.error(error);
-    store.dispatch(updateBannerData({ show: true, message: 'Error updating your data. Check the console for more information.', type: 'apiError' }));
+    store.dispatch(updateBannerData({
+      show: true,
+      message: 'Error updating your data. Check the console for more information.',
+      type: 'apiError',
+    }));
   } finally {
     if (callback) callback();
     store.dispatch(setIsSyncing(false));
   }
 };
 
-const syncNewProfileData = async (offset: number = 1000, editingProfile: Type_Profile) => {
-  if (!preSyncCheck(editingProfile)) return;
+const syncNewProfileData = async (editingProfile: Type_Profile, offset: number = 1000) => {
+  if (!preSyncCheck(editingProfile)) return null;
 
   store.dispatch(setIsSyncing(true));
 
@@ -256,23 +310,11 @@ const syncNewProfileData = async (offset: number = 1000, editingProfile: Type_Pr
     console.error(error);
     alert('Error updating your data. Check the console for more information.');
     success = false;
-  } finally {
-    store.dispatch(setIsSyncing(false));
-    return success;
   }
-};
 
-const updateAllDataQuery = async (profileData: Type_Profile, type: string) => {
-  // if the type if fullSync this will store the bot data. If we store the bot data in the redux state it will overwrite any user changes.
-  await Promise.all([
-    fetchAndStoreBotData(profileData, type === 'fullSync'),
-    fetchAndStoreProfitData(profileData),
-    fetchAndStorePerformanceData(profileData),
-    fetchAndStoreActiveDeals(profileData),
-    fetchAndStoreAccountData(profileData),
-  ]);
+  store.dispatch(setIsSyncing(false));
 
-  calculateMetrics();
+  return success;
 };
 
 const refreshFunction = (method: string, offset?: number) => {
@@ -293,11 +335,14 @@ const refreshFunction = (method: string, offset?: number) => {
         }
 
         if (!store.getState().threeCommas.autoRefresh) return;
-        updateAllData(offset, profileData, 'autoSync', undefined)
+        updateAllData(profileData, 'autoSync', offset, undefined)
           .then(() => {
             refreshFunction('run', offset);
           });
       }, refreshRate);
+      break;
+    default:
+      break;
   }
 };
 

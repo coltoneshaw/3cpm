@@ -6,13 +6,13 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine,
 } from 'recharts';
-import { ProfitArray } from '@/types/3Commas';
+import { ProfitArray } from '@/types/3CommasApi';
 import { getLang, removeDuplicatesInArray } from '@/utils/helperFunctions';
 
 import { yAxisWidth, currencyTickFormatter, currencyTooltipFormatter } from '@/app/Components/Charts/formatting';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
-import { ProfitArrayChart, Type_Tooltip } from '@/types/Charts';
+import { ProfitArrayChart, TooltipType } from '@/types/Charts';
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
 const lang = getLang();
@@ -51,8 +51,8 @@ const convertToNewDates = (data: ProfitArray[], langString: any, type: string) =
   });
 };
 
-const CustomTooltip = ({ active, payload, formatter }: Type_Tooltip) => {
-  if (!active || payload.length === 0 || payload[0] === undefined) return null;
+const CustomTooltip = ({ active, payload, formatter }: TooltipType<number, string>) => {
+  if (!active || !payload || !payload[0]?.payload) return null;
   const data: TypeNewDateProfit = payload[0].payload;
   const {
     // eslint-disable-next-line @typescript-eslint/naming-convention

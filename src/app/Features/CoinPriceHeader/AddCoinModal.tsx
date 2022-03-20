@@ -1,154 +1,120 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 import {
-    Dialog,
-    DialogContent,
+  Dialog,
+  DialogContent,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Delete from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
 
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
+import AddCoinDiv from './Components/AddCoinDiv';
 import { setStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
-import { useThemeProvidor } from "@/app/Context/ThemeEngine";
+import { useThemeProvidor } from '@/app/Context/ThemeEngine';
 
+type CoinModalProps = {
+  open: boolean,
+  setOpen: any,
+  coinNames: string[],
+  currentCoins: {
+    selectedCoins: string[],
+    updateSelectedcoins: any
+  }
+};
 
+const AddCoinModal: React.FC<CoinModalProps> = ({
+  open, setOpen, coinNames, currentCoins,
+}) => {
+  // make this version handler use the version that the user is using.
 
-const AddCoinModal = ({ open, setOpen, coinNames, currentCoins }: { open: boolean, setOpen: any, coinNames: string[], currentCoins: { selectedCoins: string[], updateSelectedcoins: any } }) => {
+  const [inputValue, changeInputValue] = useState('');
 
-    // make this version handler use the version that the user is using.
+  const { selectedCoins, updateSelectedcoins } = currentCoins;
 
-    const [inputValue, changeInputValue] = useState('')
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    let { selectedCoins, updateSelectedcoins } = currentCoins
+  const theme = useThemeProvidor();
+  const { styles } = theme;
 
-    const handleClose = () => {
-        setOpen(false);
-    };
+  // 1. Show existing coins in the header
+  // 2. give ability to delete these coins
 
-    const theme = useThemeProvidor()
-    const { styles } = theme
+  // 3. add a search for new coins that uses the coins returned from binance and possibly a dynamic filter
+  // 4. Save the coin to the header and to the localData
 
+  const deleteCoin = (coin: string) => {
+    updateSelectedcoins((prevState: string[]) => {
+      const updatedCoins = prevState.filter((c) => c !== coin);
 
-    // 1. Show existing coins in the header
-    // 2. give ability to delete these coins
+      setStorageItem(storageItem.settings.coinPriceArray, updatedCoins);
+      return updatedCoins;
+    });
+  };
 
+  const addCoin = () => {
+    changeInputValue((selectedValue) => {
+      updateSelectedcoins((prevState: string[]) => {
+        const updatedCoins = [...prevState, selectedValue];
+        setStorageItem(storageItem.settings.coinPriceArray, updatedCoins);
+        return updatedCoins;
+      });
+      return '';
+    });
+  };
 
-    // 3. add a search for new coins that uses the coins returned from binance and possibly a dynamic filter
-    // 4. Save the coin to the header and to the localData
-
-    const deleteCoin = (coin: string) => {
-        updateSelectedcoins((prevState: string[]) => {
-
-            const updatedCoins = prevState.filter(c => c !== coin);
-
-            setStorageItem(storageItem.settings.coinPriceArray, updatedCoins)
-            return updatedCoins
-        })
-    }
-
-    const addCoin = () => {
-        changeInputValue(selectedValue => {
-
-            updateSelectedcoins((prevState: string[]) => {
-                const updatedCoins = [...prevState, selectedValue]
-                setStorageItem(storageItem.settings.coinPriceArray, updatedCoins)
-                return updatedCoins;
-            }
-            )
-            return ''
-        })
-    }
-
-    const addCoinDiv = () => {
-        if (selectedCoins.length >= 5) return <p style={{fontWeight: 300, margin: 'auto'}}>Remove a coin to add another.</p>
-
-        return (
-            <>
-                <Autocomplete
-                    options={['', ...coinNames]}
-                    style={{ flexBasis: '90%', marginRight: '2em', color: 'var(--color-text-lightbackground)' }}
-                    value={inputValue}
-                    //@ts-ignore
-                    onChange={(e) => changeInputValue(e.target.innerText)}
-                    renderInput={(params) => <TextField {...params} label="Add Coin" variant="outlined"/>}
-                />
-                <AddIcon
-                    style={{
-                        flexBasis: '10%',
-                        cursor: 'pointer'
-
-                    }}
-                    onClick={() => {
-                        addCoin()
-                    }}
-                />
-            </>
-        )
-    }
-
-
-return (
+  return (
     <Dialog
-        fullWidth={false}
-        maxWidth="md"
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="max-width-dialog-title"
-        style={{
+      fullWidth={false}
+      maxWidth="md"
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="max-width-dialog-title"
+      style={{
+        color: 'var(--color-text-lightbackground)',
+        padding: 0,
+        ...styles,
 
-            color: 'var(--color-text-lightbackground)',
-            padding: 0,
-            ...styles,
-
-        }}
+      }}
     >
-        <DialogContent style={{ padding: 0 }}>
-            <div className="flex-row addCoinModal">
-                <CloseIcon className="closeIcon" onClick={handleClose} />
-
-                <div className="flex-column" style={{ 
-                    width: '100%'}}>
-                    <h2 style={{textAlign: 'center'}}>Coins</h2>
-
-                    {
-                        selectedCoins.map(coin => (
-                            <div className="flex-row selectedCoinDiv" key={coin}>
-                                <p style={{ flexBasis: '90%' }}>{coin}</p>
-                                <Delete
-                                    style={{
-                                        flexBasis: '10%',
-                                        cursor: 'pointer'
-                                    }}
-                                    onClick={() => {
-                                        deleteCoin(coin)
-                                    }}
-                                />
-                            </div>
-                        ))
-                    }
-
-                    <div className="addCoinDiv flex-row">
-
-                        {
-                            addCoinDiv()
-                        }
-
-                    </div>
-
-
-
-
-                </div>
-
-            </div>
-
-        </DialogContent>
-
+      <DialogContent style={{ padding: 0 }}>
+        <div className="flex-row addCoinModal">
+          <CloseIcon className="closeIcon" onClick={handleClose} />
+          <div
+            className="flex-column"
+            style={{ width: '100%' }}
+          >
+            <h2 style={{ textAlign: 'center' }}>Coins</h2>
+            {selectedCoins.map((coin) => (
+              <div
+                className="flex-row selectedCoinDiv"
+                key={coin}
+              >
+                <p style={{ flexBasis: '90%' }}>{coin}</p>
+                <Delete
+                  style={{
+                    flexBasis: '10%',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => {
+                    deleteCoin(coin);
+                  }}
+                />
+              </div>
+            ))}
+            <AddCoinDiv
+              selectedCoins={selectedCoins}
+              coinNames={coinNames}
+              inputValue={inputValue}
+              changeInputValue={changeInputValue}
+              addCoin={addCoin}
+            />
+          </div>
+        </div>
+      </DialogContent>
     </Dialog>
-)
-}
+  );
+};
 
 export default AddCoinModal;

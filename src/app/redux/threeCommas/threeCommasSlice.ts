@@ -10,7 +10,7 @@ import type {
 } from './initialState';
 import {
   ActiveDeals, Type_Query_Accounts, Type_Query_bots, ProfitArray,
-} from '@/types/3Commas';
+} from '@/types/3CommasApi';
 
 const dispatchError = (message: string) => {
   console.error(message);

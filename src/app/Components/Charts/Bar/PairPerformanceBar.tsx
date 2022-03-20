@@ -6,8 +6,8 @@ import {
   InputLabel, MenuItem, FormControl, Select,
 } from '@mui/material';
 
-import { PairPerformanceMetrics } from '@/types/3Commas';
-import { Type_Tooltip, Type_Pair_Performance } from '@/types/Charts';
+import { PairPerformanceMetrics } from '@/types/3CommasApi';
+import { TooltipType, Type_Pair_Performance } from '@/types/Charts';
 
 import { parseNumber } from '@/utils/numberFormatting';
 import { currencyTickFormatter, currencyTooltipFormatter } from '@/app/Components/Charts/formatting';
@@ -20,7 +20,7 @@ const defaultSortAndFilter = {
   avg_profit: false,
 };
 
-const CustomTooltip = ({ active, payload, formatter }: Type_Tooltip) => {
+const CustomTooltip = ({ active, payload, formatter }: TooltipType<number, string>) => {
   if (!active || !payload || payload[0] === undefined) return null;
   const data: PairPerformanceMetrics = payload[0].payload;
   const {

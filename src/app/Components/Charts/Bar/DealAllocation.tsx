@@ -4,13 +4,13 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 import { parseNumber } from '@/utils/numberFormatting';
-import type { Type_Tooltip, Type_DealPerformanceCharts } from '@/types/Charts';
+import type { TooltipType, Type_DealPerformanceCharts } from '@/types/Charts';
 import { dynamicSort } from '@/utils/helperFunctions';
 import { currencyTooltipFormatter } from '@/app/Components/Charts/formatting';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
-const CustomTooltip = ({ active, payload, formatter }: Type_Tooltip) => {
+const CustomTooltip = ({ active, payload, formatter }: TooltipType<number, string>) => {
   if (!active || !payload || payload[0] === undefined) return null;
 
   const {

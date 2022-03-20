@@ -8,7 +8,7 @@ const currencyKeys = ['AUD', 'BIDR', 'BTC', 'BNB', 'BRL', 'BUSD',
   'IDRT', 'NGN', 'RUB', 'TRX', 'TRY', 'TUSD', 'UAH', 'VAI',
   'XRP', 'USDP'];
 
-type CurrencyKeys = 'AUD' | 'BIDR' | 'BTC' | 'BNB' | 'BRL' | 'BUSD' |
+export type CurrencyKeys = 'AUD' | 'BIDR' | 'BTC' | 'BNB' | 'BRL' | 'BUSD' |
   'BVND' | 'DAI' | 'USD' | 'USDT' | 'USDC' | 'UST' | 'GBP' | 'ETH' | 'EUR' |
   'IDRT' | 'NGN' | 'RUB' | 'TRX' | 'TRY' | 'TUSD' | 'UAH' | 'VAI' |
   'XRP' | 'USDP';
@@ -207,11 +207,13 @@ const supportedCurrencies: SupportedCurrencies = {
 };
 
 const formatCurrency = (
-  currencyCode: (keyof typeof supportedCurrencies)[],
+  currencyCode: (keyof typeof supportedCurrencies)[] | undefined,
   value: number,
   activeDeals?: boolean,
 ) => {
   const nothing = { metric: value, symbol: '', extendedSymbol: '' };
+  if (!currencyCode) return nothing;
+
   // this can happen when the app is loading
   if (currencyCode.length === 0) return nothing;
 

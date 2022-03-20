@@ -1,5 +1,5 @@
 import {
-  app, BrowserWindow, ipcMain, shell, Menu,
+  app, BrowserWindow, ipcMain, shell,
 } from 'electron';
 import log from 'electron-log';
 import path from 'path';
@@ -19,14 +19,12 @@ import { config } from '@/main/Config/config';
 import {
   updateAPI, getAndStoreBotData, getAccountSummary, getDealOrders, updateDeal,
 } from '@/main/3Commas/index';
-import { UpdateDealRequest } from '@/main/3Commas/types/Deals';
+import type { UpdateDealRequest } from '@/main/3Commas/types';
 import { Type_Profile } from '@/types/config';
 
-import {
-  fetchCoinPricesBinance,
-} from '@/app/Features/CoinPriceHeader/BinanceApi';
+import fetchCoinPricesBinance from '@/app/Features/CoinPriceHeader/BinanceApi';
 
-import { fetchVersions } from '../app/Features/UpdateBanner/UpdateApiFetch';
+import fetchVersions from '@/app/Features/UpdateBanner/UpdateApiFetch';
 import preloadCheck from './precheck';
 
 const isDev = !app.isPackaged;

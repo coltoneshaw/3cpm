@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 
 import './App.global.scss';
-import { HashRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import Sidebar from './Components/Sidebar/Sidebar';
 import { MainWindow } from '@/app/Pages/Index';
 
@@ -59,13 +59,13 @@ const App = () => {
   }, [currentProfile]);
 
   return (
-    <HashRouter>
+    <MemoryRouter>
       <div style={styles} className="rootDiv">
         <UpdateBanner />
         <Sidebar />
         <MainWindow />
       </div>
-    </HashRouter>
+    </MemoryRouter>
   );
 };
 

@@ -8,7 +8,7 @@ import { Type_ReservedFunds } from '@/types/config';
 
 import { convertMiliseconds } from '@/utils/helperFunctions';
 
-import type { threeCommas_Api_Deals } from '@/main/3Commas/types/Deals';
+import { PreStorageDeals3cAPI } from '@/types/3CommasAPI/Deals';
 
 const accountFilters = () => {
   const profileConfig: Type_ReservedFunds[] = getProfileConfig(
@@ -71,16 +71,8 @@ const calcDealTime = (created_at: string, closed_at: string) => {
  * @param summary boolean value to represent if notifications are summarized if multiple come in together.
  */
 
-type Data = threeCommas_Api_Deals & {
-  completed_manual_safety_orders_count: number,
-  max_deal_funds: number | null,
-  profitPercent: string | null,
-  impactFactor: number | null,
-  closed_at_iso_string: number | null,
-};
-
 function findAndNotifyNewDeals(
-  data: Data[],
+  data: PreStorageDeals3cAPI[],
   lastSyncTime: number,
   summary: boolean,
 ) {
@@ -124,7 +116,7 @@ function findAndNotifyNewDeals(
     return;
   }
 
-  for (const deal of closedDeals) {
+  closedDeals.forEach((deal) => {
     const {
       bot_name, pair, final_profit,
       final_profit_percentage, from_currency, id,
@@ -152,7 +144,7 @@ function findAndNotifyNewDeals(
     } catch (error) {
       console.error(`error showing notification - ${error}`);
     }
-  }
+  });
 }
 
 export {

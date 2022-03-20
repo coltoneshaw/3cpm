@@ -6,8 +6,8 @@ import {
   ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Scatter,
 } from 'recharts';
 
-import type { BotPerformanceMetrics } from '@/types/3Commas';
-import type { Type_Tooltip, Type_BotPerformanceCharts } from '@/types/Charts';
+import type { BotPerformanceMetrics } from '@/types/3CommasApi';
+import type { TooltipType, BotPerformanceChartsType } from '@/types/Charts';
 
 import { parseNumber } from '@/utils/numberFormatting';
 import { currencyTickFormatter, currencyTooltipFormatter } from '@/app/Components/Charts/formatting';
@@ -20,7 +20,7 @@ const defaultSortAndFilter = {
   avg_profit: false,
 };
 
-const CustomTooltip = ({ active, payload, formatter }: Type_Tooltip) => {
+const CustomTooltip = ({ active, payload, formatter }: TooltipType<number, string>) => {
   if (!active || !payload || payload[0] === undefined) return null;
 
   const data: BotPerformanceMetrics = payload[0].payload;
@@ -55,7 +55,7 @@ const CustomTooltip = ({ active, payload, formatter }: Type_Tooltip) => {
     </div>
   );
 };
-const BotPerformanceBar: React.FC<Type_BotPerformanceCharts> = ({ data = [], defaultCurrency }) => {
+const BotPerformanceBar: React.FC<BotPerformanceChartsType> = ({ data = [], defaultCurrency }) => {
   const {
     sort: { sort, handleSortChange },
     filter: { filter, handleFilterChange },

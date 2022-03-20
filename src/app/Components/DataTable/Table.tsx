@@ -2,28 +2,13 @@ import React, { useEffect } from 'react';
 
 import {
   useTable, useSortBy, useExpanded, useFlexLayout,
-  TableCommonProps,
-  TableOptions,
 } from 'react-table';
 import TableHeader from './TableParts/HeaderGroup';
 import TableBody from './TableParts/Body';
 import './Table.scss';
-import type { ActiveDeals, Type_Query_bots } from '@/types/3Commas';
-import { SubRowAsync } from '@/app/Pages/ActiveDeals/Components';
-import { initialSortBy, setSortStorage } from './utils';
 
-interface TableType extends TableOptions<{}> {
-  renderRowSubComponent?: typeof SubRowAsync | undefined,
-  columns: any[],
-  data: ActiveDeals[] | any[]
-  customHeaderProps?: TableCommonProps,
-  customColumnProps?: TableCommonProps,
-  customRowProps?: TableCommonProps,
-  customCellProps?: TableCommonProps
-  localStorageSortName?: string,
-  updateLocalBotData?: React.Dispatch<React.SetStateAction<Type_Query_bots[]>>,
-  updateReservedFunds?: (id: number, column: string, value: string) => void,
-}
+import { initialSortBy, setSortStorage } from './utils';
+import { TableType } from './types';
 
 const blankCustomProps = { style: {}, className: '', role: undefined };
 const tableState: TableType = {
@@ -106,6 +91,7 @@ const CustomTable: React.FC<typeof tableState> = ({
         visibleColumns={visibleColumns}
         renderRowSubComponent={renderRowSubComponent || undefined}
         rows={rows}
+        key="table-body"
       />
 
     </div>

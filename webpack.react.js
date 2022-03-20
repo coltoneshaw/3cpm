@@ -9,21 +9,24 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, 'dist/renderer.js'),
     compress: true,
-    port: 9000
+    port: 9000,
   },
   resolve: {
     alias: {
-      ['@']: path.resolve(__dirname, 'src'),
-      ['#']: path.resolve(__dirname, '.')
+      '@': path.resolve(__dirname, 'src'),
+      '#': path.resolve(__dirname, '.'),
     },
     extensions: ['.tsx', '.ts', '.js'],
+  },
+  optimization: {
+    minimize: false,
   },
   module: {
     rules: [
       {
         test: /\.ts(x?)$/,
         include: /src/,
-        use: [{ loader: 'ts-loader' }]
+        use: [{ loader: 'ts-loader' }],
       },
       {
         test: /\.js$/,
@@ -34,12 +37,13 @@ module.exports = {
             presets: [[
               '@babel/preset-env', {
                 targets: {
-                  esmodules: true
-                }
+                  esmodules: true,
+                },
               }],
-              '@babel/preset-react']
-          }
-        }
+              '@babel/preset-react',
+            ],
+          },
+        },
       },
       {
         test: /\.s[ac]ss$/i,
@@ -48,16 +52,16 @@ module.exports = {
           'css-loader',
           'sass-loader',
         ],
-      }
-    ]
+      },
+    ],
   },
   output: {
-    path: __dirname + '/dist',
-    filename: 'renderer.js'
+    path: `${__dirname}/dist`,
+    filename: 'renderer.js',
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html'
-    })
-  ]
+      template: './src/index.html',
+    }),
+  ],
 };

@@ -1,11 +1,14 @@
 import React, { useMemo } from 'react';
-import { Switch, Checkbox } from '@mui/material';
 import { Delete as DeleteIcon } from '@mui/icons-material';
 
+import { ColumnWithStrictAccessor, Column } from 'react-table';
+import { numberCell, formattedHeader } from '@/app/Components/DataTable/Components/columns';
 import { useAppSelector } from '@/app/redux/hooks';
 import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
-import { formatCurrency } from '@/utils/granularity';
+import {
+  hideCheckbox, isEnabledSwitch, openIn3c, deleteIcon,
+} from './columns';
 
 import { parseNumber } from '@/utils/numberFormatting';
 import {
@@ -16,18 +19,19 @@ import {
   calcDropMetrics,
 } from '@/utils/formulas';
 
-import { Type_Query_bots } from '@/types/3Commas';
+import { Type_Query_bots } from '@/types/3CommasApi';
 
 import { CustomTable, OpenIn3Commas, BotsEditableCell } from '@/app/Components/DataTable/Index';
+import { TableCell } from './tableTypes';
 
 const EditableCell = BotsEditableCell;
 
-interface Type_DataTable {
+interface DataTableType {
   localBotData: Type_Query_bots[]
-  updateLocalBotData: any,
+  updateLocalBotData: React.Dispatch<React.SetStateAction<Type_Query_bots[]>>,
   selectedColumns: string[]
 }
-const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: Type_DataTable) => {
+const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: DataTableType) => {
   const localStorageSortName = storageItem.tables.BotPlanner.sort;
 
   const { metricsData: { totalBankroll } } = useAppSelector((state) => state.threeCommas);
@@ -47,10 +51,10 @@ const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: Type_D
     });
   };
 
-  const handleDeleteRow = (cellId: number) => {
+  const handleDeleteRow = (cellId: number | string) => {
     updateLocalBotData((prevState: Type_Query_bots[]) => {
       const newRows = prevState.filter((row) => {
-        if (cellId !== row.id) {
+        if (String(cellId) !== String(row.id)) {
           return row;
         }
       });
@@ -61,7 +65,7 @@ const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: Type_D
   const handleEditCellChangeCommitted = (id: number, column: string, value: string | boolean) => {
     updateLocalBotData((prevState: Type_Query_bots[]) => {
       const newRows = prevState.map((row) => {
-        if (id == row.id) {
+        if (id === row.id) {
           // @ts-ignore - validate props
           row[column] = value;
 
@@ -76,12 +80,21 @@ const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: Type_D
             active_deals_count, safety_order_step_percentage,
           } = row;
 
-          const maxDealFunds = botPerDealMaxFunds(+max_safety_orders, base_order_volume, safety_order_volume, martingale_volume_coefficient);
-          const max_inactive_funds = calcBotMaxInactiveFunds(+maxDealFunds, +max_active_deals, +active_deals_count);
+          const maxDealFunds = botPerDealMaxFunds(
+            Number(max_safety_orders),
+            base_order_volume,
+            safety_order_volume,
+            martingale_volume_coefficient,
+          );
+          const maxInactiveFunds = calcBotMaxInactiveFunds(+maxDealFunds, +max_active_deals, +active_deals_count);
           row.max_funds = calcBotMaxFunds(+maxDealFunds, +max_active_deals);
           row.max_funds_per_deal = maxDealFunds;
-          row.max_inactive_funds = max_inactive_funds;
-          row.price_deviation = calcDeviation(+max_safety_orders, +safety_order_step_percentage, +martingale_step_coefficient);
+          row.max_inactive_funds = maxInactiveFunds;
+          row.price_deviation = calcDeviation(
+            +max_safety_orders,
+            +safety_order_step_percentage,
+            +martingale_step_coefficient,
+          );
         }
         return row;
       });
@@ -90,67 +103,49 @@ const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: Type_D
     });
   };
 
-  const columns = useMemo(
+  const columns = useMemo<Column[]>(
     () => [
       {
         Header: 'Enabled?',
         accessor: 'is_enabled',
         width: 80,
-        Cell: ({ cell }: any) => (
-          <Switch
-            checked={cell.value === 1 || cell.value === true}
-            color="primary"
-            onClick={handleOnOff}
-            name={cell.row.original.id}
-            inputProps={{ 'aria-label': 'secondary checkbox' }}
-          />
-        ),
+        Cell: ({ cell }: TableCell) => isEnabledSwitch(cell, handleOnOff),
       },
       {
         Header: 'Hide?',
         accessor: 'hide',
         width: 50,
-        Cell: ({ cell }: any) => (
-          <Checkbox
-            checked={cell.value === 1 || cell.value === true}
-            onChange={() => handleEditCellChangeCommitted(cell.row.original.id, 'hide', !cell.value)}
-            name="summary"
-            style={{ color: 'var(--color-secondary)' }}
-          />
-        ),
+        Cell: ({ cell }: TableCell) => hideCheckbox(cell, handleEditCellChangeCommitted),
       },
       {
-        Header: () => <span style={{ width: '100%', textAlign: 'left', paddingLeft: '3px' }}>Bot Name</span>,
+        Header: () => formattedHeader('Bot Name'),
         accessor: 'name',
         width: 160,
         // Cell: EditableCell,
-        Cell: ({ cell }: any) => <OpenIn3Commas cell={cell} bot_id={cell.row.original.id} />,
+        Cell: ({ cell }: TableCell) => openIn3c(cell),
       },
       {
-        Header: () => <span style={{ width: '100%', textAlign: 'left', paddingLeft: '3px' }}>Pairs</span>,
+        Header: () => formattedHeader('Pairs'),
         accessor: 'pairs',
         align: 'flex-start',
-        Cell: ({ cell }: any) => ((cell.value.length > 20) ? 'Many' : cell.value),
+        Cell: ({ cell }: TableCell) => ((cell.value.length > 20) ? 'Many' : cell.value),
       },
       {
         Header: 'Currency',
         accessor: 'from_currency',
         width: 60,
-        // className: "monospace-cell",
       },
       {
         Header: 'BO',
         accessor: 'base_order_volume',
         Cell: EditableCell,
         className: 'monospace-cell',
-        // align: 'flex-end'
       },
       {
         Header: 'SO',
         accessor: 'safety_order_volume',
         Cell: EditableCell,
         className: 'monospace-cell',
-        // align: 'flex-end'
       },
       {
         Header: 'TP',
@@ -201,47 +196,31 @@ const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: Type_D
         Header: 'Deviation',
         width: 80,
         accessor: 'price_deviation',
-        Cell: ({ cell }: any) => (
-          <span className="monospace-cell">
-            {cell.value}
-            %
-          </span>
-        ),
+        Cell: ({ cell }: TableCell) => numberCell(`${cell.value}%`),
       },
       {
         Header: 'Deal Funds',
         accessor: 'max_funds_per_deal',
-        Cell: ({ cell }: any) => <span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>,
+        Cell: ({ cell }: TableCell) => numberCell(cell.value, true, cell.row.original.from_currency),
         align: 'flex-end',
       },
       {
         Header: 'Bot Funds',
         accessor: 'max_funds',
-        Cell: ({ cell }: any) => <span className=" monospace-cell">{formatCurrency([cell.row.original.from_currency], cell.value, true).metric}</span>,
+        Cell: ({ cell }: TableCell) => numberCell(cell.value, true, cell.row.original.from_currency),
         align: 'flex-end',
       },
-
       {
         Header: 'Coverage',
         width: 80,
         accessor: 'maxCoveragePercent',
-        Cell: ({ cell }: any) => (
-          <span className="monospace-cell">
-            {cell.value}
-            %
-          </span>
-        ),
+        Cell: ({ cell }: TableCell) => numberCell(`${cell.value}%`),
       },
       {
         Header: 'Risk %',
         width: 80,
         accessor: 'riskPercent',
-        Cell: ({ cell }: any) => (
-          <span className="monospace-cell">
-            {parseNumber(cell.value * 100)}
-            %
-          </span>
-        ),
+        Cell: ({ cell }: TableCell) => numberCell(`${parseNumber(cell.value * 100)}%`),
       },
       {
         Header: 'Max SO Covered',
@@ -250,10 +229,10 @@ const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: Type_D
         className: 'monospace-cell',
       },
       {
-        Header: () => <DeleteIcon />,
+        Header: () => deleteIcon('header'),
         accessor: 'origin',
         width: 60,
-        Cell: ({ cell }: any) => ((cell.value === 'custom') ? <DeleteIcon onClick={() => handleDeleteRow(cell.row.original.id)} /> : <></>),
+        Cell: ({ cell }: TableCell) => deleteIcon('cell', cell, handleDeleteRow),
       },
     ],
     [],
@@ -262,33 +241,22 @@ const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: Type_D
   return (
     <div className="botsTable dataTableBase">
       <CustomTable
-        columns={columns.filter((c) => selectedColumns.includes(c.accessor))}
+        columns={columns.filter((c) => selectedColumns.includes(String(c.accessor)))}
         data={localBotData}
         autoResetSortBy={false}
         manualSortBy
-        // @ts-ignore
         updateLocalBotData={handleEditCellChangeCommitted}
         localStorageSortName={localStorageSortName}
-        // @ts-ignore
-        getHeaderProps={() => ({
+        customHeaderProps={{
           style: {
             height: '44px',
             backgroundColor: 'var(--color-secondary-light87)',
-            zIndex: '1000',
+            zIndex: 1000,
           },
-        })}
-        // @ts-ignore
-        getColumnProps={(column) => ({
-
-        })}
-        // @ts-ignore
-        getRowProps={(row) => ({
-
-        })}
-        // @ts-ignore
-        getCellProps={(cellInfo) => ({
-
-        })}
+        }}
+        getColumnProps={{}}
+        getRowProps={{}}
+        getCellProps={{}}
       />
     </div>
 

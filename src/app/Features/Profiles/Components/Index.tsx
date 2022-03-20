@@ -1,7 +1,7 @@
-import ProfileNameEditor from "./ProfileNameEditor";
-import ProfileSwitcher from "./ProfileSwitcher";
+import ProfileNameEditor from './ProfileNameEditor';
+import ProfileSwitcher from './ProfileSwitcher';
 
 export {
-    ProfileNameEditor,
-    ProfileSwitcher
-}
+  ProfileNameEditor,
+  ProfileSwitcher,
+};

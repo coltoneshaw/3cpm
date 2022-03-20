@@ -1,75 +1,132 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from 'react';
 import { useAppSelector } from '@/app/redux/hooks';
 
 import {
-    Card_ActiveDeals, Card_totalInDeals, Card_MaxDca,
-    Card_TotalBankRoll, Card_TotalProfit, Card_MaxRiskPercent,
-    Card_TotalBoughtVolume, Card_TotalDeals, Card_TotalRoi,
-    Card_AverageDailyProfit, Card_AverageDealHours
+  MetricCard,
 } from '@/app/Components/Charts/DataCards';
 
-import { Type_MetricData } from "@/types/3Commas";
+import { Type_MetricData } from '@/types/3CommasApi';
 
 const RoiCards = ({ metricsData, currentView }: { currentView: string, metricsData: Type_MetricData }) => {
-    const { defaultCurrency } = useAppSelector(state => state.config.currentProfile.general);
+  const { defaultCurrency } = useAppSelector((state) => state.config.currentProfile.general);
 
+  const additionalMetrics = () => {
+    const {
+      activeDealCount, totalInDeals, maxRisk, totalMaxRisk, totalBankroll, position, on_orders: onOrders,
+      totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent, totalDeals,
+      averageDailyProfit, averageDealHours, totalClosedDeals, totalDealHours,
+    } = metricsData;
 
-
-
-    const additionalMetrics = (currentView: string, metricsData: Type_MetricData) => {
-        const {
-            activeDealCount, totalInDeals, maxRisk, inactiveBotFunds, totalMaxRisk, totalBankroll, position, on_orders,
-            totalProfit, totalBoughtVolume, reservedFundsTotal, maxRiskPercent, totalDeals,
-            boughtVolume, totalProfit_perf, averageDailyProfit, averageDealHours, totalClosedDeals, totalDealHours } = metricsData
-
-        const beginningCards = (
-            <>
-                <Card_MaxDca metric={totalMaxRisk} currency={defaultCurrency} />
-                <Card_TotalRoi title="Total ROI" additionalData={{ totalProfit, totalBankroll }} currency={defaultCurrency} />
-            </>)
-        if (currentView === 'performance-monitor') {
-            return (
-                <>
-                {beginningCards }
-                    <Card_TotalProfit metric={totalProfit} currency={defaultCurrency} />
-                    <Card_TotalDeals metric={totalDeals} />
-                    <Card_AverageDailyProfit metric={averageDailyProfit} currency={defaultCurrency} />
-                    <Card_AverageDealHours metric={averageDealHours} additionalData={{ totalClosedDeals, totalDealHours }} />
-                </>)
-        } else if (currentView === 'risk-monitor') {
-            return (
-                <>
-                {beginningCards}
-                    <Card_MaxRiskPercent metric={maxRiskPercent} additionalData={{ totalBankroll, maxDCA: maxRisk, inactiveBotFunds }} currency={defaultCurrency} />
-                    <Card_ActiveDeals metric={activeDealCount} />
-                    <Card_totalInDeals metric={totalInDeals} currency={defaultCurrency} additionalData={{ on_orders, totalBoughtVolume }} />
-                    <Card_TotalBankRoll metric={totalBankroll} currency={defaultCurrency} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
-                </>)
-        }
-
-        return (
-            <>
-            {beginningCards}
-                <Card_TotalProfit metric={totalProfit} currency={defaultCurrency} />
-                <Card_ActiveDeals metric={activeDealCount} />
-                <Card_totalInDeals metric={totalInDeals} currency={defaultCurrency} additionalData={{ on_orders, totalBoughtVolume }} />
-                <Card_TotalBankRoll metric={totalBankroll} currency={defaultCurrency} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
-            </>)
+    const beginningCards = (
+      <>
+        <MetricCard
+          metric={totalMaxRisk}
+          currency={defaultCurrency}
+          type="max-dca"
+        />
+        <MetricCard
+          additionalData={{ totalProfit, totalBankroll }}
+          currency={defaultCurrency}
+          metric={(totalProfit / (totalBankroll - totalProfit))}
+          type="total-roi"
+        />
+      </>
+    );
+    if (currentView === 'performance-monitor') {
+      return (
+        <>
+          {beginningCards}
+          <MetricCard
+            metric={totalProfit}
+            currency={defaultCurrency}
+            type="total-profit"
+          />
+          <MetricCard
+            metric={totalDeals}
+            type="total-deals"
+          />
+          <MetricCard
+            metric={averageDailyProfit}
+            currency={defaultCurrency}
+            type="average-daily-profit"
+          />
+          <MetricCard
+            metric={averageDealHours}
+            additionalData={{ totalClosedDeals, totalDealHours }}
+            type="average-deal-hours"
+          />
+        </>
+      );
+    } if (currentView === 'risk-monitor') {
+      return (
+        <>
+          {beginningCards}
+          <MetricCard
+            metric={maxRiskPercent}
+            additionalData={{ totalBankroll, maxDCA: maxRisk, inactiveBotFunds: 0 }}
+            currency={defaultCurrency}
+            type="max-risk"
+          />
+          <MetricCard
+            metric={activeDealCount}
+            type="active-deals"
+          />
+          <MetricCard
+            metric={totalInDeals}
+            currency={defaultCurrency}
+            additionalData={{ onOrders, totalBoughtVolume }}
+            type="total-in-deals"
+          />
+          <MetricCard
+            metric={totalBankroll}
+            currency={defaultCurrency}
+            additionalData={{ position, totalBoughtVolume, reservedFundsTotal }}
+            type="total-bankroll"
+          />
+        </>
+      );
     }
 
-    const [cards, updateCards] = useState(() => additionalMetrics(currentView, metricsData))
-    useLayoutEffect(()=>{
-        updateCards(() => additionalMetrics(currentView, metricsData))
-    }, [metricsData, currentView, defaultCurrency])
-
-
     return (
-        <div className="flex-column" style={{ alignItems: 'center' }}>
-            <div className="riskDiv" style={{ paddingBottom: '32px' }}>
-                {cards}
-            </div>
-        </div>
-    )
-}
+      <>
+        {beginningCards}
+        <MetricCard
+          metric={totalProfit}
+          currency={defaultCurrency}
+          type="total-profit"
+        />
+        <MetricCard
+          metric={activeDealCount}
+          type="active-deals"
+        />
+        <MetricCard
+          metric={totalInDeals}
+          currency={defaultCurrency}
+          additionalData={{ onOrders, totalBoughtVolume }}
+          type="total-in-deals"
+        />
+        <MetricCard
+          metric={totalBankroll}
+          currency={defaultCurrency}
+          additionalData={{ position, totalBoughtVolume, reservedFundsTotal }}
+          type="total-bankroll"
+        />
+      </>
+    );
+  };
 
-export default RoiCards
+  const [cards, updateCards] = useState(() => additionalMetrics());
+  useLayoutEffect(() => {
+    updateCards(() => additionalMetrics());
+  }, [metricsData, currentView, defaultCurrency]);
+
+  return (
+    <div className="flex-column" style={{ alignItems: 'center' }}>
+      <div className="riskDiv" style={{ paddingBottom: '32px' }}>
+        {cards}
+      </div>
+    </div>
+  );
+};
+
+export default RoiCards;

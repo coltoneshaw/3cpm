@@ -7,7 +7,7 @@ import { currencyTooltipFormatter } from '@/app/Components/Charts/formatting';
 
 import { parseNumber } from '@/utils/numberFormatting';
 
-import type { Type_Tooltip, Type_SoDistribution } from '@/types/Charts';
+import type { TooltipType, Type_SoDistribution } from '@/types/Charts';
 
 interface SODistributionArray {
   SO: number
@@ -19,7 +19,7 @@ interface SODistributionArray {
 
 const CustomTooltip = ({
   active, payload, label, formatter,
-}: Type_Tooltip) => {
+}: TooltipType<number, string>) => {
   if (!active || !payload || payload[0] === undefined) return null;
 
   const {

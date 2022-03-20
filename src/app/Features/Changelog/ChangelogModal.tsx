@@ -1,140 +1,141 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
-    Dialog,
-    DialogContent,
+  Dialog,
+  DialogContent,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useThemeProvidor } from "@/app/Context/ThemeEngine";
+import { useThemeProvidor } from '@/app/Context/ThemeEngine';
 
-import './changelogModal.scss'
+import './changelogModal.scss';
 
-import { mostRecent, versionInformation } from './changelogText'
+import { mostRecent, versionInformation } from './changelogText';
 
 const generateEnhancements = (enhancements: string[]) => {
-
-    if(enhancements.length === 0) return null
-    return (
-        <>
-            <h4>Enhancements:</h4>
-            <ul>
-                {enhancements.map((n, index) => (<li key={index}>{n}</li>))}
-            </ul>
-        </>
-    )
-}
+  if (enhancements.length === 0) return null;
+  return (
+    <>
+      <h4>Enhancements:</h4>
+      <ul>
+        {enhancements.map((n, index) => (<li key={index}>{n}</li>))}
+      </ul>
+    </>
+  );
+};
 
 const generateBugs = (bugs: string[]) => {
-
-    if(bugs.length === 0) return null
-    return (
-        <>
-            <h4>Bug Fixes:</h4>
-            <ul>
-                {bugs.map((n, index) => (<li key={index}>{n}</li>))}
-            </ul>
-        </>
-    )
-}
+  if (bugs.length === 0) return null;
+  return (
+    <>
+      <h4>Bug Fixes:</h4>
+      <ul>
+        {bugs.map((n, index) => (<li key={index}>{n}</li>))}
+      </ul>
+    </>
+  );
+};
 
 const generateNewFeatures = (newFeatures: string[]) => {
-
-    if(newFeatures.length === 0) return null
-    return (
-        <>
-            <h4>New Features:</h4>
-            <ul>
-                {newFeatures.map((n, index) => (<li key={index}>{n}</li>))}
-            </ul>
-        </>
-    )
-}
+  if (newFeatures.length === 0) return null;
+  return (
+    <>
+      <h4>New Features:</h4>
+      <ul>
+        {newFeatures.map((n, index) => (<li key={index}>{n}</li>))}
+      </ul>
+    </>
+  );
+};
 
 const changes = (version: string) => {
+  const findData = versionInformation.find((v) => v.version === version);
+  if (findData == undefined) return '';
 
-    const findData = versionInformation.find(v => v.version == version);
-    if (findData == undefined) return '';
+  const link = (findData.link) ? findData.link : 'https://docs.3cpm.io/changelog';
 
-    const link = (findData.link) ? findData.link : 'https://docs.3cpm.io/changelog'
+  return (
+    <>
+      <a href={link} className="changelogLink">Read the full changelog</a>
+      {
+        generateNewFeatures(findData.new)
+      }
+      {
+        generateEnhancements(findData.enhancements)
+      }
+      {
+        generateBugs(findData.bugs)
+      }
+    </>
+  );
+};
 
-    return (
-        <>
-            <a href={link} className="changelogLink">Read the full changelog</a>
-            {
-                generateNewFeatures(findData.new)
-            }
-            {
-                generateEnhancements(findData.enhancements)
-            }
-            {
-                generateBugs(findData.bugs)
-            }
-        </>
-    )
-}
-
-
-
-const versions = versionInformation.reverse().map(v => v.version)
+const versions = versionInformation.reverse().map((v) => v.version);
 
 const ChangelogModal = ({ open, setOpen }: { open: boolean, setOpen: any }) => {
+  // make this version handler use the version that the user is using.
+  const [versionView, changeVersion] = useState(() => mostRecent);
 
-    
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    // make this version handler use the version that the user is using.
-    const [versionView, changeVersion] = useState(() => mostRecent)
+  const theme = useThemeProvidor();
+  const { styles } = theme;
 
-    const handleClose = () => {
-        setOpen(false);
-    };
+  return (
+    <Dialog
+      fullWidth={false}
+      maxWidth="md"
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="max-width-dialog-title"
+      style={{
 
-    const theme = useThemeProvidor()
-    const { styles } = theme
+        color: 'var(--color-text-lightbackground)',
+        padding: 0,
+        ...styles,
 
+      }}
+    >
+      <DialogContent style={{ padding: 0, overflow: 'hidden' }}>
+        <div className="flex-row changelogModal">
+          <CloseIcon className="closeIcon" onClick={handleClose} />
+          <div className="flex-column versionDiv">
+            <h3>Versions</h3>
+            {
+              versions.map((version) => {
+                const primary = (version === versionView) ? 'active' : '';
+                return (
+                  <span
+                    className={`version ${primary}`}
+                    onClick={() => changeVersion(version)}
+                    onKeyDown={() => changeVersion(version)}
+                    key={version}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    {version}
+                  </span>
+                );
+              })
+            }
 
-    return (
-        <Dialog
-            fullWidth={false}
-            maxWidth="md"
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="max-width-dialog-title"
-            style={{
+          </div>
+          <div className="flex-column changesDiv">
+            <h3>Changes:</h3>
+            {changes(versionView)}
 
-                color: 'var(--color-text-lightbackground)',
-                padding: 0,
-                ...styles,
+          </div>
 
-            }}
-        >
-            <DialogContent style={{ padding: 0, overflow: 'hidden' }}>
-                <div className="flex-row changelogModal">
-                    <CloseIcon className="closeIcon" onClick={handleClose} />
-                    <div className="flex-column versionDiv">
-                        <h3>Versions</h3>
-                        {
-                            versions.map(version => {
-                                const primary = (version == versionView) ? 'active' : '';
-                                return <span className={`version ${primary}`} onClick={() => changeVersion(version)} key={version}>{version}</span>
-                            })
-                        }
+        </div>
 
-                    </div>
-                    <div className="flex-column changesDiv">
-                        <h3>Changes:</h3>
-                        {changes(versionView)}
-
-                    </div>
-
-                </div>
-
-            </DialogContent>
-            {/* <DialogActions>
+      </DialogContent>
+      {/* <DialogActions>
                 <Button onClick={handleClose} color="primary">
                     Close
                 </Button>
             </DialogActions> */}
-        </Dialog>
-    )
-}
+    </Dialog>
+  );
+};
 
 export default ChangelogModal;

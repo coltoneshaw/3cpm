@@ -1,9 +1,9 @@
 import { getFiltersQueryString } from '@/app/Features/3Commas/queryString';
 import { initDate, DateRangeToSQLString } from '@/app/Features/3Commas/3Commas';
-import { Type_Profile } from '@/types/config'
-import type { Type_Query_bots } from '@/types/3Commas'
-import type { DateRange } from "@/types/Date";
-
+import { Type_Profile } from '@/types/config';
+import type { Type_Query_bots } from '@/types/3CommasApi';
+import type { DateRange } from '@/types/Date';
+import { FetchBotPerformanceMetrics } from '../Type_3Commas';
 
 /**
  *
@@ -12,17 +12,18 @@ import type { DateRange } from "@/types/Date";
  */
 
 const fetchBotPerformanceMetrics = async (profileData: Type_Profile, oDate?: DateRange) => {
-    const filtersQueryString = await getFiltersQueryString(profileData);
-    const { currencyString, accountIdString, startString, currentProfileID } = filtersQueryString;
+  const filtersQueryString = await getFiltersQueryString(profileData);
+  const {
+    currencyString, accountIdString, startString, currentProfileID,
+  } = filtersQueryString;
 
+  // TODO - Need to update this so it uses the start string OR the adjusted string.
+  const date = initDate(startString, oDate);
+  const [fromDateStr, toDateStr] = DateRangeToSQLString(date);
+  const fromSQL = `and closed_at >= '${fromDateStr}'`;
+  const toSQL = `and closed_at < '${toDateStr}'`;
 
-    // TODO - Need to update this so it uses the start string OR the adjusted string.
-    let date = initDate(startString, oDate);
-    const [fromDateStr, toDateStr] = DateRangeToSQLString(date)
-    const fromSQL = `and closed_at >= '${fromDateStr}'`
-    const toSQL = `and closed_at < '${toDateStr}'`
-
-    const queryString = `
+  const queryString = `
                 SELECT 
                     bot_id,
                     sum(final_profit)                                                         as total_profit,
@@ -43,40 +44,38 @@ const fetchBotPerformanceMetrics = async (profileData: Type_Profile, oDate?: Dat
                     and deals.currency in (${currencyString})
                     ${fromSQL} ${toSQL}
                 GROUP BY
-                    bot_id;`
+                    bot_id;`;
 
-    let databaseQuery: fetchBotPerformanceMetrics[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, queryString);
+  const databaseQuery: FetchBotPerformanceMetrics[] | [] = await window.ThreeCPM.Repository.Database
+    .query(currentProfileID, queryString);
 
-    if (databaseQuery == null || databaseQuery.length > 0) {
-        return databaseQuery
-    }
-    return []
-
-
-}
+  if (databaseQuery == null || databaseQuery.length > 0) {
+    return databaseQuery;
+  }
+  return [];
+};
 
 const botQuery = async (currentProfile: Type_Profile): Promise<Type_Query_bots[] | []> => {
-    const filtersQueryString = await getFiltersQueryString(currentProfile);
-    const { accountIdString, currentProfileID, currencyString } = filtersQueryString;
+  const filtersQueryString = await getFiltersQueryString(currentProfile);
+  const { accountIdString, currentProfileID, currencyString } = filtersQueryString;
 
-
-    const queryString = `
+  const queryString = `
                 SELECT
                     *
                 FROM 
                     bots
                 WHERE
                     from_currency in (${currencyString})
-                    and (account_id in (${accountIdString})  OR origin = 'custom')`
+                    and (account_id in (${accountIdString})  OR origin = 'custom')`;
 
-    let databaseQuery: Type_Query_bots[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, queryString);
+  const databaseQuery: Type_Query_bots[] | [] = await window.ThreeCPM.Repository.Database
+    .query(currentProfileID, queryString);
 
-    if (databaseQuery != null) return databaseQuery
-    return []
-
-}
+  if (databaseQuery != null) return databaseQuery;
+  return [];
+};
 
 export {
-    fetchBotPerformanceMetrics,
-    botQuery
-}
+  fetchBotPerformanceMetrics,
+  botQuery,
+};

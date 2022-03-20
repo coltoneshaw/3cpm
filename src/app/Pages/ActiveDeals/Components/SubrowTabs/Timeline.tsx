@@ -4,7 +4,7 @@ import { parseNumber } from '@/utils/numberFormatting';
 // import { formatCurrency } from '@/utils/granularity';
 
 import { dynamicSort } from '@/utils/helperFunctions';
-import type { Type_MarketOrders, Deals } from '@/types/3Commas';
+import type { Type_MarketOrders, Deals } from '@/types/3CommasApi';
 import { calcSafetyArray } from '@/utils/formulas';
 
 const dateFormatter = (dateString: string) => new Date(dateString).toLocaleDateString(undefined, {

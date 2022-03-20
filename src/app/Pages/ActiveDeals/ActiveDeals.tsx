@@ -5,13 +5,12 @@ import { ColumnSelector, useColumnSelector } from '@/app/Components/DataTable/Co
 
 import { useAppSelector } from '@/app/redux/hooks';
 import {
-  Card_ActiveDeals, Card_totalInDeals, Card_ActiveDealReserve,
-  Card_TotalDayProfit, Card_TotalUnrealizedProfit, Card_TotalRoi,
+  MetricCard,
 } from '@/app/Components/Charts/DataCards';
 import { NotificationsSettings, DealsTable } from './Components/index';
 
 import './ActiveDeals.scss';
-import { ActiveDeals } from '@/types/3Commas';
+import { ActiveDeals } from '@/types/3CommasApi';
 
 const columnList = [
   {
@@ -96,7 +95,7 @@ const ActiveDealsPage = () => {
     : 0;
 
   const {
-    activeDealCount, totalInDeals, on_orders, totalBoughtVolume, totalBankroll,
+    activeDealCount, totalInDeals, on_orders: onOrders, totalBoughtVolume, totalBankroll,
   } = metricsData;
 
   const [localData, updateLocalData] = useState<ActiveDeals[]>([]);
@@ -110,12 +109,39 @@ const ActiveDealsPage = () => {
       <div className="flex-row headerButtonsAndKPIs">
         <div className="flex-row" style={{ flex: 1, paddingBottom: '.5em' }}>
           <div className="riskDiv activeDealCards">
-            <Card_ActiveDeals metric={activeDealCount} />
-            <Card_totalInDeals metric={totalInDeals} currency={defaultCurrency} additionalData={{ on_orders, totalBoughtVolume }} />
-            <Card_TotalDayProfit metric={todaysProfit} currency={defaultCurrency} />
-            <Card_ActiveDealReserve metric={activeDealReserve} currency={defaultCurrency} />
-            <Card_TotalUnrealizedProfit metric={unrealizedProfitTotal} currency={defaultCurrency} />
-            <Card_TotalRoi title="Today's ROI" additionalData={{ totalBankroll, totalProfit: todaysProfit }} currency={defaultCurrency} />
+            <MetricCard
+              metric={activeDealCount}
+              type="active-deals"
+            />
+            <MetricCard
+              metric={totalInDeals}
+              currency={defaultCurrency}
+              additionalData={{ onOrders, totalBoughtVolume }}
+              type="total-in-deals"
+            />
+            <MetricCard
+              metric={todaysProfit}
+              currency={defaultCurrency}
+              type="todays-profit"
+            />
+
+            <MetricCard
+              metric={activeDealReserve}
+              currency={['USD']}
+              type="active-deal-reserve"
+            />
+            <MetricCard
+              metric={unrealizedProfitTotal}
+              currency={defaultCurrency}
+              type="total-unrealized-profit"
+            />
+            <MetricCard
+              title="Today's ROI"
+              type="total-roi"
+              metric={(todaysProfit / (totalBankroll - todaysProfit))}
+              additionalData={{ totalBankroll, totalProfit: todaysProfit }}
+              currency={defaultCurrency}
+            />
           </div>
 
         </div>
@@ -129,7 +155,10 @@ const ActiveDealsPage = () => {
           <div className="filters tableButtons">
             <ColumnSelector columns={columns} selectedColumns={selectedColumns} handleChange={handleChange} />
 
-            <ToggleRefreshButton style={{ width: '250px', margin: '5px', height: '38px' }} className="ToggleRefreshButton" />
+            <ToggleRefreshButton
+              style={{ width: '250px', margin: '5px', height: '38px' }}
+              className="ToggleRefreshButton"
+            />
             <UpdateDataButton className="CtaButton" style={{ margin: '5px', height: '38px' }} disabled />
           </div>
 

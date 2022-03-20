@@ -1,9 +1,7 @@
-import DealPerformanceBubble from './DealPerformanceBubble'
-import BotPerformanceBubble from './BotPerformanceBubble'
-
-
+import DealPerformanceBubble from './DealPerformanceBubble';
+import BotPerformanceBubble from './BotPerformanceBubble';
 
 export {
-    DealPerformanceBubble,
-    BotPerformanceBubble
-}
+  DealPerformanceBubble,
+  BotPerformanceBubble,
+};

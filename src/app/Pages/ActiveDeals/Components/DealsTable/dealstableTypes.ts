@@ -3,7 +3,7 @@ import {
   UseTableCellProps, UseSortByOptions,
 } from 'react-table';
 
-import type { ActiveDeals } from '@/types/3Commas';
+import type { ActiveDeals } from '@/types/3CommasApi';
 
 export interface TableRow extends UseExpandedRowProps<ActiveDeals>, UseTableRowProps<ActiveDeals> { }
 export interface TableColumn extends UseExpandedInstanceProps<Column> { }

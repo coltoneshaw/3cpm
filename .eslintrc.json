@@ -23,10 +23,10 @@
     "@typescript-eslint"
   ],
   "rules": {
-    "no-restricted-syntax": [
-      "error",
-      "ForInStatement"
-    ],
+    // "no-restricted-syntax": [
+    //   "error",
+    //   "ForInStatement"
+    // ],
     "no-param-reassign": [
       "error",
       {

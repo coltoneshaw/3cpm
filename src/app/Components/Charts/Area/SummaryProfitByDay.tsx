@@ -8,7 +8,7 @@ import NoData from '@/app/Pages/Stats/Components/NoData';
 
 import { getLang } from '@/utils/helperFunctions';
 
-import { ProfitArrayChart, Type_Tooltip } from '@/types/Charts';
+import { ProfitArrayChart, TooltipType } from '@/types/Charts';
 
 import {
   yAxisWidth,
@@ -20,10 +20,8 @@ const lang = getLang();
 
 const CustomTooltip = ({
   active, payload, formatter, label,
-}: Type_Tooltip) => {
-  if (!active || payload.length === 0 || payload[0] === undefined) {
-    return null;
-  }
+}: TooltipType<string, number>) => {
+  if (!active || !payload || !payload[0]?.payload) return null;
 
   const formattedLabel = new Date(label).toLocaleString(getLang(), {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
@@ -95,7 +93,7 @@ const SummaryProfitByDay = ({
               // @ts-ignore
               <CustomTooltip
                 formatter={
-                  (value: Type_Tooltip) => currencyTooltipFormatter(
+                  (value: TooltipType<string, number>) => currencyTooltipFormatter(
                     value,
                     defaultCurrency,
                   )

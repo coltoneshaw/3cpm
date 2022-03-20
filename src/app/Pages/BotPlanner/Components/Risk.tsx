@@ -1,15 +1,9 @@
 import React from 'react';
 
 import { useAppSelector } from '@/app/redux/hooks';
-import { Type_Query_bots } from '@/types/3Commas';
+import { Type_Query_bots } from '@/types/3CommasApi';
 
-import {
-  Card_EnabledBots,
-  Card_DropCoverage,
-  Card_MaxDca,
-  Card_TotalBankRoll,
-  Card_MaxRiskPercent,
-} from '@/app/Components/Charts/DataCards';
+import { MetricCard } from '@/app/Components/Charts/DataCards';
 
 // Need to import metric contexts here
 const Risk = ({ localBotData }: { localBotData: Type_Query_bots[] }) => {
@@ -32,22 +26,50 @@ const Risk = ({ localBotData }: { localBotData: Type_Query_bots[] }) => {
      * TODO
      * - Can move these calculations on to the data card itself to clean up these functions. That would mean not every card gets a metric since most are calculated.
      */
-  const maxDCA = (enabledDeals.length > 0) ? enabledDeals.map((deal) => deal.max_funds).reduce((sum, max) => sum + max) : 0;
+  const maxDCA = (enabledDeals.length > 0)
+    ? enabledDeals
+      .map((deal) => deal.max_funds)
+      .reduce((sum, max) => sum + max)
+    : 0;
   // const inactiveBotFunds = result.map(r => r.enabled_inactive_funds).reduce((sum, funds) => sum + funds ) ?? 0;
 
   const risk = (maxDCA / totalBankroll) * 100;
   const botCount = localBotData.filter((deal) => deal.is_enabled).length;
 
-  const sumDropCoverage = (enabledDeals.length > 0) ? enabledDeals.map((deal) => ((deal.maxCoveragePercent) ? deal.maxCoveragePercent : 0)).reduce((sum, max) => sum + max) : 0;
+  const sumDropCoverage = (enabledDeals.length > 0)
+    ? enabledDeals
+      .map((deal) => ((deal.maxCoveragePercent) ? deal.maxCoveragePercent : 0))
+      .reduce((sum, max) => sum + max)
+    : 0;
   const dropCoverage = sumDropCoverage / enabledDeals.length;
 
   return (
     <div className="riskDiv activeDealCards" style={{ flex: 1 }}>
-      <Card_TotalBankRoll metric={totalBankroll} currency={defaultCurrency} additionalData={{ position, totalBoughtVolume, reservedFundsTotal }} />
-      <Card_MaxRiskPercent metric={risk} additionalData={{ totalBankroll, maxDCA, inactiveBotFunds: 0 }} currency={defaultCurrency} />
-      <Card_EnabledBots metric={botCount} />
-      <Card_MaxDca metric={maxDCA} currency={defaultCurrency} />
-      <Card_DropCoverage metric={dropCoverage} />
+      <MetricCard
+        metric={totalBankroll}
+        currency={defaultCurrency}
+        additionalData={{ position, totalBoughtVolume, reservedFundsTotal }}
+        type="total-bankroll"
+      />
+      <MetricCard
+        metric={risk}
+        additionalData={{ totalBankroll, maxDCA, inactiveBotFunds: 0 }}
+        currency={defaultCurrency}
+        type="max-risk"
+      />
+      <MetricCard
+        metric={botCount}
+        type="enabled-bots"
+      />
+      <MetricCard
+        metric={maxDCA}
+        currency={defaultCurrency}
+        type="max-dca"
+      />
+      <MetricCard
+        metric={dropCoverage}
+        type="drop-coverage"
+      />
 
     </div>
   );

@@ -1,5 +1,4 @@
-
 export type BinanceTicketPrice = {
-    "symbol": string,
-    "price": string
-}
+  'symbol': string,
+  'price': string
+};

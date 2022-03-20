@@ -1,7 +1,7 @@
-import ChangelogModal from "./Changelog/ChangelogModal";
-import ToastNotifcations from './ToastNotifications/ToastNotification'
+import ChangelogModal from './Changelog/ChangelogModal';
+import ToastNotifcations from './ToastNotifications/ToastNotification';
 
 export {
-    ChangelogModal,
-    ToastNotifcations
-}
+  ChangelogModal,
+  ToastNotifcations,
+};

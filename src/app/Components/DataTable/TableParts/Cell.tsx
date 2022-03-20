@@ -7,7 +7,7 @@ type IndividualCell = {
   style: CSSProperties | undefined
   maxWidth: undefined | number
   align: string
-  key: Key
+  cellKey: Key;
   func: (type: string, userProps?: object | undefined) => React.ReactNode
   customCellProps: TableCommonProps | { style: {}, className: '', role: undefined } | undefined
 };
@@ -15,7 +15,9 @@ type IndividualCell = {
 const RenderIndividualCell: React.FC<IndividualCell> = ({
   className = '', style = {},
   maxWidth = undefined,
-  align, key, func,
+  align,
+  func,
+  cellKey,
   customCellProps,
 }) => (
   <div
@@ -29,7 +31,7 @@ const RenderIndividualCell: React.FC<IndividualCell> = ({
       ...customCellProps?.style,
     }}
     role="cell"
-    key={key}
+    key={cellKey}
   >
     {func('Cell')}
   </div>
@@ -53,6 +55,7 @@ const RenderCells = (
         maxWidth={maxWidth}
         align={align}
         key={cellProps.key}
+        cellKey={cellProps.key}
         func={cell.render}
         customCellProps={customCellProps}
       />
