@@ -18,7 +18,6 @@ type TypeTableBody = {
   visibleColumns: ColumnInstance<object>[];
   renderRowSubComponent: typeof SubRowAsync | undefined,
   rows: Row<object>[]
-
 };
 
 const TableBody: React.FC<TypeTableBody> = ({
@@ -36,6 +35,7 @@ const TableBody: React.FC<TypeTableBody> = ({
     style={bodyProps?.style}
     className={classNames('tbody', bodyProps.className)}
     role="rowgroup"
+    key="table-body"
   >
     {RenderRows(
       rows,

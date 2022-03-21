@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
   Row, TableCommonProps, ColumnInstance,
 } from 'react-table';
@@ -30,7 +30,7 @@ const RenderRows = (
     prepareRow(row);
     const { style, className, key } = row.getRowProps();
     return (
-      <>
+      <Fragment key={key}>
         <div
           style={{
             ...style,
@@ -42,9 +42,8 @@ const RenderRows = (
         >
           {RenderCells(row?.cells, customCellProps)}
         </div>
-
         {subRowCheck(row, visibleColumns, renderRowSubComponent)}
-      </>
+      </Fragment>
     );
   });
 };

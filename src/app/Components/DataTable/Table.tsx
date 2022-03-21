@@ -80,6 +80,7 @@ const CustomTable: React.FC<typeof tableState> = ({
         headerGroups={headerGroups}
         customColumnProps={customColumnProps}
         customHeaderProps={customHeaderProps}
+        key="table-header"
       />
       <TableBody
         bodyProps={getTableBodyProps()}

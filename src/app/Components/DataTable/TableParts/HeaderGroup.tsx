@@ -68,7 +68,7 @@ const RenderHeaderGroup = (
   return (
     <div
       className={classNames('tr', header.className, customHeaderProps.className)}
-      key={headerGroup.id}
+      key={header.key}
       style={{
         ...header.style,
         ...customHeaderProps?.style,
