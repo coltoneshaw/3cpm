@@ -9,3 +9,4 @@ build/*
 release/*
 commit.sh
 .env
+.eslintcache

@@ -14,7 +14,7 @@ import { yAxisWidth, currencyTickFormatter, currencyTooltipFormatter } from '@/a
 
 import { getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
-import type { defaultCurrency, Type_Profile } from '@/types/config';
+import type { DefaultCurrency, ProfileType } from '@/types/config';
 import type { DateRange } from '@/types/Date';
 
 import { getSelectPairDataByDate, getFiltersQueryString } from '@/app/Features/3Commas/3Commas';
@@ -42,7 +42,7 @@ const getPairList = async (
   updatePairs: Function,
   updatePairFilters: Function,
   wheres: string,
-  currentProfile: Type_Profile,
+  currentProfile: ProfileType,
 ) => {
   const filtersQueryString = await getFiltersQueryString(currentProfile);
   const { currencyString, accountIdString, currentProfileID } = filtersQueryString;
@@ -66,7 +66,7 @@ Group By pair order by total_profit DESC;`,
 };
 
 interface TTProps extends TooltipType<number, string> {
-  formatter: (value: any, defaultCurrency?: defaultCurrency) => string
+  formatter: (value: any, defaultCurrency?: DefaultCurrency) => string
 }
 
 const CustomTooltip = ({
@@ -107,7 +107,7 @@ const CustomTooltip = ({
 };
 type PairPerfByDateType = {
   datePair: DateRange,
-  defaultCurrency: defaultCurrency
+  defaultCurrency: DefaultCurrency
 };
 
 const PairPerformanceByDate: React.FC<PairPerfByDateType> = ({ datePair, defaultCurrency }) => {

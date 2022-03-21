@@ -10,13 +10,11 @@ type TypeOpenIn3Commas = {
   className?: string
 };
 
-const defaults: TypeOpenIn3Commas = {
-  cell: undefined,
-  bot_id: undefined,
+const defaultsProps = {
   className: undefined,
 };
 
-const OpenIn3Commas: React.FC<typeof defaults> = ({ cell, bot_id, className }) => {
+const OpenIn3Commas: React.FC<TypeOpenIn3Commas> = ({ cell, bot_id, className }) => {
   const url = (bot_id) ? `https://3commas.io/bots/${bot_id}/edit` : 'https://3commas.io/bots';
 
   return (
@@ -42,5 +40,7 @@ const OpenIn3Commas: React.FC<typeof defaults> = ({ cell, bot_id, className }) =
     </span>
   );
 };
+
+OpenIn3Commas.defaultProps = defaultsProps;
 
 export default OpenIn3Commas;

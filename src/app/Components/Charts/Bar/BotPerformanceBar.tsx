@@ -20,7 +20,7 @@ const defaultSortAndFilter = {
   avg_profit: false,
 };
 
-const CustomTooltip = ({ active, payload, formatter }: TooltipType<number, string>) => {
+const CustomTooltip: React.FC<TooltipType<number, string>> = ({ active, payload, formatter }) => {
   if (!active || !payload || payload[0] === undefined) return null;
 
   const data: BotPerformanceMetrics = payload[0].payload;

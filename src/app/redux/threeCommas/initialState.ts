@@ -1,24 +1,24 @@
-import { Type_ReservedFunds } from '@/types/config';
+import { ReservedFundsType } from '@/types/config';
 
 import type {
-  Type_Query_bots,
+  QueryBotsType,
   ActiveDeals,
-  Type_Query_Accounts,
-  Type_MetricData,
+  QueryAccountsType,
+  MetricDataType,
   ProfitArray,
   PerformanceMetrics,
 } from '@/types/3CommasApi';
 
-export { Type_MetricData, PerformanceMetrics, Type_ReservedFunds };
+export { MetricDataType as Type_MetricData, PerformanceMetrics, ReservedFundsType };
 // Define the initial state using that type
 export const initialState = {
-  botData: <Type_Query_bots[] | []>[],
+  botData: <QueryBotsType[] | []>[],
   profitData: <ProfitArray[] | []>[],
   activeDeals: <ActiveDeals[] | []>[],
   performanceData: <PerformanceMetrics>{ pair_bot: [], bot: [], safety_order: [] },
   balanceData: { on_orders: 0, position: 0 },
-  accountData: <Type_Query_Accounts[] | []>[],
-  metricsData: <Type_MetricData>{
+  accountData: <QueryAccountsType[] | []>[],
+  metricsData: <MetricDataType>{
     activeDealCount: 0,
     totalProfit_perf: 0,
     totalDeals: 0,
@@ -44,26 +44,27 @@ export const initialState = {
   additionalData: [],
   isSyncing: false,
   isSyncingTime: 0,
-  syncOptions: <Type_SyncData>{
+  syncOptions: <SyncDataType>{
     time: 0,
     syncCount: 0,
   },
   autoRefresh: false,
 };
 
-export type typeString = 'botData' | 'profitData' | 'activeDeals'
+export type TypeString =
+  'botData' | 'profitData' | 'activeDeals'
   | 'performanceData' | 'metricsData' | 'accountData' | 'balanceData';
 
-export type Type_SyncData = {
+export type SyncDataType = {
   time: number,
   syncCount: number
 };
 
-export type setDataType =
+export type SetDataType =
   { type: 'botData', data: typeof initialState.botData } |
   { type: 'profitData', data: typeof initialState.profitData } |
   { type: 'activeDeals', data: typeof initialState.activeDeals } |
   { type: 'performanceData', data: typeof initialState.performanceData } |
   { type: 'balanceData', data: typeof initialState.balanceData } |
   { type: 'accountData', data: typeof initialState.accountData } |
-  { type: 'metricsData', data: Type_MetricData };
+  { type: 'metricsData', data: MetricDataType };

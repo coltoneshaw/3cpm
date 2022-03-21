@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+.vscode
+.github
+assets
+docs
+release
+webpack.*
+scripts

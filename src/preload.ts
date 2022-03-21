@@ -1,4 +1,4 @@
-import { Type_Profile } from '@/types/config';
+import { ProfileType } from '@/types/config';
 
 import {
   mainPreload, UpdateDealRequest, Type_UpdateFunction, getDealOrders, defaultConfig,
@@ -9,28 +9,32 @@ const { contextBridge, ipcRenderer } = require('electron');
 async function setupContextBridge() {
   contextBridge.exposeInMainWorld('mainPreload', {
     deals: {
-      async update(profileData: Type_Profile, deal: UpdateDealRequest): Promise<mainPreload['deals']['update']> {
+      async update(profileData: ProfileType, deal: UpdateDealRequest): Promise<mainPreload['deals']['update']> {
         return ipcRenderer.invoke('api-deals-update', profileData, deal);
       },
     },
     api: {
-      async update(type: string, options: Type_UpdateFunction, profileData: Type_Profile): Promise<mainPreload['api']['update']> {
+      async update(
+        type: string,
+        options: Type_UpdateFunction,
+        profileData: ProfileType,
+      ): Promise<mainPreload['api']['update']> {
         console.log('Updating 3Commas data.');
         return ipcRenderer.invoke('api-updateData', type, options, profileData);
       },
-      async updateBots(profileData: Type_Profile): Promise<void> {
+      async updateBots(profileData: ProfileType): Promise<void> {
         console.log('Fetching Bot Data');
         await ipcRenderer.invoke('api-getBots', profileData);
       },
       async getAccountData(
-        profileData: Type_Profile,
+        profileData: ProfileType,
         key?: string,
         secret?: string,
         mode?: string,
       ): Promise<ReturnType<typeof getDealOrders>> {
         return ipcRenderer.invoke('api-getAccountData', profileData, key, secret, mode);
       },
-      async getDealOrders(profileData: Type_Profile, dealID: number) {
+      async getDealOrders(profileData: ProfileType, dealID: number) {
         return ipcRenderer.invoke('api-getDealOrders', profileData, dealID);
       },
     },
@@ -39,7 +43,7 @@ async function setupContextBridge() {
         console.log('fetching Config');
         return ipcRenderer.invoke('allConfig', value);
       },
-      profile: async (type: 'create', newProfile: Type_Profile, profileId: string) => {
+      profile: async (type: 'create', newProfile: ProfileType, profileId: string) => {
         if (type === 'create') {
           // storing the initial config values
           await ipcRenderer.invoke('setStoreValue', `profiles.${profileId}`, newProfile);
@@ -48,7 +52,13 @@ async function setupContextBridge() {
       },
 
       // gets the value for the current profile
-      getProfile: async (value: string, profileId: string): Promise<Type_Profile | undefined> => ipcRenderer.invoke('allConfig', `profiles.${profileId}${value ? `.${value}` : ''}`),
+      getProfile: async (
+        value: string,
+        profileId: string,
+      ): Promise<ProfileType | undefined> => ipcRenderer.invoke(
+        'allConfig',
+        `profiles.${profileId}${value ? `.${value}` : ''}`,
+      ),
 
       async reset(): Promise<void> {
         /**

@@ -7,12 +7,12 @@ import type { defaultConfig } from '@/utils/defaultConfig';
 
 import { findAndNotifyNewDeals } from '@/main/Notifications/notifications';
 
-import { Type_UpdateFunction } from '@/types/3CommasApi';
-import { Type_Profile } from '@/types/config';
+import { UpdateFunctionType } from '@/types/3CommasApi';
+import { ProfileType } from '@/types/config';
 
 const log = require('electron-log');
 
-async function getDealData(type: 'autoSync' | 'fullSync', options: Type_UpdateFunction, profileData: Type_Profile) {
+async function getDealData(type: 'autoSync' | 'fullSync', options: UpdateFunctionType, profileData: ProfileType) {
   return deals(options.offset, type, profileData)
     .then((data) => {
       const { deals: DealArray, lastSyncTime } = data;
@@ -30,7 +30,7 @@ async function getDealData(type: 'autoSync' | 'fullSync', options: Type_UpdateFu
       return lastSyncTime;
     });
 }
-async function getAccountData(profileData: Type_Profile): Promise<void> {
+async function getAccountData(profileData: ProfileType): Promise<void> {
   if (!profileData) {
     log.error(' No profile was provided to the updateAPI call');
     return;
@@ -54,7 +54,7 @@ async function getAccountData(profileData: Type_Profile): Promise<void> {
  *
  * @param profileData if not sent, this will use the current profile saved to the config.
  */
-async function getAndStoreBotData(profileData: Type_Profile): Promise<void> {
+async function getAndStoreBotData(profileData: ProfileType): Promise<void> {
   if (!profileData) {
     log.error(' No profile was provided to the updateAPI call');
     return;
@@ -99,8 +99,8 @@ async function getAndStoreBotData(profileData: Type_Profile): Promise<void> {
  */
 async function updateAPI(
   type: 'autoSync' | 'fullSync',
-  options: Type_UpdateFunction,
-  profileData: Type_Profile,
+  options: UpdateFunctionType,
+  profileData: ProfileType,
 ): Promise<number | false> {
   if (!profileData) {
     log.error(' No profile was provided to the updateAPI call');
@@ -115,7 +115,7 @@ async function updateAPI(
   return lastSyncTime;
 }
 
-// async function updateDeal(profileData: Type_Profile, deal: UpdateDealRequest) {
+// async function updateDeal(profileData: ProfileType, deal: UpdateDealRequest) {
 //   return await apiUpdateDeal(profileData, deal)
 // }
 

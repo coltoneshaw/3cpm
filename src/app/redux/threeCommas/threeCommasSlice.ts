@@ -6,10 +6,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialState } from './initialState';
 
 import type {
-  setDataType, Type_MetricData, PerformanceMetrics, Type_SyncData,
+  SetDataType, Type_MetricData, PerformanceMetrics, SyncDataType,
 } from './initialState';
 import {
-  ActiveDeals, Type_Query_Accounts, Type_Query_bots, ProfitArray,
+  ActiveDeals, QueryAccountsType, QueryBotsType, ProfitArray,
 } from '@/types/3CommasApi';
 
 const dispatchError = (message: string) => {
@@ -27,7 +27,7 @@ export const threeCommasSlice = createSlice({
       state.isSyncing = Boolean(action.payload);
       state.isSyncingTime = Date.now();
     },
-    setSyncData: (state, action: PayloadAction<Type_SyncData>) => {
+    setSyncData: (state, action: PayloadAction<SyncDataType>) => {
       state.syncOptions = action.payload;
     },
     setAutoRefresh: (state, action: PayloadAction<boolean>) => {
@@ -36,7 +36,7 @@ export const threeCommasSlice = createSlice({
       if (!action.payload) state.syncOptions = { ...state.syncOptions, syncCount: 0, time: 0 };
       if (action.payload) state.syncOptions = { ...state.syncOptions, syncCount: 0, time: new Date().getTime() };
     },
-    setData: (state, action: PayloadAction<setDataType>) => {
+    setData: (state, action: PayloadAction<SetDataType>) => {
       if (!action || !action.payload) {
         dispatchError('missing payload, action, or data.');
         return;
@@ -46,7 +46,7 @@ export const threeCommasSlice = createSlice({
 
       switch (type) {
         case 'botData': // update all the api data.
-          state.botData = <Type_Query_bots[]>data;
+          state.botData = <QueryBotsType[]>data;
           break;
         case 'profitData': // update all the api data.
           state.profitData = <ProfitArray[]>data;
@@ -63,7 +63,7 @@ export const threeCommasSlice = createSlice({
           state.activeDeals = <ActiveDeals[]>data;
           break;
         case 'accountData':
-          state.accountData = { ...state.accountData, ...<Type_Query_Accounts[]>data };
+          state.accountData = { ...state.accountData, ...<QueryAccountsType[]>data };
           break;
         case 'balanceData':
           state.balanceData = { ...state.balanceData, ...<{ on_orders: number, position: number }>data };

@@ -7,10 +7,10 @@ import {
   ListItemText,
   Checkbox,
 } from '@mui/material';
-import { Type_ReservedFunds } from '@/types/config';
+import { ReservedFundsType } from '@/types/config';
 
 type TypeAccountSelector = {
-  reservedFunds: Type_ReservedFunds[],
+  reservedFunds: ReservedFundsType[],
   updateAccounts: CallableFunction
 };
 const AccountSelector: React.FC<TypeAccountSelector> = ({ reservedFunds, updateAccounts }) => {

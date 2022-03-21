@@ -11,22 +11,22 @@ import { useAppSelector } from '@/app/redux/hooks';
 // import AddIcon from '@mui/icons-material/Add';
 
 // import TextField from '@mui/material/TextField';
-import { TconfigValues, Type_Profile } from '@/types/config';
+import { ConfigValuesType, ProfileType } from '@/types/config';
 
 import { useThemeProvidor } from '@/app/Context/ThemeEngine';
 
 interface ProfileModalProps {
   open: boolean
   setOpen: any
-  profiles: TconfigValues['profiles'] | {}
+  profiles: ConfigValuesType['profiles'] | {}
   // currentProfileId: string
 }
 
-const returnMappedProfiles = (profiles: TconfigValues['profiles'] | {}, config: TconfigValues) => {
+const returnMappedProfiles = (profiles: ConfigValuesType['profiles'] | {}, config: ConfigValuesType) => {
   if (!profiles || profiles === {}) return null;
 
   return Object.keys(profiles).map((p) => {
-    const mappedProf: Type_Profile = profiles[p as keyof typeof profiles];
+    const mappedProf: ProfileType = profiles[p as keyof typeof profiles];
 
     return (
       <div className="flex-row selectedCoinDiv" key={p}>

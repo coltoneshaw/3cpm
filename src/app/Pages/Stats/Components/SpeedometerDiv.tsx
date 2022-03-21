@@ -1,16 +1,15 @@
 import React from 'react';
-import Box from '@mui/material/Box';
-import { MaxRiskSpeedometer } from '@/app/Components/Charts/Speedometer';
+import MaxRiskSpeedometer from '@/app/Components/Charts/Speedometer';
 import { BalancePie } from '@/app/Components/Charts/Pie';
-import type { Type_MetricData } from '@/types/3CommasApi';
-import type { defaultCurrency } from '@/types/config';
+import type { MetricDataType } from '@/types/3CommasApi';
+import type { DefaultCurrency } from '@/types/config';
 
-interface Speedometer_Type {
-  metrics: Type_MetricData
-  defaultCurrency: defaultCurrency
+interface SpeedometerType {
+  metrics: MetricDataType
+  defaultCurrency: DefaultCurrency
 }
 
-const SpeedometerDiv = ({ metrics, defaultCurrency }: Speedometer_Type) => {
+const SpeedometerDiv: React.FC<SpeedometerType> = ({ metrics, defaultCurrency }) => {
   const { maxRiskPercent, bankrollAvailable } = metrics;
 
   return (
@@ -20,7 +19,11 @@ const SpeedometerDiv = ({ metrics, defaultCurrency }: Speedometer_Type) => {
         metric={maxRiskPercent}
         min={0}
         max={400}
-        colorArray={['rgb(96, 213, 46)', 'rgb(150, 222, 42)', 'rgb(212, 231, 37)', 'rgb(239, 197, 33)', 'rgb(247, 138, 29)', 'rgb(255, 71, 26)']}
+        colorArray={[
+          'rgb(96, 213, 46)', 'rgb(150, 222, 42)',
+          'rgb(212, 231, 37)', 'rgb(239, 197, 33)',
+          'rgb(247, 138, 29)', 'rgb(255, 71, 26)',
+        ]}
         labelArray={[
           {
             text: '50%',

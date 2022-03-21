@@ -1,12 +1,11 @@
-import type { config } from "@/types/preload";
-
+import type { Config } from '@/types/preload';
 
 export default interface ConfigRepository {
-    get: config['get'];
-    profile: config['profile'];
-    getProfile: config['getProfile']
-    reset: config['reset']
-    set: config['set']
-    // setProfile: config['setProfile']
-    bulk: config['bulk']
+  get: Config['get'];
+  profile: Config['profile'];
+  getProfile: Config['getProfile']
+  reset: Config['reset']
+  set: Config['set']
+  // setProfile: config['setProfile']
+  bulk: Config['bulk']
 }

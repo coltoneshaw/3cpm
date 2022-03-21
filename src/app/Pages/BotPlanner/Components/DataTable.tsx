@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import React, { useMemo } from 'react';
-import { Delete as DeleteIcon } from '@mui/icons-material';
 
-import { ColumnWithStrictAccessor, Column } from 'react-table';
+import { Column } from 'react-table';
 import { numberCell, formattedHeader } from '@/app/Components/DataTable/Components/columns';
 import { useAppSelector } from '@/app/redux/hooks';
 import { storageItem } from '@/app/Features/LocalStorage/LocalStorage';
@@ -19,16 +19,16 @@ import {
   calcDropMetrics,
 } from '@/utils/formulas';
 
-import { Type_Query_bots } from '@/types/3CommasApi';
+import { QueryBotsType } from '@/types/3CommasApi';
 
-import { CustomTable, OpenIn3Commas, BotsEditableCell } from '@/app/Components/DataTable/Index';
+import { CustomTable, BotsEditableCell } from '@/app/Components/DataTable/Index';
 import { TableCell } from './tableTypes';
 
 const EditableCell = BotsEditableCell;
 
 interface DataTableType {
-  localBotData: Type_Query_bots[]
-  updateLocalBotData: React.Dispatch<React.SetStateAction<Type_Query_bots[]>>,
+  localBotData: QueryBotsType[]
+  updateLocalBotData: React.Dispatch<React.SetStateAction<QueryBotsType[]>>,
   selectedColumns: string[]
 }
 const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: DataTableType) => {
@@ -38,11 +38,11 @@ const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: DataTa
 
   // handling this locally because it does not need to be saved yet.
   const handleOnOff = (e: any) => {
-    updateLocalBotData((prevState: Type_Query_bots[]) => {
-      const newRows = prevState.map((row: Type_Query_bots) => {
-        if (e != undefined && e.target !== null) {
-          if (e.target.name == row.id) {
-            row.is_enabled = (row.is_enabled == 1) ? 0 : 1;
+    updateLocalBotData((prevState: QueryBotsType[]) => {
+      const newRows = prevState.map((row: QueryBotsType) => {
+        if (e !== undefined && e.target !== null) {
+          if (e.target.name === row.id) {
+            row.is_enabled = (row.is_enabled === 1) ? 0 : 1;
           }
         }
         return row;
@@ -52,18 +52,19 @@ const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: DataTa
   };
 
   const handleDeleteRow = (cellId: number | string) => {
-    updateLocalBotData((prevState: Type_Query_bots[]) => {
+    updateLocalBotData((prevState: QueryBotsType[]) => {
       const newRows = prevState.filter((row) => {
         if (String(cellId) !== String(row.id)) {
           return row;
         }
+        return null;
       });
       return calcDropMetrics(totalBankroll, newRows);
     });
   };
 
   const handleEditCellChangeCommitted = (id: number, column: string, value: string | boolean) => {
-    updateLocalBotData((prevState: Type_Query_bots[]) => {
+    updateLocalBotData((prevState: QueryBotsType[]) => {
       const newRows = prevState.map((row) => {
         if (id === row.id) {
           // @ts-ignore - validate props

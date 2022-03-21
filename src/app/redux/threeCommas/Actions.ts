@@ -11,7 +11,7 @@ import { initialState } from '@/app/redux/threeCommas/initialState';
 
 import { updateLastSyncTime } from '@/app/redux/config/configSlice';
 import { updateBannerData } from '@/app/Features/UpdateBanner/redux/bannerSlice';
-import type { Type_Profile, Type_ReservedFunds } from '@/types/config';
+import type { ProfileType, ReservedFundsType } from '@/types/config';
 import type { QueryPerformanceArray } from '@/types/3CommasApi';
 
 // Utilities
@@ -59,7 +59,7 @@ const dispatchSetBalanceData = (data: typeof initialState.balanceData) => {
  * These functions are responsible for fetching the related data from the local database, then updating the current state
  */
 
-const fetchAndStoreBotData = async (currentProfile: Type_Profile, update: boolean) => {
+const fetchAndStoreBotData = async (currentProfile: ProfileType, update: boolean) => {
   try {
     await botQuery(currentProfile)
       .then((result) => {
@@ -76,7 +76,7 @@ const fetchAndStoreBotData = async (currentProfile: Type_Profile, update: boolea
   }
 };
 
-const fetchAndStoreProfitData = async (profileData: Type_Profile) => {
+const fetchAndStoreProfitData = async (profileData: ProfileType) => {
   await fetchDealDataFunction(profileData)
     .then((data) => {
       if (!data) return;
@@ -86,7 +86,7 @@ const fetchAndStoreProfitData = async (profileData: Type_Profile) => {
     });
 };
 
-const fetchAndStorePerformanceData = async (profileData: Type_Profile) => {
+const fetchAndStorePerformanceData = async (profileData: ProfileType) => {
   const pairBot = async () => fetchPerformanceDataFunction(profileData, undefined)
     .then(((data: QueryPerformanceArray[]) => {
       if (!data || data.length === 0) return;
@@ -139,7 +139,7 @@ const fetchAndStorePerformanceData = async (profileData: Type_Profile) => {
   await Promise.all([pairBot(), bot(), pair(), so()]);
 };
 
-const fetchAndStoreActiveDeals = async (profileData: Type_Profile) => {
+const fetchAndStoreActiveDeals = async (profileData: ProfileType) => {
   await getActiveDealsFunction(profileData)
     .then((data) => {
       if (!data) return;
@@ -151,7 +151,7 @@ const fetchAndStoreActiveDeals = async (profileData: Type_Profile) => {
     });
 };
 
-const fetchAndStoreAccountData = async (profileData: Type_Profile) => {
+const fetchAndStoreAccountData = async (profileData: ProfileType) => {
   await getAccountDataFunction(profileData)
     .then((data) => {
       if (!data || !data.accountData || data.accountData.length === 0) return;
@@ -171,7 +171,7 @@ const calculateMetrics = () => {
   const {
     maxRisk, totalBoughtVolume, position, on_orders: onOrders, inactiveBotFunds,
   } = threeCommas.metricsData;
-  const reservedFundsArray = <Type_ReservedFunds[]>config.currentProfile.statSettings.reservedFunds;
+  const reservedFundsArray = <ReservedFundsType[]>config.currentProfile.statSettings.reservedFunds;
 
   const localOnOrders = undefToZero(onOrders);
   const localPosition = undefToZero(position);
@@ -215,7 +215,7 @@ const calculateMetrics = () => {
   });
 };
 
-const updateAllDataQuery = async (profileData: Type_Profile, type: string) => {
+const updateAllDataQuery = async (profileData: ProfileType, type: string) => {
   // if the type if fullSync this will store the bot data. If we store the bot data in the redux state it will overwrite any user changes.
   await Promise.all([
     fetchAndStoreBotData(profileData, type === 'fullSync'),
@@ -235,7 +235,7 @@ const updateAllDataQuery = async (profileData: Type_Profile, type: string) => {
  *
  */
 
-const preSyncCheck = (profileData: Type_Profile) => {
+const preSyncCheck = (profileData: ProfileType) => {
   if (!profileData || dotProp.has(profileData, 'profileData.apis.threeC')
     || dotProp.has(profileData, 'profileData.apis.threeC.key')
     || dotProp.has(profileData, 'profileData.apis.threeC.secret')
@@ -249,7 +249,7 @@ const preSyncCheck = (profileData: Type_Profile) => {
 };
 
 const updateAllData = async (
-  profileData: Type_Profile,
+  profileData: ProfileType,
   type: 'autoSync' | 'fullSync',
   offset: number = 1000,
   callback?: CallableFunction,
@@ -291,7 +291,7 @@ const updateAllData = async (
   }
 };
 
-const syncNewProfileData = async (editingProfile: Type_Profile, offset: number = 1000) => {
+const syncNewProfileData = async (editingProfile: ProfileType, offset: number = 1000) => {
   if (!preSyncCheck(editingProfile)) return null;
 
   store.dispatch(setIsSyncing(true));

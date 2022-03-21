@@ -100,7 +100,9 @@ export type Deals = {
   stop_loss_type: 'stop_loss' | 'stop_loss_and_disable_bot'
   safety_order_volume_type: 'quote_currency' | 'percent'
   base_order_volume_type: 'quote_currency' | 'percent'
-  from_currency: 'AUD' | 'BIDR' | 'BNB' | 'BRL' | 'BTC' | 'BUSD' | 'BVND' | 'DAI' | 'ETH' | 'EUR' | 'GBP' | 'IDRT' | 'NGN' | 'RUB' | 'TRX' | 'TRY' | 'TUSD' | 'UAH' | 'USD' | 'USDC' | 'USDT' | 'USDP' | 'VAI' | 'XRP'
+  from_currency:
+  'AUD' | 'BIDR' | 'BNB' | 'BRL' | 'BTC' | 'BUSD' | 'BVND' | 'DAI' | 'ETH' | 'EUR' | 'GBP'
+  | 'IDRT' | 'NGN' | 'RUB' | 'TRX' | 'TRY' | 'TUSD' | 'UAH' | 'USD' | 'USDC' | 'USDT' | 'USDP' | 'VAI' | 'XRP'
   to_currency: string
   current_price: number
   take_profit_price: number
@@ -135,7 +137,7 @@ export type ActiveDeals = Deals & {
   so_volume_remaining: number
 };
 
-export type Type_Query_Accounts = {
+export type QueryAccountsType = {
   currency_code: string
   id: number | string
   account_id: number
@@ -149,13 +151,13 @@ export type Type_Query_Accounts = {
   market_code: string
 };
 
-export type Type_Pair_By_Date = {
+export type PairByDateType = {
   date: string
   pair: string
   profit: number
 };
 
-export type Type_bots = {
+export type BotsType = {
   id: number | string
   origin: string
   account_id: number
@@ -175,7 +177,9 @@ export type Type_bots = {
   finished_deals_count?: number
   finished_deals_profit_usd?: number
   // TODO - Fix this to pull the currencyKeys
-  from_currency: 'AUD' | 'BIDR' | 'BNB' | 'BRL' | 'BTC' | 'BUSD' | 'BVND' | 'DAI' | 'ETH' | 'EUR' | 'GBP' | 'IDRT' | 'NGN' | 'RUB' | 'TRX' | 'TRY' | 'TUSD' | 'UAH' | 'USD' | 'USDC' | 'USDT' | 'USDP' | 'VAI' | 'XRP'
+  from_currency:
+  'AUD' | 'BIDR' | 'BNB' | 'BRL' | 'BTC' | 'BUSD' | 'BVND' | 'DAI' | 'ETH' | 'EUR'
+  | 'GBP' | 'IDRT' | 'NGN' | 'RUB' | 'TRX' | 'TRY' | 'TUSD' | 'UAH' | 'USD' | 'USDC' | 'USDT' | 'USDP' | 'VAI' | 'XRP'
   is_enabled: number | boolean
 
   // TODO -- all of these are null in the database. Why?
@@ -205,15 +209,11 @@ export type Type_bots = {
   hide: boolean
 };
 
-export type Type_Query_bots = Type_bots & {
+export type QueryBotsType = BotsType & {
   pairs: string
 };
 
-export interface Type_API_bots extends Type_bots {
-  pairs: string[]
-}
-
-export type Type_MetricData = {
+export type MetricDataType = {
   activeDealCount: number
   totalProfit_perf: number
   totalDeals: number
@@ -237,7 +237,7 @@ export type Type_MetricData = {
   totalMaxRisk: number // adding maxRisk and inactiveBotFunds together.
 };
 
-export type Type_MarketOrders = {
+export type MarketOrdersType = {
   order_id: string
   deal_order_type: string;
   order_type: string // buy / sell
@@ -261,97 +261,15 @@ export type ManualSOs = {
   rate: number,
   average_price: number,
 };
-export interface Type_UpdateFunction {
+export interface UpdateFunctionType {
   offset: number
   time: number
   syncCount: number
 }
 
-export interface Type_Deals_API {
-  id: number // in use
-  type: string // in use
-  bot_id: number // in use
-  max_safety_orders: number // in use
-  deal_has_error: boolean
-  from_currency_id: number // in use
-  to_currency_id: number // in use
-  account_id: number // in use
-  active_safety_orders_count: number // in use
-  created_at: string // in use
-  updated_at: string // in use
-  closed_at: string // in use
-  closed_at_iso_string: number | null // in use
-  finished: boolean // in use
-  current_active_safety_orders_count: boolean // in use
-  current_active_safety_orders: number // in use
-  completed_safety_orders_count: number // in use
-  completed_manual_safety_orders_count: number // in use
-  cancellable: boolean
-  panic_sellable: boolean
-  trailing_enabled: boolean
-  tsl_enabled: boolean
-  stop_loss_timeout_enabled: boolean
-  stop_loss_timeout_in_seconds: number
-  active_manual_safety_orders: number // in use
-  pair: string // in use
-  status: string // in use
-  localized_status: string
-  take_profit: number // in use
-  base_order_volume: number // in use
-  safety_order_volume: number // in use
-  safety_order_step_percentage: number // in use
-  leverage_type: string
-  leverage_custom_value: number
-  bought_amount: number // in use
-  bought_volume: number // in use
-  bought_average_price: number
-  base_order_average_price: number
-  sold_amount: number
-  sold_volume: number
-  sold_average_price: number
-  take_profit_type: string
-  final_profit: string // in use
-  martingale_coefficient: number
-  martingale_volume_coefficient: number
-  martingale_step_coefficient: number
-  stop_loss_percentage: number
-  error_message: string
-  profit_currency: 'quote_currency' | 'base_currency'
-  stop_loss_type: 'stop_loss' | 'stop_loss_and_disable_bot'
-  safety_order_volume_type: 'quote_currency' | 'percent'
-  base_order_volume_type: 'quote_currency' | 'percent'
-  from_currency: 'AUD' | 'BIDR' | 'BNB' | 'BRL' | 'BTC' | 'BUSD' | 'BVND' | 'DAI' | 'ETH' | 'EUR' | 'GBP' | 'IDRT' | 'NGN' | 'RUB' | 'TRX' | 'TRY' | 'TUSD' | 'UAH' | 'USD' | 'USDC' | 'USDT' | 'USDP' | 'VAI' | 'XRP'
-  to_currency: string
-  current_price: number
-  take_profit_price: number
-  stop_loss_price: number
-  final_profit_percentage: number
-  actual_profit_percentage: number
-  bot_name: string
-  account_name: string
-  usd_final_profit: number
-  actual_profit: number
-  actual_usd_profit: number
-  failed_message: string
-  reserved_base_coin: number
-  reserved_second_coin: number
-  trailing_deviation: number
-  trailing_max_price: number
-  tsl_max_price: number
-  strategy: string
-  reserved_quote_funds: string
-  reserved_base_funds: string
-  realized_actual_profit_usd: number
-  deal_hours: number
-  currency: string
-  max_deal_funds: number
-  profitPercent: number
-  impactFactor: number
-}
-
-export interface Type_SyncOptions {
-  time: number,
-  summary: boolean,
-  offset: number,
-  notifications: boolean
-}
+// export interface SyncOptionsType {
+//   time: number,
+//   summary: boolean,
+//   offset: number,
+//   notifications: boolean
+// }

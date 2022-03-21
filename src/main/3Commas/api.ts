@@ -2,7 +2,7 @@
 import log from 'electron-log';
 import ThreeCommasAPI from './3commaslib';
 import {
-  Type_MarketOrders, ManualSOs, Type_Query_Accounts,
+  MarketOrdersType, ManualSOs, QueryAccountsType,
 } from '@/types/3CommasApi';
 import { Bots3CAPI } from '@/types/3CommasAPI/Bots';
 import { setProfileConfig } from '@/main/Config/config';
@@ -16,7 +16,7 @@ import {
   calcBotMaxInactiveFunds,
 } from '@/utils/formulas';
 
-import { Type_Profile } from '@/types/config';
+import { ProfileType } from '@/types/config';
 import type { UpdateDealRequest } from '@/main/3Commas/types';
 import { Deals3CAPI, PreStorageDeals3cAPI } from '@/types/3CommasAPI/Deals';
 
@@ -28,7 +28,7 @@ import { Deals3CAPI, PreStorageDeals3cAPI } from '@/types/3CommasAPI/Deals';
  * @description - required at the moment so when you make a config change on the frontend you're not using old data.
  */
 const threeCapi = (
-  profileData?: Type_Profile,
+  profileData?: ProfileType,
   key?: string,
   secret?: string,
   incomingMode?: string,
@@ -52,7 +52,7 @@ const threeCapi = (
   return new ThreeCommasAPI({ apiKey, apiSecret, mode });
 };
 
-async function bots(profileData: Type_Profile) {
+async function bots(profileData: ProfileType) {
   const api = threeCapi(profileData);
   if (!api) return [];
 
@@ -147,7 +147,7 @@ async function bots(profileData: Type_Profile) {
    * @description Fetching market orders for bots that are active and have active market orders
    * @api_docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/deals_api.md#deal-safety-orders-permission-bots_read-security-signed
    */
-async function getMarketOrders(deal_id: number, profileData: Type_Profile) {
+async function getMarketOrders(deal_id: number, profileData: ProfileType) {
   const api = threeCapi(profileData);
   if (!api) return false;
 
@@ -182,7 +182,7 @@ async function getMarketOrders(deal_id: number, profileData: Type_Profile) {
  * @description Fetching market orders for bots that are active and have active market orders
  * @api_docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/deals_api.md#deal-safety-orders-permission-bots_read-security-signed
  */
-async function getDealOrders(profileData: Type_Profile, deal_id: number) {
+async function getDealOrders(profileData: ProfileType, deal_id: number) {
   const api = threeCapi(profileData);
   if (!api) return [];
 
@@ -190,7 +190,7 @@ async function getDealOrders(profileData: Type_Profile, deal_id: number) {
   const data = await api.getDealSafetyOrders(String(deal_id));
 
   return (!data) ? []
-    : data.map((order: Type_MarketOrders) => {
+    : data.map((order: MarketOrdersType) => {
       // market orders do not use the rate metric, but active orders do not use the average price
       const rate = (order.rate !== 0) ? +order.rate : +order.average_price;
 
@@ -277,7 +277,7 @@ async function getActiveDeals(api: ThreeCommasAPI, perSyncOffset = 300) {
  *
  * @returns object array of deals.
  */
-async function getDealsUpdate(perSyncOffset: number, type: 'autoSync' | 'fullSync', profileData: Type_Profile) {
+async function getDealsUpdate(perSyncOffset: number, type: 'autoSync' | 'fullSync', profileData: ProfileType) {
   const api = threeCapi(profileData);
   if (!api) {
     return {
@@ -312,7 +312,7 @@ async function getDealsUpdate(perSyncOffset: number, type: 'autoSync' | 'fullSyn
   return { deals: [...updatedDeals, ...activeDeals], lastSyncTime };
 }
 
-async function deals(offset: number, type: 'autoSync' | 'fullSync', profileData: Type_Profile) {
+async function deals(offset: number, type: 'autoSync' | 'fullSync', profileData: ProfileType) {
   const { deals: dealsUpdate, lastSyncTime } = await getDealsUpdate(offset, type, profileData);
   const dealArray: PreStorageDeals3cAPI[] = [];
 
@@ -400,7 +400,7 @@ async function deals(offset: number, type: 'autoSync' | 'fullSync', profileData:
  *
  * @docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/accounts_api.md#information-about-all-user-balances-on-specified-exchange--permission-accounts_read-security-signed
  */
-async function getAccountDetail(profileData: Type_Profile) {
+async function getAccountDetail(profileData: ProfileType) {
   console.log('tried to do accounts');
   const api = threeCapi(profileData);
   console.log(api);
@@ -411,7 +411,7 @@ async function getAccountDetail(profileData: Type_Profile) {
     return [];
   }
   console.debug(accountData);
-  const array: Type_Query_Accounts[] = [];
+  const array: QueryAccountsType[] = [];
   const accountIDs = profileData.statSettings.reservedFunds.filter((a) => a.is_enabled).map((a) => a.id);
   const filteredAccountData = accountData.filter((a: any) => accountIDs.includes(a.id));
 
@@ -449,7 +449,7 @@ async function getAccountDetail(profileData: Type_Profile) {
 }
 
 // TODO replace this with the get account detail function with some conditional logic
-async function getAccountSummary(profileData?: Type_Profile, key?: string, secret?: string, mode?: string) {
+async function getAccountSummary(profileData?: ProfileType, key?: string, secret?: string, mode?: string) {
   const api = threeCapi(profileData, key, secret, mode);
   if (!api) return [];
   const accountData = await api.accounts();
@@ -464,7 +464,7 @@ async function getAccountSummary(profileData?: Type_Profile, key?: string, secre
   return array;
 }
 
-async function updateDeal(profileData: Type_Profile, deal: UpdateDealRequest) {
+async function updateDeal(profileData: ProfileType, deal: UpdateDealRequest) {
   const api = threeCapi(profileData);
   if (!api) return false;
 

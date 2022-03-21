@@ -3,9 +3,9 @@ import log from 'electron-log';
 import Store from 'electron-store';
 import { v4 as uuidv4 } from 'uuid';
 import { run } from '@/main/Database/database';
-import { TconfigValues, Type_Profile } from '@/types/config';
+import { ConfigValuesType, ProfileType } from '@/types/config';
 import { defaultConfig } from '@/utils/defaultConfig';
-import { convertToProfileDatabases } from './migrations/2.0.0';
+import convertToProfileDatabases from './migrations/2.0.0';
 
 const migrationToProfiles = async (config: any) => {
   // if(config.get('general.version') === 'v0.5.0') {
@@ -63,7 +63,7 @@ const migrationToProfiles = async (config: any) => {
 };
 
 // establishing a config store.
-export const config = new Store<TconfigValues>({
+export const config = new Store<ConfigValuesType>({
   migrations: {
     '1.0.0': async (store) => {
       log.info('migrating the config store to 1.0.0');
@@ -85,7 +85,7 @@ export const config = new Store<TconfigValues>({
       await convertToProfileDatabases(profileIds);
     },
   },
-  defaults: <TconfigValues>defaultConfig,
+  defaults: <ConfigValuesType>defaultConfig,
 });
 
 const getProfileConfig = (key: string): any => {
@@ -96,18 +96,20 @@ const getProfileConfig = (key: string): any => {
 const getProfileConfigAll = (profileId?: string) => {
   if (!profileId) profileId = <string>config.get('current');
 
-  return <Type_Profile>config.get(`profiles.${profileId}`);
+  return <ProfileType>config.get(`profiles.${profileId}`);
 };
 
 const setProfileConfig = (key: string, value: any, profileId: string) => {
   if (!profileId) {
     log.error(`No profile ID to set the config${key} - ${value}`);
-    return;
+    return null;
   }
   return config.set(`profiles.${profileId}.${key}`, value);
 };
 
-const setDefaultConfig = () => config.store = defaultConfig;
+const setDefaultConfig = () => {
+  config.store = defaultConfig;
+};
 
 export {
   getProfileConfig,

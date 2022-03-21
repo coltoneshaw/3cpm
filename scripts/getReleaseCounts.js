@@ -19,33 +19,33 @@ const fetchVersions = async () => {
     Total: 0,
   };
 
-  for (release of data) {
-    const { tag_name, assets } = release;
+  data.forEach((release) => {
+    const { tag_name: tagName, assets } = release;
 
     const downloads = {};
     let releaseDownloads = 0;
 
-    for (download of assets) {
-      const { name, download_count } = download;
+    assets.forEach((download) => {
+      const { name, download_count: downloadCount } = download;
       if (name.includes('.exe')) {
-        downloads.Windows = download_count;
-        downloadsByOS.Windows += download_count;
+        downloads.Windows = downloadCount;
+        downloadsByOS.Windows += downloadCount;
       } else if (name.includes('.AppImage' || name.includes('.snap'))) {
-        downloads.Linux = download_count;
-        downloadsByOS.Linux += download_count;
+        downloads.Linux = downloadCount;
+        downloadsByOS.Linux += downloadCount;
       } else if (name.includes('.dmg')) {
-        downloads.Mac = download_count;
-        downloadsByOS.Mac += download_count;
+        downloads.Mac = downloadCount;
+        downloadsByOS.Mac += downloadCount;
       }
 
-      releaseDownloads += +download_count;
-    }
+      releaseDownloads += +downloadCount;
+    });
 
     downloads.Total = releaseDownloads;
-    downloadArray[tag_name] = downloads;
+    downloadArray[tagName] = downloads;
     downloadsByOS.Total += releaseDownloads;
     // downloadArray.push({tag_name: downloads})
-  }
+  });
 
   console.log(downloadArray);
   // console.log(downloadsByRelease)

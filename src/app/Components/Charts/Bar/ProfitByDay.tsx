@@ -51,7 +51,7 @@ const convertToNewDates = (data: ProfitArray[], langString: any, type: string) =
   });
 };
 
-const CustomTooltip = ({ active, payload, formatter }: TooltipType<number, string>) => {
+const CustomTooltip: React.FC<TooltipType<number, string>> = ({ active, payload, formatter }) => {
   if (!active || !payload || !payload[0]?.payload) return null;
   const data: TypeNewDateProfit = payload[0].payload;
   const {

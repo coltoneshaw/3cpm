@@ -3,13 +3,13 @@ import path from 'path';
 import fsExtra from 'fs-extra';
 import { app } from 'electron';
 import { checkOrMakeTables } from './Database/initializeDatabase';
-import { TconfigValues } from '@/types/config';
+import { ConfigValuesType } from '@/types/config';
 import { config } from '@/main/Config/config';
 
 const appDataPath = app.getPath('userData');
 const checkInvalidConfig = async (
   currentProfile: string | undefined | 'default',
-  loadedConfig: TconfigValues,
+  loadedConfig: ConfigValuesType,
 ) => {
   if (!currentProfile || currentProfile === 'default') {
     try {

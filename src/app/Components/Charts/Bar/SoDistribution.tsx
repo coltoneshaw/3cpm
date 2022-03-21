@@ -7,7 +7,7 @@ import { currencyTooltipFormatter } from '@/app/Components/Charts/formatting';
 
 import { parseNumber } from '@/utils/numberFormatting';
 
-import type { TooltipType, Type_SoDistribution } from '@/types/Charts';
+import type { TooltipType, SoDistributionType } from '@/types/Charts';
 
 interface SODistributionArray {
   SO: number
@@ -17,9 +17,9 @@ interface SODistributionArray {
   numberOfDeals: number
 }
 
-const CustomTooltip = ({
+const CustomTooltip: React.FC<TooltipType<number, string>> = ({
   active, payload, label, formatter,
-}: TooltipType<number, string>) => {
+}) => {
   if (!active || !payload || payload[0] === undefined) return null;
 
   const {
@@ -45,7 +45,7 @@ const CustomTooltip = ({
   );
 };
 
-const SoDistribution = ({ data = [], metrics, defaultCurrency }: Type_SoDistribution) => {
+const SoDistribution = ({ data = [], metrics, defaultCurrency }: SoDistributionType) => {
   let dataArray: SODistributionArray[] = [];
 
   if (data.length > 0) {

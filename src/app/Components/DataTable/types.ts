@@ -4,7 +4,7 @@ import type {
 } from 'react-table';
 
 import React from 'react';
-import type { ActiveDeals, Type_Query_bots } from '@/types/3CommasApi';
+import type { ActiveDeals, QueryBotsType } from '@/types/3CommasApi';
 import { SubRowAsync } from '@/app/Pages/ActiveDeals/Components';
 
 export interface TableType extends TableOptions<{}> {
@@ -17,6 +17,6 @@ export interface TableType extends TableOptions<{}> {
   customCellProps?: TableCommonProps
   localStorageSortName?: string,
   updateLocalBotData?:
-  (id: number, column: string, value: string) => void | React.Dispatch<React.SetStateAction<Type_Query_bots[]>>,
+  (id: number, column: string, value: string) => void | React.Dispatch<React.SetStateAction<QueryBotsType[]>>,
   updateReservedFunds?: (id: number, column: string, value: string) => void,
 }

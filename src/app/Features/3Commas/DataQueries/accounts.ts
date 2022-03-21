@@ -1,13 +1,13 @@
-import { Type_Query_Accounts } from '@/types/3CommasApi';
-import { getFiltersQueryString } from '@/app/Features/3Commas/queryString';
-import { Type_Profile } from '@/types/config';
+import { QueryAccountsType } from '@/types/3CommasApi';
+import getFiltersQueryString from '@/app/Features/3Commas/queryString';
+import { ProfileType } from '@/types/config';
 
 /**
  *
  * @param {string} defaultCurrency This is the default currency configured in settings and used as a filter
  * @returns
  */
-const getAccountDataFunction = async (profileData: Type_Profile) => {
+const getAccountDataFunction = async (profileData: ProfileType) => {
   const filtersQueryString = await getFiltersQueryString(profileData);
   const { currencyString, accountIdString, currentProfileID } = filtersQueryString;
 
@@ -20,20 +20,21 @@ const getAccountDataFunction = async (profileData: Type_Profile) => {
                     account_id IN ( ${accountIdString} )
                     and currency_code IN ( ${currencyString} )
     `;
-  const accountData: Type_Query_Accounts[] | [] = await window.ThreeCPM.Repository.Database.query(currentProfileID, query);
+  const accountData: QueryAccountsType[] | [] = await window.ThreeCPM.Repository.Database
+    .query(currentProfileID, query);
 
   // removed this since it seems redundant to the above query
   // .then((data: Type_Query_Accounts[]) => data.filter(row => defaultCurrency.includes(row.currency_code)))
 
   if (accountData == null || accountData.length > 0) {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     let on_ordersTotal = 0;
     let positionTotal = 0;
 
-    for (const account of accountData) {
-      const { on_orders, position } = account;
+    accountData.forEach(({ on_orders, position }) => {
       on_ordersTotal += on_orders;
       positionTotal += position;
-    }
+    });
     return {
       accountData,
       balance: {
@@ -52,6 +53,4 @@ const getAccountDataFunction = async (profileData: Type_Profile) => {
   };
 };
 
-export {
-  getAccountDataFunction,
-};
+export default getAccountDataFunction;

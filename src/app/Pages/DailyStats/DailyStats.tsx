@@ -12,7 +12,7 @@ import { AllCurrencySelector, AccountSelector } from '@/app/Components/Selectors
 import { SummaryProfitByDay } from '@/app/Components/Charts/Area';
 import { ProfitByDay } from '@/app/Components/Charts/Bar';
 
-import { RoiMetrics } from './Components/KPIs';
+import RoiMetrics from './Components/RoiMetrics';
 import { formatCurrency } from '@/utils/granularity';
 
 import './DailyStats.scss';
@@ -27,8 +27,16 @@ const DailyStats = () => {
   } = useDailyState();
 
   // These need to be adjusted based on the current currency / exchange. Right now it's not.
-  const activeDealReserve = (queryStats.activeDeals.activeDeals.length > 0) ? queryStats.activeDeals.activeDeals.map((deal) => deal.actual_usd_profit).reduce((sum, profit) => sum + profit) : 0;
-  const unrealizedProfitTotal = (queryStats.activeDeals.activeDeals.length > 0) ? queryStats.activeDeals.activeDeals.map((deal) => (deal.take_profit / 100) * deal.bought_volume).reduce((sum, profit) => sum + profit) : 0;
+  const activeDealReserve = (queryStats.activeDeals.activeDeals.length > 0)
+    ? queryStats.activeDeals.activeDeals
+      .map((deal) => deal.actual_usd_profit)
+      .reduce((sum, profit) => sum + profit)
+    : 0;
+  const unrealizedProfitTotal = (queryStats.activeDeals.activeDeals.length > 0)
+    ? queryStats.activeDeals.activeDeals
+      .map((deal) => (deal.take_profit / 100) * deal.bought_volume)
+      .reduce((sum, profit) => sum + profit)
+    : 0;
 
   return (
     <>
@@ -137,7 +145,11 @@ const DailyStats = () => {
           <ProfitByDay data={queryStats.dailyProfit.profitData} X="profit" defaultCurrency={defaultCurrency} />
         </Grid>
         <Grid item xs={6}>
-          <SummaryProfitByDay data={queryStats.dailyProfit.profitData} X="runningSum" defaultCurrency={defaultCurrency} />
+          <SummaryProfitByDay
+            data={queryStats.dailyProfit.profitData}
+            X="runningSum"
+            defaultCurrency={defaultCurrency}
+          />
         </Grid>
 
         <Grid item xs={6}>

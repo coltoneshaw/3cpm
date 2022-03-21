@@ -1,18 +1,22 @@
 import React from 'react';
 import ReactSpeedometer from 'react-d3-speedometer';
 
-interface Type_Speedometer {
-  metric: number
-  min: number
-  max: number
-  colorArray?: string[]
-  labelArray: object[]
-  title: string
-}
+type SpeedometerType = {
+  metric: number;
+  min: number;
+  max: number;
+  colorArray?: string[] | undefined;
+  labelArray: object[];
+  title: string;
+};
 
-const MaxRiskSpeedometer = ({
+const defaultProps = {
+  colorArray: undefined,
+};
+
+const MaxRiskSpeedometer: React.FC<SpeedometerType> = ({
   metric, min, max, colorArray, labelArray, title,
-}: Type_Speedometer) => (
+}) => (
   <div
     className="boxData"
     style={{
@@ -43,5 +47,7 @@ const MaxRiskSpeedometer = ({
   </div>
 
 );
+
+MaxRiskSpeedometer.defaultProps = defaultProps;
 
 export default MaxRiskSpeedometer;

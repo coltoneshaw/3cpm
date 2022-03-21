@@ -1,8 +1,8 @@
 import type { supportedCurrencies } from '@/utils/granularity';
 
-export type defaultCurrency = (keyof typeof supportedCurrencies)[] | [];
+export type DefaultCurrency = (keyof typeof supportedCurrencies)[] | [];
 
-export interface Type_Profile {
+export interface ProfileType {
   id: string
   name: string,
   apis: {
@@ -13,7 +13,7 @@ export interface Type_Profile {
     }
   },
   general: {
-    defaultCurrency: defaultCurrency
+    defaultCurrency: DefaultCurrency
     globalLimit: number
     updated: boolean
   },
@@ -25,44 +25,44 @@ export interface Type_Profile {
   statSettings: {
     startDate: number
     account_id: number[],
-    reservedFunds: Type_ReservedFunds[]
+    reservedFunds: ReservedFundsType[]
   },
   writeEnabled: boolean,
 }
 
-export type Type_NotificationsSettings = {
+export type NotificationsSettingsType = {
   enabled: boolean,
   summary: boolean,
 };
 
-export type Type_GlobalSettings = {
-  notifications: Type_NotificationsSettings
+export type GlobalSettingsType = {
+  notifications: NotificationsSettingsType
 };
 
-export interface Type_ReservedFunds {
+export interface ReservedFundsType {
   id: number
   account_name: string
   reserved_funds: string | number
   is_enabled: boolean
 }
 
-export interface Type_ApiKeys {
+export interface ApiKeys {
   key: string
   secret: string
 }
 
-export type TconfigValues = {
-  profiles: Record<string, Type_Profile>,
+export type ConfigValuesType = {
+  profiles: Record<string, ProfileType>,
   current: string | 'default',
-  globalSettings: Type_GlobalSettings,
+  globalSettings: GlobalSettingsType,
   general: {
     version: string
   },
 };
 
-export interface Type_ConfigContext {
-  config: TconfigValues
-  currentProfile: Type_Profile
+export interface ConfigContextType {
+  config: ConfigValuesType
+  currentProfile: ProfileType
   updateConfig: any
   setConfigBulk: any
   reset: any
@@ -75,7 +75,7 @@ export interface Type_ConfigContext {
     updateCurrency: any
     updateApiData: any
     apiData: { key: string, secret: string, mode: string }
-    reservedFunds: Type_ReservedFunds[],
+    reservedFunds: ReservedFundsType[],
     updateReservedFunds: any
     currentProfileId: string
     updateCurrentProfileId: any

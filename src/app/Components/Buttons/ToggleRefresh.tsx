@@ -14,12 +14,17 @@ interface TypeButtonProps {
   className?: string
 }
 
+const defaultProps: TypeButtonProps = {
+  style: {},
+  className: '',
+};
+
 /**
  *
  * TODO
  * - Move the state of this timer somewhere shared so it doesn't continue to cause issues with updating
  */
-const ToggleRefreshButton = ({ style, className }: TypeButtonProps) => {
+const ToggleRefreshButton: React.FC<typeof defaultProps> = ({ style, className }) => {
   const {
     autoRefresh, isSyncingTime, isSyncing, syncOptions,
   } = useAppSelector((state) => state.threeCommas);

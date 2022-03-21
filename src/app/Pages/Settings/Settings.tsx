@@ -22,7 +22,7 @@ import {
 
 import { ProfileNameEditor } from '@/app/Features/Profiles/Components/Index';
 
-import { ChangelogModal, ToastNotifcations } from '@/app/Features/Index';
+import { ChangelogModal, ToastNotifications } from '@/app/Features/Index';
 import WriteModeSettings from '@/app/Pages/Settings/Components/WriteModeSettings';
 
 const SettingsPage = () => {
@@ -112,7 +112,7 @@ const SettingsPage = () => {
         </Button>
       </div>
       <ChangelogModal open={openChangelog} setOpen={setOpenChangelog} />
-      <ToastNotifcations open={open} handleClose={handleClose} message="Config has been saved" />
+      <ToastNotifications open={open} handleClose={handleClose} message="Config has been saved" />
     </>
   );
 };

@@ -1,13 +1,13 @@
 import moment from 'moment';
-import { getFiltersQueryString } from '@/app/Features/3Commas/queryString';
+import getFiltersQueryString from '@/app/Features/3Commas/queryString';
 import { initDate, DateRangeToSQLString } from '@/app/Features/3Commas/3Commas';
-import { Type_Profile } from '@/types/config';
+import { ProfileType } from '@/types/config';
 import type { DateRange } from '@/types/Date';
 
-import { Type_Pair_By_Date } from '@/types/3CommasApi';
+import { PairByDateType } from '@/types/3CommasApi';
 import { FetchPairPerformanceMetrics } from '../Type_3Commas';
 
-const fetchPairPerformanceMetrics = async (profileData: Type_Profile, oDate?: DateRange) => {
+const fetchPairPerformanceMetrics = async (profileData: ProfileType, oDate?: DateRange) => {
   const filtersQueryString = await getFiltersQueryString(profileData);
   const {
     currencyString, accountIdString, startString, currentProfileID,
@@ -52,7 +52,7 @@ const fetchPairPerformanceMetrics = async (profileData: Type_Profile, oDate?: Da
  *
  * @description This is used to see pairs on a per date bases in charts. This is not used in the DataContext state. This reports based on the usd_final_profit only
  */
-const getSelectPairDataByDate = async (profileData: Type_Profile, pairs: string[], oDate: DateRange) => {
+const getSelectPairDataByDate = async (profileData: ProfileType, pairs: string[], oDate: DateRange) => {
   const filtersQueryString = await getFiltersQueryString(profileData);
   const {
     currencyString, accountIdString, startString, currentProfileID,
@@ -82,7 +82,7 @@ const getSelectPairDataByDate = async (profileData: Type_Profile, pairs: string[
             date, pair;
     `;
 
-  const pairData: Array<Type_Pair_By_Date> | [] = await window.ThreeCPM.Repository.Database
+  const pairData: Array<PairByDateType> | [] = await window.ThreeCPM.Repository.Database
     .query(currentProfileID, query);
 
   const currentDate = moment(date.from).clone();

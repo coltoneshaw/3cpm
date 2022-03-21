@@ -44,7 +44,7 @@ function dynamicSort(property: string) {
     // eslint-disable-next-line no-param-reassign
     property = property.substr(1);
   }
-  return function (a: any, b: any) {
+  return (a: any, b: any) => {
     /* next line works with strings and numbers,
      * and you may want to customize it to your needs
      */

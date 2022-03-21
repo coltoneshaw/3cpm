@@ -7,7 +7,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { useAppSelector } from '@/app/redux/hooks';
 import { OrderTimeline, DCA, Orders } from '../SubrowTabs/Index';
-import type { Type_MarketOrders } from '@/types/3CommasApi';
+import type { MarketOrdersType } from '@/types/3CommasApi';
 
 const SubRows = ({
   row, ordersData, loading,
@@ -57,7 +57,7 @@ const SubRows = ({
 
 const SubRowAsync = ({ row }: any) => {
   const [loading, setLoading] = useState(true);
-  const [ordersData, setOrdersData] = useState<Type_MarketOrders[] | any[]>([]);
+  const [ordersData, setOrdersData] = useState<MarketOrdersType[] | any[]>([]);
 
   const { currentProfile } = useAppSelector((state) => state.config);
 

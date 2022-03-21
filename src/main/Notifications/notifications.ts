@@ -4,14 +4,14 @@ import { Notification } from 'electron';
 import path from 'path';
 import { parseNumber } from '@/utils/numberFormatting';
 import { getProfileConfig } from '@/main/Config/config';
-import { Type_ReservedFunds } from '@/types/config';
+import { ReservedFundsType } from '@/types/config';
 
 import { convertMiliseconds } from '@/utils/helperFunctions';
 
 import { PreStorageDeals3cAPI } from '@/types/3CommasAPI/Deals';
 
 const accountFilters = () => {
-  const profileConfig: Type_ReservedFunds[] = getProfileConfig(
+  const profileConfig: ReservedFundsType[] = getProfileConfig(
     'statSettings.reservedFunds',
   );
   return profileConfig

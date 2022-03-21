@@ -1,8 +1,8 @@
-import type {api} from '@/types/preload'
+import type { API } from '@/types/preload';
 
 export default interface APIRepository {
-    update: api['update'];
-    updateBots: api['updateBots'];
-    getAccountData: api['getAccountData']
-    getDealOrders: api['getDealOrders']
+  update: API['update'];
+  updateBots: API['updateBots'];
+  getAccountData: API['getAccountData']
+  getDealOrders: API['getDealOrders']
 }

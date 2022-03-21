@@ -1,8 +1,8 @@
-import { Type_Profile } from '@/types/config';
+import { ProfileType } from '@/types/config';
 import type { ActiveDeals, ProfitArray } from '@/types/3CommasApi';
 import type { QueryDealByPairByDayReturn, BotQueryDealByDayReturn } from './type_dailydashboard';
 import type { FetchDealDataFunctionQuery } from '@/app/Features/3Commas/Type_3Commas';
-import type { utcDateRange } from '@/types/Date';
+import type { UtcDateRange } from '@/types/Date';
 import { getDatesBetweenTwoDates } from '@/utils/helperFunctions';
 
 import { daysInMilli } from '@/app/Pages/DailyStats/logic';
@@ -13,8 +13,8 @@ type Filters = {
 };
 
 const queryDealByPairByDay = async (
-  profileData: Type_Profile,
-  utcDateRange: utcDateRange,
+  profileData: ProfileType,
+  utcDateRange: UtcDateRange,
   filters: Filters,
 ): Promise<QueryDealByPairByDayReturn[] | []> => {
   const queryString = `
@@ -61,8 +61,8 @@ const queryDealByPairByDay = async (
 };
 
 const queryDealByBotByDay = async (
-  profileData: Type_Profile,
-  utcDateRange: utcDateRange,
+  profileData: ProfileType,
+  utcDateRange: UtcDateRange,
   filters: Filters,
 ): Promise<BotQueryDealByDayReturn[] | []> => {
   const queryString = `
@@ -156,7 +156,7 @@ const getHistoricalProfits = async (
   };
 };
 
-const getTotalProfit = async (profileData: Type_Profile, filters: Filters): Promise<number> => {
+const getTotalProfit = async (profileData: ProfileType, filters: Filters): Promise<number> => {
   const totalProfit = `
     SELECT 
         sum(final_profit) as final_profit
@@ -172,7 +172,7 @@ const getTotalProfit = async (profileData: Type_Profile, filters: Filters): Prom
   return total[0].final_profit;
 };
 
-const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utcDateRange, filters: Filters) => {
+const queryProfitDataByDay = async (profileData: ProfileType, utcDateRange: UtcDateRange, filters: Filters) => {
   const profitData: ProfitArray[] | [] = [];
   const utcStart = utcDateRange.utcStartDate - daysInMilli.thirty;
 
@@ -277,7 +277,7 @@ const queryProfitDataByDay = async (profileData: Type_Profile, utcDateRange: utc
   };
 };
 
-const getActiveDealsFunction = async (profileData: Type_Profile, filters: Filters) => {
+const getActiveDealsFunction = async (profileData: ProfileType, filters: Filters) => {
   const query = `
                 SELECT
                     * 

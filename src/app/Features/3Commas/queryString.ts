@@ -1,19 +1,20 @@
+import { ReservedFundsType, ProfileType } from '@/types/config';
 
-import { Type_ReservedFunds, Type_Profile } from '@/types/config'
+const getFiltersQueryString = (profileData: ProfileType) => {
+  const { general: { defaultCurrency }, statSettings: { reservedFunds, startDate }, id } = profileData;
 
+  const currencyString = (defaultCurrency) ? defaultCurrency.map((b: string) => `'${b}'`) : '';
+  const startString = startDate;
+  const accountIdString = reservedFunds
+    .filter((account: ReservedFundsType) => account.is_enabled)
+    .map((account: ReservedFundsType) => account.id);
 
-export const getFiltersQueryString = (profileData: Type_Profile) => {
-    const { general: { defaultCurrency }, statSettings: { reservedFunds, startDate }, id } = profileData
+  return {
+    currencyString,
+    accountIdString,
+    startString,
+    currentProfileID: id,
+  };
+};
 
-    const currencyString = (defaultCurrency) ? defaultCurrency.map((b: string) => "'" + b + "'") : ""
-    const startString = startDate
-    const accountIdString = reservedFunds.filter((account: Type_ReservedFunds) => account.is_enabled).map((account: Type_ReservedFunds) => account.id)
-
-    return {
-        currencyString,
-        accountIdString,
-        startString,
-        currentProfileID: id
-    }
-
-}
+export default getFiltersQueryString;

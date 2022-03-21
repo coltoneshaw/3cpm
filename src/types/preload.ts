@@ -1,21 +1,22 @@
-import { Type_Profile } from '@/types/config';
+import { ProfileType } from '@/types/config';
 import { defaultConfig } from '@/utils/defaultConfig';
 import type { UpdateDealRequest } from '@/main/3Commas/types';
-import { Type_UpdateFunction } from '@/types/3CommasApi';
+import { UpdateFunctionType } from '@/types/3CommasApi';
 import type { getDealOrders } from '@/main/3Commas/index';
-import type { Type_GithubRelease } from '@/app/Repositories/Types/GithubRelease';
+import type { GithubReleaseType } from '@/app/Repositories/Types/GithubRelease';
 import type { BinanceTicketPrice } from '@/app/Repositories/Types/Binance';
 
 declare global {
   interface Window {
-    mainPreload: mainPreload
+    mainPreload: MainPreload
   }
 }
 
-export interface config {
-  get: <T extends 'all' | string>(value: T) => Promise<T extends 'all' ? typeof defaultConfig : T extends string ? any : never>,
-  profile: (type: 'create', newProfile: Type_Profile, profileId: string) => Promise<void>,
-  getProfile: (value: string, profileId: string) => Promise<Type_Profile | undefined>,
+export interface Config {
+  get: <T extends 'all' | string>(value: T) => Promise<T extends 'all'
+    ? typeof defaultConfig : T extends string ? any : never>,
+  profile: (type: 'create', newProfile: ProfileType, profileId: string) => Promise<void>,
+  getProfile: (value: string, profileId: string) => Promise<ProfileType | undefined>,
   reset: () => Promise<void>,
   set: (key: string, value: any) => Promise<void>,
   // setProfile: (key: string, value: any) => Promise<any>,
@@ -23,7 +24,7 @@ export interface config {
 }
 
 export type TableNames = 'deals' | 'bots' | 'accountData';
-export interface database {
+export interface Database {
   query: (profileId: string, queryString: string) => Promise<any>,
   update: (profileId: string, table: TableNames, updateData: object[]) => void,
   upsert: (profileId: string, table: TableNames, data: any[], id: string, updateColumn: string) => void,
@@ -31,41 +32,46 @@ export interface database {
   deleteAllData: (profileID?: string) => Promise<void>
 }
 
-export interface api {
-  update: (type: string, options: Type_UpdateFunction, profileData: Type_Profile) => Promise<false | number>,
-  updateBots: (profileData: Type_Profile) => Promise<void>,
-  getAccountData: (profileData?: Type_Profile, key?: string, secret?: string, mode?: string) => Promise<{ id: number, name: string }[]>,
-  getDealOrders: (profileData: Type_Profile, dealID: number) => ReturnType<typeof getDealOrders>,
+export interface API {
+  update: (type: string, options: UpdateFunctionType, profileData: ProfileType) => Promise<false | number>,
+  updateBots: (profileData: ProfileType) => Promise<void>,
+  getAccountData: (
+    profileData?: ProfileType,
+    key?: string,
+    secret?: string,
+    mode?: string
+  ) => Promise<{ id: number, name: string }[]>,
+  getDealOrders: (profileData: ProfileType, dealID: number) => ReturnType<typeof getDealOrders>,
 }
 
-export interface general {
+export interface General {
   openLink: (link: string) => void
 }
 
-export interface binance {
+export interface Binance {
   coinData: () => Promise<BinanceTicketPrice[] | false>
 }
-export interface pm {
-  versions: () => Promise<Type_GithubRelease[] | false>
+export interface PM {
+  versions: () => Promise<GithubReleaseType[] | false>
 }
 
-interface mainPreload {
+interface MainPreload {
   deals: {
-    update: (profileData: Type_Profile, deal: UpdateDealRequest) => Promise<void>
+    update: (profileData: ProfileType, deal: UpdateDealRequest) => Promise<void>
   },
-  api: api,
-  config: config,
-  database: database,
-  general: general,
-  binance: binance,
-  pm: pm
+  api: API,
+  config: Config,
+  database: Database,
+  general: General,
+  binance: Binance,
+  pm: PM
 }
 
 export {
-  mainPreload,
-  Type_Profile,
+  MainPreload,
+  ProfileType,
   defaultConfig,
   UpdateDealRequest,
-  Type_UpdateFunction,
+  UpdateFunctionType as Type_UpdateFunction,
   getDealOrders,
 };

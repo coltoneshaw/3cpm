@@ -4,14 +4,14 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 import { parseNumber } from '@/utils/numberFormatting';
-import type { TooltipType, Type_DealPerformanceCharts } from '@/types/Charts';
+import type { TooltipType, DealPerformanceChartsType } from '@/types/Charts';
 import { dynamicSort } from '@/utils/helperFunctions';
 import { currencyTooltipFormatter } from '@/app/Components/Charts/formatting';
 
 import NoData from '@/app/Pages/Stats/Components/NoData';
 
-const CustomTooltip = ({ active, payload, formatter }: TooltipType<number, string>) => {
-  if (!active || !payload || payload[0] === undefined) return null;
+const CustomTooltip: React.FC<TooltipType<number, string>> = ({ active, payload, formatter }) => {
+  if (!active || !payload || !payload[0]?.payload) return null;
 
   const {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -44,7 +44,7 @@ const CustomTooltip = ({ active, payload, formatter }: TooltipType<number, strin
   );
 };
 
-const DealAllocationBar = ({ data = [], defaultCurrency }: Type_DealPerformanceCharts) => {
+const DealAllocationBar: React.FC<DealPerformanceChartsType> = ({ data = [], defaultCurrency }) => {
   let localData = [...data];
   const renderChart = () => {
     if (localData.length === 0) {

@@ -1,5 +1,5 @@
-import { getFiltersQueryString } from '@/app/Features/3Commas/queryString';
-import { Type_Profile } from '@/types/config';
+import getFiltersQueryString from '@/app/Features/3Commas/queryString';
+import { ProfileType } from '@/types/config';
 import type { ProfitArray, QueryPerformanceArray, ActiveDeals } from '@/types/3CommasApi';
 import { getDatesBetweenTwoDates } from '@/utils/helperFunctions';
 import { initDate, DateRangeToSQLString } from '@/app/Features/3Commas/3Commas';
@@ -8,7 +8,7 @@ import { FetchDealDataFunctionQuery, FetchPerformanceData, FetchSoData } from '.
 
 // Filtering by only closed.
 // This can most likely be moved to the performance dashboard or upwards to the app header.
-const fetchDealDataFunction = async (profileData: Type_Profile) => {
+const fetchDealDataFunction = async (profileData: ProfileType) => {
   const filtersQueryString = await getFiltersQueryString(profileData);
   const {
     currencyString, accountIdString, startString, currentProfileID,
@@ -102,7 +102,7 @@ const fetchDealDataFunction = async (profileData: Type_Profile) => {
 };
 
 const fetchPerformanceDataFunction = async (
-  profileData: Type_Profile,
+  profileData: ProfileType,
   oDate?: DateRange,
 ): Promise<QueryPerformanceArray[] | []> => {
   const filtersQueryString = await getFiltersQueryString(profileData);
@@ -165,7 +165,7 @@ const fetchPerformanceDataFunction = async (
   return [];
 };
 
-const getActiveDealsFunction = async (profileData: Type_Profile) => {
+const getActiveDealsFunction = async (profileData: ProfileType) => {
   const filtersQueryString = await getFiltersQueryString(profileData);
   const { currencyString, accountIdString, currentProfileID } = filtersQueryString;
   const query = `
@@ -213,7 +213,7 @@ const getActiveDealsFunction = async (profileData: Type_Profile) => {
   };
 };
 
-const fetchSoData = async (currentProfile: Type_Profile, oDate?: DateRange) => {
+const fetchSoData = async (currentProfile: ProfileType, oDate?: DateRange) => {
   const filtersQueryString = await getFiltersQueryString(currentProfile);
   const {
     currencyString, accountIdString, startString, currentProfileID,

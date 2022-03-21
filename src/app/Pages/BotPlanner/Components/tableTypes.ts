@@ -3,15 +3,15 @@ import {
   UseTableCellProps, UseSortByOptions,
 } from 'react-table';
 
-import type { Type_Query_bots } from '@/types/3CommasApi';
+import type { QueryBotsType } from '@/types/3CommasApi';
 
-export interface TableRow extends UseExpandedRowProps<Type_Query_bots>, UseTableRowProps<Type_Query_bots> { }
+export interface TableRow extends UseExpandedRowProps<QueryBotsType>, UseTableRowProps<QueryBotsType> { }
 export interface TableColumn extends UseExpandedInstanceProps<Column> { }
-export interface Cell extends UseTableCellProps<Type_Query_bots> { }
+export interface Cell extends UseTableCellProps<QueryBotsType> { }
 
 export interface TableCell
-  extends UseTableInstanceProps<Type_Query_bots>,
-  UseSortByOptions<Type_Query_bots> {
+  extends UseTableInstanceProps<QueryBotsType>,
+  UseSortByOptions<QueryBotsType> {
   row: TableRow
   column: TableColumn
   cell: Cell

@@ -9,7 +9,7 @@ interface ToastNotificationTypeProps {
   message: string
 }
 
-const ToastNotifcations: React.FC<ToastNotificationTypeProps> = ({ open, handleClose, message }) => (
+const ToastNotifications: React.FC<ToastNotificationTypeProps> = ({ open, handleClose, message }) => (
   <Snackbar
     anchorOrigin={{
       vertical: 'bottom',
@@ -27,4 +27,4 @@ const ToastNotifcations: React.FC<ToastNotificationTypeProps> = ({ open, handleC
   />
 );
 
-export default ToastNotifcations;
+export default ToastNotifications;

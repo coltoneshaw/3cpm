@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-// import { Type_Profile } from '@/types/config';
 import { defaultProfile } from '@/utils/defaultConfig';
 import { updateProfileByPath } from '@/app/redux/globalFunctions';
 

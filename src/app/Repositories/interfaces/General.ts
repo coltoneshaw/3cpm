@@ -1,10 +1,9 @@
-import type { general, pm } from "@/types/preload";
-
+import type { General, PM } from '@/types/preload';
 
 export interface GeneralRepository {
-    openLink: general['openLink']
+  openLink: General['openLink']
 }
 
 export interface PmRepository {
-    versions: pm['versions']
+  versions: PM['versions']
 }

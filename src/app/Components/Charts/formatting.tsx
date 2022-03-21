@@ -1,20 +1,20 @@
 import { formatCurrency, supportedCurrencies } from '@/utils/granularity';
-import type { defaultCurrency } from '@/types/config';
+import type { DefaultCurrency } from '@/types/config';
 import { dynamicSort } from '@/utils/helperFunctions';
 import { BotPerformanceMetrics, PairPerformanceMetrics } from '@/types/3CommasApi';
 
-const yAxisWidth = (defaultCurrency: defaultCurrency) => {
+const yAxisWidth = (defaultCurrency: DefaultCurrency) => {
   const firstCurrency = defaultCurrency[0] ?? ['USD'];
   const yWidth = supportedCurrencies[firstCurrency].rounding * 10 ?? undefined;
   return (yWidth < 50) ? undefined : yWidth;
 };
 
-const currencyTickFormatter = (value: any, defaultCurrency: defaultCurrency) => {
+const currencyTickFormatter = (value: any, defaultCurrency: DefaultCurrency) => {
   if (value === 0) return value;
   return String(formatCurrency([defaultCurrency[0]], value).metric);
 };
 
-const currencyTooltipFormatter = (value: any, defaultCurrency: defaultCurrency) => {
+const currencyTooltipFormatter = (value: any, defaultCurrency: DefaultCurrency) => {
   if (value === 0) return value;
 
   const { metric, symbol } = formatCurrency([defaultCurrency[0]], value);

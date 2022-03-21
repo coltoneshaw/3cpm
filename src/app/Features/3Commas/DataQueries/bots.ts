@@ -1,7 +1,7 @@
-import { getFiltersQueryString } from '@/app/Features/3Commas/queryString';
+import getFiltersQueryString from '@/app/Features/3Commas/queryString';
 import { initDate, DateRangeToSQLString } from '@/app/Features/3Commas/3Commas';
-import { Type_Profile } from '@/types/config';
-import type { Type_Query_bots } from '@/types/3CommasApi';
+import { ProfileType } from '@/types/config';
+import type { QueryBotsType } from '@/types/3CommasApi';
 import type { DateRange } from '@/types/Date';
 import { FetchBotPerformanceMetrics } from '../Type_3Commas';
 
@@ -11,7 +11,7 @@ import { FetchBotPerformanceMetrics } from '../Type_3Commas';
  *
  */
 
-const fetchBotPerformanceMetrics = async (profileData: Type_Profile, oDate?: DateRange) => {
+const fetchBotPerformanceMetrics = async (profileData: ProfileType, oDate?: DateRange) => {
   const filtersQueryString = await getFiltersQueryString(profileData);
   const {
     currencyString, accountIdString, startString, currentProfileID,
@@ -55,7 +55,7 @@ const fetchBotPerformanceMetrics = async (profileData: Type_Profile, oDate?: Dat
   return [];
 };
 
-const botQuery = async (currentProfile: Type_Profile): Promise<Type_Query_bots[] | []> => {
+const botQuery = async (currentProfile: ProfileType): Promise<QueryBotsType[] | []> => {
   const filtersQueryString = await getFiltersQueryString(currentProfile);
   const { accountIdString, currentProfileID, currencyString } = filtersQueryString;
 
@@ -68,7 +68,7 @@ const botQuery = async (currentProfile: Type_Profile): Promise<Type_Query_bots[]
                     from_currency in (${currencyString})
                     and (account_id in (${accountIdString})  OR origin = 'custom')`;
 
-  const databaseQuery: Type_Query_bots[] | [] = await window.ThreeCPM.Repository.Database
+  const databaseQuery: QueryBotsType[] | [] = await window.ThreeCPM.Repository.Database
     .query(currentProfileID, queryString);
 
   if (databaseQuery != null) return databaseQuery;

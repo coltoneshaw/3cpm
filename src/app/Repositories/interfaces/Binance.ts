@@ -1,8 +1,5 @@
-import type { binance } from "@/types/preload";
-
+import type { Binance } from '@/types/preload';
 
 export default interface BinanceRepository {
-    coinData: binance['coinData']
+  coinData: Binance['coinData']
 }
-
-

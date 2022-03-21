@@ -1,6 +1,6 @@
 import fetch from 'electron-fetch';
 
-import type { Type_GithubRelease } from '@/app/Repositories/Types/GithubRelease';
+import type { GithubReleaseType } from '@/app/Repositories/Types/GithubRelease';
 
 const fetchVersions = async () => {
   try {
@@ -12,7 +12,7 @@ const fetchVersions = async () => {
       },
     );
 
-    return await response.json<Type_GithubRelease[] | []>();
+    return await response.json<GithubReleaseType[] | []>();
   } catch (e) {
     console.log(e);
     return false;

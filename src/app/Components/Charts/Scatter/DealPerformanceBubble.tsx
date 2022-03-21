@@ -7,7 +7,7 @@ import {
   InputLabel, MenuItem, FormControl, Select,
 } from '@mui/material';
 
-import { TooltipType, Type_DealPerformanceCharts } from '@/types/Charts';
+import { TooltipType, DealPerformanceChartsType } from '@/types/Charts';
 import { QueryPerformanceArray } from '@/types/3CommasApi';
 import { parseNumber } from '@/utils/numberFormatting';
 import NoData from '@/app/Pages/Stats/Components/NoData';
@@ -57,7 +57,7 @@ const filterData = (data: QueryPerformanceArray[], filter: FilterString) => {
 const defaultFilter = 'all';
 const defaultSort = 'percentTotalProfit';
 
-const CustomTooltip = ({ active, payload, formatter }: TooltipType<number, string>) => {
+const CustomTooltip: React.FC<TooltipType<number, string>> = ({ active, payload, formatter }) => {
   if (!active || !payload || !payload[0]?.payload) return null;
 
   const {
@@ -105,7 +105,7 @@ const CustomTooltip = ({ active, payload, formatter }: TooltipType<number, strin
  * TODO
  * - Look at combining this chart by "pair-BO" to minimize bubbles on the chart.
  */
-const DealPerformanceBubble = ({ data = [], defaultCurrency }: Type_DealPerformanceCharts) => {
+const DealPerformanceBubble = ({ data = [], defaultCurrency }: DealPerformanceChartsType) => {
   const { filter: storedFilter } = storageItem.charts.DealPerformanceBubble;
 
   // const [sort, setSort] = useState(defaultSort);

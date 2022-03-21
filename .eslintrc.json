@@ -9,6 +9,9 @@
     "airbnb-typescript",
     "eslint:recommended"
   ],
+  "globals": {
+    "NodeJS": true
+  },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {

@@ -5,7 +5,7 @@ import {
 import NoData from '@/app/Pages/Stats/Components/NoData';
 import { currencyTickFormatter, currencyTooltipFormatter } from '@/app/Components/Charts/formatting';
 
-import type { defaultCurrency as DefaultCurrency } from '@/types/config';
+import type { DefaultCurrency } from '@/types/config';
 
 import type { TooltipType } from '@/types/Charts';
 import type { QueryDealByPairByDayReturn, BotQueryDealByDayReturn } from '../3Commas/type_dailydashboard';

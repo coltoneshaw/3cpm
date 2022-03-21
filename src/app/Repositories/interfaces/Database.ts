@@ -1,9 +1,9 @@
-import type { database } from '@/types/preload';
+import type { Database } from '@/types/preload';
 
 export default interface DBRepository {
-  query: database['query'];
-  update: database['update'];
-  upsert: database['upsert'];
-  run: database['run'];
-  deleteAllData: database['deleteAllData'];
+  query: Database['query'];
+  update: Database['update'];
+  upsert: Database['upsert'];
+  run: Database['run'];
+  deleteAllData: Database['deleteAllData'];
 }

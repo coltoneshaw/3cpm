@@ -1,4 +1,4 @@
-import { Type_MarketOrders, Type_Query_bots } from '@/types/3CommasApi';
+import { MarketOrdersType, QueryBotsType } from '@/types/3CommasApi';
 
 /**
  *
@@ -84,7 +84,7 @@ function calcMaxSOReached(
  */
 const calcDropCoverage = (
   totalFundsAvailable: number,
-  bot: Type_Query_bots,
+  bot: QueryBotsType,
 ) => {
   /*
     take the total bankroll / total enabled bots = money available for this bot
@@ -173,7 +173,7 @@ function calcDealMaxFunds(
   mstc: number,
   completedSOs: number,
   os: number,
-  market_order_data: Type_MarketOrders[] | undefined,
+  market_order_data: MarketOrdersType[] | undefined,
 ) {
   let maxTotal = +bo;
 
@@ -186,11 +186,11 @@ function calcDealMaxFunds(
   // add unfilled manual safety orders
   // TODO - Add typedef for market Orders
   if (!(typeof market_order_data === 'undefined')) {
-    for (const order of market_order_data) {
+    market_order_data.forEach((order) => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { quantity_remaining, rate } = order;
       maxTotal += quantity_remaining * +rate;
-    }
+    });
   }
   return maxTotal;
 }
@@ -208,7 +208,7 @@ const calcDealHours = (createdAt: string, closedAt: string) => {
   return +hours.toFixed(2);
 };
 
-const calcDropMetrics = (bankRoll: number, botData: Type_Query_bots[]) => {
+const calcDropMetrics = (bankRoll: number, botData: QueryBotsType[]) => {
   /**
      * This function is responsible for taking the bot data, bankroll and outputting the new bot array with the metrics added.
      */

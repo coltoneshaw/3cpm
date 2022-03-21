@@ -45,7 +45,6 @@ const PairSelector = ({ pairFilters, updatePairFilters, pairs }: PairSelectorTyp
           value={pairFilters}
           onChange={handleChange}
           input={<Input />}
-          // @ts-ignore
           renderValue={() => ((pairFilters.length > 0) ? pairFilters.join() : '')}
           style={{ width: '150px' }}
           MenuProps={{

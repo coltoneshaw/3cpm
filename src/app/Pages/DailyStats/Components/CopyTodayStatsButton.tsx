@@ -4,20 +4,24 @@ import {
   Button, ButtonGroup,
 } from '@mui/material';
 
-import { ToastNotifcations } from '@/app/Features/Index';
-import { Type_MetricData } from '@/types/3CommasApi';
+import { ToastNotifications } from '@/app/Features/Index';
+import { MetricDataType } from '@/types/3CommasApi';
 import { formatCurrency } from '@/utils/granularity';
 
 interface ButtonPropsType {
   style?: object,
   className?: string
-  metricsData: Type_MetricData
+  metricsData: MetricDataType
   todayProfit: number,
   activeDealReserve: number
 }
-const CopyTodayStatsButton = ({
+const defaultProps = {
+  style: {},
+  className: '',
+};
+const CopyTodayStatsButton: React.FC<ButtonPropsType> = ({
   metricsData, todayProfit, style, className, activeDealReserve,
-}: ButtonPropsType) => {
+}) => {
   const anchorRef = useRef<HTMLDivElement>(null);
   const [isToastOpen, setToastOpen] = useState(false);
   // const [isSubmenuOpen, setSubmenuOpen] = useState(false);
@@ -109,9 +113,11 @@ const CopyTodayStatsButton = ({
 
             </Popover> */}
 
-      <ToastNotifcations open={isToastOpen} handleClose={handleToastClose} message="Stats copied to your clipboard." />
+      <ToastNotifications open={isToastOpen} handleClose={handleToastClose} message="Stats copied to your clipboard." />
     </>
   );
 };
+
+CopyTodayStatsButton.defaultProps = defaultProps;
 
 export default CopyTodayStatsButton;

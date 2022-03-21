@@ -5,9 +5,9 @@ import {
   MetricCard,
 } from '@/app/Components/Charts/DataCards';
 
-import { Type_MetricData } from '@/types/3CommasApi';
+import { MetricDataType } from '@/types/3CommasApi';
 
-const RoiCards = ({ metricsData, currentView }: { currentView: string, metricsData: Type_MetricData }) => {
+const RoiCards = ({ metricsData, currentView }: { currentView: string, metricsData: MetricDataType }) => {
   const { defaultCurrency } = useAppSelector((state) => state.config.currentProfile.general);
 
   const additionalMetrics = () => {

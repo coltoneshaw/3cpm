@@ -20,7 +20,7 @@ import {
   updateAPI, getAndStoreBotData, getAccountSummary, getDealOrders, updateDeal,
 } from '@/main/3Commas/index';
 import type { UpdateDealRequest } from '@/main/3Commas/types';
-import { Type_Profile } from '@/types/config';
+import { ProfileType } from '@/types/config';
 
 import fetchCoinPricesBinance from '@/app/Features/CoinPriceHeader/BinanceApi';
 
@@ -170,7 +170,7 @@ ipcMain.handle('api-updateData', async (
   event,
   type,
   options,
-  profileData: Type_Profile,
+  profileData: ProfileType,
 ): Promise<ReturnType<typeof updateAPI>> => updateAPI(
   type,
   options,
@@ -179,14 +179,14 @@ ipcMain.handle('api-updateData', async (
 
 ipcMain.handle('api-getBots', async (
   event,
-  profileData: Type_Profile,
+  profileData: ProfileType,
 ): Promise<void> => {
   await getAndStoreBotData(profileData);
 });
 
 ipcMain.handle('api-getAccountData', async (
   event,
-  profileData: Type_Profile,
+  profileData: ProfileType,
   key?: string,
   secret?: string,
   mode?: string,
@@ -194,13 +194,13 @@ ipcMain.handle('api-getAccountData', async (
 
 ipcMain.handle('api-getDealOrders', async (
   event,
-  profileData: Type_Profile,
+  profileData: ProfileType,
   deal_id: number,
 ) => getDealOrders(profileData, deal_id));
 
 ipcMain.handle('api-deals-update', async (
   event,
-  profileData: Type_Profile,
+  profileData: ProfileType,
   deal: UpdateDealRequest,
 ) => updateDeal(profileData, deal));
 

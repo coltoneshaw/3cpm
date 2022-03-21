@@ -1,17 +1,17 @@
 import moment from 'moment';
 
 import {
-  Type_UpdateFunction,
+  UpdateFunctionType,
 } from '@/types/3CommasApi';
-import { Type_Profile } from '@/types/config';
+import { ProfileType } from '@/types/config';
 import { DateRange } from '@/types/Date';
 
-import { getFiltersQueryString } from './queryString';
+import getFiltersQueryString from './queryString';
 import {
   fetchPerformanceDataFunction, fetchDealDataFunction, getActiveDealsFunction, fetchSoData,
 } from './DataQueries/deals';
 import { fetchBotPerformanceMetrics, botQuery } from './DataQueries/bots';
-import { getAccountDataFunction } from './DataQueries/accounts';
+import getAccountDataFunction from './DataQueries/accounts';
 
 // these queries use the deals database but are pairs only. Can probably combine this with the deals queries or create a new folder.
 import { fetchPairPerformanceMetrics, getSelectPairDataByDate } from './DataQueries/pairs';
@@ -22,7 +22,7 @@ import { fetchPairPerformanceMetrics, getSelectPairDataByDate } from './DataQuer
  * @params - type 'autoSync'
  * @params {options} - option string
  */
-const updateThreeCData = async (type: string, options: Type_UpdateFunction, profileData: Type_Profile) => {
+const updateThreeCData = async (type: string, options: UpdateFunctionType, profileData: ProfileType) => {
   console.info({ options });
   return window.ThreeCPM.Repository.API.update(type, options, profileData);
 };

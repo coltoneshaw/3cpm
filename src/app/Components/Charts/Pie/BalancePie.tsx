@@ -6,8 +6,8 @@ import { currencyTooltipFormatter } from '../formatting';
 
 // types
 import type { TooltipType } from '@/types/Charts';
-import type { Type_MetricData } from '@/types/3CommasApi';
-import type { defaultCurrency } from '@/types/config';
+import type { MetricDataType } from '@/types/3CommasApi';
+import type { DefaultCurrency } from '@/types/config';
 
 const CustomTooltip = ({ active, payload, formatter }: TooltipType<string, number>) => {
   if (!active || !payload || !payload[0]?.payload) return null;
@@ -26,8 +26,8 @@ const CustomTooltip = ({ active, payload, formatter }: TooltipType<string, numbe
 };
 interface PieMetricsType {
   title: string
-  metrics: Type_MetricData
-  defaultCurrency: defaultCurrency
+  metrics: MetricDataType
+  defaultCurrency: DefaultCurrency
 }
 const BalancePie = ({ title, metrics, defaultCurrency }: PieMetricsType) => {
   const {

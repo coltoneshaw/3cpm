@@ -6,7 +6,7 @@ import SyncIcon from '@mui/icons-material/Sync';
 import { useAppSelector } from '@/app/redux/hooks';
 import { updateAllData } from '@/app/redux/threeCommas/Actions';
 
-import { ToastNotifcations } from '@/app/Features/Index';
+import { ToastNotifications } from '@/app/Features/Index';
 
 interface TypeButtonProps {
   style?: {},
@@ -64,7 +64,7 @@ const UpdateDataButton: React.FC<typeof defaultProps> = ({ style, className }) =
         {' '}
 
       </Button>
-      <ToastNotifcations
+      <ToastNotifications
         open={open}
         handleClose={handleClose}
         message="Sync finished."

@@ -1,5 +1,3 @@
 import MaxRiskSpeedometer from './MaxRiskPercent';
 
-export {
-  MaxRiskSpeedometer,
-};
+export default MaxRiskSpeedometer;

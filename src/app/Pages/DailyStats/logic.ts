@@ -3,7 +3,7 @@ import moment from 'moment';
 import { isValid } from 'date-fns';
 import { useAppSelector } from '@/app/redux/hooks';
 
-import type { Type_Profile } from '@/types/config';
+import type { ProfileType } from '@/types/config';
 import {
   queryDealByPairByDay, queryDealByBotByDay, queryProfitDataByDay, getTotalProfit, getActiveDealsFunction,
 } from '@/app/Pages/DailyStats/Components';
@@ -60,7 +60,7 @@ type FiltersType = {
 
 const oneMillisecondDay = 86400000;
 
-export const queryDayDashboard = async (utcEndDate: number, profileData: Type_Profile, filters: FiltersType) => {
+export const queryDayDashboard = async (utcEndDate: number, profileData: ProfileType, filters: FiltersType) => {
   // removing a day, then adding a millisecond to round to the beginning of the UTC day
   const utcStartDate = utcEndDate - oneMillisecondDay + 1;
   const utcDateRange = { utcEndDate, utcStartDate };

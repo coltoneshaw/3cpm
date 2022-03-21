@@ -41,7 +41,7 @@ const filterData = (data: BotPerformanceMetrics[], filter: String) => {
   return localData;
 };
 
-const CustomTooltip = ({ active, payload, formatter }: TooltipType<number, string>) => {
+const CustomTooltip: React.FC<TooltipType<number, string>> = ({ active, payload, formatter }) => {
   if (!active || !payload || !payload[0]?.payload) return null;
 
   const data: BotPerformanceMetrics = payload[0].payload;

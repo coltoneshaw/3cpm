@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -48,7 +49,7 @@ const generateNewFeatures = (newFeatures: string[]) => {
 
 const changes = (version: string) => {
   const findData = versionInformation.find((v) => v.version === version);
-  if (findData == undefined) return '';
+  if (findData === undefined) return '';
 
   const link = (findData.link) ? findData.link : 'https://docs.3cpm.io/changelog';
 

@@ -4,14 +4,14 @@ import { parseNumber } from '@/utils/numberFormatting';
 // import { formatCurrency } from '@/utils/granularity';
 
 import { dynamicSort } from '@/utils/helperFunctions';
-import type { Type_MarketOrders, Deals } from '@/types/3CommasApi';
+import type { MarketOrdersType, Deals } from '@/types/3CommasApi';
 import { calcSafetyArray } from '@/utils/formulas';
 
 const dateFormatter = (dateString: string) => new Date(dateString).toLocaleDateString(undefined, {
   month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit',
 });
 
-const OrderTimeline = ({ row, ordersData }: { row: { original: Deals }, ordersData: Type_MarketOrders[] }) => {
+const OrderTimeline = ({ row, ordersData }: { row: { original: Deals }, ordersData: MarketOrdersType[] }) => {
   const [future, updateFuture] = useState(false);
   const changeFuture = (event: React.ChangeEvent<HTMLInputElement>) => updateFuture(event.target.checked);
 
@@ -117,7 +117,7 @@ const OrderTimeline = ({ row, ordersData }: { row: { original: Deals }, ordersDa
           </tr>
         </thead>
         <tbody className="dcaCalcTable">
-          {filterData(sortedData).map((r: Type_MarketOrders) => (
+          {filterData(sortedData).map((r: MarketOrdersType) => (
             <tr key={`order-${r.order_id}`} style={{ opacity: (r.status_string === 'Future') ? 0.6 : '' }}>
               <td>{r.order_type}</td>
               <td>{r.deal_order_type}</td>

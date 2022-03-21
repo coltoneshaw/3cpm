@@ -5,13 +5,13 @@ import { updateConfig, deleteProfileByIdGlobal } from '@/app/redux/config/config
 import { syncNewProfileData } from '@/app/redux/threeCommas/Actions';
 
 import LoaderIcon from '@/app/Components/icons/Loading/Loading';
-import { Type_Profile } from '@/types/config';
+import { ProfileType } from '@/types/config';
 
 interface SubmitButtons {
   setOpen: any
 }
 
-const checkProfileIsValid = (tempProfile: Type_Profile) => {
+const checkProfileIsValid = (tempProfile: ProfileType) => {
   const { defaultCurrency } = tempProfile.general;
   const { key, mode, secret } = tempProfile.apis.threeC;
   const { reservedFunds, startDate } = tempProfile.statSettings;

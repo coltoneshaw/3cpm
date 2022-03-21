@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import { ToastNotifcations } from '@/app/Features/Index';
+import { ToastNotifications } from '@/app/Features/Index';
 
 interface TypeSaveButton {
   saveFunction: any
@@ -31,7 +31,7 @@ const SaveButton = ({ saveFunction, className }: TypeSaveButton) => {
       >
         Save table data
       </Button>
-      <ToastNotifcations
+      <ToastNotifications
         open={open}
         handleClose={handleClose}
         message="Sync finished."

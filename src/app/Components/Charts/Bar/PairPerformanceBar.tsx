@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 
 import { PairPerformanceMetrics } from '@/types/3CommasApi';
-import { TooltipType, Type_Pair_Performance } from '@/types/Charts';
+import { TooltipType, PairPerformanceType } from '@/types/Charts';
 
 import { parseNumber } from '@/utils/numberFormatting';
 import { currencyTickFormatter, currencyTooltipFormatter } from '@/app/Components/Charts/formatting';
@@ -20,8 +20,8 @@ const defaultSortAndFilter = {
   avg_profit: false,
 };
 
-const CustomTooltip = ({ active, payload, formatter }: TooltipType<number, string>) => {
-  if (!active || !payload || payload[0] === undefined) return null;
+const CustomTooltip: React.FC<TooltipType<number, string>> = ({ active, payload, formatter }) => {
+  if (!active || !payload || !payload[0]?.payload) return null;
   const data: PairPerformanceMetrics = payload[0].payload;
   const {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -49,7 +49,7 @@ const CustomTooltip = ({ active, payload, formatter }: TooltipType<number, strin
     </div>
   );
 };
-const PairPerformanceBar = ({ data = [], defaultCurrency }: Type_Pair_Performance) => {
+const PairPerformanceBar: React.FC<PairPerformanceType> = ({ data = [], defaultCurrency }) => {
   const {
     sort: { sort, handleSortChange },
     filter: { filter, handleFilterChange },

@@ -1,14 +1,26 @@
-import { Type_UpdateFunction } from '@/types/3CommasApi';
-import { Type_Profile } from '@/types/config';
+import { UpdateFunctionType } from '@/types/3CommasApi';
+import { ProfileType } from '@/types/config';
 import BaseElectronRepository from '@/app/Repositories/Impl/electron/Base';
 import { APIRepository } from '@/app/Repositories/interfaces';
 
 export default class ElectronAPIRepository extends BaseElectronRepository implements APIRepository {
-  update = (type: string, options: Type_UpdateFunction, profileData: Type_Profile) => this.mainPreload.api.update(type, options, profileData);
+  update = (
+    type: string,
+    options: UpdateFunctionType,
+    profileData: ProfileType,
+  ) => this.mainPreload.api.update(type, options, profileData);
 
-  updateBots = (profileData: Type_Profile) => this.mainPreload.api.updateBots(profileData);
+  updateBots = (profileData: ProfileType) => this.mainPreload.api.updateBots(profileData);
 
-  getAccountData = (profileData?: Type_Profile, key?: string, secret?: string, mode?: string) => this.mainPreload.api.getAccountData(profileData, key, secret, mode);
+  getAccountData = (
+    profileData?: ProfileType,
+    key?: string,
+    secret?: string,
+    mode?: string,
+  ) => this.mainPreload.api.getAccountData(profileData, key, secret, mode);
 
-  getDealOrders = (profileData: Type_Profile, dealID: number) => this.mainPreload.api.getDealOrders(profileData, dealID);
+  getDealOrders = (
+    profileData: ProfileType,
+    dealID: number,
+  ) => this.mainPreload.api.getDealOrders(profileData, dealID);
 }

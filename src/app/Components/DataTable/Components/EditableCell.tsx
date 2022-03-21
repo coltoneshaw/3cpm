@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Type_Query_bots } from '@/types/3CommasApi';
-import { Type_ReservedFunds } from '@/types/config';
+import { QueryBotsType } from '@/types/3CommasApi';
+import { ReservedFundsType } from '@/types/config';
 
 interface Cell {
   value: {
     initialValue: string
   }
   row: {
-    original: Type_Query_bots | Type_ReservedFunds,
+    original: QueryBotsType | ReservedFundsType,
   }
   column: {
     id: string
@@ -41,7 +41,7 @@ const BotsEditableCell: React.FC<Cell> = ({
   };
 
   const ending = () => {
-    if (column == 'take_profit') return '%';
+    if (column === 'take_profit') return '%';
     // if (column == 'max_safety_orders') return ' SOs'
     return '';
   };

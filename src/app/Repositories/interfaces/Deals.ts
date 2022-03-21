@@ -1,3 +1,3 @@
 export default interface DealsRepository {
-    update(profileData: any, deal: any): any;
+  update(profileData: any, deal: any): any;
 }

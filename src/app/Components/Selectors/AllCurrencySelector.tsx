@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { supportedCurrencies } from '@/utils/granularity';
 
-import { defaultCurrency } from '@/types/config';
+import { DefaultCurrency } from '@/types/config';
 
 const returnCurrencyMenuItems = (currencyArray: typeof supportedCurrencies) => {
   const usd: (typeof supportedCurrencies.USD)[] = [];
@@ -35,13 +35,13 @@ const returnCurrencyMenuItems = (currencyArray: typeof supportedCurrencies) => {
 };
 
 type TypeAllCurrencySelector = {
-  defaultCurrency: defaultCurrency,
+  defaultCurrency: DefaultCurrency,
   updateCurrency: CallableFunction
 };
 
 const AllCurrencySelector: React.FC<TypeAllCurrencySelector> = ({ defaultCurrency, updateCurrency }) => {
   const [selectedCurrency, updateSelectedCurrency] = useState(defaultCurrency);
-  const updateTempCurrency = (newCurrency: defaultCurrency) => {
+  const updateTempCurrency = (newCurrency: DefaultCurrency) => {
     updateCurrency(newCurrency);
     updateSelectedCurrency(newCurrency);
   };

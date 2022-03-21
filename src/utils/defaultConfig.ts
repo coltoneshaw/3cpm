@@ -1,6 +1,6 @@
 import { sub, getTime } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
-import { TconfigValues, Type_Profile } from '@/types/config';
+import { ConfigValuesType, ProfileType } from '@/types/config';
 
 // @ts-ignore
 import { version } from '#/package.json';
@@ -72,7 +72,7 @@ const configSchema = {
 
 const currentId = uuidv4();
 
-const defaultProfile: Type_Profile = {
+const defaultProfile: ProfileType = {
   name: 'New profile',
   id: currentId,
   apis: {
@@ -100,7 +100,7 @@ const defaultProfile: Type_Profile = {
   writeEnabled: false,
 };
 
-const defaultConfig: TconfigValues = {
+const defaultConfig: ConfigValuesType = {
 
   profiles: { [currentId]: defaultProfile },
   current: 'default',

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Type_Profile } from '@/types/config';
+import { ProfileType } from '@/types/config';
 import { getLang } from '@/utils/helperFunctions';
 
 const lang = getLang();
 
-const dateString = (currentProfile: Type_Profile) => {
+const dateString = (currentProfile: ProfileType) => {
   const date: undefined | number = currentProfile?.statSettings?.startDate;
 
   if (date !== undefined) {
@@ -15,7 +15,7 @@ const dateString = (currentProfile: Type_Profile) => {
   return '';
 };
 
-const returnAccountNames = (currentProfile: Type_Profile) => {
+const returnAccountNames = (currentProfile: ProfileType) => {
   const { reservedFunds } = currentProfile.statSettings;
   return reservedFunds.length > 0
     ? currentProfile.statSettings.reservedFunds
@@ -24,14 +24,14 @@ const returnAccountNames = (currentProfile: Type_Profile) => {
     : 'n/a';
 };
 
-const returnCurrencyValues = (currentProfile: Type_Profile) => {
+const returnCurrencyValues = (currentProfile: ProfileType) => {
   const currencyValues: string[] | undefined = currentProfile.general.defaultCurrency;
   return currencyValues !== undefined && currencyValues.length > 0
     ? currencyValues.join(', ')
     : 'n/a';
 };
 
-const StatFiltersDiv = ({ currentProfile }: { currentProfile: Type_Profile }) => (
+const StatFiltersDiv = ({ currentProfile }: { currentProfile: ProfileType }) => (
   <div className="flex-row filters">
     <p>
       <strong>Account: </strong>

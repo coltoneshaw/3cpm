@@ -1,12 +1,12 @@
 import React from 'react';
 
 import { useAppSelector } from '@/app/redux/hooks';
-import { Type_Query_bots } from '@/types/3CommasApi';
+import { QueryBotsType } from '@/types/3CommasApi';
 
 import { MetricCard } from '@/app/Components/Charts/DataCards';
 
 // Need to import metric contexts here
-const Risk = ({ localBotData }: { localBotData: Type_Query_bots[] }) => {
+const Risk = ({ localBotData }: { localBotData: QueryBotsType[] }) => {
   const { defaultCurrency } = useAppSelector((state) => state.config.currentProfile.general);
   const {
     metricsData: {

@@ -10,9 +10,9 @@ import { ColumnSelector, useColumnSelector } from '@/app/Components/DataTable/Co
 import './BotPlanner.scss';
 
 import { calcDropMetrics } from '@/utils/formulas';
-import { Type_Query_bots } from '@/types/3CommasApi';
+import { QueryBotsType } from '@/types/3CommasApi';
 
-const blankObject: Type_Query_bots = {
+const blankObject: QueryBotsType = {
   id: Math.random().toString(16).slice(2),
   origin: 'custom',
   name: 'edit me',
@@ -75,7 +75,7 @@ const columnList = [
 const BotPlannerPage = () => {
   const { metricsData: { totalBankroll }, botData } = useAppSelector((state) => state.threeCommas);
   const currentProfile = useAppSelector((state) => state.config.currentProfile);
-  const [localBotData, updateLocalBotData] = useState<Type_Query_bots[]>([]);
+  const [localBotData, updateLocalBotData] = useState<QueryBotsType[]>([]);
 
   const { columns, selectedColumns, handleChange } = useColumnSelector(columnList, 'BotPlanner');
 
@@ -102,7 +102,7 @@ const BotPlannerPage = () => {
       window.ThreeCPM.Repository.Database.run(currentProfile.id, 'DELETE from bots where origin = \'custom\'');
     } else {
       window.ThreeCPM.Repository.Database.query(currentProfile.id, 'select * from bots where origin = \'custom\';')
-        .then((table: Type_Query_bots[]) => {
+        .then((table: QueryBotsType[]) => {
           table.forEach((row) => {
             if (!customBotIds.includes(row.id)) {
               window.ThreeCPM.Repository.Database.run(currentProfile.id, `DELETE from bots where id = '${row.id}'`);

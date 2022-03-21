@@ -1,4 +1,4 @@
-import { Type_Profile } from '@/types/config';
+import { ProfileType } from '@/types/config';
 
 export const configPaths = {
   apis: {
@@ -32,7 +32,7 @@ export const configPaths = {
   },
 };
 
-export const updateProfileByPath = (data: any, profileData: Type_Profile, path: any) => {
+export const updateProfileByPath = (data: any, profileData: ProfileType, path: any) => {
   // let newProfile = Object.assign({}, { ...state.currentProfile })
   switch (path) {
     case configPaths.apis.threeC.main: // update all the api data.

@@ -5,16 +5,14 @@ import {
 } from 'recharts';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 import { currencyTooltipFormatter } from '@/app/Components/Charts/formatting';
-// import { getFiltersQueryString } from '@/app/Features/3Commas/3Commas';
-// import { useAppSelector } from '@/app/redux/hooks';
 import { parseNumber } from '@/utils/numberFormatting';
 
-import type { TooltipType, Type_SoDealDis } from '@/types/Charts';
+import type { TooltipType, SoDealDisType } from '@/types/Charts';
 import type { SODistributionArray } from '@/types/3CommasApi';
 
-const CustomTooltip = ({
+const CustomTooltip: React.FC<TooltipType<number, string>> = ({
   active, payload, formatter,
-}: TooltipType<number, string>) => {
+}) => {
   if (!active || !payload || !payload[0]?.payload) return null;
 
   const data: SODistributionArray = payload[0].payload;
@@ -55,7 +53,7 @@ const CustomTooltip = ({
 // move the bot / pair data to be in the global state
 // add the query to the 3C table
 //
-const SoDealDistribution: React.FC<Type_SoDealDis> = ({ data = [], defaultCurrency }) => {
+const SoDealDistribution: React.FC<SoDealDisType> = ({ data = [], defaultCurrency }) => {
   // const safety_order = useAppSelector(state => state.threeCommas.performanceData.safety_order)
 
   const [soData, updateData] = useState<SODistributionArray[]>([]);

@@ -1,7 +1,7 @@
 import { Grid, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { parseNumber } from '@/utils/numberFormatting';
-import { ActiveDeals, Type_MarketOrders } from '@/types/3CommasApi';
+import { ActiveDeals, MarketOrdersType } from '@/types/3CommasApi';
 
 type Calc = {
   addFunds: number
@@ -24,14 +24,14 @@ type Row = {
 
 type DCAType = {
   row: Row,
-  ordersData: Type_MarketOrders[] | []
+  ordersData: MarketOrdersType[] | []
 };
 
 const exchangeFee = 0.001;
 
 const calcNew = (
   { addFunds, atPrice, tpPercent }: Calc,
-  ordersData: Type_MarketOrders[],
+  ordersData: MarketOrdersType[],
   currentPrice: number,
   bought_volume: number,
 ) => {
@@ -67,7 +67,7 @@ const calcOriginal = ({
   };
 };
 
-const dcaTableData = (row: Row, calc: Calc, ordersData: Type_MarketOrders[]): CalcObject[] => {
+const dcaTableData = (row: Row, calc: Calc, ordersData: MarketOrdersType[]): CalcObject[] => {
   const original = calcOriginal(row.original);
   const newData = calcNew(calc, ordersData, row.original.current_price, row.original.bought_volume);
   const diff = {

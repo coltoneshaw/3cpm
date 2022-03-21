@@ -10,7 +10,7 @@ import NoData from '@/app/Pages/Stats/Components/NoData';
 import { currencyTooltipFormatter } from '@/app/Components/Charts/formatting';
 
 import type { ActiveDeals } from '@/types/3CommasApi';
-import type { TooltipType, Type_ActiveDealCharts } from '@/types/Charts';
+import type { TooltipType, ActiveDealChartsType } from '@/types/Charts';
 
 const CustomTooltip: React.FC<TooltipType<number, string>> = ({
   active, payload, label, formatter,
@@ -52,7 +52,7 @@ const CustomTooltip: React.FC<TooltipType<number, string>> = ({
   );
 };
 
-const DealSoUtilizationBar = ({ data = [], defaultCurrency }: Type_ActiveDealCharts) => {
+const DealSoUtilizationBar: React.FC<ActiveDealChartsType> = ({ data = [], defaultCurrency }) => {
   let localData = [...data];
 
   const renderChart = () => {

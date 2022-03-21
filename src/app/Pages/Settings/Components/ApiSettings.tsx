@@ -7,7 +7,7 @@ import { updateReservedFundsArray } from '@/app/redux/config/configActions';
 import { configPaths } from '@/app/redux/globalFunctions';
 import { updateEditProfileByPath } from '@/app/Pages/Settings/Redux/settingsSlice';
 
-import { Type_ReservedFunds } from '@/types/config';
+import { ReservedFundsType } from '@/types/config';
 
 const validKeys = ['key', 'secret', 'mode'];
 
@@ -30,7 +30,7 @@ const ApiSettings = () => {
     dispatch(updateEditProfileByPath({ data: updateData, path: configPaths.apis.threeC.main }));
   };
 
-  const handleUpdatingReservedFunds = (reservedFunds: Type_ReservedFunds[]) => {
+  const handleUpdatingReservedFunds = (reservedFunds: ReservedFundsType[]) => {
     dispatch(updateEditProfileByPath({ data: reservedFunds, path: configPaths.statSettings.reservedFunds }));
   };
 
