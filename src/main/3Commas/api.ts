@@ -401,16 +401,13 @@ async function deals(offset: number, type: 'autoSync' | 'fullSync', profileData:
  * @docs - https://github.com/3commas-io/3commas-official-api-docs/blob/master/accounts_api.md#information-about-all-user-balances-on-specified-exchange--permission-accounts_read-security-signed
  */
 async function getAccountDetail(profileData: ProfileType) {
-  console.log('tried to do accounts');
   const api = threeCapi(profileData);
-  console.log(api);
   if (!api) return [];
 
   const accountData = await api.accounts();
   if (!accountData) {
     return [];
   }
-  console.debug(accountData);
   const array: QueryAccountsType[] = [];
   const accountIDs = profileData.statSettings.reservedFunds.filter((a) => a.is_enabled).map((a) => a.id);
   const filteredAccountData = accountData.filter((a: any) => accountIDs.includes(a.id));

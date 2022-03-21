@@ -4,6 +4,8 @@ import {
   ListItemText, Checkbox, ListSubheader,
 } from '@mui/material';
 import { supportedCurrencies } from '@/utils/granularity';
+import { logToConsole } from '@/utils/logging';
+import { showAlert } from '@/app/Components/Popups/Popups';
 
 import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
 import { configPaths } from '@/app/redux/globalFunctions';
@@ -39,7 +41,7 @@ const CurrencySelector = () => {
   const usdNames = usd.map((c) => c.value);
   const onChange = (e: any) => {
     if (e.target.value.some((cur: string) => !Object.keys(supportedCurrencies).includes(cur))) {
-      console.error('No matching currency code found.');
+      logToConsole('error', 'No matching currency code found.');
       return;
     }
 
@@ -48,7 +50,7 @@ const CurrencySelector = () => {
       const isAllUsd = e.target.value.every((v: string) => usdNames.includes(v));
       if (!isAllUsd) {
         handleChange([]);
-        alert('Warning. You cannot mix currencies that are not USD based.');
+        showAlert('Warning. You cannot mix currencies that are not USD based.');
         return;
       }
       handleChange([...e.target.value]);

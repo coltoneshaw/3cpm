@@ -6,7 +6,8 @@ import { useAppSelector } from '@/app/redux/hooks';
 import type { UpdateDealRequest } from '@/main/3Commas/types';
 import { updateAllData } from '@/app/redux/threeCommas/Actions';
 import { useThemeProvidor } from '@/app/Context/ThemeEngine';
-
+import { logToConsole } from '@/utils/logging';
+import { showAlert } from '@/app/Components/Popups/Popups';
 import './EditDeal.scss';
 
 const EditDeal = ({ originalDeal, open, onClose }: any) => {
@@ -40,11 +41,11 @@ const EditDeal = ({ originalDeal, open, onClose }: any) => {
     }
 
     updateWorking(true);
-    console.log('updating deal', req);
+    logToConsole('debug', 'updating deal', req);
     const updatedDeal = await window.ThreeCPM.Repository.Deals.update(currentProfile, req);
-    console.debug('update deal response', updatedDeal);
+    logToConsole('debug', 'update deal response', updatedDeal);
     if (updatedDeal?.error_description) {
-      alert(updatedDeal.error_description);
+      showAlert(updatedDeal.error_description);
     }
 
     updateActionBtn('Refreshing data');

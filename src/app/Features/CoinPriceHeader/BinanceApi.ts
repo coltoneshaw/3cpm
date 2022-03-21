@@ -1,5 +1,6 @@
 import fetch from 'electron-fetch';
 import { BinanceTicketPrice } from '@/app/Repositories/Types/Binance';
+import { logToConsole } from '@/utils/logging';
 
 const fetchCoinPricesBinance = async () => {
   try {
@@ -13,7 +14,7 @@ const fetchCoinPricesBinance = async () => {
 
     return await response.json<BinanceTicketPrice[]>();
   } catch (e) {
-    console.log(e);
+    logToConsole('error', e);
     return false;
   }
 };

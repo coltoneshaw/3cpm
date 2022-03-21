@@ -1,5 +1,3 @@
 import MetricCard from './SharedCards';
 
-export {
-  MetricCard,
-};
+export default MetricCard;

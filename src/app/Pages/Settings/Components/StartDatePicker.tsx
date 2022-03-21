@@ -33,7 +33,15 @@ const StartDatePicker = () => {
         value={startDate}
         onChange={handleDateChange}
         maxDate={new Date(returnTodayUtcEnd(new Date()))}
-        renderInput={(params) => <TextField {...params} />}
+        renderInput={(params) => (
+          <TextField
+            id={params.id}
+            inputProps={params.inputProps}
+            ref={params.ref}
+            label={params.label}
+            autoFocus
+          />
+        )}
         className="desktopPicker"
       />
 

@@ -47,7 +47,15 @@ const DailyStats = () => {
             value={value}
             onChange={handleChange}
             maxDate={new Date(moment.utc(new Date()).endOf('day').valueOf())}
-            renderInput={(params) => <TextField {...params} />}
+            renderInput={(params) => (
+              <TextField
+                id={params.id}
+                inputProps={params.inputProps}
+                ref={params.ref}
+                label={params.label}
+                autoFocus
+              />
+            )}
           />
         </Grid>
         <Grid item xs={3}>

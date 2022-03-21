@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable no-console */
 
 import { parseNumber } from './numberFormatting';
+import { logToConsole } from '@/utils/logging';
 
 const currencyKeys = ['AUD', 'BIDR', 'BTC', 'BNB', 'BRL', 'BUSD',
   'BVND', 'DAI', 'USD', 'USDT', 'USDC', 'UST', 'GBP', 'ETH', 'EUR',
@@ -222,7 +222,7 @@ const formatCurrency = (
     .some((cur) => !currencyKeys.includes(cur));
 
   if (currencyKeyExists) {
-    console.error('No matching currency code found.', currencyCode);
+    logToConsole('error', 'No matching currency code found.', currencyCode);
     return nothing;
   }
 

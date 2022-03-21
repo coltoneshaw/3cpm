@@ -2,6 +2,7 @@ import React, {
   createContext, useState, useEffect, CSSProperties, useMemo,
 } from 'react';
 import { setStorageItem, getStorageItem } from '@/app/Features/LocalStorage/LocalStorage';
+import { logToConsole } from '@/utils/logging';
 
 // TODO - see about setting this to something other than null for the default Value
 // @ts-ignore
@@ -92,7 +93,7 @@ const ThemeEngine = ({ children }: any) => {
   const changeTheme = () => {
     updateTheme((prevTheme) => {
       const newTheme = (prevTheme === 'lightMode') ? 'darkMode' : 'lightMode';
-      console.log(newTheme);
+      logToConsole('debug', newTheme);
       setStyles(colorVariables(newTheme === 'lightMode'));
       setStorageItem('displayMode', newTheme);
       return newTheme;

@@ -22,7 +22,7 @@ import {
 import { QueryBotsType } from '@/types/3CommasApi';
 
 import { CustomTable, BotsEditableCell } from '@/app/Components/DataTable/Index';
-import { TableCell } from './tableTypes';
+import { BotTableTypes } from './tableTypes';
 
 const EditableCell = BotsEditableCell;
 
@@ -110,26 +110,25 @@ const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: DataTa
         Header: 'Enabled?',
         accessor: 'is_enabled',
         width: 80,
-        Cell: ({ cell }: TableCell) => isEnabledSwitch(cell, handleOnOff),
+        Cell: ({ cell }: BotTableTypes) => isEnabledSwitch(cell, handleOnOff),
       },
       {
         Header: 'Hide?',
         accessor: 'hide',
         width: 50,
-        Cell: ({ cell }: TableCell) => hideCheckbox(cell, handleEditCellChangeCommitted),
+        Cell: ({ cell }: BotTableTypes) => hideCheckbox(cell, handleEditCellChangeCommitted),
       },
       {
         Header: () => formattedHeader('Bot Name'),
         accessor: 'name',
         width: 160,
-        // Cell: EditableCell,
-        Cell: ({ cell }: TableCell) => openIn3c(cell),
+        Cell: ({ cell }: BotTableTypes) => openIn3c(cell),
       },
       {
         Header: () => formattedHeader('Pairs'),
         accessor: 'pairs',
         align: 'flex-start',
-        Cell: ({ cell }: TableCell) => ((cell.value.length > 20) ? 'Many' : cell.value),
+        Cell: ({ cell }: BotTableTypes) => ((cell.value.length > 20) ? 'Many' : cell.value),
       },
       {
         Header: 'Currency',
@@ -197,31 +196,31 @@ const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: DataTa
         Header: 'Deviation',
         width: 80,
         accessor: 'price_deviation',
-        Cell: ({ cell }: TableCell) => numberCell(`${cell.value}%`),
+        Cell: ({ cell }: BotTableTypes) => numberCell(`${cell.value}%`),
       },
       {
         Header: 'Deal Funds',
         accessor: 'max_funds_per_deal',
-        Cell: ({ cell }: TableCell) => numberCell(cell.value, true, cell.row.original.from_currency),
+        Cell: ({ cell }: BotTableTypes) => numberCell(cell.value, true, cell.row.original.from_currency),
         align: 'flex-end',
       },
       {
         Header: 'Bot Funds',
         accessor: 'max_funds',
-        Cell: ({ cell }: TableCell) => numberCell(cell.value, true, cell.row.original.from_currency),
+        Cell: ({ cell }: BotTableTypes) => numberCell(cell.value, true, cell.row.original.from_currency),
         align: 'flex-end',
       },
       {
         Header: 'Coverage',
         width: 80,
         accessor: 'maxCoveragePercent',
-        Cell: ({ cell }: TableCell) => numberCell(`${cell.value}%`),
+        Cell: ({ cell }: BotTableTypes) => numberCell(`${cell.value}%`),
       },
       {
         Header: 'Risk %',
         width: 80,
         accessor: 'riskPercent',
-        Cell: ({ cell }: TableCell) => numberCell(`${parseNumber(cell.value * 100)}%`),
+        Cell: ({ cell }: BotTableTypes) => numberCell(`${parseNumber(cell.value * 100)}%`),
       },
       {
         Header: 'Max SO Covered',
@@ -233,7 +232,7 @@ const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: DataTa
         Header: () => deleteIcon('header'),
         accessor: 'origin',
         width: 60,
-        Cell: ({ cell }: TableCell) => deleteIcon('cell', cell, handleDeleteRow),
+        Cell: ({ cell }: BotTableTypes) => deleteIcon('cell', cell, handleDeleteRow),
       },
     ],
     [],
@@ -246,7 +245,7 @@ const DataTable = ({ localBotData, updateLocalBotData, selectedColumns }: DataTa
         data={localBotData}
         autoResetSortBy={false}
         manualSortBy
-        updateLocalBotData={handleEditCellChangeCommitted}
+        handleEditCellChangeCommitted={handleEditCellChangeCommitted}
         localStorageSortName={localStorageSortName}
         customHeaderProps={{
           style: {

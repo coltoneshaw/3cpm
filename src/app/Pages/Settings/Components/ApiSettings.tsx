@@ -6,7 +6,8 @@ import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
 import { updateReservedFundsArray } from '@/app/redux/config/configActions';
 import { configPaths } from '@/app/redux/globalFunctions';
 import { updateEditProfileByPath } from '@/app/Pages/Settings/Redux/settingsSlice';
-
+import { logToConsole } from '@/utils/logging';
+import { showAlert } from '@/app/Components/Popups/Popups';
 import { ReservedFundsType } from '@/types/config';
 
 const validKeys = ['key', 'secret', 'mode'];
@@ -18,8 +19,8 @@ const ApiSettings = () => {
 
   const handleChange = (e: any) => {
     if (!e.target.name || !validKeys.includes(e.target.name)) {
-      console.debug('Failed to change API setting due to invalid config path.');
-      console.debug(e);
+      logToConsole('debug', 'Failed to change API setting due to invalid config path.');
+      logToConsole('debug', e);
       return;
     }
 
@@ -103,7 +104,7 @@ const ApiSettings = () => {
               );
               handleUpdatingReservedFunds(reservedFunds ?? []);
             } catch (error) {
-              alert('there was an error testing the API keys. Check the console for more information.');
+              showAlert('there was an error testing the API keys. Check the console for more information.');
             }
           }
         }

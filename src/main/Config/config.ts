@@ -74,10 +74,10 @@ export const config = new Store<ConfigValuesType>({
       store.set('globalSettings.notifications', { enabled: true, summary: false });
 
       const profileIds = Object.keys(store.store.profiles);
-      const resetLastSyncTime = async (profileIds: string[]) => {
-        if (!profileIds || profileIds.length === 0) return;
-        profileIds.forEach((profileId) => {
-          store.set(`profiles.${profileId}.syncStatus.deals.lastSyncTime`, null);
+      const resetLastSyncTime = async (storeProfileIds: string[]) => {
+        if (!storeProfileIds || storeProfileIds.length === 0) return;
+        storeProfileIds.forEach((p) => {
+          store.set(`profiles.${p}.syncStatus.deals.lastSyncTime`, null);
         });
       };
 
@@ -94,6 +94,7 @@ const getProfileConfig = (key: string): any => {
 };
 
 const getProfileConfigAll = (profileId?: string) => {
+  // eslint-disable-next-line no-param-reassign
   if (!profileId) profileId = <string>config.get('current');
 
   return <ProfileType>config.get(`profiles.${profileId}`);

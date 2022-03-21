@@ -6,6 +6,7 @@ import { syncNewProfileData } from '@/app/redux/threeCommas/Actions';
 
 import LoaderIcon from '@/app/Components/icons/Loading/Loading';
 import { ProfileType } from '@/types/config';
+import { logToConsole } from '@/utils/logging';
 
 interface SubmitButtons {
   setOpen: any
@@ -65,13 +66,14 @@ const SaveDeleteButtons = ({ setOpen }: SubmitButtons) => {
       } catch (error) {
         // if there is an error storing the current profile, the data from the database gets deleted.
         await window.ThreeCPM.Repository.Database.deleteAllData(currentProfile.id);
-        console.error(error);
+        logToConsole('error', error);
         // eslint-disable-next-line max-len, no-alert
         alert('There was an error storing your profile data. Please try again. If the issue persists look at the documentation for additional guidance.');
       } finally {
         setLoaderIcon(false);
       }
     } else {
+      // eslint-disable-next-line no-alert
       alert(message);
     }
   };

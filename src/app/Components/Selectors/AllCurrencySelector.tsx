@@ -10,6 +10,7 @@ import {
   ListSubheader,
 } from '@mui/material';
 import { supportedCurrencies } from '@/utils/granularity';
+import { logToConsole } from '@/utils/logging';
 
 import { DefaultCurrency } from '@/types/config';
 
@@ -17,7 +18,7 @@ const returnCurrencyMenuItems = (currencyArray: typeof supportedCurrencies) => {
   const usd: (typeof supportedCurrencies.USD)[] = [];
   const crypto: (typeof supportedCurrencies.USD)[] = [];
 
-  for (const currency in currencyArray) {
+  Object.keys(currencyArray).forEach((currency) => {
     if (Object.prototype.hasOwnProperty.call(currencyArray, currency)) {
       const tempCurrency = currencyArray[currency as keyof typeof supportedCurrencies];
       if (tempCurrency.type === 'usd') {
@@ -26,7 +27,7 @@ const returnCurrencyMenuItems = (currencyArray: typeof supportedCurrencies) => {
         crypto.push(tempCurrency);
       }
     }
-  }
+  });
 
   return {
     usd,
@@ -49,8 +50,8 @@ const AllCurrencySelector: React.FC<TypeAllCurrencySelector> = ({ defaultCurrenc
   const { usd, crypto } = returnCurrencyMenuItems(supportedCurrencies);
   const onChange = (e: any) => {
     if (e.target.value.some((cur: string) => !Object.keys(supportedCurrencies).includes(cur))) {
-      console.error('No matching currency code found.');
-      return false;
+      logToConsole('error', 'No matching currency code found.');
+      return;
     }
 
     updateTempCurrency([...e.target.value]);

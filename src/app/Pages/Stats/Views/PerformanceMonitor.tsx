@@ -8,7 +8,7 @@ import { useAppSelector } from '@/app/redux/hooks';
 // custom charts
 import { BotPerformanceBubble, DealPerformanceBubble } from '@/app/Components/Charts/Scatter';
 import { DealAllocationBar, SoDealDistribution } from '@/app/Components/Charts/Bar';
-import { PairPerformanceByDate } from '@/app/Components/Charts/Line';
+import PairPerformanceByDate from '@/app/Components/Charts/Line';
 
 import {
   fetchBotPerformanceMetrics,

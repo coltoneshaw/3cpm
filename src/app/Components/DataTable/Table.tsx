@@ -20,15 +20,14 @@ const tableState: TableType = {
   columns: [],
   renderRowSubComponent: undefined,
   localStorageSortName: undefined,
-  updateLocalBotData: undefined,
-  updateReservedFunds: undefined,
+  handleEditCellChangeCommitted: undefined,
 };
 
 // Expose some prop getters for headers, rows and cells, or more if you want!
 const CustomTable: React.FC<typeof tableState> = ({
   columns, data,
   renderRowSubComponent = undefined,
-  updateLocalBotData, updateReservedFunds, localStorageSortName,
+  handleEditCellChangeCommitted, localStorageSortName,
   customHeaderProps = blankCustomProps,
   customColumnProps = blankCustomProps,
   customRowProps = blankCustomProps,
@@ -53,8 +52,7 @@ const CustomTable: React.FC<typeof tableState> = ({
       columns,
       data,
       autoResetSortBy: false,
-      updateLocalBotData,
-      updateReservedFunds,
+      handleEditCellChangeCommitted,
       autoResetExpanded: false,
       initialState: {
         sortBy: initialSortBy(localStorageSortName),

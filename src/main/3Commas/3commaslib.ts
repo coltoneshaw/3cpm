@@ -67,7 +67,7 @@ class ThreeCommasAPI {
       );
 
       if (response.status >= 400) {
-        console.error('API call is in error:', response.status, 'url', `${this.url}${path}${u.toString()}`);
+        log.error('API call is in error:', response.status, 'url', `${this.url}${path}${u.toString()}`);
       }
 
       return await response.json();

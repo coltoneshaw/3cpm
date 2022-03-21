@@ -3,7 +3,7 @@ import React from 'react';
 import { useAppSelector } from '@/app/redux/hooks';
 import { QueryBotsType } from '@/types/3CommasApi';
 
-import { MetricCard } from '@/app/Components/Charts/DataCards';
+import MetricCard from '@/app/Components/Charts/DataCards';
 
 // Need to import metric contexts here
 const Risk = ({ localBotData }: { localBotData: QueryBotsType[] }) => {

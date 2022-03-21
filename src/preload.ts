@@ -1,15 +1,17 @@
 import { ProfileType } from '@/types/config';
 
 import {
-  mainPreload, UpdateDealRequest, Type_UpdateFunction, getDealOrders, defaultConfig,
+  MainPreload, UpdateDealRequest, Type_UpdateFunction, getDealOrders, defaultConfig,
 } from '@/types/preload';
+
+import { logToConsole } from './utils/logging';
 
 const { contextBridge, ipcRenderer } = require('electron');
 
 async function setupContextBridge() {
   contextBridge.exposeInMainWorld('mainPreload', {
     deals: {
-      async update(profileData: ProfileType, deal: UpdateDealRequest): Promise<mainPreload['deals']['update']> {
+      async update(profileData: ProfileType, deal: UpdateDealRequest): Promise<MainPreload['deals']['update']> {
         return ipcRenderer.invoke('api-deals-update', profileData, deal);
       },
     },
@@ -18,12 +20,12 @@ async function setupContextBridge() {
         type: string,
         options: Type_UpdateFunction,
         profileData: ProfileType,
-      ): Promise<mainPreload['api']['update']> {
-        console.log('Updating 3Commas data.');
+      ): Promise<MainPreload['api']['update']> {
+        logToConsole('debug', 'Updating 3Commas data.');
         return ipcRenderer.invoke('api-updateData', type, options, profileData);
       },
       async updateBots(profileData: ProfileType): Promise<void> {
-        console.log('Fetching Bot Data');
+        logToConsole('debug', 'Fetching Bot Data');
         await ipcRenderer.invoke('api-getBots', profileData);
       },
       async getAccountData(
@@ -40,7 +42,7 @@ async function setupContextBridge() {
     },
     config: {
       get: async (value: string | 'all'): Promise<any> => {
-        console.log('fetching Config');
+        logToConsole('debug', 'fetching Config');
         return ipcRenderer.invoke('allConfig', value);
       },
       profile: async (type: 'create', newProfile: ProfileType, profileId: string) => {
@@ -65,11 +67,11 @@ async function setupContextBridge() {
          * TODO
          * - Add error handling for default config here.
          */
-        console.log('attempting to reset the config to default values.');
+        logToConsole('debug', 'attempting to reset the config to default values.');
         await ipcRenderer.invoke('config-clear');
       },
       async set(key: string, value: any): Promise<void> {
-        console.log('writing Config');
+        logToConsole('debug', 'writing Config');
         await ipcRenderer.invoke('setStoreValue', key, value);
       },
 
@@ -77,8 +79,8 @@ async function setupContextBridge() {
     },
     database: {
       async query(profileId: string, queryString: string) {
-        console.log('running database query');
-        console.log(queryString);
+        logToConsole('debug', 'running database query');
+        logToConsole('debug', queryString);
         return ipcRenderer.invoke('query-database', profileId, queryString);
       },
       update(profileId: string, table: string, updateData: object[]): void {
@@ -97,7 +99,7 @@ async function setupContextBridge() {
         ipcRenderer.invoke('run-database', profileId, query);
       },
       async deleteAllData(profileID?: string): Promise<void> {
-        console.log('deleting all data!');
+        logToConsole('debug', 'deleting all data!');
         await ipcRenderer.invoke('database-deleteAll', profileID);
       },
     },

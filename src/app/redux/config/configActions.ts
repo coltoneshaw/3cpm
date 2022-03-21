@@ -3,6 +3,8 @@ import {
   setConfig, setCurrentProfile, updateCurrentProfileByPath, deleteProfileById, updateNotificationsSettings,
 } from '@/app/redux/config/configSlice';
 import { setSyncData } from '@/app/redux/threeCommas/threeCommasSlice';
+import { logToConsole } from '@/utils/logging';
+import { showAlert, showConfirm } from '@/app/Components/Popups/Popups';
 
 import {
   ConfigValuesType, NotificationsSettingsType, ProfileType, ReservedFundsType,
@@ -31,7 +33,7 @@ const storeConfigInFile = async () => {
     updateConfig();
     return true;
   } catch (e) {
-    console.error(e);
+    logToConsole('error', e);
     return false;
   }
 };
@@ -61,7 +63,7 @@ const updateReservedFundsArray = async (
 
     // checking to see if any reserved funds exist
     if (reservedFunds.length === 0 || reservedFunds === []) {
-      console.log('setting since there are no account IDs!');
+      logToConsole('debug', 'setting since there are no account IDs!');
       return filteredAccountData.map((account) => {
         const { id, name } = account;
         return {
@@ -111,13 +113,13 @@ const deleteProfileByIdGlobal = (
   const profileKeys = Object.keys(config.profiles);
   if (profileKeys.length <= 1) {
     // eslint-disable-next-line max-len
-    alert('Hold on cowboy. You seem to be trying to delete your last profile. If you want to reset your data use Menu > Help > Reset all data.');
+    showAlert('Hold on cowboy. You seem to be trying to delete your last profile. If you want to reset your data use Menu > Help > Reset all data.');
     return;
   }
   // eslint-disable-next-line max-len
-  const accept = confirm('Deleting this profile will delete all information attached to it including API keys, and the database. This action will not impact your 3Commas account in any way. Confirm you would like to locally delete this profile.');
+  const accept = showConfirm('Deleting this profile will delete all information attached to it including API keys, and the database. This action will not impact your 3Commas account in any way. Confirm you would like to locally delete this profile.');
   if (accept) {
-    console.log('deleted the profile!');
+    logToConsole('debug', 'deleted the profile!');
 
     store.dispatch(deleteProfileById({ profileId }));
     storeConfigInFile();

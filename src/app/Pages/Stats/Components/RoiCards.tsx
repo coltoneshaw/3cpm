@@ -1,9 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { useAppSelector } from '@/app/redux/hooks';
 
-import {
-  MetricCard,
-} from '@/app/Components/Charts/DataCards';
+import MetricCard from '@/app/Components/Charts/DataCards';
 
 import { MetricDataType } from '@/types/3CommasApi';
 

@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ConfigValuesType, ProfileType } from '@/types/config';
 import { defaultConfig, defaultProfile } from '@/utils/defaultConfig';
 import { updateProfileByPath } from '@/app/redux/globalFunctions';
+import { logToConsole } from '@/utils/logging';
 
 // Define the initial state using that type
 const initialState = {
@@ -15,7 +16,7 @@ export const configSlice = createSlice({
   initialState,
   reducers: {
     setConfig: (state, action) => {
-      console.log('setting the config');
+      logToConsole('debug', 'setting the config');
       state.config = action.payload;
     },
     setCurrentProfile: (state, action) => {
@@ -52,7 +53,7 @@ export const configSlice = createSlice({
         [newConfig.current] = Object.keys(newConfig.profiles);
         state.config = newConfig;
       } else {
-        console.error('You cannot delete all your profiles. It looks like your down to the last one.');
+        logToConsole('error', 'You cannot delete all your profiles. It looks like your down to the last one.');
       }
     },
     // this is my bug

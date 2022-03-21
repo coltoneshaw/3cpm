@@ -4,9 +4,7 @@ import { formatDeals } from '@/app/Components/DataTable/Index';
 import { ColumnSelector, useColumnSelector } from '@/app/Components/DataTable/Components';
 
 import { useAppSelector } from '@/app/redux/hooks';
-import {
-  MetricCard,
-} from '@/app/Components/Charts/DataCards';
+import MetricCard from '@/app/Components/Charts/DataCards';
 import { NotificationsSettings, DealsTable } from './Components/index';
 
 import './ActiveDeals.scss';

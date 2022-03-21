@@ -5,6 +5,7 @@ import path from 'path';
 import { parseNumber } from '@/utils/numberFormatting';
 import { getProfileConfig } from '@/main/Config/config';
 import { ReservedFundsType } from '@/types/config';
+import { logToConsole } from '@/utils/logging';
 
 import { convertMiliseconds } from '@/utils/helperFunctions';
 
@@ -111,7 +112,7 @@ function findAndNotifyNewDeals(
       // add the deal IDs to the notified deal array
       dealsNotified.push(...closedDeals.map((deal) => deal.id));
     } catch (error) {
-      console.error(`error showing notification - ${error}`);
+      logToConsole('error', `error showing notification - ${error}`);
     }
     return;
   }
@@ -142,7 +143,7 @@ function findAndNotifyNewDeals(
       // add the single deal ID to the notified array.
       dealsNotified.push(id);
     } catch (error) {
-      console.error(`error showing notification - ${error}`);
+      logToConsole('error', `error showing notification - ${error}`);
     }
   });
 }

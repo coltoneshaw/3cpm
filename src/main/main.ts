@@ -9,7 +9,7 @@ import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from 'electron-devtools-installer';
 import contextMenu from 'electron-context-menu';
-// import menu from './menu';
+import { logToConsole } from '@/utils/logging';
 import {
   update, query, checkOrMakeTables, run, deleteAllData, upsert,
 } from '@/main/Database/database';
@@ -59,8 +59,8 @@ const createWindow = (): void => {
     // before the DOM is ready
     win.webContents.once('dom-ready', async () => {
       await installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS])
-        .then((name: any) => console.log(`Added Extension:  ${name}`))
-        .catch((err: any) => console.log('An error occurred: ', err))
+        .then((name: any) => logToConsole('debug', `Added Extension:  ${name}`))
+        .catch((err: any) => logToConsole('debug', 'An error occurred: ', err))
         .finally(() => win.webContents.openDevTools());
     });
     loadURL = 'http://localhost:9000';

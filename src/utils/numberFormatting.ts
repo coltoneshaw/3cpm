@@ -45,7 +45,6 @@ const parseNumber = (
         break;
     }
   }
-  // console.log(digits)
   // if(maxSize && number >= 1) numberFormatter = { 'minimumSignificantDigits': digits , 'maximumSignificantDigits': digits, "useGrouping": false}
   // if(number < 1) numberFormatter = { 'minimumFractionDigits': (digits > 6) ? digits : 6  , 'maximumFractionDigits': (digits > 6) ? digits : 6 , "useGrouping": false}
   // if(maxSize && number < 1) numberFormatter = { 'minimumSignificantDigits': maxSize , 'maximumSignificantDigits': maxSize}

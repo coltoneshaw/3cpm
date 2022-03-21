@@ -8,6 +8,7 @@ import {
   ActiveDealsPage,
   DailyStats,
 } from '@/app/Pages/Index';
+import { logToConsole } from '@/utils/logging';
 
 // @ts-ignore
 import { version } from '#/package.json';
@@ -24,7 +25,7 @@ const MainWindow = () => {
   const [homePage, updateHomePage] = useState<string>('/activeDeals');
 
   useLayoutEffect(() => {
-    console.log(homePage);
+    logToConsole('debug', homePage);
     if (currentProfile.apis.threeC.key !== '' && currentProfile.apis.threeC.secret !== '') {
       updateHomePage(getStorageItem(storageItem.navigation.homePage) ?? '/activeDeals');
       return;

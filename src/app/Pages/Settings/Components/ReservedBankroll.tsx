@@ -6,9 +6,11 @@ import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
 import { configPaths } from '@/app/redux/globalFunctions';
 import { updateEditProfileByPath } from '@/app/Pages/Settings/Redux/settingsSlice';
 
+import type { SettingTableTypes, Cell } from './types';
+
 const EditableCell = SettingsEditableCell;
 
-const enableSwitch = (cell: any, handleOnOff: any) => (
+const enableSwitch = (cell: Cell, handleOnOff: any) => (
   <Switch
     checked={cell.value}
     color="primary"
@@ -46,7 +48,7 @@ const ReservedBankroll = () => {
       {
         Header: 'Enabled?',
         accessor: 'is_enabled',
-        Cell: ({ cell }: any) => enableSwitch(cell, handleOnOff),
+        Cell: ({ cell }: SettingTableTypes) => enableSwitch(cell, handleOnOff),
       },
       {
         Header: 'Account Name',
@@ -56,7 +58,6 @@ const ReservedBankroll = () => {
         Header: 'Reserved Funds',
         accessor: 'reserved_funds',
         Cell: EditableCell,
-
       },
     ],
     [],
@@ -83,7 +84,7 @@ const ReservedBankroll = () => {
           <CustomTable
             columns={columns}
             data={reservedFunds}
-            updateReservedFunds={handleEditCellChangeCommitted}
+            handleEditCellChangeCommitted={handleEditCellChangeCommitted}
             customHeaderProps={{
               style: {
                 height: '44px',

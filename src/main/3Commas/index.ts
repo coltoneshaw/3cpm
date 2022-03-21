@@ -4,6 +4,7 @@ import {
   bots, getAccountDetail, deals, getAccountSummary, getDealOrders, updateDeal,
 } from './api';
 import type { defaultConfig } from '@/utils/defaultConfig';
+import { logToConsole } from '@/utils/logging';
 
 import { findAndNotifyNewDeals } from '@/main/Notifications/notifications';
 
@@ -43,7 +44,7 @@ async function getAccountData(profileData: ProfileType): Promise<void> {
       // 2. Delete all the data in the database that exist in the API response
       const accountIds = data.map((account) => account.account_id);
       await run(profileData.id, `DELETE FROM accountData WHERE account_id in ( ${accountIds.join()});`);
-      console.log(data);
+      logToConsole('debug', data);
       return data;
     })
     // 3. Post the API response to the database.

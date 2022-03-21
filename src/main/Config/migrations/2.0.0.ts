@@ -17,7 +17,7 @@ const convertToProfileDatabases = async (profileIds: string[]) => {
 
   fsExtra.remove(path.join(appDataPath, 'db.sqlite3'), (err) => {
     if (err) return log.error('Unable to delete original database file', err);
-    log.info('Deleted db.sqlite3 file from user directory');
+    return log.info('Deleted db.sqlite3 file from user directory');
   });
 };
 

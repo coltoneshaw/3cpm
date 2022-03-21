@@ -1,5 +1,7 @@
 import dotProp from 'dot-prop';
 import store from '@/app/redux/store';
+import { logToConsole } from '@/utils/logging';
+import { showAlert } from '@/app/Components/Popups/Popups';
 
 import {
   setData,
@@ -72,7 +74,7 @@ const fetchAndStoreBotData = async (currentProfile: ProfileType, update: boolean
         });
       });
   } catch (error) {
-    console.error(error);
+    logToConsole('error', error);
   }
 };
 
@@ -90,7 +92,7 @@ const fetchAndStorePerformanceData = async (profileData: ProfileType) => {
   const pairBot = async () => fetchPerformanceDataFunction(profileData, undefined)
     .then(((data: QueryPerformanceArray[]) => {
       if (!data || data.length === 0) return;
-      console.log('updated Performance Data!');
+      logToConsole('error', 'updated Performance Data!');
 
       dispatchSetPerformanceData({ pair_bot: data });
 
@@ -118,21 +120,21 @@ const fetchAndStorePerformanceData = async (profileData: ProfileType) => {
   const bot = async () => fetchBotPerformanceMetrics(profileData, undefined)
     .then(((data) => {
       if (!data) return;
-      console.log('getting bot performance metrics');
+      logToConsole('error', 'getting bot performance metrics');
       dispatchSetPerformanceData({ bot: data });
     }));
 
   const pair = async () => fetchPairPerformanceMetrics(profileData, undefined)
     .then(((data) => {
       if (!data) return;
-      console.log('getting bot performance metrics');
+      logToConsole('error', 'getting bot performance metrics');
       dispatchSetPerformanceData({ pair: data });
     }));
 
   const so = async () => fetchSoData(profileData, undefined)
     .then(((data) => {
       if (!data) return;
-      console.log('getting SO performance metrics');
+      logToConsole('error', 'getting SO performance metrics');
       dispatchSetPerformanceData({ safety_order: data });
     }));
 
@@ -143,7 +145,7 @@ const fetchAndStoreActiveDeals = async (profileData: ProfileType) => {
   await getActiveDealsFunction(profileData)
     .then((data) => {
       if (!data) return;
-      console.log('updated active deals and related metrics!');
+      logToConsole('error', 'updated active deals and related metrics!');
       const { activeDeals, metrics } = data;
 
       dispatchSetActiveDeals(activeDeals);
@@ -188,7 +190,7 @@ const calculateMetrics = () => {
   const totalInDeals = localOnOrders + localTotalBoughtVolume;
   const totalBankroll = localPosition + localTotalBoughtVolume - reservedFundsTotal;
 
-  console.log({
+  logToConsole('error', {
     maxRiskPercent: Number(((localMaxRisk / totalBankroll) * 100).toFixed(0)),
     bankrollAvailable: Number(((1 - ((totalInDeals) / totalBankroll)) * 100).toFixed(0)),
     totalBankroll,
@@ -241,7 +243,7 @@ const preSyncCheck = (profileData: ProfileType) => {
     || dotProp.has(profileData, 'profileData.apis.threeC.secret')
     || dotProp.has(profileData, 'profileData.apis.threeC.mode')
   ) {
-    console.error('missing api keys or required profile');
+    logToConsole('error', 'missing api keys or required profile');
     return false;
   }
 
@@ -279,7 +281,7 @@ const updateAllData = async (
     }));
     store.dispatch(updateLastSyncTime({ data: lastSyncTime }));
   } catch (error) {
-    console.error(error);
+    logToConsole('error', error);
     store.dispatch(updateBannerData({
       show: true,
       message: 'Error updating your data. Check the console for more information.',
@@ -307,8 +309,8 @@ const syncNewProfileData = async (editingProfile: ProfileType, offset: number = 
 
     success = true;
   } catch (error) {
-    console.error(error);
-    alert('Error updating your data. Check the console for more information.');
+    logToConsole('error', error);
+    showAlert('Error updating your data. Check the console for more information.');
     success = false;
   }
 

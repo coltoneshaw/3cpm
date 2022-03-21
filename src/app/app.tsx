@@ -4,6 +4,7 @@ import './App.global.scss';
 import { MemoryRouter } from 'react-router-dom';
 import Sidebar from './Components/Sidebar/Sidebar';
 import { MainWindow } from '@/app/Pages/Index';
+import { logToConsole } from '@/utils/logging';
 
 import { useThemeProvidor } from './Context/ThemeEngine';
 
@@ -53,7 +54,7 @@ const App = () => {
       && currentProfile?.statSettings?.reservedFunds
         .filter((a) => a.is_enabled).length > 0) {
       updateAllDataQuery(currentProfile, 'fullSync');
-      console.log('Changing to a new profile');
+      logToConsole('debug', 'Changing to a new profile');
       updateLocalProfile(currentProfile);
     }
   }, [currentProfile]);

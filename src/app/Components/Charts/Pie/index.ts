@@ -1,5 +1,3 @@
 import BalancePie from './BalancePie';
 
-export {
-  BalancePie,
-};
+export default BalancePie;

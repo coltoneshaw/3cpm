@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-// import type { RootState } from '../store'
-
-// import store from '../store'
+import { logToConsole } from '@/utils/logging';
 
 import { initialState } from './initialState';
 
@@ -13,7 +11,7 @@ import {
 } from '@/types/3CommasApi';
 
 const dispatchError = (message: string) => {
-  console.error(message);
+  logToConsole('error', message);
   return undefined;
 };
 
@@ -52,7 +50,7 @@ export const threeCommasSlice = createSlice({
           state.profitData = <ProfitArray[]>data;
           break;
         case 'metricsData':
-          console.info('updating the metrics data');
+          logToConsole('debug', 'updating the metrics data');
           // spread operator since each metric can be updated independently.
           state.metricsData = { ...state.metricsData, ...<Type_MetricData>data };
           break;

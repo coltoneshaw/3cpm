@@ -12,6 +12,7 @@ import {
 } from './DataQueries/deals';
 import { fetchBotPerformanceMetrics, botQuery } from './DataQueries/bots';
 import getAccountDataFunction from './DataQueries/accounts';
+import { logToConsole } from '@/utils/logging';
 
 // these queries use the deals database but are pairs only. Can probably combine this with the deals queries or create a new folder.
 import { fetchPairPerformanceMetrics, getSelectPairDataByDate } from './DataQueries/pairs';
@@ -23,7 +24,7 @@ import { fetchPairPerformanceMetrics, getSelectPairDataByDate } from './DataQuer
  * @params {options} - option string
  */
 const updateThreeCData = async (type: string, options: UpdateFunctionType, profileData: ProfileType) => {
-  console.info({ options });
+  logToConsole('debug', { options });
   return window.ThreeCPM.Repository.API.update(type, options, profileData);
 };
 

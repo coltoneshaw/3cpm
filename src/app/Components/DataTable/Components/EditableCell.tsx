@@ -1,27 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { QueryBotsType } from '@/types/3CommasApi';
-import { ReservedFundsType } from '@/types/config';
+// import { QueryBotsType } from '@/types/3CommasApi';
+// import { ReservedFundsType } from '@/types/config';
+import type { BotTableTypes } from '@/app/Pages/BotPlanner/Components/tableTypes';
+import type { SettingTableTypes } from '@/app/Pages/Settings/Components/types';
 
-interface Cell {
-  value: {
-    initialValue: string
-  }
-  row: {
-    original: QueryBotsType | ReservedFundsType,
-  }
-  column: {
-    id: string
-  }
-  updateLocalBotData: any,
-  updateReservedFunds: any
-}
+type BotTable = BotTableTypes['cell'] & {
+  handleEditCellChangeCommitted: BotTableTypes['handleEditCellChangeCommitted']
+};
 
-const BotsEditableCell: React.FC<Cell> = ({
+type SettingsTable = SettingTableTypes['cell'] & {
+  handleEditCellChangeCommitted: SettingTableTypes['handleEditCellChangeCommitted']
+};
+
+const BotsEditableCell: React.FC<BotTable> = ({
   value: initialValue,
   row: { original },
   column: { id: column },
-  updateLocalBotData, // This is a custom function that we supplied to our table instance
-}: Cell) => {
+  handleEditCellChangeCommitted, // This is a custom function that we supplied to our table instance
+}) => {
   // We need to keep and update the state of the cell normally
   const [value, setValue] = useState(String(initialValue));
   const [size, setSize] = useState(() => String(initialValue).length * 1.5);
@@ -37,12 +33,11 @@ const BotsEditableCell: React.FC<Cell> = ({
 
   // We'll only update the external data when the input is blurred
   const onBlur = () => {
-    updateLocalBotData(original.id, column, value, original);
+    handleEditCellChangeCommitted(Number(original.id), column, value);
   };
 
   const ending = () => {
     if (column === 'take_profit') return '%';
-    // if (column == 'max_safety_orders') return ' SOs'
     return '';
   };
 
@@ -68,12 +63,12 @@ const BotsEditableCell: React.FC<Cell> = ({
 };
 
 // Create an editable cell renderer
-const SettingsEditableCell = ({
+const SettingsEditableCell: React.FC<SettingsTable> = ({
   value: initialValue,
   row: { original },
   column: { id: column },
-  updateReservedFunds, // This is a custom function that we supplied to our table instance
-}: Cell) => {
+  handleEditCellChangeCommitted, // This is a custom function that we supplied to our table instance
+}) => {
   // We need to keep and update the state of the cell normally
   const [value, setValue] = useState(String(initialValue));
   // const [size, setSize] = useState(() => String(initialValue).length * 1.5)
@@ -84,7 +79,7 @@ const SettingsEditableCell = ({
 
   // We'll only update the external data when the input is blurred
   const onBlur = () => {
-    updateReservedFunds(original.id, column, value, original);
+    handleEditCellChangeCommitted(original.id, column, value);
   };
 
   useEffect(() => {

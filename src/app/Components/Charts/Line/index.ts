@@ -1,5 +1,3 @@
 import PairPerformanceByDate from './PairByDay';
 
-export {
-  PairPerformanceByDate,
-};
+export default PairPerformanceByDate;
