@@ -184,7 +184,6 @@ function calcDealMaxFunds(
   }
 
   // add unfilled manual safety orders
-  // TODO - Add typedef for market Orders
   if (!(typeof market_order_data === 'undefined')) {
     market_order_data.forEach((order) => {
       // eslint-disable-next-line @typescript-eslint/naming-convention

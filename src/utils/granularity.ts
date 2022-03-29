@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 
 import { parseNumber } from './numberFormatting';
-import { logToConsole } from '@/utils/logging';
+import { logToConsole } from './logging';
 
 const currencyKeys = ['AUD', 'BIDR', 'BTC', 'BNB', 'BRL', 'BUSD',
   'BVND', 'DAI', 'USD', 'USDT', 'USDC', 'UST', 'GBP', 'ETH', 'EUR',

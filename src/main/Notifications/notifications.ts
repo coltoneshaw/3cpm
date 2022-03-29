@@ -4,19 +4,23 @@ import { Notification } from 'electron';
 import path from 'path';
 import { parseNumber } from '@/utils/numberFormatting';
 import { getProfileConfig } from '@/main/Config/config';
-import { ReservedFundsType } from '@/types/config';
+import { ProfileType, ReservedFundsType } from '@/types/config';
 import { logToConsole } from '@/utils/logging';
 
 import { convertMiliseconds } from '@/utils/helperFunctions';
 
 import { PreStorageDeals3cAPI } from '@/types/3CommasAPI/Deals';
 
-const accountFilters = () => {
-  const profileConfig: ReservedFundsType[] = getProfileConfig(
-    'statSettings.reservedFunds',
-  );
-  return profileConfig
-    .filter((account) => account.is_enabled).map((account) => account.id);
+const accountFilters = (profileConfig: ProfileType | null) => {
+  let filteredProfiles = profileConfig?.statSettings?.reservedFunds;
+  if (!profileConfig) {
+    filteredProfiles = getProfileConfig('statSettings.reservedFunds') as ReservedFundsType[];
+  }
+  if (!filteredProfiles) return undefined;
+
+  return filteredProfiles
+    .filter((account) => account.is_enabled)
+    .map((account) => account.id);
 };
 
 // This is added to prevent duplicate notifications from happening when the computer is asleep
@@ -76,8 +80,10 @@ function findAndNotifyNewDeals(
   data: PreStorageDeals3cAPI[],
   lastSyncTime: number,
   summary: boolean,
+  profileData: ProfileType,
 ) {
-  const filters = accountFilters();
+  const filters = accountFilters(profileData);
+  if (!filters) return;
 
   // filter for only deals that have closed
   // this will filter based on the ISO string of the closed at and if it's greater than

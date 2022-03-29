@@ -13,7 +13,9 @@ const logToConsole = (type: ConsoleTypes, ...args: any[]) => {
     case ('table'):
       console.table(...args);
       break;
-
+    case ('error'):
+      console.error(...args);
+      break;
     default:
       console.log(...args);
   }

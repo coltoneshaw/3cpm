@@ -1,16 +1,34 @@
+/**
+ * @jest-environment jsdom
+ */
 /* eslint-disable no-undef */
 
-const {
+import {
   tryParseJSON,
   removeDuplicatesInArray,
   dynamicSort,
   convertMiliseconds,
   getDateString,
   getDatesBetweenTwoDates,
-  exportedForTesting: {
-    padZero,
-  },
-} = require('./helperFunctions');
+  // exportedForTesting: {
+  //   padZero,
+  // },
+  openLink,
+  getLang,
+  exportedForTesting,
+} from './helperFunctions';
+
+const { padZero } = exportedForTesting;
+
+beforeEach(() => {
+
+});
+afterEach(() => {
+  jest.resetAllMocks();
+});
+afterAll(() => {
+  jest.clearAllMocks();
+});
 
 test('Correctly formats invalid and valid JSON String', () => {
   expect(tryParseJSON('{ "test": "test" }'))
@@ -21,14 +39,8 @@ test('Correctly formats invalid and valid JSON String', () => {
 
 test('Correctly removes duplicates in array', () => {
   const arrayWithDuplicates = [
-    {
-      test: 'test',
-      id: 1,
-    },
-    {
-      test: '2',
-      id: 1,
-    },
+    { test: 'test', id: 1 },
+    { test: '2', id: 1 },
   ];
   expect(removeDuplicatesInArray(arrayWithDuplicates, 'id'))
     .toStrictEqual([arrayWithDuplicates[0]]);
@@ -72,13 +84,13 @@ test('Returned correct date string', () => {
     .toBe('');
 
   const days = 86400000; // number of milliseconds in a day
-  const fiveDaysAgo = new Date(date - (5 * days));
+  const fiveDaysAgo = new Date(date.getTime() - (5 * days));
 
   expect(getDateString(fiveDaysAgo.toISOString()))
     .toBe('05d');
 
   const hour = 3600000;
-  const fiveHoursAgo = new Date(date - (5 * hour));
+  const fiveHoursAgo = new Date(date.getTime() - (5 * hour));
 
   expect(getDateString(fiveHoursAgo.toISOString()))
     .toBe('05h');
@@ -86,7 +98,7 @@ test('Returned correct date string', () => {
   const fiveSeconds = 5000;
   const fiveMinutes = 300000;
   const fiveMinutesHoursSecondsAgo = new Date(
-    date - ((5 * hour) + fiveSeconds + fiveMinutes),
+    date.getTime() - ((5 * hour) + fiveSeconds + fiveMinutes),
   );
 
   expect(getDateString(fiveMinutesHoursSecondsAgo.toISOString()))
@@ -102,4 +114,36 @@ test('Correctly pads a zero when needed', () => {
         years: ['2022'],
       },
     );
+});
+
+test('Correctly opens link', () => {
+  // window = jest.fn() as jest.Mocked<typeof window>;
+  const windowSpy: jest.SpyInstance = jest.spyOn(window, 'window', 'get');
+  expect(openLink('https://www.google.com'))
+    .toBe(undefined);
+  windowSpy.mockRestore();
+  // window.open.mockClear();
+
+  // window.mainPreload = true;
+  // expect(openLink('https://www.google.com'))
+  //   .toBe(undefined);
+});
+
+test('Correctly returns lanquage', () => {
+  const languageGetter: jest.SpyInstance = jest.spyOn(window, 'navigator', 'get');
+  languageGetter.mockImplementation(() => ({
+    language: 'en-US',
+  }));
+
+  expect(getLang())
+    .toBe('en-US');
+
+  languageGetter.mockRestore();
+
+  languageGetter.mockImplementation(() => ({
+    languages: ['en-US', 'en-UK'],
+  }));
+
+  expect(getLang())
+    .toBe('en-US');
 });

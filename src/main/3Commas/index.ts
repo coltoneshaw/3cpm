@@ -23,7 +23,7 @@ async function getDealData(type: 'autoSync' | 'fullSync', options: UpdateFunctio
       const { enabled, summary } = store;
       // if notifications need to be enabled for the fullSync then the type below needs to be updated.
       if (type === 'autoSync' && enabled && (options.time !== undefined || options.syncCount !== 0)) {
-        findAndNotifyNewDeals(DealArray, options.time, summary);
+        findAndNotifyNewDeals(DealArray, options.time, summary, profileData);
       }
 
       update('deals', DealArray, profileData.id);

@@ -8,7 +8,7 @@
   "scripts": {
     "check-lint": "eslint --ext .js,.jsx,.tsx,.ts . --quiet --cache",
     "fix-lint": "eslint --ext .js,.jsx,.tsx,.ts . --quiet --cache --fix",
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --coverage",
     "pack": "electron-builder --dir ",
     "build:mac": "webpack && electron-builder --dir && electron-builder --mac",
     "build:win": "webpack && electron-builder --dir && electron-builder --win",
@@ -61,6 +61,7 @@
     "eslint": "^8.10.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^26.1.3",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.29.3",
     "eslint-plugin-react-hooks": "^4.3.0",

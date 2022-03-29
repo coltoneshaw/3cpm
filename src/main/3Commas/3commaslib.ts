@@ -81,7 +81,7 @@ class ThreeCommasAPI {
      * Deals methods
      */
 
-  async getDeals(params: any): Promise<Deals3CAPI[]> {
+  async getDeals(params?: any): Promise<Deals3CAPI[] | []> {
     return this.makeRequest('GET', '/public/api/ver1/deals?', params);
   }
 
