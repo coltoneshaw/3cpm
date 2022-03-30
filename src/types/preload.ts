@@ -3,8 +3,8 @@ import { defaultConfig } from '@/utils/defaultConfig';
 import type { Deals } from '@/types/3cAPI';
 import { UpdateFunctionType } from '@/types/DatabaseQueries';
 import type { getDealOrders } from '@/main/3Commas/index';
-import type { GithubReleaseType } from '@/app/Repositories/Types/GithubRelease';
-import type { BinanceTicketPrice } from '@/app/Repositories/Types/Binance';
+import type { GithubReleaseType } from '@/webapp/Repositories/Types/GithubRelease';
+import type { BinanceTicketPrice } from '@/webapp/Repositories/Types/Binance';
 
 declare global {
   interface Window {

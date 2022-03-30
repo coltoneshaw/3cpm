@@ -22,9 +22,9 @@ import {
 import type { Deals } from '@/types/3cAPI';
 import { ProfileType } from '@/types/config';
 
-import fetchCoinPricesBinance from '@/app/Features/CoinPriceHeader/BinanceApi';
+import fetchCoinPricesBinance from '@/webapp/Features/CoinPriceHeader/BinanceApi';
 
-import fetchVersions from '@/app/Features/UpdateBanner/UpdateApiFetch';
+import fetchVersions from '@/webapp/Features/UpdateBanner/UpdateApiFetch';
 import preloadCheck from './precheck';
 
 const isDev = !app.isPackaged;

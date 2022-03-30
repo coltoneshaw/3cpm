@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: './src/renderer.tsx',
+  entry: './src/webapp/renderer.tsx',
   target: 'electron-renderer',
   devtool: 'source-map',
   devServer: {
