@@ -1,9 +1,9 @@
 {
-    "watch": [ 
-      "src/main.ts", 
-      "src/preload.ts", 
-      "src/electron/*"
-    ],
-    "exec": "webpack --config ./webpack.electron.js && electron .",
-    "ext": "ts"
-  }
+  "watch": [
+    "src/main.ts",
+    "src/preload.ts",
+    "src/electron/*"
+  ],
+  "exec": "webpack --config ./webpack.electron.js && electron .",
+  "ext": "ts"
+}

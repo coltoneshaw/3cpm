@@ -164,7 +164,7 @@ const DealsTable = ({ data, selectedColumns }: { data: ActiveDeals[] | [], selec
       align: 'flex-end',
       maxWidth: 120,
       style: { paddingRight: '1rem' },
-      Cell: ({ cell }: TableCell) => numberCell(`${cell.value}%`),
+      Cell: ({ cell }: TableCell) => numberCell(`${cell.value.toFixed(2)}%`),
     },
   ];
 

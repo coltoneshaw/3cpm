@@ -81,17 +81,16 @@ const getPosition = (localData: BotPerformanceMetrics[]) => localData
       opacity={0.8}
     />
   ));
+const defaultFilter = 'all';
+const localStorageFilterName = storageItem.charts.BotPerformanceBubble.filter;
 
 const BotPerformanceBubble: React.FC<BotPerformanceChartsType> = ({ data = [], defaultCurrency }) => {
   const yWidth = yAxisWidth(defaultCurrency);
   const [filter, setFilter] = useState('all');
 
-  const defaultFilter = 'all';
-  const localStorageFilterName = storageItem.charts.BotPerformanceBubble.filter;
-
   useEffect(() => {
     const getFilterFromStorage = getStorageItem(localStorageFilterName);
-    setFilter((getFilterFromStorage !== undefined) ? getFilterFromStorage : defaultFilter);
+    setFilter((getFilterFromStorage) || defaultFilter);
   }, []);
 
   const handleChange = (event: any) => {

@@ -79,8 +79,12 @@ class ThreeCommasAPI {
     return this.makeRequest('GET', `/public/api/ver1/deals/${params.deal_id}/show`, /* { deal_id } */ undefined);
   }
 
-  async getDealSafetyOrders(deal_id: number): Promise<Deals.Responses.MarketOrders[]> {
-    return this.makeRequest('GET', `/public/api/ver1/deals/${deal_id}/market_orders?`, /* { deal_id } */ undefined);
+  async getDealSafetyOrders(params: { deal_id: number | string }): Promise<Deals.Responses.MarketOrders[]> {
+    return this.makeRequest(
+      'GET',
+      `/public/api/ver1/deals/${params.deal_id}/market_orders?`,
+      /* { deal_id } */ undefined,
+    );
   }
 
   async updateDeal(params: Deals.Params.UpdateDeal): Promise<Deals.Responses.Deal> {

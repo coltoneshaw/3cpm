@@ -10,17 +10,17 @@
     "fix-lint": "eslint --ext .js,.jsx,.tsx,.ts . --quiet --cache --fix",
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --coverage",
     "pack": "electron-builder --dir ",
-    "build:mac": "webpack && electron-builder --dir && electron-builder --mac",
-    "build:win": "webpack && electron-builder --dir && electron-builder --win",
-    "build:linux": "webpack && electron-builder --dir && electron-builder --linux",
-    "build": "webpack && electron-builder --dir && electron-builder --mac --win --linux",
-    "react:dev": "webpack serve --mode=development",
+    "build:mac": "npm run webpack && electron-builder --dir && electron-builder --mac",
+    "build:win": "npm run webpack && electron-builder --dir && electron-builder --win",
+    "build:linux": "npm run webpack && electron-builder --dir && electron-builder --linux",
+    "build": "npm run webpack && electron-builder --dir && electron-builder --mac --win --linux",
+    "react:dev": "npm run webpack serve --mode=development",
     "electron:dev": "nodemon",
     "webpack": "webpack",
     "dev": "concurrently --kill-others \"npm run react:dev\" \"npm run electron:dev\"",
     "start": "npm run build && electron dist/main.js",
     "rebuild": "./node_modules/.bin/electron-rebuild -f -w better-sqlite3",
-    "wpanddev": "webpack && concurrently --kill-others \"npm run react:dev\" \"npm run electron:dev\""
+    "wpanddev": "npm run webpack && concurrently --kill-others \"npm run react:dev\" \"npm run electron:dev\""
   },
   "repository": {
     "type": "git",

@@ -55,7 +55,7 @@ const getStorageItem = (id: string) => {
   const parsed = (savedStorageItem) ? tryParseJSON(savedStorageItem) : undefined;
   if (parsed) return parsed;
 
-  return storageItem;
+  return savedStorageItem;
 };
 
 export {

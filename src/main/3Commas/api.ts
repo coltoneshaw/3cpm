@@ -150,7 +150,7 @@ async function getMarketOrders(deal_id: number, profileData: ProfileType) {
   if (!api) return false;
 
   // this is the /market_orders endpoint.
-  const apiCall = await api.getDealSafetyOrders(String(deal_id));
+  const apiCall = await api.getDealSafetyOrders({ deal_id });
 
   const manualSOs: ManualSOs[] = [];
 
@@ -185,7 +185,7 @@ async function getDealOrders(profileData: ProfileType, deal_id: number) {
   if (!api) return [];
 
   // this is the /market_orders endpoint.
-  const data = await api.getDealSafetyOrders(String(deal_id));
+  const data = await api.getDealSafetyOrders({ deal_id });
 
   return (!data) ? []
     : data.map((order: MarketOrdersType) => {

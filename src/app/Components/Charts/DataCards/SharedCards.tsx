@@ -121,7 +121,7 @@ const returnCardData = (
     message = defaults.description(totalClosedDeals, totalDealHours);
   }
 
-  if (type === 'drop-coverage') {
+  if (type === 'drop-coverage' || type === 'active-deal-reserve') {
     cardMetric = { metric: parseNumber(metric, 2), symbol: '%' };
   }
   if (type === 'total-in-deals') {

@@ -43,10 +43,8 @@ const CoinPriceHeader = () => {
 
   useEffect(() => {
     const coinPriceArray = getStorageItem(storageItem.settings.coinPriceArray);
-    updateSelectedcoins(() => (
-      (coinPriceArray !== undefined && coinPriceArray.length > 0)
-        ? coinPriceArray : ['BTCUSDT']
-    ));
+    const selected = (coinPriceArray) || ['BTCUSDT'];
+    updateSelectedcoins(selected);
   }, []);
 
   return (

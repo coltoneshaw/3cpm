@@ -12,6 +12,15 @@ test('Formats included currency correctly', () => {
     });
 });
 
+test('check long numbers', () => {
+  expect(formatCurrency(['USD'], 2.1918473409000003, true))
+    .toStrictEqual({
+      metric: '2.1918',
+      symbol: '$',
+      extendedSymbol: 'USD',
+    });
+});
+
 test('Formats invalid currency correctly and throws console.error', () => {
   jest.spyOn(console, 'error').mockImplementation();
 

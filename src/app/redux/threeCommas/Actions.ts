@@ -92,7 +92,7 @@ const fetchAndStorePerformanceData = async (profileData: ProfileType) => {
   const pairBot = async () => fetchPerformanceDataFunction(profileData, undefined)
     .then(((data: QueryPerformanceArray[]) => {
       if (!data || data.length === 0) return;
-      logToConsole('error', 'updated Performance Data!');
+      logToConsole('debug', 'updated Performance Data!');
 
       dispatchSetPerformanceData({ pair_bot: data });
 
@@ -120,21 +120,21 @@ const fetchAndStorePerformanceData = async (profileData: ProfileType) => {
   const bot = async () => fetchBotPerformanceMetrics(profileData, undefined)
     .then(((data) => {
       if (!data) return;
-      logToConsole('error', 'getting bot performance metrics');
+      logToConsole('debug', 'getting bot performance metrics');
       dispatchSetPerformanceData({ bot: data });
     }));
 
   const pair = async () => fetchPairPerformanceMetrics(profileData, undefined)
     .then(((data) => {
       if (!data) return;
-      logToConsole('error', 'getting bot performance metrics');
+      logToConsole('debug', 'getting bot performance metrics');
       dispatchSetPerformanceData({ pair: data });
     }));
 
   const so = async () => fetchSoData(profileData, undefined)
     .then(((data) => {
       if (!data) return;
-      logToConsole('error', 'getting SO performance metrics');
+      logToConsole('debug', 'getting SO performance metrics');
       dispatchSetPerformanceData({ safety_order: data });
     }));
 
@@ -145,7 +145,7 @@ const fetchAndStoreActiveDeals = async (profileData: ProfileType) => {
   await getActiveDealsFunction(profileData)
     .then((data) => {
       if (!data) return;
-      logToConsole('error', 'updated active deals and related metrics!');
+      logToConsole('debug', 'updated active deals and related metrics!');
       const { activeDeals, metrics } = data;
 
       dispatchSetActiveDeals(activeDeals);

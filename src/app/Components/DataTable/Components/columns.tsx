@@ -8,8 +8,8 @@ export const numberCell = (
   style?: React.CSSProperties,
 ) => {
   let valueIs = value;
-  if (format && currency && value) {
-    valueIs = formatCurrency([currency], Number(value), true).metric;
+  if (format && value) {
+    valueIs = formatCurrency([currency ?? 'USD'], value, true).metric;
   }
   return (
     <span

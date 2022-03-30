@@ -114,7 +114,7 @@ const DealPerformanceBubble = ({ data = [], defaultCurrency }: DealPerformanceCh
 
   useEffect(() => {
     const getFilterFromStorage = getStorageItem(storedFilter);
-    setFilter((getFilterFromStorage !== undefined) ? getFilterFromStorage : defaultFilter);
+    setFilter(getFilterFromStorage || defaultFilter);
 
     // const getSortFromStorage = getStorageItem(storedSort);
     // setSort((getSortFromStorage != undefined) ? getSortFromStorage : defaultSort);

@@ -208,7 +208,7 @@ const supportedCurrencies: SupportedCurrencies = {
 
 const formatCurrency = (
   currencyCode: (keyof typeof supportedCurrencies)[] | undefined,
-  value: number,
+  value: number | string,
   activeDeals?: boolean,
 ) => {
   const nothing = { metric: value, symbol: '', extendedSymbol: '' };

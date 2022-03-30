@@ -24,17 +24,17 @@ const usePerformanceSortAndFilter = (name: Name, metrics: Metrics) => {
   const localStorageFilterName = storageItem.charts[name].filter;
   const localStorageSortName = storageItem.charts[name].sort;
 
-  const [sort, setSort] = useState(defaultSort);
+  const [sort, setSort] = useState<SortString>(defaultSort);
   const [filter, setFilter] = useState(defaultFilter);
   const [metricsDisplayed, updatedMetricsDisplayed] = useState(() => (metrics));
 
   useLayoutEffect(() => {
     // const getFilterFromStorage = getStorageItem(localStorageFilterName);
-    // setFilter((getFilterFromStorage != undefined) ? getFilterFromStorage : defaultFilter);
+    // setFilter((!getFilterFromStorage) ? getFilterFromStorage : defaultFilter);
 
     setFilter(defaultFilter);
     const getSortFromStorage = getStorageItem(localStorageSortName);
-    setSort((getSortFromStorage !== undefined) ? getSortFromStorage : defaultSort);
+    setSort(getSortFromStorage || defaultSort);
   }, []);
 
   const handleSortChange = (event: any) => {
@@ -65,7 +65,8 @@ const usePerformanceSortAndFilter = (name: Name, metrics: Metrics) => {
   };
 };
 
-const useLocalDataWithHeight = (data: Data, filter: string, sort: string) => {
+type SortString = '-total_profit' | '-bought_volume' | '-avg_deal_hours' | '-avg_profit';
+const useLocalDataWithHeight = (data: Data, filter: string, sort: SortString) => {
   const [localData, updateLocalData] = useState<any[]>(() => data);
   const [chartHeight, updateChartHeight] = useState<number>(300);
   const [newData, updateNewData] = useState<any[]>([]);
@@ -78,7 +79,7 @@ const useLocalDataWithHeight = (data: Data, filter: string, sort: string) => {
     if (data && data !== []) {
       updateNewData(() => {
         const filteredData = filterData(localData, filter).sort(dynamicSort(sort));
-        updateChartHeight((newData.length * 15) + 250);
+        updateChartHeight((filteredData.length * 15) + 250);
         return filteredData;
       });
     }

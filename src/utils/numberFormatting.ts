@@ -10,7 +10,6 @@ const parseNumber = (
   activeDeals?: boolean,
 ) => {
   const isNumber = Number(number);
-
   let numberFormatter: any = {
     minimumFractionDigits: (digits > 4) ? 4 : digits,
     maximumFractionDigits: digits,
@@ -18,22 +17,24 @@ const parseNumber = (
 
   // Fix the logic here to format the number
   if (activeDeals) {
+    const absNumber = Math.abs(isNumber);
+    const numberOfDigits = (digits > 4) ? digits : 4;
     switch (true) {
-      case (isNumber < 10):
+      case (absNumber < 10):
         numberFormatter = {
-          minimumFractionDigits: (digits > 4) ? digits : 4,
-          maximumFractionDigits: 8,
+          minimumFractionDigits: numberOfDigits,
+          maximumFractionDigits: numberOfDigits,
           useGrouping: false,
         };
         break;
-      case (isNumber < 1000):
+      case (absNumber < 1000):
         numberFormatter = {
           minimumFractionDigits: digits,
           maximumFractionDigits: digits,
           useGrouping: false,
         };
         break;
-      case (isNumber >= 1000):
+      case (absNumber >= 1000):
         numberFormatter = {
           minimumFractionDigits: 0,
           maximumFractionDigits: 0,
