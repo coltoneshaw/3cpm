@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useAppSelector } from '@/app/redux/hooks';
-import { QueryBotsType } from '@/types/3CommasApi';
+import { QueryBotsType } from '@/types/DatabaseQueries';
 
 import MetricCard from '@/app/Components/Charts/DataCards';
 

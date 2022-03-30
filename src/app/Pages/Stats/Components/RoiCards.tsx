@@ -3,7 +3,7 @@ import { useAppSelector } from '@/app/redux/hooks';
 
 import MetricCard from '@/app/Components/Charts/DataCards';
 
-import { MetricDataType } from '@/types/3CommasApi';
+import { MetricDataType } from '@/types/DatabaseQueries';
 
 const RoiCards = ({ metricsData, currentView }: { currentView: string, metricsData: MetricDataType }) => {
   const { defaultCurrency } = useAppSelector((state) => state.config.currentProfile.general);

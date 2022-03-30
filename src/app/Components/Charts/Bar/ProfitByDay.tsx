@@ -6,7 +6,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine,
 } from 'recharts';
-import { ProfitArray } from '@/types/3CommasApi';
+import { ProfitArray } from '@/types/DatabaseQueries';
 import { getLang, removeDuplicatesInArray } from '@/utils/helperFunctions';
 
 import { yAxisWidth, currencyTickFormatter, currencyTooltipFormatter } from '@/app/Components/Charts/formatting';

@@ -4,7 +4,7 @@ import type {
 } from 'react-table';
 
 import React from 'react';
-import type { ActiveDeals, QueryBotsType } from '@/types/3CommasApi';
+import type { ActiveDeals, QueryBotsType } from '@/types/DatabaseQueries';
 import { SubRowAsync } from '@/app/Pages/ActiveDeals/Components';
 
 export interface TableType extends TableOptions<{}> {

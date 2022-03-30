@@ -1,4 +1,4 @@
-import { UpdateFunctionType } from '@/types/3CommasApi';
+import { UpdateFunctionType } from '@/types/DatabaseQueries';
 import { ProfileType } from '@/types/config';
 import BaseElectronRepository from '@/app/Repositories/Impl/electron/Base';
 import { APIRepository } from '@/app/Repositories/interfaces';

@@ -4,7 +4,7 @@ import { initDate, DateRangeToSQLString } from '@/app/Features/3Commas/3Commas';
 import { ProfileType } from '@/types/config';
 import type { DateRange } from '@/types/Date';
 
-import { PairByDateType } from '@/types/3CommasApi';
+import { PairByDateType } from '@/types/DatabaseQueries';
 import { FetchPairPerformanceMetrics } from '../Type_3Commas';
 
 const fetchPairPerformanceMetrics = async (profileData: ProfileType, oDate?: DateRange) => {

@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 
 import { TooltipType, DealPerformanceChartsType } from '@/types/Charts';
-import { QueryPerformanceArray } from '@/types/3CommasApi';
+import { QueryPerformanceArray } from '@/types/DatabaseQueries';
 import { parseNumber } from '@/utils/numberFormatting';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 import { dynamicSort } from '@/utils/helperFunctions';

@@ -1,5 +1,5 @@
 import { ProfileType } from '@/types/config';
-import type { ActiveDeals, ProfitArray } from '@/types/3CommasApi';
+import type { ActiveDeals, ProfitArray } from '@/types/DatabaseQueries';
 import type { QueryDealByPairByDayReturn, BotQueryDealByDayReturn } from './type_dailydashboard';
 import type { FetchDealDataFunctionQuery } from '@/app/Features/3Commas/Type_3Commas';
 import type { UtcDateRange } from '@/types/Date';

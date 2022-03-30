@@ -9,7 +9,7 @@ import { logToConsole } from '@/utils/logging';
 
 import { convertMiliseconds } from '@/utils/helperFunctions';
 
-import { PreStorageDeals3cAPI } from '@/types/3CommasAPI/Deals';
+import type { PreStorageDeals3cAPI } from '@/main/3Commas/types';
 
 const accountFilters = (profileConfig: ProfileType | null) => {
   let filteredProfiles = profileConfig?.statSettings?.reservedFunds;

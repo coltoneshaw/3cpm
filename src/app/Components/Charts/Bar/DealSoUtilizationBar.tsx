@@ -9,7 +9,7 @@ import { dynamicSort } from '@/utils/helperFunctions';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 import { currencyTooltipFormatter } from '@/app/Components/Charts/formatting';
 
-import type { ActiveDeals } from '@/types/3CommasApi';
+import type { ActiveDeals } from '@/types/DatabaseQueries';
 import type { TooltipType, ActiveDealChartsType } from '@/types/Charts';
 
 const CustomTooltip: React.FC<TooltipType<number, string>> = ({

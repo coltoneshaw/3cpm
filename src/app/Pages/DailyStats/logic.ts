@@ -7,7 +7,7 @@ import type { ProfileType } from '@/types/config';
 import {
   queryDealByPairByDay, queryDealByBotByDay, queryProfitDataByDay, getTotalProfit, getActiveDealsFunction,
 } from '@/app/Pages/DailyStats/Components';
-import { ActiveDeals, ProfitArray } from '@/types/3CommasApi';
+import { ActiveDeals, ProfitArray } from '@/types/DatabaseQueries';
 import { BotQueryDealByDayReturn, QueryDealByPairByDayReturn } from './Components/3Commas/type_dailydashboard';
 
 const oldestYear = 2015;

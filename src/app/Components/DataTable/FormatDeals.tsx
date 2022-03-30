@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { ActiveDeals } from '@/types/3CommasApi';
+import { ActiveDeals } from '@/types/DatabaseQueries';
 import { calcDeviation } from '@/utils/formulas';
 // import { parseNumber } from '@/utils/numberFormatting';
 

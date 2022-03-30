@@ -7,7 +7,7 @@ import type {
   MetricDataType,
   ProfitArray,
   PerformanceMetrics,
-} from '@/types/3CommasApi';
+} from '@/types/DatabaseQueries';
 
 export { MetricDataType as Type_MetricData, PerformanceMetrics, ReservedFundsType };
 // Define the initial state using that type

@@ -5,7 +5,7 @@ import {
 import {
   ProfitArray, QueryPerformanceArray, ActiveDeals, MetricDataType,
   BotPerformanceMetrics, PairPerformanceMetrics, SODistributionArray,
-} from '@/types/3CommasApi';
+} from '@/types/DatabaseQueries';
 
 import type { DefaultCurrency } from '@/types/config';
 

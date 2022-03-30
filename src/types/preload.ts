@@ -1,7 +1,7 @@
 import { ProfileType } from '@/types/config';
 import { defaultConfig } from '@/utils/defaultConfig';
-import type { UpdateDealRequest } from '@/main/3Commas/types';
-import { UpdateFunctionType } from '@/types/3CommasApi';
+import type { Deals } from '@/types/3cAPI';
+import { UpdateFunctionType } from '@/types/DatabaseQueries';
 import type { getDealOrders } from '@/main/3Commas/index';
 import type { GithubReleaseType } from '@/app/Repositories/Types/GithubRelease';
 import type { BinanceTicketPrice } from '@/app/Repositories/Types/Binance';
@@ -57,7 +57,7 @@ export interface PM {
 
 interface MainPreload {
   deals: {
-    update: (profileData: ProfileType, deal: UpdateDealRequest) => Promise<void>
+    update: (profileData: ProfileType, deal: Deals.Params.UpdateDeal) => Promise<Deals.Responses.Deal>
   },
   api: API,
   config: Config,
@@ -71,7 +71,6 @@ export {
   MainPreload,
   ProfileType,
   defaultConfig,
-  UpdateDealRequest,
   UpdateFunctionType as Type_UpdateFunction,
   getDealOrders,
 };

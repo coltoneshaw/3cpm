@@ -4,7 +4,7 @@ import { getLang } from '@/utils/helperFunctions';
 
 import CardTooltip from '@/app/Components/Charts/DataCards/CustomToolTip';
 
-import { ProfitArray } from '@/types/3CommasApi';
+import { ProfitArray } from '@/types/DatabaseQueries';
 import { formatCurrency } from '@/utils/granularity';
 
 const lang = getLang();

@@ -1,7 +1,7 @@
 import { formatCurrency, supportedCurrencies } from '@/utils/granularity';
 import type { DefaultCurrency } from '@/types/config';
 import { dynamicSort } from '@/utils/helperFunctions';
-import { BotPerformanceMetrics, PairPerformanceMetrics } from '@/types/3CommasApi';
+import { BotPerformanceMetrics, PairPerformanceMetrics } from '@/types/DatabaseQueries';
 
 const yAxisWidth = (defaultCurrency: DefaultCurrency) => {
   const firstCurrency = defaultCurrency[0] ?? ['USD'];

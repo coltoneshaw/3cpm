@@ -8,7 +8,7 @@ import MetricCard from '@/app/Components/Charts/DataCards';
 import { NotificationsSettings, DealsTable } from './Components/index';
 
 import './ActiveDeals.scss';
-import { ActiveDeals } from '@/types/3CommasApi';
+import { ActiveDeals } from '@/types/DatabaseQueries';
 
 const columnList = [
   {

@@ -6,7 +6,7 @@ import {
   InputLabel, MenuItem, FormControl, Select,
 } from '@mui/material';
 
-import { PairPerformanceMetrics } from '@/types/3CommasApi';
+import { PairPerformanceMetrics } from '@/types/DatabaseQueries';
 import { TooltipType, PairPerformanceType } from '@/types/Charts';
 
 import { parseNumber } from '@/utils/numberFormatting';

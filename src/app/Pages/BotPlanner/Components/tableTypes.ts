@@ -3,7 +3,7 @@ import {
   UseTableCellProps, UseSortByOptions,
 } from 'react-table';
 
-import type { QueryBotsType } from '@/types/3CommasApi';
+import type { QueryBotsType } from '@/types/DatabaseQueries';
 
 export interface TableRow extends UseExpandedRowProps<QueryBotsType>, UseTableRowProps<QueryBotsType> { }
 export interface TableColumn extends UseExpandedInstanceProps<Column> { }

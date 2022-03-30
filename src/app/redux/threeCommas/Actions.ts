@@ -14,7 +14,7 @@ import { initialState } from '@/app/redux/threeCommas/initialState';
 import { updateLastSyncTime } from '@/app/redux/config/configSlice';
 import { updateBannerData } from '@/app/Features/UpdateBanner/redux/bannerSlice';
 import type { ProfileType, ReservedFundsType } from '@/types/config';
-import type { QueryPerformanceArray } from '@/types/3CommasApi';
+import type { QueryPerformanceArray } from '@/types/DatabaseQueries';
 
 // Utilities
 import {

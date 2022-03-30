@@ -10,7 +10,7 @@ import { ColumnSelector, useColumnSelector } from '@/app/Components/DataTable/Co
 import './BotPlanner.scss';
 
 import { calcDropMetrics } from '@/utils/formulas';
-import { QueryBotsType } from '@/types/3CommasApi';
+import { QueryBotsType } from '@/types/DatabaseQueries';
 
 const blankObject: QueryBotsType = {
   id: Math.random().toString(16).slice(2),

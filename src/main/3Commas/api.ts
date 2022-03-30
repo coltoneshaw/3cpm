@@ -3,10 +3,10 @@ import log from 'electron-log';
 import ThreeCommasAPI from './3commaslib';
 import {
   MarketOrdersType, ManualSOs, QueryAccountsType,
-} from '@/types/3CommasApi';
-import { Bots3CAPI } from '@/types/3CommasAPI/Bots';
+} from '@/types/DatabaseQueries';
+import { Bots, Deals } from '@/types/3cAPI';
 import { setProfileConfig } from '@/main/Config/config';
-
+import { PreStorageDeals3cAPI } from './types';
 import {
   calcDealHours,
   botPerDealMaxFunds,
@@ -17,8 +17,6 @@ import {
 } from '@/utils/formulas';
 
 import { ProfileType } from '@/types/config';
-import type { UpdateDealRequest } from '@/main/3Commas/types';
-import { Deals3CAPI, PreStorageDeals3cAPI } from '@/types/3CommasAPI/Deals';
 
 /**
  *
@@ -57,7 +55,7 @@ async function bots(profileData: ProfileType) {
   if (!api) return [];
 
   const responseArray = [];
-  let response: Bots3CAPI[];
+  let response: Bots.Responses.Bot[];
   const offsetMax = 5000;
   const perOffset = 100;
 
@@ -213,7 +211,7 @@ async function getDealsThatAreUpdated(
   { id, lastSyncTime: incomingLastSyncTime }: { id: string, lastSyncTime: number | null },
 ) {
   const responseArray = [];
-  let response: Deals3CAPI[];
+  let response: Deals.Responses.Deal[];
   const offsetMax = 250000;
   const perOffset = (perSyncOffset) || 1000;
   let oldestDate;
@@ -231,7 +229,7 @@ async function getDealsThatAreUpdated(
       order: 'updated_at',
       order_direction: 'desc',
       offset,
-      scope: 'active, completed, finished',
+      scope: ['active', 'completed', 'finished'],
     });
     if (response.length > 0) { responseArray.push(...response); }
 
@@ -266,7 +264,7 @@ async function getDealsThatAreUpdated(
 let activeDealIDs = <number[]>[];
 
 async function getActiveDeals(api: ThreeCommasAPI, perSyncOffset = 300) {
-  const response = await api.getDeals({ limit: perSyncOffset, scope: 'active' });
+  const response = await api.getDeals({ limit: perSyncOffset, scope: ['active'] });
   return response;
 }
 
@@ -286,7 +284,7 @@ async function getDealsUpdate(perSyncOffset: number, type: 'autoSync' | 'fullSyn
     };
   }
 
-  let activeDeals = <[] | Deals3CAPI[]>[];
+  let activeDeals = <[] | Deals.Responses.Deal[]>[];
 
   if (type === 'autoSync') {
     activeDeals = await getActiveDeals(api, perSyncOffset);
@@ -413,10 +411,11 @@ async function getAccountDetail(profileData: ProfileType) {
   const filteredAccountData = accountData.filter((a: any) => accountIDs.includes(a.id));
 
   filteredAccountData.forEach(async (account) => {
+    const accountKey = { account_id: String(account.id) };
     // this loads the account balances from the exchange to 3C ensuring the numbers are updated
-    await api.accountLoadBalances(String(account.id));
+    await api.accountLoadBalances(accountKey);
     // this is where we get the coins and position per account.
-    const data = await api.accountTableData(String(account.id));
+    const data = await api.accountTableData(accountKey);
 
     const { name: account_name, exchange_name, market_code } = account;
     // Load data into new array with only the columns we want and format them
@@ -461,7 +460,7 @@ async function getAccountSummary(profileData?: ProfileType, key?: string, secret
   return array;
 }
 
-async function updateDeal(profileData: ProfileType, deal: UpdateDealRequest) {
+async function updateDeal(profileData: ProfileType, deal: Deals.Params.UpdateDeal) {
   const api = threeCapi(profileData);
   if (!api) return false;
 

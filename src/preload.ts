@@ -1,8 +1,10 @@
 import { ProfileType } from '@/types/config';
 
 import {
-  MainPreload, UpdateDealRequest, Type_UpdateFunction, getDealOrders, defaultConfig,
+  MainPreload, Type_UpdateFunction, getDealOrders, defaultConfig,
 } from '@/types/preload';
+
+import { Deals } from '@/types/3cAPI';
 
 import { logToConsole } from './utils/logging';
 
@@ -11,7 +13,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 async function setupContextBridge() {
   contextBridge.exposeInMainWorld('mainPreload', {
     deals: {
-      async update(profileData: ProfileType, deal: UpdateDealRequest): Promise<MainPreload['deals']['update']> {
+      async update(profileData: ProfileType, deal: Deals.Params.UpdateDeal): Promise<MainPreload['deals']['update']> {
         return ipcRenderer.invoke('api-deals-update', profileData, deal);
       },
     },

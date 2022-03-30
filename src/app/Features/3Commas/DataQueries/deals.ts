@@ -1,6 +1,6 @@
 import getFiltersQueryString from '@/app/Features/3Commas/queryString';
 import { ProfileType } from '@/types/config';
-import type { ProfitArray, QueryPerformanceArray, ActiveDeals } from '@/types/3CommasApi';
+import type { ProfitArray, QueryPerformanceArray, ActiveDeals } from '@/types/DatabaseQueries';
 import { getDatesBetweenTwoDates } from '@/utils/helperFunctions';
 import { initDate, DateRangeToSQLString } from '@/app/Features/3Commas/3Commas';
 import type { DateRange } from '@/types/Date';

@@ -19,7 +19,7 @@ import { config } from '@/main/Config/config';
 import {
   updateAPI, getAndStoreBotData, getAccountSummary, getDealOrders, updateDeal,
 } from '@/main/3Commas/index';
-import type { UpdateDealRequest } from '@/main/3Commas/types';
+import type { Deals } from '@/types/3cAPI';
 import { ProfileType } from '@/types/config';
 
 import fetchCoinPricesBinance from '@/app/Features/CoinPriceHeader/BinanceApi';
@@ -201,8 +201,8 @@ ipcMain.handle('api-getDealOrders', async (
 ipcMain.handle('api-deals-update', async (
   event,
   profileData: ProfileType,
-  deal: UpdateDealRequest,
-) => updateDeal(profileData, deal));
+  deal: Deals.Params.UpdateDeal,
+): Promise<Deals.Responses.Deal | false> => updateDeal(profileData, deal));
 
 ipcMain.handle('binance-getCoins', async () => fetchCoinPricesBinance());
 

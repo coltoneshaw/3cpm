@@ -8,7 +8,7 @@ import { currencyTooltipFormatter } from '@/app/Components/Charts/formatting';
 import { parseNumber } from '@/utils/numberFormatting';
 
 import type { TooltipType, SoDealDisType } from '@/types/Charts';
-import type { SODistributionArray } from '@/types/3CommasApi';
+import type { SODistributionArray } from '@/types/DatabaseQueries';
 
 const CustomTooltip: React.FC<TooltipType<number, string>> = ({
   active, payload, formatter,

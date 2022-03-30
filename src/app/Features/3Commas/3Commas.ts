@@ -2,7 +2,7 @@ import moment from 'moment';
 
 import {
   UpdateFunctionType,
-} from '@/types/3CommasApi';
+} from '@/types/DatabaseQueries';
 import { ProfileType } from '@/types/config';
 import { DateRange } from '@/types/Date';
 

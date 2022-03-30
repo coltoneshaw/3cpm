@@ -15,7 +15,7 @@ import {
 import { numberCell, formattedHeader } from '@/app/Components/DataTable/Components/columns';
 import { TableRow, TableColumn, TableCell } from './dealstableTypes';
 import { returnErrorTooltip, sortMe } from './utiils';
-import type { ActiveDeals } from '@/types/3CommasApi';
+import type { ActiveDeals } from '@/types/DatabaseQueries';
 
 const DealsTable = ({ data, selectedColumns }: { data: ActiveDeals[] | [], selectedColumns: string[] }) => {
   const { writeEnabled } = useAppSelector((state) => state.config.currentProfile);

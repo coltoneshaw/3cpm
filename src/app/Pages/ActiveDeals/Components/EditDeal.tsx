@@ -3,7 +3,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useAppSelector } from '@/app/redux/hooks';
-import type { UpdateDealRequest } from '@/main/3Commas/types';
+import type { Deals } from '@/types/3cAPI';
 import { updateAllData } from '@/app/redux/threeCommas/Actions';
 import { useThemeProvidor } from '@/app/Context/ThemeEngine';
 import { logToConsole } from '@/utils/logging';
@@ -32,7 +32,7 @@ const EditDeal = ({ originalDeal, open, onClose }: any) => {
 
   const saveChanges = async () => {
     updateActionBtn('Sending new settings to 3Commas');
-    const req: UpdateDealRequest = {
+    const req: Deals.Params.UpdateDeal = {
       deal_id: deal.id,
     };
 

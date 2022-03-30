@@ -6,7 +6,7 @@ import {
   ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Scatter,
 } from 'recharts';
 
-import type { BotPerformanceMetrics } from '@/types/3CommasApi';
+import type { BotPerformanceMetrics } from '@/types/DatabaseQueries';
 import type { TooltipType, BotPerformanceChartsType } from '@/types/Charts';
 
 import { parseNumber } from '@/utils/numberFormatting';

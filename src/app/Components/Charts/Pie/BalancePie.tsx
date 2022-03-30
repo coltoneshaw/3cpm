@@ -6,7 +6,7 @@ import { currencyTooltipFormatter } from '../formatting';
 
 // types
 import type { TooltipType } from '@/types/Charts';
-import type { MetricDataType } from '@/types/3CommasApi';
+import type { MetricDataType } from '@/types/DatabaseQueries';
 import type { DefaultCurrency } from '@/types/config';
 
 const CustomTooltip = ({ active, payload, formatter }: TooltipType<string, number>) => {

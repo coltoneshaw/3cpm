@@ -7,7 +7,8 @@
     "plugin:react/recommended",
     "airbnb",
     "airbnb-typescript",
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:jest/recommended"
   ],
   "globals": {
     "NodeJS": true
@@ -23,7 +24,8 @@
   },
   "plugins": [
     "react",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "jest"
   ],
   "rules": {
     // "no-restricted-syntax": [

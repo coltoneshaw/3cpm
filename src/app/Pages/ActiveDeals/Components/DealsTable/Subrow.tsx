@@ -7,7 +7,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { useAppSelector } from '@/app/redux/hooks';
 import { OrderTimeline, DCA, Orders } from '../SubrowTabs/Index';
-import type { MarketOrdersType } from '@/types/3CommasApi';
+import type { MarketOrdersType } from '@/types/DatabaseQueries';
 
 const SubRows = ({
   row, ordersData, loading,

@@ -8,7 +8,7 @@ import type {
 } from './initialState';
 import {
   ActiveDeals, QueryAccountsType, QueryBotsType, ProfitArray,
-} from '@/types/3CommasApi';
+} from '@/types/DatabaseQueries';
 
 const dispatchError = (message: string) => {
   logToConsole('error', message);

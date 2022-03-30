@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { RiskMonitor, SummaryStatistics, PerformanceMonitor } from '../Views/Index';
 import { setStorageItem, getStorageItem, storageItem } from '@/app/Features/LocalStorage/LocalStorage';
 
-import type { PageIds } from '../types.d';
+import type { PageIds } from '../types';
 
 const defaultNav = 'summary-stats';
 const localStorageSortName = storageItem.navigation.statsPage;

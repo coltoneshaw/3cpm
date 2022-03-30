@@ -19,7 +19,7 @@ import {
   calcDropMetrics,
 } from '@/utils/formulas';
 
-import { QueryBotsType } from '@/types/3CommasApi';
+import { QueryBotsType } from '@/types/DatabaseQueries';
 
 import { CustomTable, BotsEditableCell } from '@/app/Components/DataTable/Index';
 import { BotTableTypes } from './tableTypes';

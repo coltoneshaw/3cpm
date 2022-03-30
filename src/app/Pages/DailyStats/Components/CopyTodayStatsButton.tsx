@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 
 import { ToastNotifications } from '@/app/Features/Index';
-import { MetricDataType } from '@/types/3CommasApi';
+import { MetricDataType } from '@/types/DatabaseQueries';
 import { formatCurrency } from '@/utils/granularity';
 
 interface ButtonPropsType {

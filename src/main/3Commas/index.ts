@@ -8,7 +8,7 @@ import { logToConsole } from '@/utils/logging';
 
 import { findAndNotifyNewDeals } from '@/main/Notifications/notifications';
 
-import { UpdateFunctionType } from '@/types/3CommasApi';
+import { UpdateFunctionType } from '@/types/DatabaseQueries';
 import { ProfileType } from '@/types/config';
 
 const log = require('electron-log');

@@ -9,7 +9,7 @@ import {
 import { currencyTooltipFormatter, yAxisWidth, currencyTickFormatter } from '@/app/Components/Charts/formatting';
 
 import { TooltipType, BotPerformanceChartsType } from '@/types/Charts';
-import { BotPerformanceMetrics } from '@/types/3CommasApi';
+import { BotPerformanceMetrics } from '@/types/DatabaseQueries';
 import { parseNumber } from '@/utils/numberFormatting';
 import NoData from '@/app/Pages/Stats/Components/NoData';
 

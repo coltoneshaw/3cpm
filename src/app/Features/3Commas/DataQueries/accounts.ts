@@ -1,4 +1,4 @@
-import { QueryAccountsType } from '@/types/3CommasApi';
+import { QueryAccountsType } from '@/types/DatabaseQueries';
 import getFiltersQueryString from '@/app/Features/3Commas/queryString';
 import { ProfileType } from '@/types/config';
 
