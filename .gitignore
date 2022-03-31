@@ -1,13 +1,7 @@
 node_modules
-node_modules/
-node/
-/node_modules
-src/main-app.js
 dist
 build
 release
-/src/main-app.js
-release/*
 commit.sh
 .env
 .eslintcache

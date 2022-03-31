@@ -1,9 +1,9 @@
-import getFiltersQueryString from '@/webapp/Features/3Commas/queryString';
-import { ProfileType } from '@/types/config';
-import type { ProfitArray, QueryPerformanceArray, ActiveDeals } from '@/types/DatabaseQueries';
-import { getDatesBetweenTwoDates } from '@/utils/helperFunctions';
-import { initDate, DateRangeToSQLString } from '@/webapp/Features/3Commas/3Commas';
-import type { DateRange } from '@/types/Date';
+import getFiltersQueryString from 'webapp/Features/3Commas/queryString';
+import { ProfileType } from 'types/config';
+import type { ProfitArray, QueryPerformanceArray, ActiveDeals } from 'types/DatabaseQueries';
+import { getDatesBetweenTwoDates } from 'common/utils/helperFunctions';
+import { initDate, DateRangeToSQLString } from 'webapp/Features/3Commas/3Commas';
+import type { DateRange } from 'types/Date';
 import { FetchDealDataFunctionQuery, FetchPerformanceData, FetchSoData } from '../Type_3Commas';
 
 // Filtering by only closed.

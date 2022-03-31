@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
-import { useAppSelector } from '@/webapp/redux/hooks';
-import type { BinanceTicketPrice } from '@/webapp/Repositories/Types/Binance';
+import { useAppSelector } from 'webapp/redux/hooks';
+import { getStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
+import type { BinanceTicketPrice } from 'common/repositories/Types/Binance';
 
 import AddCoinModal from './AddCoinModal';
-import { getStorageItem, storageItem } from '@/webapp/Features/LocalStorage/LocalStorage';
 
 import './CoinPriceHeader.scss';
 

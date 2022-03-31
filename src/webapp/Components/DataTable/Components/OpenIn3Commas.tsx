@@ -2,7 +2,7 @@ import React from 'react';
 
 import LaunchIcon from '@mui/icons-material/Launch';
 
-import { openLink } from '@/utils/helperFunctions';
+import { openLink } from 'common/utils/helperFunctions';
 
 type TypeOpenIn3Commas = {
   cell: any,

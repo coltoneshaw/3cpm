@@ -6,26 +6,26 @@ import { Provider } from 'react-redux';
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
-import { ThemeEngine } from '@/webapp/Context/ThemeEngine';
+import { ThemeEngine } from 'webapp/Context/ThemeEngine';
 
-import App from '@/webapp/app';
+import App from 'webapp/app';
 
-import store from '@/webapp/redux/store';
+import store from 'webapp/redux/store';
 
 import {
   ElectronAPIRepository,
   ElectronDealsRepository,
   ElectronDBRepository,
   ElectronConfigRepository,
-} from '@/webapp/Repositories/Impl/electron';
+} from 'common/repositories/Impl/electron';
 
-import BaseBinanceRepository from '@/webapp/Repositories/Impl/Binance';
+import BaseBinanceRepository from 'common/repositories/Impl/Binance';
 import {
   BaseGeneralRepository,
   BasePmRepository,
-} from '@/webapp/Repositories/Impl/General';
+} from 'common/repositories/Impl/General';
 
-import { Repository } from '@/webapp/Repositories/interfaces';
+import { Repository } from 'common/repositories/interfaces';
 
 interface ThreeCPMNS {
   Repository: Repository

@@ -1,4 +1,4 @@
-import { ReservedFundsType, ProfileType } from '@/types/config';
+import { ReservedFundsType, ProfileType } from 'types/config';
 
 const getFiltersQueryString = (profileData: ProfileType) => {
   const { general: { defaultCurrency }, statSettings: { reservedFunds, startDate }, id } = profileData;

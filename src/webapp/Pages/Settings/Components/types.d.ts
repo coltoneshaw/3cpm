@@ -3,7 +3,7 @@ import {
   UseTableCellProps, UseSortByOptions,
 } from 'react-table';
 
-import { ReservedFundsType } from '@/types/config';
+import { ReservedFundsType } from 'types/config';
 
 export interface TableRow extends UseExpandedRowProps<ReservedFundsType>, UseTableRowProps<ReservedFundsType> { }
 export interface TableColumn extends UseExpandedInstanceProps<Column> { }

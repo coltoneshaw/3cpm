@@ -13,10 +13,10 @@ import {
   bindMenu,
 } from 'material-ui-popup-state/hooks';
 import { Divider } from '@mui/material';
-import ManageProfileModal from '@/webapp/Features/Profiles/ManageProfileModal';
-import { setSyncData } from '@/webapp/redux/threeCommas/threeCommasSlice';
-import { addConfigProfile, setCurrentProfileById } from '@/webapp/redux/config/configSlice';
-import { useAppDispatch, useAppSelector } from '@/webapp/redux/hooks';
+import ManageProfileModal from 'webapp/Features/Profiles/ManageProfileModal';
+import { setSyncData } from 'webapp/redux/threeCommas/threeCommasSlice';
+import { addConfigProfile, setCurrentProfileById } from 'webapp/redux/config/configSlice';
+import { useAppDispatch, useAppSelector } from 'webapp/redux/hooks';
 
 const ProfileSwitcher = () => {
   const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' });

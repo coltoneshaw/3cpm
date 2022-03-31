@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Switch } from '@mui/material';
 
-import { CustomTable, SettingsEditableCell } from '@/webapp/Components/DataTable/Index';
-import { useAppSelector, useAppDispatch } from '@/webapp/redux/hooks';
-import { configPaths } from '@/webapp/redux/globalFunctions';
-import { updateEditProfileByPath } from '@/webapp/Pages/Settings/Redux/settingsSlice';
+import { CustomTable, SettingsEditableCell } from 'webapp/Components/DataTable/Index';
+import { useAppSelector, useAppDispatch } from 'webapp/redux/hooks';
+import { configPaths } from 'webapp/redux/globalFunctions';
+import { updateEditProfileByPath } from 'webapp/Pages/Settings/Redux/settingsSlice';
 
 import type { SettingTableTypes, Cell } from './types';
 

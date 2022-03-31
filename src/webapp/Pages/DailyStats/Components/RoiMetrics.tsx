@@ -1,11 +1,10 @@
 import React from 'react';
 import moment from 'moment';
-import { getLang } from '@/utils/helperFunctions';
+import CardTooltip from 'webapp/Components/Charts/DataCards/CustomToolTip';
+import { getLang } from 'common/utils/helperFunctions';
 
-import CardTooltip from '@/webapp/Components/Charts/DataCards/CustomToolTip';
-
-import { ProfitArray } from '@/types/DatabaseQueries';
-import { formatCurrency } from '@/utils/granularity';
+import { ProfitArray } from 'types/DatabaseQueries';
+import { formatCurrency } from 'common/utils/granularity';
 
 const lang = getLang();
 

@@ -5,12 +5,17 @@ import {
   ButtonGroup,
   Button,
 } from '@mui/material';
-import { useAppSelector, useAppDispatch } from '@/webapp/redux/hooks';
-import { setEditingProfile } from '@/webapp/Pages/Settings/Redux/settingsSlice';
+import { useAppSelector, useAppDispatch } from 'webapp/redux/hooks';
+import { setEditingProfile } from 'webapp/Pages/Settings/Redux/settingsSlice';
+
+// @ts-ignore
+import { ProfileNameEditor } from 'webapp/Features/Profiles/Components/Index';
+import { ChangelogModal, ToastNotifications } from 'webapp/Features/Index';
+import WriteModeSettings from 'webapp/Pages/Settings/Components/WriteModeSettings';
+import { openLink } from 'common/utils/helperFunctions';
 
 // @ts-ignore
 import { version } from '#/package.json';
-import { openLink } from '@/utils/helperFunctions';
 
 import {
   CurrencySelector,
@@ -19,11 +24,6 @@ import {
   ReservedBankroll,
   StartDatePicker,
 } from './Components/Index';
-
-import { ProfileNameEditor } from '@/webapp/Features/Profiles/Components/Index';
-
-import { ChangelogModal, ToastNotifications } from '@/webapp/Features/Index';
-import WriteModeSettings from '@/webapp/Pages/Settings/Components/WriteModeSettings';
 
 const SettingsPage = () => {
   const dispatch = useAppDispatch();

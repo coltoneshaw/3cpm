@@ -1,7 +1,7 @@
 import fetch from 'electron-fetch';
 
-import type { GithubReleaseType } from '@/webapp/Repositories/Types/GithubRelease';
-import { logToConsole } from '@/utils/logging';
+import { logToConsole } from 'common/utils/logging';
+import type { GithubReleaseType } from 'common/repositories/Types/GithubRelease';
 
 const fetchVersions = async () => {
   try {

@@ -1,11 +1,11 @@
 import React from 'react';
-import { useAppSelector } from '@/webapp/redux/hooks';
+import { useAppSelector } from 'webapp/redux/hooks';
 
 // material UI components
 
 // custom charts
-import { DealSoUtilizationBar, SoDistribution } from '@/webapp/Components/Charts/Bar/index';
-import SpeedometerDiv from '@/webapp/Pages/Stats/Components/SpeedometerDiv';
+import { DealSoUtilizationBar, SoDistribution } from 'webapp/Components/Charts/Bar/index';
+import SpeedometerDiv from 'webapp/Pages/Stats/Components/SpeedometerDiv';
 
 const RiskMonitor = () => {
   const { activeDeals, metricsData } = useAppSelector((state) => state.threeCommas);

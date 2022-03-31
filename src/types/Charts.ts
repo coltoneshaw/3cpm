@@ -5,9 +5,9 @@ import {
 import {
   ProfitArray, QueryPerformanceArray, ActiveDeals, MetricDataType,
   BotPerformanceMetrics, PairPerformanceMetrics, SODistributionArray,
-} from '@/types/DatabaseQueries';
+} from 'types/DatabaseQueries';
 
-import type { DefaultCurrency } from '@/types/config';
+import type { DefaultCurrency } from 'types/config';
 
 export interface SoDistributionType {
   data: ActiveDeals[]

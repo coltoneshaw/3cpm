@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import { ConfigValuesType, ProfileType } from '@/types/config';
-import { defaultConfig, defaultProfile } from '@/utils/defaultConfig';
-import { updateProfileByPath } from '@/webapp/redux/globalFunctions';
-import { logToConsole } from '@/utils/logging';
+import { updateProfileByPath } from 'webapp/redux/globalFunctions';
+import { defaultConfig, defaultProfile } from 'common/utils/defaultConfig';
+import { logToConsole } from 'common/utils/logging';
+import { ConfigValuesType, ProfileType } from 'types/config';
 
 // Define the initial state using that type
 const initialState = {

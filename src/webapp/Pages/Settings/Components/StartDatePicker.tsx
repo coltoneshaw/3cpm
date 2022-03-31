@@ -5,9 +5,9 @@ import moment from 'moment';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import { TextField, FormControl } from '@mui/material';
 
-import { useAppSelector, useAppDispatch } from '@/webapp/redux/hooks';
-import { configPaths } from '@/webapp/redux/globalFunctions';
-import { updateEditProfileByPath } from '@/webapp/Pages/Settings/Redux/settingsSlice';
+import { useAppSelector, useAppDispatch } from 'webapp/redux/hooks';
+import { configPaths } from 'webapp/redux/globalFunctions';
+import { updateEditProfileByPath } from 'webapp/Pages/Settings/Redux/settingsSlice';
 
 const StartDatePicker = () => {
   const startDate = useAppSelector((state) => state.settings.editingProfile.statSettings.startDate);

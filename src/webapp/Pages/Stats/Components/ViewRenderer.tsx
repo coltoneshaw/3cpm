@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { setStorageItem, getStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
 import { RiskMonitor, SummaryStatistics, PerformanceMonitor } from '../Views/Index';
-import { setStorageItem, getStorageItem, storageItem } from '@/webapp/Features/LocalStorage/LocalStorage';
 
 import type { PageIds } from '../types';
 

@@ -7,7 +7,7 @@ import {
   ListItemText,
   Checkbox,
 } from '@mui/material';
-import { ReservedFundsType } from '@/types/config';
+import { ReservedFundsType } from 'types/config';
 
 type TypeAccountSelector = {
   reservedFunds: ReservedFundsType[],

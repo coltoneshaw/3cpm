@@ -2,13 +2,13 @@ import React from 'react';
 import {
   TextField, Button, InputLabel, FormControl, MenuItem, Select,
 } from '@mui/material';
-import { useAppSelector, useAppDispatch } from '@/webapp/redux/hooks';
-import { updateReservedFundsArray } from '@/webapp/redux/config/configActions';
-import { configPaths } from '@/webapp/redux/globalFunctions';
-import { updateEditProfileByPath } from '@/webapp/Pages/Settings/Redux/settingsSlice';
-import { logToConsole } from '@/utils/logging';
-import { showAlert } from '@/webapp/Components/Popups/Popups';
-import { ReservedFundsType } from '@/types/config';
+import { useAppSelector, useAppDispatch } from 'webapp/redux/hooks';
+import { updateReservedFundsArray } from 'webapp/redux/config/configActions';
+import { configPaths } from 'webapp/redux/globalFunctions';
+import { updateEditProfileByPath } from 'webapp/Pages/Settings/Redux/settingsSlice';
+import { showAlert } from 'webapp/Components/Popups/Popups';
+import { logToConsole } from 'common/utils/logging';
+import { ReservedFundsType } from 'types/config';
 
 const validKeys = ['key', 'secret', 'mode'];
 

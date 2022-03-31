@@ -4,20 +4,19 @@ import {
   ComposedChart, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line,
 } from 'recharts';
 
-import type { TooltipType } from '@/types/Charts';
+import type { TooltipType } from 'types/Charts';
 
+import { useAppSelector } from 'webapp/redux/hooks';
+import { getLang } from 'common/utils/helperFunctions';
+import { yAxisWidth, currencyTickFormatter, currencyTooltipFormatter } from 'webapp/Components/Charts/formatting';
+
+import { getStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
+
+import type { DefaultCurrency, ProfileType } from 'types/config';
+import type { DateRange } from 'types/Date';
+
+import { getSelectPairDataByDate, getFiltersQueryString } from 'webapp/Features/3Commas/3Commas';
 import PairSelector from './Components/PairSelector';
-
-import { useAppSelector } from '@/webapp/redux/hooks';
-import { getLang } from '@/utils/helperFunctions';
-import { yAxisWidth, currencyTickFormatter, currencyTooltipFormatter } from '@/webapp/Components/Charts/formatting';
-
-import { getStorageItem, storageItem } from '@/webapp/Features/LocalStorage/LocalStorage';
-
-import type { DefaultCurrency, ProfileType } from '@/types/config';
-import type { DateRange } from '@/types/Date';
-
-import { getSelectPairDataByDate, getFiltersQueryString } from '@/webapp/Features/3Commas/3Commas';
 
 const lang = getLang();
 

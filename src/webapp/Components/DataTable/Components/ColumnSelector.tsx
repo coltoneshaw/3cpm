@@ -8,7 +8,7 @@ import {
   Checkbox,
 } from '@mui/material';
 
-import { setStorageItem, getStorageItem, storageItem } from '@/webapp/Features/LocalStorage/LocalStorage';
+import { setStorageItem, getStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;

@@ -3,12 +3,12 @@ import React from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
-import { parseNumber } from '@/utils/numberFormatting';
-import type { TooltipType, DealPerformanceChartsType } from '@/types/Charts';
-import { dynamicSort } from '@/utils/helperFunctions';
-import { currencyTooltipFormatter } from '@/webapp/Components/Charts/formatting';
+import { parseNumber } from 'common/utils/numberFormatting';
+import type { TooltipType, DealPerformanceChartsType } from 'types/Charts';
+import { dynamicSort } from 'common/utils/helperFunctions';
+import { currencyTooltipFormatter } from 'webapp/Components/Charts/formatting';
 
-import NoData from '@/webapp/Pages/Stats/Components/NoData';
+import NoData from 'webapp/Pages/Stats/Components/NoData';
 
 const CustomTooltip: React.FC<TooltipType<number, string>> = ({ active, payload, formatter }) => {
   if (!active || !payload || !payload[0]?.payload) return null;

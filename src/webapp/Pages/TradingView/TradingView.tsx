@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { useThemeProvidor } from '@/webapp/Context/ThemeEngine';
+import { useThemeProvidor } from 'webapp/Context/ThemeEngine';
 
 const TradingViewPage = () => {
   const tvContainer = React.createRef<HTMLInputElement>();

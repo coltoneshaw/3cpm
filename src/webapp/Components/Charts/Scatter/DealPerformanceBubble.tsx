@@ -7,14 +7,14 @@ import {
   InputLabel, MenuItem, FormControl, Select,
 } from '@mui/material';
 
-import { TooltipType, DealPerformanceChartsType } from '@/types/Charts';
-import { QueryPerformanceArray } from '@/types/DatabaseQueries';
-import { parseNumber } from '@/utils/numberFormatting';
-import NoData from '@/webapp/Pages/Stats/Components/NoData';
-import { dynamicSort } from '@/utils/helperFunctions';
+import { TooltipType, DealPerformanceChartsType } from 'types/Charts';
+import { QueryPerformanceArray } from 'types/DatabaseQueries';
+import { parseNumber } from 'common/utils/numberFormatting';
+import NoData from 'webapp/Pages/Stats/Components/NoData';
+import { dynamicSort } from 'common/utils/helperFunctions';
 
-import { setStorageItem, getStorageItem, storageItem } from '@/webapp/Features/LocalStorage/LocalStorage';
-import { currencyTooltipFormatter } from '@/webapp/Components/Charts/formatting';
+import { setStorageItem, getStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
+import { currencyTooltipFormatter } from 'webapp/Components/Charts/formatting';
 
 const colors = ['#DBEAFE', '#BFDBFE', '#93C5FD', '#60A5FA', '#3B82F6', '#2563EB', '#1D4ED8', '#1E40AF', '#1E3A8A'];
 

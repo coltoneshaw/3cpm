@@ -4,8 +4,8 @@ import type {
 } from 'react-table';
 
 import React from 'react';
-import type { ActiveDeals, QueryBotsType } from '@/types/DatabaseQueries';
-import { SubRowAsync } from '@/webapp/Pages/ActiveDeals/Components';
+import type { ActiveDeals, QueryBotsType } from 'types/DatabaseQueries';
+import { SubRowAsync } from 'webapp/Pages/ActiveDeals/Components';
 
 export interface TableType extends TableOptions<{}> {
   renderRowSubComponent?: typeof SubRowAsync | undefined,

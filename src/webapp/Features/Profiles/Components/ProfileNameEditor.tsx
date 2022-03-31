@@ -1,8 +1,8 @@
 import React from 'react';
 import { TextField } from '@mui/material';
-import { useAppSelector, useAppDispatch } from '@/webapp/redux/hooks';
-import { configPaths } from '@/webapp/redux/globalFunctions';
-import { updateEditProfileByPath } from '@/webapp/Pages/Settings/Redux/settingsSlice';
+import { useAppSelector, useAppDispatch } from 'webapp/redux/hooks';
+import { configPaths } from 'webapp/redux/globalFunctions';
+import { updateEditProfileByPath } from 'webapp/Pages/Settings/Redux/settingsSlice';
 
 const ProfileNameEditor = () => {
   const { name } = useAppSelector((state) => state.settings.editingProfile);

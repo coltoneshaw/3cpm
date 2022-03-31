@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import { defaultProfile } from '@/utils/defaultConfig';
-import { updateProfileByPath } from '@/webapp/redux/globalFunctions';
+import { updateProfileByPath } from 'webapp/redux/globalFunctions';
+import { defaultProfile } from 'common/utils/defaultConfig';
 
 const initialState = {
   editingProfile: defaultProfile,

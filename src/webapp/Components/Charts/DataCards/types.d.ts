@@ -1,5 +1,5 @@
-import type { supportedCurrencies } from '@/utils/granularity';
-import type descriptions from '@/descriptions';
+import type { supportedCurrencies } from 'common/utils/granularity';
+import type descriptions from 'common/descriptions';
 
 export type Keys =
   'active-deals' | 'max-risk'

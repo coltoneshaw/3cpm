@@ -1,7 +1,7 @@
 import { Grid, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { parseNumber } from '@/utils/numberFormatting';
-import { ActiveDeals, MarketOrdersType } from '@/types/DatabaseQueries';
+import { parseNumber } from 'common/utils/numberFormatting';
+import { ActiveDeals, MarketOrdersType } from 'types/DatabaseQueries';
 
 type Calc = {
   addFunds: number

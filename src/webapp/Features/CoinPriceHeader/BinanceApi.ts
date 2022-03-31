@@ -1,6 +1,6 @@
 import fetch from 'electron-fetch';
-import { BinanceTicketPrice } from '@/webapp/Repositories/Types/Binance';
-import { logToConsole } from '@/utils/logging';
+import { logToConsole } from 'common/utils/logging';
+import { BinanceTicketPrice } from 'common/repositories/Types/Binance';
 
 const fetchCoinPricesBinance = async () => {
   try {

@@ -6,11 +6,11 @@ import {
   ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Scatter,
 } from 'recharts';
 
-import type { BotPerformanceMetrics } from '@/types/DatabaseQueries';
-import type { TooltipType, BotPerformanceChartsType } from '@/types/Charts';
+import type { BotPerformanceMetrics } from 'types/DatabaseQueries';
+import type { TooltipType, BotPerformanceChartsType } from 'types/Charts';
 
-import { parseNumber } from '@/utils/numberFormatting';
-import { currencyTickFormatter, currencyTooltipFormatter } from '@/webapp/Components/Charts/formatting';
+import { parseNumber } from 'common/utils/numberFormatting';
+import { currencyTickFormatter, currencyTooltipFormatter } from 'webapp/Components/Charts/formatting';
 import { usePerformanceSortAndFilter, useLocalDataWithHeight } from './Components/barCustomState';
 
 const defaultSortAndFilter = {

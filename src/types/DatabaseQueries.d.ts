@@ -1,4 +1,4 @@
-import { FetchBotPerformanceMetrics, FetchPairPerformanceMetrics } from '@/webapp/Features/3Commas/Type_3Commas';
+import { FetchBotPerformanceMetrics, FetchPairPerformanceMetrics } from 'webapp/Features/3Commas/Type_3Commas';
 
 export type QueryPerformanceArray = {
   performance_id: string

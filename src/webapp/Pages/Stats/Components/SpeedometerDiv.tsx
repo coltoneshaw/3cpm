@@ -1,8 +1,8 @@
 import React from 'react';
-import MaxRiskSpeedometer from '@/webapp/Components/Charts/Speedometer';
-import BalancePie from '@/webapp/Components/Charts/Pie';
-import type { MetricDataType } from '@/types/DatabaseQueries';
-import type { DefaultCurrency } from '@/types/config';
+import MaxRiskSpeedometer from 'webapp/Components/Charts/Speedometer';
+import BalancePie from 'webapp/Components/Charts/Pie';
+import type { MetricDataType } from 'types/DatabaseQueries';
+import type { DefaultCurrency } from 'types/config';
 
 interface SpeedometerType {
   metrics: MetricDataType

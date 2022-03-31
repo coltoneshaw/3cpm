@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button, ButtonGroup } from '@mui/material';
 
-import { useAppSelector } from '@/webapp/redux/hooks';
+import { useAppSelector } from 'webapp/redux/hooks';
 
 import './Stats.scss';
 
-import { UpdateDataButton } from '@/webapp/Components/Buttons/Index';
+import { UpdateDataButton } from 'webapp/Components/Buttons/Index';
 import {
   RoiCards, ViewRenderer, useViewRenderer, StatFiltersDiv,
 } from './Components/Index';

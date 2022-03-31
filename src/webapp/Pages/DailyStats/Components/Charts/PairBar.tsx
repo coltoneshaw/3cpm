@@ -2,14 +2,14 @@ import React from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
-import NoData from '@/webapp/Pages/Stats/Components/NoData';
-import { currencyTickFormatter, currencyTooltipFormatter } from '@/webapp/Components/Charts/formatting';
+import NoData from 'webapp/Pages/Stats/Components/NoData';
+import { currencyTickFormatter, currencyTooltipFormatter } from 'webapp/Components/Charts/formatting';
 
-import type { DefaultCurrency } from '@/types/config';
+import type { DefaultCurrency } from 'types/config';
 
-import type { TooltipType } from '@/types/Charts';
+import type { TooltipType } from 'types/Charts';
 import type { QueryDealByPairByDayReturn, BotQueryDealByDayReturn } from '../3Commas/type_dailydashboard';
-import { dynamicSort } from '@/utils/helperFunctions';
+import { dynamicSort } from 'common/utils/helperFunctions';
 
 type Params = {
   data: QueryDealByPairByDayReturn[] | BotQueryDealByDayReturn[]

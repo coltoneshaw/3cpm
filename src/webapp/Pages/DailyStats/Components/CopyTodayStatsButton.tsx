@@ -4,9 +4,9 @@ import {
   Button, ButtonGroup,
 } from '@mui/material';
 
-import { ToastNotifications } from '@/webapp/Features/Index';
-import { MetricDataType } from '@/types/DatabaseQueries';
-import { formatCurrency } from '@/utils/granularity';
+import { ToastNotifications } from 'webapp/Features/Index';
+import { MetricDataType } from 'types/DatabaseQueries';
+import { formatCurrency } from 'common/utils/granularity';
 
 interface ButtonPropsType {
   style?: object,

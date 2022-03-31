@@ -3,13 +3,13 @@ import {
   FormControl, InputLabel, MenuItem, Select,
   ListItemText, Checkbox, ListSubheader,
 } from '@mui/material';
-import { supportedCurrencies } from '@/utils/granularity';
-import { logToConsole } from '@/utils/logging';
-import { showAlert } from '@/webapp/Components/Popups/Popups';
+import { showAlert } from 'webapp/Components/Popups/Popups';
 
-import { useAppSelector, useAppDispatch } from '@/webapp/redux/hooks';
-import { configPaths } from '@/webapp/redux/globalFunctions';
-import { updateEditProfileByPath } from '@/webapp/Pages/Settings/Redux/settingsSlice';
+import { useAppSelector, useAppDispatch } from 'webapp/redux/hooks';
+import { configPaths } from 'webapp/redux/globalFunctions';
+import { updateEditProfileByPath } from 'webapp/Pages/Settings/Redux/settingsSlice';
+import { logToConsole } from 'common/utils/logging';
+import { supportedCurrencies } from 'common/utils/granularity';
 
 const returnCurrencyMenuItems = (currencyArray: typeof supportedCurrencies) => {
   const usd: (typeof supportedCurrencies.USD)[] = [];

@@ -1,9 +1,9 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { useAppSelector } from '@/webapp/redux/hooks';
+import { useAppSelector } from 'webapp/redux/hooks';
 
-import MetricCard from '@/webapp/Components/Charts/DataCards';
+import MetricCard from 'webapp/Components/Charts/DataCards';
 
-import { MetricDataType } from '@/types/DatabaseQueries';
+import { MetricDataType } from 'types/DatabaseQueries';
 
 const RoiCards = ({ metricsData, currentView }: { currentView: string, metricsData: MetricDataType }) => {
   const { defaultCurrency } = useAppSelector((state) => state.config.currentProfile.general);

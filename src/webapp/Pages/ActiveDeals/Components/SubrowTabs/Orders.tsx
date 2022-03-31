@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatCurrency } from '@/utils/granularity';
+import { formatCurrency } from 'common/utils/granularity';
 
 const dateFormatter = (dateString: string) => new Date(dateString).toLocaleDateString(undefined, {
   month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit',

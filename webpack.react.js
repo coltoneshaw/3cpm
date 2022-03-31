@@ -15,6 +15,10 @@ module.exports = {
     alias: {
       '@': path.resolve(__dirname, 'src'),
       '#': path.resolve(__dirname, '.'),
+      'webapp': path.resolve(__dirname, 'src/webapp'),
+      'electron': path.resolve(__dirname, 'src/electron'),
+      'common': path.resolve(__dirname, 'src/common'),
+      'types': path.resolve(__dirname, 'src/types'),
     },
     extensions: ['.tsx', '.ts', '.js'],
   },

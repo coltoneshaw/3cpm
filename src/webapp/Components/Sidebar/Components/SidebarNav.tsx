@@ -1,7 +1,7 @@
 import React from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import { NavLink } from 'react-router-dom';
-import { setStorageItem, storageItem } from '@/webapp/Features/LocalStorage/LocalStorage';
+import { setStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
 
 interface Props {
   // In your case

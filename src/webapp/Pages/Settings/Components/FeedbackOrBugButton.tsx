@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import React from 'react';
 
-import { openLink } from '@/utils/helperFunctions';
+import { openLink } from 'common/utils/helperFunctions';
 
 const FeedbackOrBugButton = () => (
   <Button

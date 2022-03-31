@@ -3,17 +3,17 @@ import { Grid, TextField } from '@mui/material';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import moment from 'moment';
 
-import { UpdateDataButton } from '@/webapp/Components/Buttons/Index';
-import { useAppSelector } from '@/webapp/redux/hooks';
-import { PairBar, CopyTodayStatsButton } from '@/webapp/Pages/DailyStats/Components';
-import { useDailyState } from './logic';
-import { AllCurrencySelector, AccountSelector } from '@/webapp/Components/Selectors';
+import { UpdateDataButton } from 'webapp/Components/Buttons/Index';
+import { useAppSelector } from 'webapp/redux/hooks';
+import { PairBar, CopyTodayStatsButton } from 'webapp/Pages/DailyStats/Components';
+import { AllCurrencySelector, AccountSelector } from 'webapp/Components/Selectors';
 
-import { SummaryProfitByDay } from '@/webapp/Components/Charts/Area';
-import { ProfitByDay } from '@/webapp/Components/Charts/Bar';
+import { SummaryProfitByDay } from 'webapp/Components/Charts/Area';
+import { ProfitByDay } from 'webapp/Components/Charts/Bar';
+import { useDailyState } from './logic';
 
 import RoiMetrics from './Components/RoiMetrics';
-import { formatCurrency } from '@/utils/granularity';
+import { formatCurrency } from 'common/utils/granularity';
 
 import './DailyStats.scss';
 

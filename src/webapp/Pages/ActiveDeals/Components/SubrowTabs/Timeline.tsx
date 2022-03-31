@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { FormControlLabel, Checkbox } from '@mui/material';
-import { parseNumber } from '@/utils/numberFormatting';
+import { parseNumber } from 'common/utils/numberFormatting';
 // import { formatCurrency } from '@/utils/granularity';
 
-import { dynamicSort } from '@/utils/helperFunctions';
-import type { MarketOrdersType, Deals } from '@/types/DatabaseQueries';
-import { calcSafetyArray } from '@/utils/formulas';
+import { dynamicSort } from 'common/utils/helperFunctions';
+import type { MarketOrdersType, Deals } from 'types/DatabaseQueries';
+import { calcSafetyArray } from 'common/utils/formulas';
 
 const dateFormatter = (dateString: string) => new Date(dateString).toLocaleDateString(undefined, {
   month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit',

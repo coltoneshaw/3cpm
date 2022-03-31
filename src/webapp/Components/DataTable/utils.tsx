@@ -1,4 +1,4 @@
-import { getStorageItem, setStorageItem } from '@/webapp/Features/LocalStorage/LocalStorage';
+import { getStorageItem, setStorageItem } from 'webapp/Features/LocalStorage/LocalStorage';
 
 export const sortReturn = (isSorted: boolean, isSortedDesc: boolean | undefined) => {
   if (!isSorted) return '';

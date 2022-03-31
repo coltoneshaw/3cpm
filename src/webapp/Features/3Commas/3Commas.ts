@@ -2,9 +2,9 @@ import moment from 'moment';
 
 import {
   UpdateFunctionType,
-} from '@/types/DatabaseQueries';
-import { ProfileType } from '@/types/config';
-import { DateRange } from '@/types/Date';
+} from 'types/DatabaseQueries';
+import { ProfileType } from 'types/config';
+import { DateRange } from 'types/Date';
 
 import getFiltersQueryString from './queryString';
 import {
@@ -12,7 +12,7 @@ import {
 } from './DataQueries/deals';
 import { fetchBotPerformanceMetrics, botQuery } from './DataQueries/bots';
 import getAccountDataFunction from './DataQueries/accounts';
-import { logToConsole } from '@/utils/logging';
+import { logToConsole } from 'common/utils/logging';
 
 // these queries use the deals database but are pairs only. Can probably combine this with the deals queries or create a new folder.
 import { fetchPairPerformanceMetrics, getSelectPairDataByDate } from './DataQueries/pairs';

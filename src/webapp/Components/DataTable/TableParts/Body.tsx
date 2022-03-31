@@ -8,7 +8,7 @@ import {
 import classNames from 'classnames';
 import RenderRows from './Row';
 
-import { SubRowAsync } from '@/webapp/Pages/ActiveDeals/Components';
+import { SubRowAsync } from 'webapp/Pages/ActiveDeals/Components';
 
 type TypeTableBody = {
   bodyProps: TableBodyProps,

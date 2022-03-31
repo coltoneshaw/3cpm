@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import { ToastNotifications } from '@/webapp/Features/Index';
+import { ToastNotifications } from 'webapp/Features/Index';
 
 interface TypeSaveButton {
   saveFunction: any

@@ -4,7 +4,7 @@ import {
 } from 'react-table';
 import classNames from 'classnames';
 import RenderCells from './Cell';
-import { SubRowAsync } from '@/webapp/Pages/ActiveDeals/Components';
+import { SubRowAsync } from 'webapp/Pages/ActiveDeals/Components';
 
 const subRowCheck = (
   row: Row<object>,

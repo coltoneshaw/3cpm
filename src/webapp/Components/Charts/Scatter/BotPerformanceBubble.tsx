@@ -6,16 +6,16 @@ import {
   InputLabel, MenuItem, FormControl, Select,
 } from '@mui/material';
 
-import { currencyTooltipFormatter, yAxisWidth, currencyTickFormatter } from '@/webapp/Components/Charts/formatting';
+import { currencyTooltipFormatter, yAxisWidth, currencyTickFormatter } from 'webapp/Components/Charts/formatting';
 
-import { TooltipType, BotPerformanceChartsType } from '@/types/Charts';
-import { BotPerformanceMetrics } from '@/types/DatabaseQueries';
-import { parseNumber } from '@/utils/numberFormatting';
-import NoData from '@/webapp/Pages/Stats/Components/NoData';
+import { TooltipType, BotPerformanceChartsType } from 'types/Charts';
+import { BotPerformanceMetrics } from 'types/DatabaseQueries';
+import { parseNumber } from 'common/utils/numberFormatting';
+import NoData from 'webapp/Pages/Stats/Components/NoData';
 
-import { dynamicSort } from '@/utils/helperFunctions';
+import { dynamicSort } from 'common/utils/helperFunctions';
 
-import { setStorageItem, getStorageItem, storageItem } from '@/webapp/Features/LocalStorage/LocalStorage';
+import { setStorageItem, getStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
 
 const colors = ['#DBEAFE', '#BFDBFE', '#93C5FD', '#60A5FA', '#3B82F6', '#2563EB', '#1D4ED8', '#1E40AF', '#1E3A8A'];
 

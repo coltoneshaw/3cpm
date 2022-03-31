@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import configSlice from '@/webapp/redux/config/configSlice';
-import threeCommasSlice from '@/webapp/redux/threeCommas/threeCommasSlice';
-import settingsSlice from '@/webapp/Pages/Settings/Redux/settingsSlice';
-import bannerSlice from '@/webapp/Features/UpdateBanner/redux/bannerSlice';
+import configSlice from 'webapp/redux/config/configSlice';
+import threeCommasSlice from 'webapp/redux/threeCommas/threeCommasSlice';
+import settingsSlice from 'webapp/Pages/Settings/Redux/settingsSlice';
+import bannerSlice from 'webapp/Features/UpdateBanner/redux/bannerSlice';
 
 const store = configureStore({
   reducer: {

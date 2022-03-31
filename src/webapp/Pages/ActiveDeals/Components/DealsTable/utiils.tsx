@@ -1,5 +1,5 @@
 import React from 'react';
-import CardTooltip from '@/webapp/Components/Charts/DataCards/CustomToolTip';
+import CardTooltip from 'webapp/Components/Charts/DataCards/CustomToolTip';
 import { TableRow } from './dealstableTypes';
 
 export const returnErrorTooltip = (errorMessage: string, value: string) => (

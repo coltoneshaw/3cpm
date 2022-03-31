@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-// import { QueryBotsType } from '@/types/3CommasApi';
-// import { ReservedFundsType } from '@/types/config';
-import type { BotTableTypes } from '@/webapp/Pages/BotPlanner/Components/tableTypes';
-import type { SettingTableTypes } from '@/webapp/Pages/Settings/Components/types';
+// import { QueryBotsType } from 'types/3CommasApi';
+// import { ReservedFundsType } from 'types/config';
+import type { BotTableTypes } from 'webapp/Pages/BotPlanner/Components/tableTypes';
+import type { SettingTableTypes } from 'webapp/Pages/Settings/Components/types';
 
 type BotTable = BotTableTypes['cell'] & {
   handleEditCellChangeCommitted: BotTableTypes['handleEditCellChangeCommitted']

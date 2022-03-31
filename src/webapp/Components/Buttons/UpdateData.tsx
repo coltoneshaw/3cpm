@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import SyncIcon from '@mui/icons-material/Sync';
 
-import { useAppSelector } from '@/webapp/redux/hooks';
-import { updateAllData } from '@/webapp/redux/threeCommas/Actions';
+import { useAppSelector } from 'webapp/redux/hooks';
+import { updateAllData } from 'webapp/redux/threeCommas/Actions';
 
-import { ToastNotifications } from '@/webapp/Features/Index';
+import { ToastNotifications } from 'webapp/Features/Index';
 
 interface TypeButtonProps {
   style?: {},

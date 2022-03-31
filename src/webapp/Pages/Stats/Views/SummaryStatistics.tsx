@@ -1,12 +1,12 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import { useAppSelector } from '@/webapp/redux/hooks';
+import { useAppSelector } from 'webapp/redux/hooks';
 
 // material UI components
 
 // custom charts
-import { SummaryProfitByDay } from '@/webapp/Components/Charts/Area';
-import { PairPerformanceBar, BotPerformanceBar, ProfitByDay } from '@/webapp/Components/Charts/Bar';
+import { SummaryProfitByDay } from 'webapp/Components/Charts/Area';
+import { PairPerformanceBar, BotPerformanceBar, ProfitByDay } from 'webapp/Components/Charts/Bar';
 
 const SummaryStatistics = () => {
   const { profitData, performanceData } = useAppSelector((state) => state.threeCommas);

@@ -4,17 +4,17 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
 
-import NoData from '@/webapp/Pages/Stats/Components/NoData';
+import NoData from 'webapp/Pages/Stats/Components/NoData';
 
-import { getLang } from '@/utils/helperFunctions';
+import { getLang } from 'common/utils/helperFunctions';
 
-import { ProfitArrayChart, TooltipType } from '@/types/Charts';
+import { ProfitArrayChart, TooltipType } from 'types/Charts';
 
 import {
   yAxisWidth,
   currencyTickFormatter,
   currencyTooltipFormatter,
-} from '@/webapp/Components/Charts/formatting';
+} from 'webapp/Components/Charts/formatting';
 
 const lang = getLang();
 

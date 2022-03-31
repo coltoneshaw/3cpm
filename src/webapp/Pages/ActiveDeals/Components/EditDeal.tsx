@@ -2,12 +2,12 @@ import {
   Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useAppSelector } from '@/webapp/redux/hooks';
-import type { Deals } from '@/types/3cAPI';
-import { updateAllData } from '@/webapp/redux/threeCommas/Actions';
-import { useThemeProvidor } from '@/webapp/Context/ThemeEngine';
-import { logToConsole } from '@/utils/logging';
-import { showAlert } from '@/webapp/Components/Popups/Popups';
+import { useAppSelector } from 'webapp/redux/hooks';
+import { updateAllData } from 'webapp/redux/threeCommas/Actions';
+import { useThemeProvidor } from 'webapp/Context/ThemeEngine';
+import { showAlert } from 'webapp/Components/Popups/Popups';
+import { logToConsole } from 'common/utils/logging';
+import type { Deals } from 'types/3cAPI';
 import './EditDeal.scss';
 
 const EditDeal = ({ originalDeal, open, onClose }: any) => {

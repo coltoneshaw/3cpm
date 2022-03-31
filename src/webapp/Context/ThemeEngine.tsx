@@ -1,8 +1,8 @@
 import React, {
   createContext, useState, useEffect, CSSProperties, useMemo,
 } from 'react';
-import { setStorageItem, getStorageItem } from '@/webapp/Features/LocalStorage/LocalStorage';
-import { logToConsole } from '@/utils/logging';
+import { setStorageItem, getStorageItem } from 'webapp/Features/LocalStorage/LocalStorage';
+import { logToConsole } from 'common/utils/logging';
 
 // TODO - see about setting this to something other than null for the default Value
 // @ts-ignore

@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatCurrency, CurrencyKeys } from '@/utils/granularity';
+import { formatCurrency, CurrencyKeys } from 'common/utils/granularity';
 
 export const numberCell = (
   value: string | number | undefined,

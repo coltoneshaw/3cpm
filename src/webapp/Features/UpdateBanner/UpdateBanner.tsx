@@ -1,8 +1,8 @@
 import React from 'react';
 import Close from '@mui/icons-material/Close';
 
-import { openLink } from '@/utils/helperFunctions';
-import { useAppDispatch, useAppSelector } from '@/webapp/redux/hooks';
+import { openLink } from 'common/utils/helperFunctions';
+import { useAppDispatch, useAppSelector } from 'webapp/redux/hooks';
 import { updateBannerData, Banner } from './redux/bannerSlice';
 import './UpdateBanner.scss';
 

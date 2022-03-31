@@ -1,10 +1,10 @@
-import { ProfileType } from '@/types/config';
-import { defaultConfig } from '@/utils/defaultConfig';
-import type { Deals } from '@/types/3cAPI';
-import { UpdateFunctionType } from '@/types/DatabaseQueries';
-import type { getDealOrders } from '@/main/3Commas/index';
-import type { GithubReleaseType } from '@/webapp/Repositories/Types/GithubRelease';
-import type { BinanceTicketPrice } from '@/webapp/Repositories/Types/Binance';
+import { defaultConfig } from 'common/utils/defaultConfig';
+import type { getDealOrders } from 'electron/main/3Commas/index';
+import { UpdateFunctionType } from 'types/DatabaseQueries';
+import type { Deals } from 'types/3cAPI';
+import { ProfileType } from 'types/config';
+import type { BinanceTicketPrice } from 'common/repositories/Types/Binance';
+import type { GithubReleaseType } from 'common/repositories/Types/GithubRelease';
 
 declare global {
   interface Window {

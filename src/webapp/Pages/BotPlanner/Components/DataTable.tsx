@@ -2,26 +2,26 @@
 import React, { useMemo } from 'react';
 
 import { Column } from 'react-table';
-import { numberCell, formattedHeader } from '@/webapp/Components/DataTable/Components/columns';
-import { useAppSelector } from '@/webapp/redux/hooks';
-import { storageItem } from '@/webapp/Features/LocalStorage/LocalStorage';
+import { numberCell, formattedHeader } from 'webapp/Components/DataTable/Components/columns';
+import { useAppSelector } from 'webapp/redux/hooks';
+import { storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
 
 import {
   hideCheckbox, isEnabledSwitch, openIn3c, deleteIcon,
 } from './columns';
 
-import { parseNumber } from '@/utils/numberFormatting';
+import { parseNumber } from 'common/utils/numberFormatting';
 import {
   calcDeviation,
   botPerDealMaxFunds,
   calcBotMaxInactiveFunds,
   calcBotMaxFunds,
   calcDropMetrics,
-} from '@/utils/formulas';
+} from 'common/utils/formulas';
 
-import { QueryBotsType } from '@/types/DatabaseQueries';
+import { QueryBotsType } from 'types/DatabaseQueries';
 
-import { CustomTable, BotsEditableCell } from '@/webapp/Components/DataTable/Index';
+import { CustomTable, BotsEditableCell } from 'webapp/Components/DataTable/Index';
 import { BotTableTypes } from './tableTypes';
 
 const EditableCell = BotsEditableCell;

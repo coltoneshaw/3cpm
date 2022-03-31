@@ -1,7 +1,7 @@
 import { Checkbox, FormControlLabel } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useAppSelector } from '@/webapp/redux/hooks';
-import { updateNotificationsSettingsGlobal } from '@/webapp/redux/config/configActions';
+import { useAppSelector } from 'webapp/redux/hooks';
+import { updateNotificationsSettingsGlobal } from 'webapp/redux/config/configActions';
 
 /**
  *

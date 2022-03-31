@@ -6,11 +6,11 @@ import {
   InputLabel, MenuItem, FormControl, Select,
 } from '@mui/material';
 
-import { PairPerformanceMetrics } from '@/types/DatabaseQueries';
-import { TooltipType, PairPerformanceType } from '@/types/Charts';
+import { PairPerformanceMetrics } from 'types/DatabaseQueries';
+import { TooltipType, PairPerformanceType } from 'types/Charts';
 
-import { parseNumber } from '@/utils/numberFormatting';
-import { currencyTickFormatter, currencyTooltipFormatter } from '@/webapp/Components/Charts/formatting';
+import { parseNumber } from 'common/utils/numberFormatting';
+import { currencyTickFormatter, currencyTooltipFormatter } from 'webapp/Components/Charts/formatting';
 import { usePerformanceSortAndFilter, useLocalDataWithHeight } from './Components/barCustomState';
 
 const defaultSortAndFilter = {

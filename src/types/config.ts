@@ -1,4 +1,4 @@
-import type { supportedCurrencies } from '@/utils/granularity';
+import type { supportedCurrencies } from 'common/utils/granularity';
 
 export type DefaultCurrency = (keyof typeof supportedCurrencies)[] | [];
 

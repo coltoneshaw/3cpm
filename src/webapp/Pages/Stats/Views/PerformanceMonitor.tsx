@@ -3,20 +3,20 @@ import React, { useEffect, useState } from 'react';
 // material UI components
 import { Grid, TextField, Box } from '@mui/material';
 import DateRangePicker, { DateRange } from '@mui/lab/DateRangePicker';
-import { useAppSelector } from '@/webapp/redux/hooks';
+import { useAppSelector } from 'webapp/redux/hooks';
 
 // custom charts
-import { BotPerformanceBubble, DealPerformanceBubble } from '@/webapp/Components/Charts/Scatter';
-import { DealAllocationBar, SoDealDistribution } from '@/webapp/Components/Charts/Bar';
-import PairPerformanceByDate from '@/webapp/Components/Charts/Line';
+import { BotPerformanceBubble, DealPerformanceBubble } from 'webapp/Components/Charts/Scatter';
+import { DealAllocationBar, SoDealDistribution } from 'webapp/Components/Charts/Bar';
+import PairPerformanceByDate from 'webapp/Components/Charts/Line';
 
 import {
   fetchBotPerformanceMetrics,
   fetchPairPerformanceMetrics,
   fetchPerformanceDataFunction,
   fetchSoData,
-} from '@/webapp/Features/3Commas/3Commas';
-import { DateRange as Type_DateRange } from '@/types/Date';
+} from 'webapp/Features/3Commas/3Commas';
+import { DateRange as Type_DateRange } from 'types/Date';
 
 const PerformanceMonitor = () => {
   const { currentProfile } = useAppSelector((state) => state.config);

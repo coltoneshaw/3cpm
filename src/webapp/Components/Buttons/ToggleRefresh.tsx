@@ -5,9 +5,9 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 
 import './ToggleRefresh.scss';
-import { useAppDispatch, useAppSelector } from '@/webapp/redux/hooks';
-import { setAutoRefresh } from '@/webapp/redux/threeCommas/threeCommasSlice';
-import { refreshFunction } from '@/webapp/redux/threeCommas/Actions';
+import { useAppDispatch, useAppSelector } from 'webapp/redux/hooks';
+import { setAutoRefresh } from 'webapp/redux/threeCommas/threeCommasSlice';
+import { refreshFunction } from 'webapp/redux/threeCommas/Actions';
 
 interface TypeButtonProps {
   style?: object,

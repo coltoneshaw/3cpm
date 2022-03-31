@@ -1,4 +1,4 @@
-import { ProfileType } from '@/types/config';
+import { ProfileType } from 'types/config';
 
 export const configPaths = {
   apis: {

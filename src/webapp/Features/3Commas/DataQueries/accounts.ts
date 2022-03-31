@@ -1,6 +1,6 @@
-import { QueryAccountsType } from '@/types/DatabaseQueries';
-import getFiltersQueryString from '@/webapp/Features/3Commas/queryString';
-import { ProfileType } from '@/types/config';
+import { QueryAccountsType } from 'types/DatabaseQueries';
+import getFiltersQueryString from 'webapp/Features/3Commas/queryString';
+import { ProfileType } from 'types/config';
 
 /**
  *

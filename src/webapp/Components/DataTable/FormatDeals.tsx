@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { ActiveDeals } from '@/types/DatabaseQueries';
-import { calcDeviation } from '@/utils/formulas';
+import { ActiveDeals } from 'types/DatabaseQueries';
+import { calcDeviation } from 'common/utils/formulas';
 // import { parseNumber } from '@/utils/numberFormatting';
 
 // @ts-ignore

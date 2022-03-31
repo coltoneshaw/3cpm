@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import { useAppSelector } from '@/webapp/redux/hooks';
+import { useAppSelector } from 'webapp/redux/hooks';
 
+import { UpdateDataButton } from 'webapp/Components/Buttons/Index';
+import { ColumnSelector, useColumnSelector } from 'webapp/Components/DataTable/Components';
 import { DataTable, SaveButton, Risk } from './Components';
-import { UpdateDataButton } from '@/webapp/Components/Buttons/Index';
-import { ColumnSelector, useColumnSelector } from '@/webapp/Components/DataTable/Components';
 
 import './BotPlanner.scss';
 
-import { calcDropMetrics } from '@/utils/formulas';
-import { QueryBotsType } from '@/types/DatabaseQueries';
+import { calcDropMetrics } from 'common/utils/formulas';
+import { QueryBotsType } from 'types/DatabaseQueries';
 
 const blankObject: QueryBotsType = {
   id: Math.random().toString(16).slice(2),

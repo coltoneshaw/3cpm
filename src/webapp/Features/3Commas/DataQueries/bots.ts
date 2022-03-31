@@ -1,8 +1,8 @@
-import getFiltersQueryString from '@/webapp/Features/3Commas/queryString';
-import { initDate, DateRangeToSQLString } from '@/webapp/Features/3Commas/3Commas';
-import { ProfileType } from '@/types/config';
-import type { QueryBotsType } from '@/types/DatabaseQueries';
-import type { DateRange } from '@/types/Date';
+import getFiltersQueryString from 'webapp/Features/3Commas/queryString';
+import { initDate, DateRangeToSQLString } from 'webapp/Features/3Commas/3Commas';
+import { ProfileType } from 'types/config';
+import type { QueryBotsType } from 'types/DatabaseQueries';
+import type { DateRange } from 'types/Date';
 import { FetchBotPerformanceMetrics } from '../Type_3Commas';
 
 /**

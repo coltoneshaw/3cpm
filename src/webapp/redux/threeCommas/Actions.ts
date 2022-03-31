@@ -1,27 +1,27 @@
 import dotProp from 'dot-prop';
-import store from '@/webapp/redux/store';
-import { logToConsole } from '@/utils/logging';
-import { showAlert } from '@/webapp/Components/Popups/Popups';
+import store from 'webapp/redux/store';
+import { showAlert } from 'webapp/Components/Popups/Popups';
 
 import {
   setData,
   setIsSyncing,
   setSyncData,
   setAutoRefresh,
-} from '@/webapp/redux/threeCommas/threeCommasSlice';
-import { initialState } from '@/webapp/redux/threeCommas/initialState';
+} from 'webapp/redux/threeCommas/threeCommasSlice';
+import { initialState } from 'webapp/redux/threeCommas/initialState';
 
-import { updateLastSyncTime } from '@/webapp/redux/config/configSlice';
-import { updateBannerData } from '@/webapp/Features/UpdateBanner/redux/bannerSlice';
-import type { ProfileType, ReservedFundsType } from '@/types/config';
-import type { QueryPerformanceArray } from '@/types/DatabaseQueries';
-
-// Utilities
+import { updateLastSyncTime } from 'webapp/redux/config/configSlice';
+import { updateBannerData } from 'webapp/Features/UpdateBanner/redux/bannerSlice';
 import {
   fetchDealDataFunction, fetchPerformanceDataFunction, getActiveDealsFunction,
   fetchBotPerformanceMetrics, fetchPairPerformanceMetrics, botQuery,
   getAccountDataFunction, updateThreeCData, fetchSoData,
-} from '@/webapp/Features/3Commas/3Commas';
+} from 'webapp/Features/3Commas/3Commas';
+import type { ProfileType, ReservedFundsType } from 'types/config';
+import type { QueryPerformanceArray } from 'types/DatabaseQueries';
+
+// Utilities
+import { logToConsole } from 'common/utils/logging';
 
 /*
  *

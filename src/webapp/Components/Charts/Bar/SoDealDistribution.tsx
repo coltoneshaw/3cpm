@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
-import NoData from '@/webapp/Pages/Stats/Components/NoData';
-import { currencyTooltipFormatter } from '@/webapp/Components/Charts/formatting';
-import { parseNumber } from '@/utils/numberFormatting';
+import NoData from 'webapp/Pages/Stats/Components/NoData';
+import { currencyTooltipFormatter } from 'webapp/Components/Charts/formatting';
+import { parseNumber } from 'common/utils/numberFormatting';
 
-import type { TooltipType, SoDealDisType } from '@/types/Charts';
-import type { SODistributionArray } from '@/types/DatabaseQueries';
+import type { TooltipType, SoDealDisType } from 'types/Charts';
+import type { SODistributionArray } from 'types/DatabaseQueries';
 
 const CustomTooltip: React.FC<TooltipType<number, string>> = ({
   active, payload, formatter,

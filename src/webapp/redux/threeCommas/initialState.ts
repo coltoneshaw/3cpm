@@ -1,4 +1,4 @@
-import { ReservedFundsType } from '@/types/config';
+import { ReservedFundsType } from 'types/config';
 
 import type {
   QueryBotsType,
@@ -7,7 +7,7 @@ import type {
   MetricDataType,
   ProfitArray,
   PerformanceMetrics,
-} from '@/types/DatabaseQueries';
+} from 'types/DatabaseQueries';
 
 export { MetricDataType as Type_MetricData, PerformanceMetrics, ReservedFundsType };
 // Define the initial state using that type

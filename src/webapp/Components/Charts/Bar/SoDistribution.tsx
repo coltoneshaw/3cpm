@@ -2,12 +2,12 @@ import React from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
-import NoData from '@/webapp/Pages/Stats/Components/NoData';
-import { currencyTooltipFormatter } from '@/webapp/Components/Charts/formatting';
+import NoData from 'webapp/Pages/Stats/Components/NoData';
+import { currencyTooltipFormatter } from 'webapp/Components/Charts/formatting';
 
-import { parseNumber } from '@/utils/numberFormatting';
+import { parseNumber } from 'common/utils/numberFormatting';
 
-import type { TooltipType, SoDistributionType } from '@/types/Charts';
+import type { TooltipType, SoDistributionType } from 'types/Charts';
 
 interface SODistributionArray {
   SO: number

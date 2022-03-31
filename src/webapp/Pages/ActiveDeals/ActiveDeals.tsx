@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { UpdateDataButton, ToggleRefreshButton } from '@/webapp/Components/Buttons/Index';
-import { formatDeals } from '@/webapp/Components/DataTable/Index';
-import { ColumnSelector, useColumnSelector } from '@/webapp/Components/DataTable/Components';
+import { UpdateDataButton, ToggleRefreshButton } from 'webapp/Components/Buttons/Index';
+import { formatDeals } from 'webapp/Components/DataTable/Index';
+import { ColumnSelector, useColumnSelector } from 'webapp/Components/DataTable/Components';
 
-import { useAppSelector } from '@/webapp/redux/hooks';
-import MetricCard from '@/webapp/Components/Charts/DataCards';
+import { useAppSelector } from 'webapp/redux/hooks';
+import MetricCard from 'webapp/Components/Charts/DataCards';
 import { NotificationsSettings, DealsTable } from './Components/index';
 
 import './ActiveDeals.scss';
-import { ActiveDeals } from '@/types/DatabaseQueries';
+import { ActiveDeals } from 'types/DatabaseQueries';
 
 const columnList = [
   {

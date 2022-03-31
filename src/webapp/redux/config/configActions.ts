@@ -1,16 +1,15 @@
 /* eslint-disable no-restricted-globals */
 import {
   setConfig, setCurrentProfile, updateCurrentProfileByPath, deleteProfileById, updateNotificationsSettings,
-} from '@/webapp/redux/config/configSlice';
-import { setSyncData } from '@/webapp/redux/threeCommas/threeCommasSlice';
-import { logToConsole } from '@/utils/logging';
-import { showAlert, showConfirm } from '@/webapp/Components/Popups/Popups';
+} from 'webapp/redux/config/configSlice';
+import { setSyncData } from 'webapp/redux/threeCommas/threeCommasSlice';
+import { showAlert, showConfirm } from 'webapp/Components/Popups/Popups';
+import { logToConsole } from 'common/utils/logging';
 
+import { removeDuplicatesInArray } from 'common/utils/helperFunctions';
 import {
   ConfigValuesType, NotificationsSettingsType, ProfileType, ReservedFundsType,
-} from '@/types/config';
-
-import { removeDuplicatesInArray } from '@/utils/helperFunctions';
+} from 'types/config';
 
 import store from '../store';
 

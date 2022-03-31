@@ -2,23 +2,23 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 
 import './App.global.scss';
 import { MemoryRouter } from 'react-router-dom';
+import { MainWindow } from 'webapp/Pages/Index';
+import { logToConsole } from 'common/utils/logging';
+import { useAppSelector, useAppDispatch } from 'webapp/redux/hooks';
+import { updateConfig } from 'webapp/redux/config/configActions';
+import {
+  updateBannerData,
+} from 'webapp/Features/UpdateBanner/redux/bannerSlice';
 import Sidebar from './Components/Sidebar/Sidebar';
-import { MainWindow } from '@/webapp/Pages/Index';
-import { logToConsole } from '@/utils/logging';
 
 import { useThemeProvidor } from './Context/ThemeEngine';
 
 import UpdateBanner from './Features/UpdateBanner/UpdateBanner';
 
-import { useAppSelector, useAppDispatch } from '@/webapp/redux/hooks';
-import { updateConfig } from '@/webapp/redux/config/configActions';
 import { updateAllDataQuery } from './redux/threeCommas/Actions';
 
 // @ts-ignore
 import { version } from '#/package.json';
-import {
-  updateBannerData,
-} from '@/webapp/Features/UpdateBanner/redux/bannerSlice';
 
 const App = () => {
   const themeEngine = useThemeProvidor();

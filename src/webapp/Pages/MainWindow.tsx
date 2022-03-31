@@ -7,16 +7,16 @@ import {
   StatsPage,
   ActiveDealsPage,
   DailyStats,
-} from '@/webapp/Pages/Index';
-import { logToConsole } from '@/utils/logging';
+} from 'webapp/Pages/Index';
+
+import CoinPriceHeader from 'webapp/Features/CoinPriceHeader/CoinPriceHeader';
+import { useAppSelector } from 'webapp/redux/hooks';
+import { ChangelogModal } from 'webapp/Features/Index';
+import { getStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
+import { logToConsole } from 'common/utils/logging';
 
 // @ts-ignore
 import { version } from '#/package.json';
-
-import CoinPriceHeader from '@/webapp/Features/CoinPriceHeader/CoinPriceHeader';
-import { useAppSelector } from '@/webapp/redux/hooks';
-import { ChangelogModal } from '@/webapp/Features/Index';
-import { getStorageItem, storageItem } from '@/webapp/Features/LocalStorage/LocalStorage';
 
 const MainWindow = () => {
   const navigate = useNavigate();

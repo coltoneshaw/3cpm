@@ -1,10 +1,10 @@
 import moment from 'moment';
-import getFiltersQueryString from '@/webapp/Features/3Commas/queryString';
-import { initDate, DateRangeToSQLString } from '@/webapp/Features/3Commas/3Commas';
-import { ProfileType } from '@/types/config';
-import type { DateRange } from '@/types/Date';
+import getFiltersQueryString from 'webapp/Features/3Commas/queryString';
+import { initDate, DateRangeToSQLString } from 'webapp/Features/3Commas/3Commas';
+import { ProfileType } from 'types/config';
+import type { DateRange } from 'types/Date';
 
-import { PairByDateType } from '@/types/DatabaseQueries';
+import { PairByDateType } from 'types/DatabaseQueries';
 import { FetchPairPerformanceMetrics } from '../Type_3Commas';
 
 const fetchPairPerformanceMetrics = async (profileData: ProfileType, oDate?: DateRange) => {

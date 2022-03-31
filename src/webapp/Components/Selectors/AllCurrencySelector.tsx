@@ -9,10 +9,10 @@ import {
   Checkbox,
   ListSubheader,
 } from '@mui/material';
-import { supportedCurrencies } from '@/utils/granularity';
-import { logToConsole } from '@/utils/logging';
+import { supportedCurrencies } from 'common/utils/granularity';
+import { logToConsole } from 'common/utils/logging';
 
-import { DefaultCurrency } from '@/types/config';
+import { DefaultCurrency } from 'types/config';
 
 const returnCurrencyMenuItems = (currencyArray: typeof supportedCurrencies) => {
   const usd: (typeof supportedCurrencies.USD)[] = [];

@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { isValid } from 'date-fns';
-import { useAppSelector } from '@/webapp/redux/hooks';
+import { useAppSelector } from 'webapp/redux/hooks';
 
-import type { ProfileType } from '@/types/config';
+import type { ProfileType } from 'types/config';
 import {
   queryDealByPairByDay, queryDealByBotByDay, queryProfitDataByDay, getTotalProfit, getActiveDealsFunction,
-} from '@/webapp/Pages/DailyStats/Components';
-import { ActiveDeals, ProfitArray } from '@/types/DatabaseQueries';
+} from 'webapp/Pages/DailyStats/Components';
+import { ActiveDeals, ProfitArray } from 'types/DatabaseQueries';
 import { BotQueryDealByDayReturn, QueryDealByPairByDayReturn } from './Components/3Commas/type_dailydashboard';
 
 const oldestYear = 2015;

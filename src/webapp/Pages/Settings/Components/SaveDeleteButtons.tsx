@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Button } from '@mui/material';
-import { useAppSelector } from '@/webapp/redux/hooks';
-import { updateConfig, deleteProfileByIdGlobal } from '@/webapp/redux/config/configActions';
-import { syncNewProfileData } from '@/webapp/redux/threeCommas/Actions';
+import { useAppSelector } from 'webapp/redux/hooks';
+import { updateConfig, deleteProfileByIdGlobal } from 'webapp/redux/config/configActions';
+import { syncNewProfileData } from 'webapp/redux/threeCommas/Actions';
 
-import LoaderIcon from '@/webapp/Components/icons/Loading/Loading';
-import { ProfileType } from '@/types/config';
-import { logToConsole } from '@/utils/logging';
+import LoaderIcon from 'webapp/Components/icons/Loading/Loading';
+import { ProfileType } from 'types/config';
+import { logToConsole } from 'common/utils/logging';
 
 interface SubmitButtons {
   setOpen: any

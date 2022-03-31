@@ -5,7 +5,7 @@ import {
   DialogContent,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useThemeProvidor } from '@/webapp/Context/ThemeEngine';
+import { useThemeProvidor } from 'webapp/Context/ThemeEngine';
 
 import './changelogModal.scss';
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import { ProfileType } from '@/types/config';
-import { getLang } from '@/utils/helperFunctions';
+import { getLang } from 'common/utils/helperFunctions';
+import { ProfileType } from 'types/config';
 
 const lang = getLang();
 

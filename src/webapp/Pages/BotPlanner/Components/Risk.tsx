@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { useAppSelector } from '@/webapp/redux/hooks';
-import { QueryBotsType } from '@/types/DatabaseQueries';
+import { useAppSelector } from 'webapp/redux/hooks';
+import { QueryBotsType } from 'types/DatabaseQueries';
 
-import MetricCard from '@/webapp/Components/Charts/DataCards';
+import MetricCard from 'webapp/Components/Charts/DataCards';
 
 // Need to import metric contexts here
 const Risk = ({ localBotData }: { localBotData: QueryBotsType[] }) => {

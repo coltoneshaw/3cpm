@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import {
   Select, InputLabel, FormControl, MenuItem, Checkbox, ListItemText, Input,
 } from '@mui/material';
-import { useAppSelector } from '@/webapp/redux/hooks';
+import { useAppSelector } from 'webapp/redux/hooks';
 
-import { setStorageItem, storageItem } from '@/webapp/Features/LocalStorage/LocalStorage';
+import { setStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
 
 type PairSelectorType = {
   pairs: { pair: string, opacity: number }[]

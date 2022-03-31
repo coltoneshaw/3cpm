@@ -6,14 +6,14 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Delete from '@mui/icons-material/Delete';
-import { deleteProfileByIdGlobal } from '@/webapp/redux/config/configActions';
-import { useAppSelector } from '@/webapp/redux/hooks';
+import { deleteProfileByIdGlobal } from 'webapp/redux/config/configActions';
+import { useAppSelector } from 'webapp/redux/hooks';
 // import AddIcon from '@mui/icons-material/Add';
 
 // import TextField from '@mui/material/TextField';
-import { ConfigValuesType, ProfileType } from '@/types/config';
+import { ConfigValuesType, ProfileType } from 'types/config';
 
-import { useThemeProvidor } from '@/webapp/Context/ThemeEngine';
+import { useThemeProvidor } from 'webapp/Context/ThemeEngine';
 
 interface ProfileModalProps {
   open: boolean

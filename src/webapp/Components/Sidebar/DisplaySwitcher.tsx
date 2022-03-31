@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import { Moon, Sun } from '@/webapp/Components/icons/Index';
+import { Moon, Sun } from 'webapp/Components/icons/Index';
 
-import { useThemeProvidor } from '@/webapp/Context/ThemeEngine';
+import { useThemeProvidor } from 'webapp/Context/ThemeEngine';
 
 const DisplaySwitcher = () => {
   const [display, changeDisplay] = useState(false);

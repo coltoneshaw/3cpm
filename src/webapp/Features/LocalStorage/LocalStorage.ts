@@ -1,4 +1,4 @@
-import { tryParseJSON } from '@/utils/helperFunctions';
+import { tryParseJSON } from 'common/utils/helperFunctions';
 
 const storageItem = {
   navigation: {

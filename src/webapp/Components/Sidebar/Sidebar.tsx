@@ -5,13 +5,13 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import {
   ActiveDealsIcon, TradingViewLogo, BotPlannerIcon, Coffee, Cog, PieChart,
-} from '@/webapp/Components/icons/Index';
+} from 'webapp/Components/icons/Index';
 import { SidebarNav, SidebarLink } from './Components';
-import { ProfileSwitcher } from '@/webapp/Features/Profiles/Components/Index';
+import { ProfileSwitcher } from 'webapp/Features/Profiles/Components/Index';
 
 import DisplaySwitcher from './DisplaySwitcher';
 
-import { openLink } from '@/utils/helperFunctions';
+import { openLink } from 'common/utils/helperFunctions';
 
 /**
  * TODO:

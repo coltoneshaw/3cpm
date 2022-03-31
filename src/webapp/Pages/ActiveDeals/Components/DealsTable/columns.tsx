@@ -2,9 +2,9 @@ import React from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import { TableRow, Cell } from './dealstableTypes';
-import { OpenIn3Commas } from '@/webapp/Components/DataTable/Components';
-import { formatCurrency } from '@/utils/granularity';
-import { parseNumber } from '@/utils/numberFormatting';
+import { OpenIn3Commas } from 'webapp/Components/DataTable/Components';
+import { formatCurrency } from 'common/utils/granularity';
+import { parseNumber } from 'common/utils/numberFormatting';
 
 export const IdHeader = (toggleAllRowsExpanded: (value: boolean | undefined) => void) => (
   <span

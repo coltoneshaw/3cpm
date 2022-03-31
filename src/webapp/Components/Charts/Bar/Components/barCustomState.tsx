@@ -3,10 +3,10 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import {
   setStorageItem,
   getStorageItem, storageItem,
-} from '@/webapp/Features/LocalStorage/LocalStorage';
-import { BotPerformanceMetrics, PairPerformanceMetrics } from '@/types/DatabaseQueries';
-import { dynamicSort } from '@/utils/helperFunctions';
-import { filterData } from '@/webapp/Components/Charts/formatting';
+} from 'webapp/Features/LocalStorage/LocalStorage';
+import { BotPerformanceMetrics, PairPerformanceMetrics } from 'types/DatabaseQueries';
+import { dynamicSort } from 'common/utils/helperFunctions';
+import { filterData } from 'webapp/Components/Charts/formatting';
 
 const defaultFilter = 'all';
 const defaultSort = '-total_profit';

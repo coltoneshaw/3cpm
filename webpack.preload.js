@@ -5,12 +5,16 @@ module.exports = {
   // Build Mode
   mode: 'development',
   // Electron Entrypoint
-  entry: './src/preload.ts',
+  entry: './src/electron/preload.ts',
   target: 'electron-main',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
       '#': path.resolve(__dirname, '.'),
+      'webapp': path.resolve(__dirname, 'src/webapp'),
+      'electron': path.resolve(__dirname, 'src/electron'),
+      'common': path.resolve(__dirname, 'src/common'),
+      'types': path.resolve(__dirname, 'src/types'),
     },
     extensions: ['.tsx', '.ts', '.js'],
   },

@@ -6,14 +6,14 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine,
 } from 'recharts';
-import { ProfitArray } from '@/types/DatabaseQueries';
-import { getLang, removeDuplicatesInArray } from '@/utils/helperFunctions';
+import { ProfitArray } from 'types/DatabaseQueries';
+import { getLang, removeDuplicatesInArray } from 'common/utils/helperFunctions';
 
-import { yAxisWidth, currencyTickFormatter, currencyTooltipFormatter } from '@/webapp/Components/Charts/formatting';
-import NoData from '@/webapp/Pages/Stats/Components/NoData';
+import { yAxisWidth, currencyTickFormatter, currencyTooltipFormatter } from 'webapp/Components/Charts/formatting';
+import NoData from 'webapp/Pages/Stats/Components/NoData';
 
-import { ProfitArrayChart, TooltipType } from '@/types/Charts';
-import { setStorageItem, getStorageItem, storageItem } from '@/webapp/Features/LocalStorage/LocalStorage';
+import { ProfitArrayChart, TooltipType } from 'types/Charts';
+import { setStorageItem, getStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
 
 const lang = getLang();
 
