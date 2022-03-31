@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
 // import { ThemeProvider } from '@material-ui/core/styles';
@@ -63,8 +63,10 @@ const repo: Repository = {
 
 // TODO: find a more react friendly way of making Repository accessible
 window.ThreeCPM.Repository = repo;
-
-render(
+const container = document.getElementById('root');
+if (!container) throw new Error('Failed to find the root element');
+const root = createRoot(container);
+root.render(
   <React.StrictMode>
     <LocalizationProvider dateAdapter={DateAdapter}>
       <Provider store={store}>
@@ -74,6 +76,4 @@ render(
       </Provider>
     </LocalizationProvider>
   </React.StrictMode>,
-  document.getElementById('root'),
-
 );

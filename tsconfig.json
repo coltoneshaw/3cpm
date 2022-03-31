@@ -33,6 +33,11 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "types": [
+      "react/next",
+      "react-dom/next",
+      "jest"
+    ]
   }
 }
