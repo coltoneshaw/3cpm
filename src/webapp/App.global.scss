@@ -2,94 +2,91 @@
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
- @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap");
 
+body {
+  font-family: "Open Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-
- body {
-   font-family: 'Open Sans', sans-serif;
-   -webkit-font-smoothing: antialiased;
-   -moz-osx-font-smoothing: grayscale;
- }
-
- html, body, #root, .rootDiv {
-   height: 100%;
-   margin: 0;
-   min-height: 100vh;
-   min-width: 1200px;
-   width: 100vw;
- }
-
+html,
+body,
+#root,
+.rootDiv {
+  height: 100%;
+  margin: 0;
+  min-height: 100vh;
+  min-width: 1200px;
+  width: 100vw;
+}
 
 .rootDiv {
-   display: flex;  /* enables flex content for its children */
-   box-sizing: border-box;
-   flex-direction: row;
- }
+  display: flex; /* enables flex content for its children */
+  box-sizing: border-box;
+  flex-direction: row;
+}
 
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
 
- code {
-   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-     monospace;
- }
+h1 {
+  font-size: 2em;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: var(--color-text-lightbackground);
+}
 
- h1 {
-   font-size: 2em;
-   letter-spacing: 1px;
-   font-weight: 600;
-   color: var(--color-text-lightbackground)
- }
+#sidebar {
+  width: 60px;
+  background-color: var(--color-primary);
+  height: 100%;
+  min-height: 100vh;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
 
- #sidebar {
-     width: 60px;
-     background-color: var(--color-primary);
-     height: 100%;
-     min-height: 100vh;
-     flex-shrink: 0;
-     box-sizing: border-box;
+.text-center {
+  text-align: center;
+}
 
- }
+.mainWindow {
+  flex-grow: 1;
+  background-color: var(--color-background);
+  padding: 3% 1% 1% 1%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
 
- .text-center {
-   text-align: center;
- }
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  color: var(--color-text-lightbackground);
+}
 
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
 
- .mainWindow{
-     flex-grow: 1;
-     background-color: var(--color-background);
-     padding: 3% 1% 1% 1%;
-     overflow: auto;
-     display: flex;
-     flex-direction: column;
- }
+.padding button {
+  margin: 10px;
+}
 
- .flex-row{
-     display: flex;
-     flex-direction: row;
-     color: var(--color-text-lightbackground)
- }
+.boxData {
+  border-radius: 15px;
+  background-color: var(--color-background-light);
+  text-align: center;
+  color: var(--color-text-lightbackground);
+  box-shadow: 0 5px 10px var(--color-boxshadow-1),
+    0 15px 40px var(--color-boxshadow-2);
+  padding: 1em;
+}
 
- .flex-column{
-     display: flex;
-     flex-direction: column;
- }
-
- .padding button {
-     margin: 10px
- }
-
- .boxData {
-     border-radius: 15px;
-     background-color: var(--color-background-light);
-     text-align: center;
-     color: var(--color-text-lightbackground);
-     box-shadow: 0 5px 10px var(--color-boxshadow-1), 0 15px 40px var(--color-boxshadow-2);
-     padding: 1em;
- }
-
-
- .iconSpinning {
+.iconSpinning {
   animation: spin-animation 1s infinite;
   animation-timing-function: linear;
   display: inline-block;
@@ -97,11 +94,11 @@
 
 @keyframes spin-animation {
   0% {
-      transform: rotate(0deg);
+    transform: rotate(0deg);
   }
 
   100% {
-      transform: rotate(-360deg);
+    transform: rotate(-360deg);
   }
 }
 
@@ -117,7 +114,7 @@
 Material Switch Overrides.
 **/
 
-.MuiSwitch-track{
+.MuiSwitch-track {
   background-color: var(--color-secondary-light50) !important;
 }
 
@@ -133,44 +130,36 @@ Material Switch Overrides.
   background-color: var(--color-secondary-light25) !important;
 }
 
-
-
 .MuiSelect-root,
 .MuiFormLabel-root,
 .MuiInputBase-input,
 .MuiSelect-icon,
 .MuiIconButton-label,
 .MuiFormHelperText-root,
-.MuiTab-root 
- {
+.MuiTab-root {
   color: var(--color-text-lightbackground) !important;
 }
 
 .MuiOutlinedInput-notchedOutline {
   border-color: var(--color-text-lightbackground) !important;
-  opacity: .5;
-
+  opacity: 0.5;
 }
 
-
 .MuiInput-underline:before {
-  border-bottom: 1px solid var(--color-text-lightbackground)  !important;
-  opacity: .6 !important;
+  border-bottom: 1px solid var(--color-text-lightbackground) !important;
+  opacity: 0.6 !important;
 }
 
 .MuiInput-underline:after {
-  border-bottom: 1px solid var(--color-CTA)  !important;
-  opacity: .6 !important;
+  border-bottom: 1px solid var(--color-CTA) !important;
+  opacity: 0.6 !important;
 }
-
 
 .secondaryButton-outline {
   background-color: none !important;
   color: var(--color-secondary-light50) !important;
   border: 1px solid var(--color-secondary-light50) !important;
 }
-
-
 
 .primaryButton-outline {
   color: var(--color-primary-light25) !important;
@@ -197,56 +186,50 @@ Material Switch Overrides.
   border: 1px solid var(--color-CTA-light25) !important;
 }
 
-
 // .MuiCheckbox-colorSecondary.Mui-checked,
 // .MuiButton-textPrimary  {
 //   color: var(--color-secondary) !important;
 // }
 
-.MuiCheckbox-colorSecondary.Mui-checked  {
+.MuiCheckbox-colorSecondary.Mui-checked {
   color: var(--color-secondary) !important;
 }
 
 .recharts-text,
-.current-value{
+.current-value {
   fill: var(--color-text-lightbackground) !important;
 }
-
 
 .headerButtonsAndKPIs {
   flex-wrap: wrap;
   justify-content: center;
-  padding-bottom: .5em;
+  padding-bottom: 0.5em;
   align-items: center;
 
   .activeDealCards {
     flex-wrap: nowrap;
-    justify-content: flex-start; 
+    justify-content: flex-start;
   }
 
-  .headerButtons{
+  .headerButtons {
     flex-basis: 20%;
     align-items: flex-end;
     display: flex;
     flex-direction: row;
     align-self: flex-end;
   }
-  
-  
-  @media only screen and (max-width: 1550px)  {
 
+  @media only screen and (max-width: 1550px) {
     .activeDealCards {
-        justify-content: center; 
-        padding-bottom: .5em;
+      justify-content: center;
+      padding-bottom: 0.5em;
     }
 
-    .headerButtons{
+    .headerButtons {
       align-items: center;
       flex-direction: row;
+    }
   }
-
-  }
-
 }
 
 .monospace-cell,

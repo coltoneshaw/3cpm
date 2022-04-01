@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { logToConsole } from 'common/utils/logging';
 
+import {
+  ActiveDeals, QueryAccountsType, QueryBotsType, ProfitArray,
+} from 'types/DatabaseQueries';
 import { initialState } from './initialState';
 
 import type {
   SetDataType, Type_MetricData, PerformanceMetrics, SyncDataType,
 } from './initialState';
-import {
-  ActiveDeals, QueryAccountsType, QueryBotsType, ProfitArray,
-} from 'types/DatabaseQueries';
 
 const dispatchError = (message: string) => {
   logToConsole('error', message);

@@ -7,7 +7,7 @@ import {
 
 import { Deals } from 'types/3cAPI';
 
-const { contextBridge, ipcRenderer } = require('electron');
+import { contextBridge, ipcRenderer } from 'electron';
 
 async function setupContextBridge() {
   contextBridge.exposeInMainWorld('mainPreload', {

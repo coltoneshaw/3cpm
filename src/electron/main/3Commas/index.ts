@@ -4,14 +4,13 @@ import type { defaultConfig } from 'common/utils/defaultConfig';
 import { logToConsole } from 'common/utils/logging';
 
 import { findAndNotifyNewDeals } from 'electron/main/Notifications/notifications';
-import {
-  bots, getAccountDetail, deals, getAccountSummary, getDealOrders, updateDeal,
-} from './api';
 
 import { UpdateFunctionType } from 'types/DatabaseQueries';
 import { ProfileType } from 'types/config';
-
-const log = require('electron-log');
+import log from 'electron-log';
+import {
+  bots, getAccountDetail, deals, getAccountSummary, getDealOrders, updateDeal,
+} from './api';
 
 async function getDealData(type: 'autoSync' | 'fullSync', options: UpdateFunctionType, profileData: ProfileType) {
   return deals(options.offset, type, profileData)

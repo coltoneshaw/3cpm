@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { UpdateDataButton, ToggleRefreshButton } from 'webapp/Components/Buttons/Index';
+import type { ActiveDeals } from 'types/DatabaseQueries';
+
 import { formatDeals } from 'webapp/Components/DataTable/Index';
 import { ColumnSelector, useColumnSelector } from 'webapp/Components/DataTable/Components';
 
@@ -8,7 +10,6 @@ import MetricCard from 'webapp/Components/Charts/DataCards';
 import { NotificationsSettings, DealsTable } from './Components/index';
 
 import './ActiveDeals.scss';
-import { ActiveDeals } from 'types/DatabaseQueries';
 
 const columnList = [
   {
