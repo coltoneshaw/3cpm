@@ -1,35 +1,22 @@
 const path = require('path');
+const { merge } = require('webpack-merge');
+const common = require('./webpack.common')
 
-module.exports = {
-  externals: { 'better-sqlite3': 'commonjs2 better-sqlite3' },
+module.exports = merge(common, {
+  externals: {
+    'better-sqlite3': 'commonjs2 better-sqlite3',
+    '3commas-api-node': 'commonjs2 3commas-api-node'
+  },
   // Build Mode
   mode: 'development',
   // Electron Entrypoint
-  entry: './src/electron/main/main.ts',
+  entry: {
+    'main': './src/electron/main/main.ts',
+    'preload': './src/electron/preload.ts'
+  },
   target: 'electron-main',
   optimization: {
     minimize: false,
   },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-      '#': path.resolve(__dirname, '.'),
-      'webapp': path.resolve(__dirname, 'src/webapp'),
-      'electron': path.resolve(__dirname, 'src/electron'),
-      'common': path.resolve(__dirname, 'src/common'),
-      'types': path.resolve(__dirname, 'src/types'),
-    },
-    extensions: ['.tsx', '.ts', '.js'],
-  },
-  module: {
-    rules: [{
-      test: /\.ts$/,
-      include: /src/,
-      use: [{ loader: 'ts-loader' }],
-    }],
-  },
-  output: {
-    path: `${__dirname}/dist`,
-    filename: 'main.js',
-  },
-};
+
+});
