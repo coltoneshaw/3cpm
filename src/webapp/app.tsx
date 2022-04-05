@@ -4,11 +4,8 @@ import './App.global.scss';
 import { MemoryRouter } from 'react-router-dom';
 import { MainWindow } from 'webapp/Pages/Index';
 import { logToConsole } from 'common/utils/logging';
-import { useAppSelector, useAppDispatch } from 'webapp/redux/hooks';
+import { useAppSelector } from 'webapp/redux/hooks';
 import { updateConfig } from 'webapp/redux/config/configActions';
-import {
-  updateBannerData,
-} from 'webapp/Features/UpdateBanner/redux/bannerSlice';
 import Sidebar from './Components/Sidebar/Sidebar';
 
 import { useThemeProvidor } from './Context/ThemeEngine';
@@ -16,37 +13,18 @@ import { useThemeProvidor } from './Context/ThemeEngine';
 import UpdateBanner from './Features/UpdateBanner/UpdateBanner';
 
 import { updateAllDataQuery } from './redux/threeCommas/Actions';
-
-// @ts-ignore
-import { version } from '#/package.json';
-import fetchVersions from './Features/UpdateBanner/UpdateApiFetch';
+import fetchVersions from './Features/UpdateBanner/fetchVersion';
 
 const App = () => {
   const themeEngine = useThemeProvidor();
   const currentProfile = useAppSelector((state) => state.config.currentProfile);
-  const dispatch = useAppDispatch();
   const [profile, updateLocalProfile] = useState(() => currentProfile);
   const { styles } = themeEngine;
 
   useEffect(() => {
     updateConfig();
+    fetchVersions();
   }, []);
-
-  useEffect(() => {
-    fetchVersions()
-      .then((versionData) => {
-        if (!versionData || !versionData[0]) return;
-        const currentVersion = versionData.filter((release: any) => !release.prerelease)[0];
-        if (`v${version}` !== currentVersion.tag_name) {
-          dispatch(updateBannerData({
-            show: true,
-            message: currentVersion.tag_name,
-            type: 'updateVersion',
-          }));
-        }
-      });
-  }, []);
-
   useLayoutEffect(() => {
     if (currentProfile.id === profile.id) return;
     if (

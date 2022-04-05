@@ -4,7 +4,9 @@
 
 import log from 'electron-log';
 import ThreeCommasAPI from './3commaslib';
-import { deals } from '@/tests/mocks/mockData';
+import mocks from '@/tests/mocks/mockData';
+
+const deals = mocks.threeCommas.DealsArray;
 
 const error = {
   error: 'not_found',

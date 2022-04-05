@@ -1,5 +1,8 @@
 import { ProfileType } from 'types/config';
 
+import store from 'webapp/redux/store';
+import { logout } from 'webapp/redux/config/configSlice';
+
 export const configPaths = {
   apis: {
     threeC: {
@@ -62,3 +65,7 @@ export const updateProfileByPath = (data: any, profileData: ProfileType, path: a
 
   return profileData;
 };
+
+export async function logoutGlobally() {
+  await store.dispatch(logout());
+}

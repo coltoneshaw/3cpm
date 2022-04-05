@@ -2,7 +2,6 @@ import { sub, getTime } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfigValuesType, ProfileType } from 'types/config';
 
-// @ts-ignore
 import { version } from '#/package.json';
 
 const configSchema = {

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import { useAppSelector } from 'webapp/redux/hooks';
 import { getStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
+import fetchHandler from 'webapp/utils/fetchHandler';
 import type { BinanceTicketPrice } from './binanceTypes';
-import fetchCoinPricesBinance from './BinanceApi';
 import AddCoinModal from './AddCoinModal';
 
 import './CoinPriceHeader.scss';
@@ -14,9 +14,9 @@ const CoinPriceHeader = () => {
   const [coinNames, updateCoinNames] = useState<string[]>([]);
 
   const fetchNewCoinData = (update?: string) => {
-    fetchCoinPricesBinance()
+    fetchHandler<BinanceTicketPrice[]>('https://api.binance.com/api/v3/ticker/price')
       .then((data) => {
-        if (!data || selectedCoins.length === 0) return;
+        if (data instanceof Error || !data || selectedCoins.length === 0) return;
         const filteredCoins = data.filter((coin) => selectedCoins.includes(coin.symbol));
         updateCoinData(filteredCoins);
         if (update === 'firstUpdate') updateCoinNames(data.map((coin) => coin.symbol));

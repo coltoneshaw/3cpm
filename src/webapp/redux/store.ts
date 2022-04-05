@@ -1,4 +1,6 @@
-import { configureStore } from '@reduxjs/toolkit';
+import {
+  configureStore,
+} from '@reduxjs/toolkit';
 import configSlice from 'webapp/redux/config/configSlice';
 import threeCommasSlice from 'webapp/redux/threeCommas/threeCommasSlice';
 import settingsSlice from 'webapp/Pages/Settings/Redux/settingsSlice';

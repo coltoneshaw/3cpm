@@ -5,7 +5,7 @@
 // src/mocks/handlers.js
 import { rest } from 'msw';
 
-import mocks from './mockData';
+import mocks from '@/tests/mocks/mockData';
 
 export default [
   rest.get('https://api.3commas.io/public/api/ver1/deals/:dealID/show', (req, res, ctx) => {
@@ -48,9 +48,6 @@ export default [
     ctx.status(200),
     ctx.json(mocks.GitHubReleases),
   )),
-
-  // Mocking a network error to handle when the client doesn't have connection.
-  rest.get('https://badurl.com*', (req, res) => res.networkError('Network request failed')),
 
   rest.get('https://api.github.com/repos/3cpm/desktop*', (req, res, ctx) => res(
     ctx.status(200),

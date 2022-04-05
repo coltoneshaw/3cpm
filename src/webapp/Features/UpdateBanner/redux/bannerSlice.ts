@@ -19,6 +19,10 @@ export const bannerSlice = createSlice({
       state.type = type;
     },
   },
+  extraReducers: {
+    'config/logout': () => initialState,
+  },
+
 });
 
 export const {

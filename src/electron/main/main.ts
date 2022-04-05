@@ -9,7 +9,6 @@ import installExtension, {
 } from 'electron-devtools-installer';
 import contextMenu from 'electron-context-menu';
 
-import fetchVersions from 'webapp/Features/UpdateBanner/UpdateApiFetch';
 import { logToConsole } from 'common/utils/logging';
 import {
   update, query, checkOrMakeTables, run, deleteAllData, upsert,
@@ -203,8 +202,6 @@ ipcMain.handle('api-deals-update', async (
   profileData: ProfileType,
   deal: Deals.Params.UpdateDeal,
 ): Promise<Deals.Responses.Deal | false | unknown> => updateDeal(profileData, deal));
-
-ipcMain.handle('pm-versions', async () => fetchVersions());
 
 // eslint-disable-next-line import/prefer-default-export
 export { win };

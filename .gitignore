@@ -5,3 +5,4 @@ build/*.provisionprofile
 commit.sh
 .env
 .eslintcache
+coverage

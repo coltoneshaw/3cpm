@@ -68,6 +68,7 @@ export const configSlice = createSlice({
       };
       state.config = newConfig;
     },
+    logout: () => initialState,
   },
 });
 
@@ -77,6 +78,7 @@ export const {
   setCurrentProfileById,
   updateLastSyncTime,
   updateNotificationsSettings,
+  logout,
 } = configSlice.actions;
 
 export default configSlice.reducer;

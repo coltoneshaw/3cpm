@@ -24,6 +24,9 @@ export const settingsSlice = createSlice({
     },
 
   },
+  extraReducers: {
+    'config/logout': () => initialState,
+  },
 });
 
 export const {

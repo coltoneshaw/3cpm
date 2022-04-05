@@ -55,3 +55,8 @@ export type GithubReleaseType = {
   'zipball_url': string // "https://api.github.com/repos/coltoneshaw/3c-portfolio-manager/zipball/v1.0.0",
   'body': string // it's long.
 };
+
+export interface GithubAPIError {
+  'message': 'Not Found',
+  'documentation_url': string
+}

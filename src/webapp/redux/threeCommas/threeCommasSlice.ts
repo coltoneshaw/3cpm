@@ -70,7 +70,9 @@ export const threeCommasSlice = createSlice({
           break;
       }
     },
-
+  },
+  extraReducers: {
+    'config/logout': () => initialState,
   },
 });
 
