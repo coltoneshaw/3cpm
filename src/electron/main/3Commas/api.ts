@@ -211,7 +211,7 @@ async function getDealsThatAreUpdated(
   { id, lastSyncTime: incomingLastSyncTime }: { id: string, lastSyncTime: number | null },
 ) {
   const responseArray = [];
-  let response: Deals.Responses.Deal[];
+  let response: Deals.Responses.Deal[] | [] | false;
   const offsetMax = 250000;
   const perOffset = (perSyncOffset) || 1000;
   let oldestDate;
@@ -231,7 +231,7 @@ async function getDealsThatAreUpdated(
       offset,
       scope: ['active', 'completed', 'finished'],
     });
-    if (response.length > 0) { responseArray.push(...response); }
+    if (response && response.length > 0) { responseArray.push(...response); }
 
     // this pulls the oldest date of the final item in the array.
     oldestDate = new Date(response[response.length - 1].updated_at).getTime();
@@ -284,7 +284,7 @@ async function getDealsUpdate(perSyncOffset: number, type: 'autoSync' | 'fullSyn
     };
   }
 
-  let activeDeals = <[] | Deals.Responses.Deal[]>[];
+  let activeDeals: Deals.Responses.Deal[] | [] = [];
 
   if (type === 'autoSync') {
     activeDeals = await getActiveDeals(api, perSyncOffset);
@@ -403,9 +403,7 @@ async function getAccountDetail(profileData: ProfileType) {
   if (!api) return [];
 
   const accountData = await api.accounts();
-  if (!accountData) {
-    return [];
-  }
+  if (accountData.length === 0) return [];
   const array: QueryAccountsType[] = [];
   const accountIDs = profileData.statSettings.reservedFunds.filter((a) => a.is_enabled).map((a) => a.id);
   const filteredAccountData = accountData.filter((a: any) => accountIDs.includes(a.id));
@@ -463,7 +461,6 @@ async function getAccountSummary(profileData?: ProfileType, key?: string, secret
 async function updateDeal(profileData: ProfileType, deal: Deals.Params.UpdateDeal) {
   const api = threeCapi(profileData);
   if (!api) return false;
-
   return api.updateDeal(deal);
 }
 

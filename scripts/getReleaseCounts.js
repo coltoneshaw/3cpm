@@ -1,5 +1,3 @@
-const fetch = require('electron-fetch').default;
-
 const fetchVersions = async () => {
   const response = await fetch(
     'https://api.github.com/repos/coltoneshaw/3c-portfolio-manager/releases',

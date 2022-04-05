@@ -1,23 +1,20 @@
-import fetch from 'electron-fetch';
-
 import { logToConsole } from 'common/utils/logging';
 import type { GithubReleaseType } from 'common/repositories/Types/GithubRelease';
 
-const fetchVersions = async () => {
+async function fetchVersions() {
   try {
     const response = await fetch(
       'https://api.github.com/repos/coltoneshaw/3c-portfolio-manager/releases?per_page=5',
       {
         method: 'GET',
-        timeout: 30000,
       },
     );
 
-    return await response.json<GithubReleaseType[] | []>();
+    return await response.json() as GithubReleaseType[] | [];
   } catch (e) {
     logToConsole('error', e);
-    return false;
+    return [];
   }
-};
+}
 
 export default fetchVersions;

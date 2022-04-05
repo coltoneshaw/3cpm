@@ -3,18 +3,18 @@ import { Button } from '@mui/material';
 import { useAppSelector } from 'webapp/redux/hooks';
 import { getStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
 import type { BinanceTicketPrice } from 'common/repositories/Types/Binance';
-
+import fetchCoinPricesBinance from './BinanceApi';
 import AddCoinModal from './AddCoinModal';
 
 import './CoinPriceHeader.scss';
 
 const CoinPriceHeader = () => {
   const [coinData, updateCoinData] = useState<BinanceTicketPrice[]>([]);
-  const [selectedCoins, updateSelectedcoins] = useState<string[]>([]);
+  const [selectedCoins, updateSelectedCoins] = useState<string[]>([]);
   const [coinNames, updateCoinNames] = useState<string[]>([]);
 
   const fetchNewCoinData = (update?: string) => {
-    window.ThreeCPM.Repository.Binance.coinData()
+    fetchCoinPricesBinance()
       .then((data) => {
         if (!data || selectedCoins.length === 0) return;
         const filteredCoins = data.filter((coin) => selectedCoins.includes(coin.symbol));
@@ -31,20 +31,19 @@ const CoinPriceHeader = () => {
   }, []);
 
   useEffect(() => {
-    const coinRefresh = setInterval(() => { fetchNewCoinData(); }, 5000);
+    const coinRefresh = setInterval(fetchNewCoinData, 5000);
     return () => { clearInterval(coinRefresh); };
   }, [selectedCoins]);
 
   useEffect(() => {
-    // @ts-ignore
-    const filteredCoins = coinData.filter((coin: any) => selectedCoins.includes(coin.symbol));
+    const filteredCoins = coinData.filter((coin) => selectedCoins.includes(coin.symbol));
     updateCoinData(filteredCoins);
   }, [selectedCoins]);
 
   useEffect(() => {
     const coinPriceArray = getStorageItem(storageItem.settings.coinPriceArray);
     const selected = (coinPriceArray) || ['BTCUSDT'];
-    updateSelectedcoins(selected);
+    updateSelectedCoins(selected);
   }, []);
 
   return (
@@ -58,7 +57,7 @@ const CoinPriceHeader = () => {
         open={open}
         setOpen={setOpen}
         coinNames={coinNames}
-        currentCoins={{ selectedCoins, updateSelectedcoins }}
+        currentCoins={{ selectedCoins, updateSelectedCoins }}
       />
       <div className="coinDiv">
         {coinData.map((coin: { symbol: string, price: string }, index) => (

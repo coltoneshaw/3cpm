@@ -2,8 +2,6 @@
  * @jest-environment node
  */
 
-// import fetch from 'electron-fetch';
-// import * as fetch from 'electron-fetch';
 import log from 'electron-log';
 import ThreeCommasAPI from './3commaslib';
 import { deals } from '@/tests/mocks/mockData';

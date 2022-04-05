@@ -44,6 +44,7 @@ const createWindow = (): void => {
       nodeIntegration: false, // is default value after Electron v5
       contextIsolation: true, // protect against prototype pollution
       // worldSafeExecuteJavaScript: true,
+      sandbox: true,
       preload: path.join(__dirname, 'preload.js'),
     },
     // icon: appIcon
@@ -202,7 +203,7 @@ ipcMain.handle('api-deals-update', async (
   event,
   profileData: ProfileType,
   deal: Deals.Params.UpdateDeal,
-): Promise<Deals.Responses.Deal | false> => updateDeal(profileData, deal));
+): Promise<Deals.Responses.Deal | false | unknown> => updateDeal(profileData, deal));
 
 ipcMain.handle('binance-getCoins', async () => fetchCoinPricesBinance());
 

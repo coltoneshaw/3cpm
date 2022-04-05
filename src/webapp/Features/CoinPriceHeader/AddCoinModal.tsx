@@ -18,7 +18,7 @@ type CoinModalProps = {
   coinNames: string[],
   currentCoins: {
     selectedCoins: string[],
-    updateSelectedcoins: any
+    updateSelectedCoins: any
   }
 };
 
@@ -29,7 +29,7 @@ const AddCoinModal: React.FC<CoinModalProps> = ({
 
   const [inputValue, changeInputValue] = useState('');
 
-  const { selectedCoins, updateSelectedcoins } = currentCoins;
+  const { selectedCoins, updateSelectedCoins } = currentCoins;
 
   const handleClose = () => {
     setOpen(false);
@@ -45,7 +45,7 @@ const AddCoinModal: React.FC<CoinModalProps> = ({
   // 4. Save the coin to the header and to the localData
 
   const deleteCoin = (coin: string) => {
-    updateSelectedcoins((prevState: string[]) => {
+    updateSelectedCoins((prevState: string[]) => {
       const updatedCoins = prevState.filter((c) => c !== coin);
 
       setStorageItem(storageItem.settings.coinPriceArray, updatedCoins);
@@ -55,7 +55,7 @@ const AddCoinModal: React.FC<CoinModalProps> = ({
 
   const addCoin = () => {
     changeInputValue((selectedValue) => {
-      updateSelectedcoins((prevState: string[]) => {
+      updateSelectedCoins((prevState: string[]) => {
         const updatedCoins = [...prevState, selectedValue];
         setStorageItem(storageItem.settings.coinPriceArray, updatedCoins);
         return updatedCoins;
