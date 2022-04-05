@@ -10,10 +10,10 @@ import { AllCurrencySelector, AccountSelector } from 'webapp/Components/Selector
 
 import { SummaryProfitByDay } from 'webapp/Components/Charts/Area';
 import { ProfitByDay } from 'webapp/Components/Charts/Bar';
+import { formatCurrency } from 'common/utils/granularity';
 import { useDailyState } from './logic';
 
 import RoiMetrics from './Components/RoiMetrics';
-import { formatCurrency } from 'common/utils/granularity';
 
 import './DailyStats.scss';
 

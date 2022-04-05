@@ -3,8 +3,8 @@ import {
   Row, TableCommonProps, ColumnInstance,
 } from 'react-table';
 import classNames from 'classnames';
-import RenderCells from './Cell';
 import { SubRowAsync } from 'webapp/Pages/ActiveDeals/Components';
+import RenderCells from './Cell';
 
 const subRowCheck = (
   row: Row<object>,

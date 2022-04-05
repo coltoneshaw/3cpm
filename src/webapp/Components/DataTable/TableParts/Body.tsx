@@ -6,9 +6,8 @@ import {
   Row,
 } from 'react-table';
 import classNames from 'classnames';
-import RenderRows from './Row';
-
 import { SubRowAsync } from 'webapp/Pages/ActiveDeals/Components';
+import RenderRows from './Row';
 
 type TypeTableBody = {
   bodyProps: TableBodyProps,

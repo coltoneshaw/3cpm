@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import {
   HeaderGroup,
@@ -24,7 +25,6 @@ const RenderHeader = (
     <div // Return an array of prop objects and react-table will merge them appropriately
       tabIndex={0}
       onClick={sortByProps.onClick}
-      onKeyPress={sortByProps.onClick}
       title={sortByProps.title}
       style={{
         ...columnProps.style,

@@ -1,4 +1,4 @@
-import dotProp from 'dot-prop';
+import { hasProperty } from 'dot-prop';
 import store from 'webapp/redux/store';
 import { showAlert } from 'webapp/Components/Popups/Popups';
 
@@ -238,10 +238,10 @@ const updateAllDataQuery = async (profileData: ProfileType, type: string) => {
  */
 
 const preSyncCheck = (profileData: ProfileType) => {
-  if (!profileData || dotProp.has(profileData, 'profileData.apis.threeC')
-    || dotProp.has(profileData, 'profileData.apis.threeC.key')
-    || dotProp.has(profileData, 'profileData.apis.threeC.secret')
-    || dotProp.has(profileData, 'profileData.apis.threeC.mode')
+  if (!profileData || hasProperty(profileData, 'profileData.apis.threeC')
+    || hasProperty(profileData, 'profileData.apis.threeC.key')
+    || hasProperty(profileData, 'profileData.apis.threeC.secret')
+    || hasProperty(profileData, 'profileData.apis.threeC.mode')
   ) {
     logToConsole('error', 'missing api keys or required profile');
     return false;
