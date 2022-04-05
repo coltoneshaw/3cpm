@@ -19,6 +19,7 @@ import { updateAllDataQuery } from './redux/threeCommas/Actions';
 
 // @ts-ignore
 import { version } from '#/package.json';
+import fetchVersions from './Features/UpdateBanner/UpdateApiFetch';
 
 const App = () => {
   const themeEngine = useThemeProvidor();
@@ -32,11 +33,10 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    window.ThreeCPM.Repository.Pm.versions()
+    fetchVersions()
       .then((versionData) => {
         if (!versionData || !versionData[0]) return;
-        const currentVersion = versionData
-          .filter((release: any) => !release.prerelease)[0];
+        const currentVersion = versionData.filter((release: any) => !release.prerelease)[0];
         if (`v${version}` !== currentVersion.tag_name) {
           dispatch(updateBannerData({
             show: true,

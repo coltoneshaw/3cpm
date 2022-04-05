@@ -19,10 +19,8 @@ import {
   ElectronConfigRepository,
 } from 'common/repositories/Impl/electron';
 
-import BaseBinanceRepository from 'common/repositories/Impl/Binance';
 import {
   BaseGeneralRepository,
-  BasePmRepository,
 } from 'common/repositories/Impl/General';
 
 import { Repository } from 'common/repositories/interfaces';
@@ -45,9 +43,7 @@ const repo: Repository = {
   API: new ElectronAPIRepository(mainPreload),
   Config: new ElectronConfigRepository(mainPreload),
   Database: new ElectronDBRepository(mainPreload),
-  Binance: new BaseBinanceRepository(mainPreload),
   General: new BaseGeneralRepository(mainPreload),
-  Pm: new BasePmRepository(mainPreload),
 };
 
 /*

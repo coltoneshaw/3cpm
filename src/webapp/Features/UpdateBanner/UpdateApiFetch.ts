@@ -1,5 +1,5 @@
 import { logToConsole } from 'common/utils/logging';
-import type { GithubReleaseType } from 'common/repositories/Types/GithubRelease';
+import type { GithubReleaseType } from '@/webapp/Features/UpdateBanner/GithubRelease';
 
 async function fetchVersions() {
   try {

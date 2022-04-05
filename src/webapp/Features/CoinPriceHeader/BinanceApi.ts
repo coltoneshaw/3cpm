@@ -1,5 +1,5 @@
 import { logToConsole } from 'common/utils/logging';
-import { BinanceTicketPrice } from 'common/repositories/Types/Binance';
+import { BinanceTicketPrice } from './binanceTypes';
 
 async function fetchCoinPricesBinance() {
   try {

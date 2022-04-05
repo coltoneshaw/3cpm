@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import { useAppSelector } from 'webapp/redux/hooks';
 import { getStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
-import type { BinanceTicketPrice } from 'common/repositories/Types/Binance';
+import type { BinanceTicketPrice } from './binanceTypes';
 import fetchCoinPricesBinance from './BinanceApi';
 import AddCoinModal from './AddCoinModal';
 

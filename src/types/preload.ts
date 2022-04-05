@@ -3,8 +3,6 @@ import type { getDealOrders } from 'electron/main/3Commas/index';
 import { UpdateFunctionType } from 'types/DatabaseQueries';
 import type { Deals } from 'types/3cAPI';
 import { ProfileType } from 'types/config';
-import type { BinanceTicketPrice } from 'common/repositories/Types/Binance';
-import type { GithubReleaseType } from 'common/repositories/Types/GithubRelease';
 
 declare global {
   interface Window {
@@ -48,13 +46,6 @@ export interface General {
   openLink: (link: string) => void
 }
 
-export interface Binance {
-  coinData: () => Promise<BinanceTicketPrice[] | false>
-}
-export interface PM {
-  versions: () => Promise<GithubReleaseType[] | false>
-}
-
 interface MainPreload {
   deals: {
     update: (profileData: ProfileType, deal: Deals.Params.UpdateDeal) => Promise<Deals.Responses.Deal>
@@ -63,8 +54,6 @@ interface MainPreload {
   config: Config,
   database: Database,
   general: General,
-  binance: Binance,
-  pm: PM
 }
 
 export {
