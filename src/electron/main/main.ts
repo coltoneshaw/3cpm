@@ -1,9 +1,8 @@
 import {
-  app, BrowserWindow, ipcMain, shell,
+  app, BrowserWindow, ipcMain, shell, Menu,
 } from 'electron';
 import log from 'electron-log';
 import path from 'path';
-
 import installExtension, {
   REDUX_DEVTOOLS,
   REACT_DEVELOPER_TOOLS,
@@ -24,6 +23,7 @@ import {
 } from 'electron/main/3Commas/index';
 import type { Deals } from 'types/3cAPI';
 import { ProfileType } from 'types/config';
+import menu from './menu';
 
 import preloadCheck from './precheck';
 
@@ -51,7 +51,7 @@ const createWindow = (): void => {
   });
 
   // TODO - Fix the menu export
-  // Menu.setApplicationMenu(menu);
+  Menu.setApplicationMenu(menu);
 
   let loadURL = `file://${__dirname}/index.html`;
   if (isDev) {
