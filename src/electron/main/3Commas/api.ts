@@ -9,14 +9,14 @@ import {
   calcDealMaxFunds,
   calcBotMaxInactiveFunds,
 } from 'common/utils/formulas';
-import ThreeCommasAPI from './3commaslib';
 import {
   MarketOrdersType, ManualSOs, QueryAccountsType,
 } from 'types/DatabaseQueries';
 import { Bots, Deals } from 'types/3cAPI';
+import { ProfileType } from 'types/config';
 import { PreStorageDeals3cAPI } from './types';
 
-import { ProfileType } from 'types/config';
+import ThreeCommasAPI from './3commaslib';
 
 /**
  *

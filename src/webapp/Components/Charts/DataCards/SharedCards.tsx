@@ -1,12 +1,12 @@
 import React from 'react';
 
-import Card from './CardComponent';
 import descriptions from 'common/descriptions';
 import { parseNumber } from 'common/utils/numberFormatting';
+import { formatCurrency } from 'common/utils/granularity';
 import {
   CardFunctions, MO, Keys, Metric,
 } from './types';
-import { formatCurrency } from 'common/utils/granularity';
+import Card from './CardComponent';
 
 const metricObject: MO = {
   'max-risk': {

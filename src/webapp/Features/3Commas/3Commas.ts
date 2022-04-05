@@ -6,13 +6,13 @@ import {
 import { ProfileType } from 'types/config';
 import { DateRange } from 'types/Date';
 
+import { logToConsole } from 'common/utils/logging';
 import getFiltersQueryString from './queryString';
 import {
   fetchPerformanceDataFunction, fetchDealDataFunction, getActiveDealsFunction, fetchSoData,
 } from './DataQueries/deals';
 import { fetchBotPerformanceMetrics, botQuery } from './DataQueries/bots';
 import getAccountDataFunction from './DataQueries/accounts';
-import { logToConsole } from 'common/utils/logging';
 
 // these queries use the deals database but are pairs only. Can probably combine this with the deals queries or create a new folder.
 import { fetchPairPerformanceMetrics, getSelectPairDataByDate } from './DataQueries/pairs';

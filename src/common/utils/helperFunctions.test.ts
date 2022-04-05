@@ -105,7 +105,7 @@ test('Returned correct date string', () => {
     .toBe('05h 05m 05s');
 });
 
-test('Correctly pads a zero when needed', () => {
+test('Returns date array', () => {
   expect(getDatesBetweenTwoDates('2022-01-01', '2022-01-03'))
     .toStrictEqual(
       {

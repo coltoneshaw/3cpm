@@ -7,10 +7,10 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import Delete from '@mui/icons-material/Delete';
 
-import AddCoinDiv from './Components/AddCoinDiv';
 import { setStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
 
 import { useThemeProvidor } from 'webapp/Context/ThemeEngine';
+import AddCoinDiv from './Components/AddCoinDiv';
 
 type CoinModalProps = {
   open: boolean,

@@ -2,12 +2,12 @@ import React from 'react';
 import {
   PieChart, Pie, Legend, Cell, ResponsiveContainer, Tooltip,
 } from 'recharts';
-import { currencyTooltipFormatter } from '../formatting';
 
 // types
 import type { TooltipType } from 'types/Charts';
 import type { MetricDataType } from 'types/DatabaseQueries';
 import type { DefaultCurrency } from 'types/config';
+import { currencyTooltipFormatter } from '../formatting';
 
 const CustomTooltip = ({ active, payload, formatter }: TooltipType<string, number>) => {
   if (!active || !payload || !payload[0]?.payload) return null;

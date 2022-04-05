@@ -5,12 +5,12 @@ import { useAppSelector } from 'webapp/redux/hooks';
 
 import { UpdateDataButton } from 'webapp/Components/Buttons/Index';
 import { ColumnSelector, useColumnSelector } from 'webapp/Components/DataTable/Components';
-import { DataTable, SaveButton, Risk } from './Components';
 
 import './BotPlanner.scss';
 
 import { calcDropMetrics } from 'common/utils/formulas';
 import { QueryBotsType } from 'types/DatabaseQueries';
+import { DataTable, SaveButton, Risk } from './Components';
 
 const blankObject: QueryBotsType = {
   id: Math.random().toString(16).slice(2),

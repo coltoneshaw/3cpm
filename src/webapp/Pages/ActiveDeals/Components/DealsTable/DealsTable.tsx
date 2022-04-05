@@ -3,19 +3,19 @@ import React, { useEffect, useState } from 'react';
 import { CustomTable } from 'webapp/Components/DataTable/Index';
 import { getDateString } from 'common/utils/helperFunctions';
 import { storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
-import SubRowAsync from './Subrow';
-
 import { useAppSelector } from 'webapp/redux/hooks';
 import EditDeal from 'webapp/Pages/ActiveDeals/Components/EditDeal';
+import { numberCell, formattedHeader } from 'webapp/Components/DataTable/Components/columns';
+import type { ActiveDeals } from 'types/DatabaseQueries';
+import SubRowAsync from './Subrow';
+
 import {
   IdCell, IdHeader, openIn3c,
   tablePill,
   editCell,
 } from './columns';
-import { numberCell, formattedHeader } from 'webapp/Components/DataTable/Components/columns';
 import { TableRow, TableColumn, TableCell } from './dealstableTypes';
 import { returnErrorTooltip, sortMe } from './utiils';
-import type { ActiveDeals } from 'types/DatabaseQueries';
 
 const DealsTable = ({ data, selectedColumns }: { data: ActiveDeals[] | [], selectedColumns: string[] }) => {
   const { writeEnabled } = useAppSelector((state) => state.config.currentProfile);

@@ -2,9 +2,9 @@ import type { FetchDealDataFunctionQuery } from 'webapp/Features/3Commas/Type_3C
 import { daysInMilli } from 'webapp/Pages/DailyStats/logic';
 import { ProfileType } from 'types/config';
 import type { ActiveDeals, ProfitArray } from 'types/DatabaseQueries';
-import type { QueryDealByPairByDayReturn, BotQueryDealByDayReturn } from './type_dailydashboard';
 import type { UtcDateRange } from 'types/Date';
 import { getDatesBetweenTwoDates } from 'common/utils/helperFunctions';
+import type { QueryDealByPairByDayReturn, BotQueryDealByDayReturn } from './type_dailydashboard';
 
 type Filters = {
   accounts: number[] | [],

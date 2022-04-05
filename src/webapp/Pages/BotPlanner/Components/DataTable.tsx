@@ -6,10 +6,6 @@ import { numberCell, formattedHeader } from 'webapp/Components/DataTable/Compone
 import { useAppSelector } from 'webapp/redux/hooks';
 import { storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
 
-import {
-  hideCheckbox, isEnabledSwitch, openIn3c, deleteIcon,
-} from './columns';
-
 import { parseNumber } from 'common/utils/numberFormatting';
 import {
   calcDeviation,
@@ -22,6 +18,9 @@ import {
 import { QueryBotsType } from 'types/DatabaseQueries';
 
 import { CustomTable, BotsEditableCell } from 'webapp/Components/DataTable/Index';
+import {
+  hideCheckbox, isEnabledSwitch, openIn3c, deleteIcon,
+} from './columns';
 import { BotTableTypes } from './tableTypes';
 
 const EditableCell = BotsEditableCell;

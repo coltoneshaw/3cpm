@@ -1,8 +1,8 @@
 import { Switch, Checkbox } from '@mui/material';
 import React from 'react';
 import { Delete as DeleteIcon } from '@mui/icons-material';
-import { Cell } from './tableTypes';
 import { OpenIn3Commas } from 'webapp/Components/DataTable/Components';
+import { Cell } from './tableTypes';
 
 export const isEnabledSwitch = (cell: Cell, handleOnOff: (e: any) => void) => (
   <Switch

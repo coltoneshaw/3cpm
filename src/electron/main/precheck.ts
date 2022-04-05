@@ -2,9 +2,9 @@ import log from 'electron-log';
 import path from 'path';
 import fsExtra from 'fs-extra';
 import { app } from 'electron';
-import { checkOrMakeTables } from './Database/initializeDatabase';
 import { ConfigValuesType } from 'types/config';
 import { config } from 'electron/main/Config/config';
+import { checkOrMakeTables } from './Database/initializeDatabase';
 
 const appDataPath = app.getPath('userData');
 const checkInvalidConfig = async (

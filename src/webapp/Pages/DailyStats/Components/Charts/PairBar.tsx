@@ -8,8 +8,8 @@ import { currencyTickFormatter, currencyTooltipFormatter } from 'webapp/Componen
 import type { DefaultCurrency } from 'types/config';
 
 import type { TooltipType } from 'types/Charts';
-import type { QueryDealByPairByDayReturn, BotQueryDealByDayReturn } from '../3Commas/type_dailydashboard';
 import { dynamicSort } from 'common/utils/helperFunctions';
+import type { QueryDealByPairByDayReturn, BotQueryDealByDayReturn } from '../3Commas/type_dailydashboard';
 
 type Params = {
   data: QueryDealByPairByDayReturn[] | BotQueryDealByDayReturn[]
