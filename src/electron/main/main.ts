@@ -9,7 +9,6 @@ import installExtension, {
 } from 'electron-devtools-installer';
 import contextMenu from 'electron-context-menu';
 
-import { logToConsole } from 'common/utils/logging';
 import {
   update, query, checkOrMakeTables, run, deleteAllData, upsert,
 } from 'electron/main/Database/database';
@@ -42,7 +41,7 @@ const createWindow = (): void => {
       nodeIntegration: false, // is default value after Electron v5
       contextIsolation: true, // protect against prototype pollution
       // worldSafeExecuteJavaScript: true,
-      sandbox: true,
+      // sandbox: true,
       preload: path.join(__dirname, 'preload.js'),
     },
     // icon: appIcon
@@ -54,14 +53,6 @@ const createWindow = (): void => {
 
   let loadURL = `file://${__dirname}/index.html`;
   if (isDev) {
-    // Errors are thrown if the dev tools are opened
-    // before the DOM is ready
-    win.webContents.once('dom-ready', async () => {
-      await installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS])
-        .then((name: any) => logToConsole('debug', `Added Extension:  ${name}`))
-        .catch((err: any) => logToConsole('debug', 'An error occurred: ', err))
-        .finally(() => win.webContents.openDevTools());
-    });
     loadURL = 'http://localhost:9000';
   }
 
@@ -72,6 +63,15 @@ app.on('ready', createWindow);
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
+
+if (isDev) {
+  app.whenReady()
+    .then(() => {
+      installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS]);
+      // .then((name) => console.log(`Added Extension:  ${name}`))
+      // .catch((err) => console.log('An error occurred: ', err));
+    });
+}
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();

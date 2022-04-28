@@ -6,49 +6,64 @@ import fetchHandler from 'webapp/utils/fetchHandler';
 import type { BinanceTicketPrice } from './binanceTypes';
 import AddCoinModal from './AddCoinModal';
 
+import useInterval from '@/webapp/utils/customHooks/useInterval';
+
 import './CoinPriceHeader.scss';
 
+const fetchNewCoinData = async () => {
+  const coinResponse = await fetchHandler<BinanceTicketPrice[]>('https://api.binance.com/api/v3/ticker/price');
+  if (coinResponse instanceof Error || !coinResponse) return undefined;
+  return coinResponse;
+};
+
 const CoinPriceHeader = () => {
+  const [status, setStatus] = useState<'idle' | 'running'>('idle');
   const [coinData, updateCoinData] = useState<BinanceTicketPrice[]>([]);
   const [selectedCoins, updateSelectedCoins] = useState<string[]>([]);
   const [coinNames, updateCoinNames] = useState<string[]>([]);
-
-  const fetchNewCoinData = (update?: string) => {
-    fetchHandler<BinanceTicketPrice[]>('https://api.binance.com/api/v3/ticker/price')
-      .then((data) => {
-        if (data instanceof Error || !data || selectedCoins.length === 0) return;
-        const filteredCoins = data.filter((coin) => selectedCoins.includes(coin.symbol));
-        updateCoinData(filteredCoins);
-        if (update === 'firstUpdate') updateCoinNames(data.map((coin) => coin.symbol));
-      });
-  };
 
   const { currentProfile } = useAppSelector((state) => state.config);
 
   const [open, setOpen] = useState(false);
   useEffect(() => {
-    fetchNewCoinData('firstUpdate');
+    const coinPriceArray = getStorageItem(storageItem.settings.coinPriceArray) as string[];
+    const freshSelected = coinPriceArray ?? ['BTCUSDT'];
+    updateSelectedCoins(freshSelected);
   }, []);
 
-  useEffect(() => {
-    const coinRefresh = setInterval(fetchNewCoinData, 5000);
-    return () => { clearInterval(coinRefresh); };
-  }, [selectedCoins]);
+  useInterval(
+    async () => {
+      const fetchedCoinData = await fetchNewCoinData();
+      if (!fetchedCoinData || fetchedCoinData.length === 0) return;
+      updateCoinNames(fetchedCoinData.map((coin) => coin.symbol));
+      updateCoinData(fetchedCoinData.filter((coin) => selectedCoins.includes(coin.symbol)));
+    },
+    (status === 'running' && selectedCoins.length > 0) ? 5000 : null,
+  );
 
   useEffect(() => {
-    const filteredCoins = coinData.filter((coin) => selectedCoins.includes(coin.symbol));
-    updateCoinData(filteredCoins);
+    // on first load of having coins, set the status to running.
+    if (selectedCoins.length > 0) setStatus('running');
+    return () => setStatus('idle');
   }, [selectedCoins]);
 
-  useEffect(() => {
-    const coinPriceArray = getStorageItem(storageItem.settings.coinPriceArray);
-    const selected = (coinPriceArray) || ['BTCUSDT'];
-    updateSelectedCoins(selected);
-  }, []);
+  // useEffect(() => {
+  //   if (!selectedCoins || selectedCoins.length === 0) return undefined;
+  //   // creating the initial coin refresh.
+  //   const coinRefresh = setTimeout(, 5000);
+
+  //   return () => clearTimeout(coinRefresh);
+  // }, [selectedCoins]);
 
   return (
     <div className="BtcPriceSpan monospace-cell" style={{ color: 'var(--color-text-lightbackground)' }}>
-      <p style={{ padding: 0, margin: 0, paddingLeft: '1em' }}>
+      <p
+        style={{
+          padding: 0,
+          margin: 0,
+          paddingLeft: '1em',
+        }}
+      >
         Profile:
         {' '}
         {currentProfile.name}

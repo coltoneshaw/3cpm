@@ -15,7 +15,6 @@ import { ChangelogModal } from 'webapp/Features/Index';
 import { getStorageItem, storageItem } from 'webapp/Features/LocalStorage/LocalStorage';
 import { logToConsole } from 'common/utils/logging';
 
-// @ts-ignore
 import { version } from '#/package.json';
 
 const MainWindow = () => {
