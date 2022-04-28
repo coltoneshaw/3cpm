@@ -295,13 +295,85 @@ async function deals(offset: number, type: string, profileData: Type_Profile) {
       completed_manual_safety_orders_count, current_active_safety_orders
     } = deal
 
-    let { max_safety_orders } = deal
     const activeDeal = closed_at === null;
+
+    const newDealObject = {
+      id: deal.id,
+      type: deal.type,
+      bot_id: deal.bot_id,
+      // this fix is for a bug in 3C where the active SO can be greater than 0 with max safety orders being lower which causes a mis calculation and ignoring all the SOs.
+      max_safety_orders: Math.max(completed_safety_orders_count + current_active_safety_orders, deal.max_safety_orders),
+      deal_has_error: deal?.deal_has_error,
+      from_currency_id: deal?.from_currency_id,
+      to_currency_id: deal?.to_currency_id,
+      account_id: deal.account_id,
+      active_safety_orders_count: deal.active_safety_orders_count,
+      created_at: deal.created_at,
+      updated_at: deal.updated_at,
+      closed_at: deal?.closed_at,
+      closed_at_iso_string: (activeDeal) ? null : new Date(closed_at).getTime(),
+      finished: deal?.finished,
+      current_active_safety_orders_count: deal.current_active_safety_orders_count,
+      current_active_safety_orders: deal.current_active_safety_orders,
+      completed_safety_orders_count: deal.completed_safety_orders_count,
+      cancellable: deal?.cancellable,
+      panic_sellable: deal?.panic_sellable,
+      trailing_enabled: deal?.trailing_enabled,
+      tsl_enabled: deal?.tsl_enabled,
+      stop_loss_timeout_enabled: deal?.stop_loss_timeout_enabled,
+      stop_loss_timeout_in_seconds: deal?.stop_loss_timeout_in_seconds,
+      active_manual_safety_orders: deal.active_manual_safety_orders,
+      pair: deal.pair,
+      status: deal.status,
+      localized_status: deal?.localized_status,
+      take_profit: deal.take_profit,
+      base_order_volume: deal.base_order_volume,
+      safety_order_volume: deal.safety_order_volume,
+      safety_order_step_percentage: deal.safety_order_step_percentage,
+      leverage_type: deal?.leverage_type,
+      leverage_custom_value: deal?.leverage_custom_value,
+      bought_amount: deal.bought_amount,
+      bought_volume: deal.bought_volume,
+      bought_average_price: deal.bought_average_price,
+      base_order_average_price: deal.base_order_average_price,
+      sold_amount: deal.sold_amount,
+      sold_volume: deal.sold_volume,
+      sold_average_price: deal.sold_average_price,
+      take_profit_type: deal.take_profit_type,
+      final_profit: deal.final_profit,
+      martingale_coefficient: deal.martingale_coefficient,
+      martingale_volume_coefficient: deal.martingale_volume_coefficient,
+      martingale_step_coefficient: deal.martingale_step_coefficient,
+      stop_loss_percentage: deal.stop_loss_percentage,
+      error_message: deal.error_message,
+      profit_currency: deal.profit_currency,
+      stop_loss_type: deal.stop_loss_type,
+      safety_order_volume_type: deal.safety_order_volume_type,
+      base_order_volume_type: deal.base_order_volume_type,
+      from_currency: deal.from_currency,
+      to_currency: deal.to_currency,
+      current_price: deal.current_price,
+      take_profit_price: deal.take_profit_price,
+      stop_loss_price: deal.stop_loss_price,
+      final_profit_percentage: deal.final_profit_percentage,
+      actual_profit_percentage: deal.actual_profit_percentage,
+      bot_name: deal.bot_name,
+      account_name: deal.account_name,
+      usd_final_profit: deal.usd_final_profit,
+      actual_profit: deal.actual_profit,
+      actual_usd_profit: deal.actual_usd_profit,
+      failed_message: deal.failed_message,
+      reserved_base_coin: deal.reserved_base_coin,
+      reserved_second_coin: deal.reserved_second_coin,
+      trailing_deviation: deal.trailing_deviation,
+      trailing_max_price: deal.trailing_max_price,
+      tsl_max_price: deal.tsl_max_price,
+      strategy: deal.strategy,
+      reserved_quote_funds: deal.reserved_quote_funds,
+      reserved_base_funds: deal.reserved_base_funds
+    } as threeCommas_Api_Deals
+
     const deal_hours = calc_dealHours(created_at, closed_at)
-
-    // this fix is for a bug in 3C where the active SO can be greater than 0 with max safety orders being lower which causes a mis calculation and ignoring all the SOs.
-    max_safety_orders = Math.max(completed_safety_orders_count + current_active_safety_orders, max_safety_orders)
-
     let market_order_data = <{ filled: any[], failed: any[], active: any[] }>{ filled: [], failed: [], active: [] }
 
     // This potentially adds a heavy API call to each sync, requiring it to hit the manual SO endpoint every sync.
@@ -314,7 +386,6 @@ async function deals(offset: number, type: string, profileData: Type_Profile) {
     let tempObject = {
 
       // this is recalculated based on the active and completed SOs
-      max_safety_orders,
       realized_actual_profit_usd: (activeDeal) ? null : +actual_usd_profit,
       deal_hours,
       pair: pair.split("_")[1],
@@ -323,15 +394,14 @@ async function deals(offset: number, type: string, profileData: Type_Profile) {
       // updated this value to be accurate based on what's actually been completed
       completed_manual_safety_orders_count: market_order_data.filled.length,
 
-      max_deal_funds: (activeDeal) ? calc_maxDealFunds_Deals(+bought_volume, +base_order_volume, +safety_order_volume, +max_safety_orders, completed_safety_orders_count, +martingale_volume_coefficient, market_order_data.active) : null,
+      max_deal_funds: (activeDeal) ? calc_maxDealFunds_Deals(+bought_volume, +base_order_volume, +safety_order_volume, +deal.max_safety_orders, completed_safety_orders_count, +martingale_volume_coefficient, market_order_data.active) : null,
       profitPercent: (activeDeal) ? null : ((+final_profit_percentage / 100) / +deal_hours).toFixed(3),
       impactFactor: (activeDeal) ? (((+bought_average_price - +current_price) / +bought_average_price) * (415 / (Number(bought_volume) ** 0.618))) / (+actual_usd_profit / +actual_profit) : null,
-      closed_at_iso_string: (activeDeal) ? null : new Date(closed_at).getTime(),
       // final_profit: +final_profit,
       // final_profit_percentage: +final_profit_percentage
     }
 
-    dealArray.push({ ...deal, ...tempObject })
+    dealArray.push({ ...newDealObject, ...tempObject })
   }
 
   return {

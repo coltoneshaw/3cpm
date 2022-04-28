@@ -57,7 +57,7 @@
     "electron-devtools-installer": "^3.2.0",
     "electron-is-dev": "^2.0.0",
     "electron-notarize": "^1.1.1",
-    "electron-rebuild": "^2.3.5",
+    "electron-rebuild": "^3.2.7",
     "html-webpack-plugin": "^5.3.2",
     "nodemon": "^2.0.12",
     "react": "^17.0.2",

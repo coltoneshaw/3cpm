@@ -31,7 +31,7 @@ export type threeCommas_Api_Deals = {
     created_at: string 
     updated_at: string 
     closed_at: string 
-    // closed_at_iso_string: number 
+    closed_at_iso_string: number | null
     finished: boolean
     current_active_safety_orders_count: boolean 
     current_active_safety_orders: number  //DEPRECATED
