@@ -105,10 +105,13 @@
     },
     "mac": {
       "category": "public.app-category.finance",
-      "target": [
-        "dmg",
-        "zip"
-      ],
+      "target": {
+        "target": "default",
+        "arch": [
+          "x64",
+          "arm64"
+        ]
+      },
       "type": "distribution",
       "darkModeSupport": true,
       "hardenedRuntime": true,
