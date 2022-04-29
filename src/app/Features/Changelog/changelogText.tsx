@@ -1,5 +1,5 @@
 
-const mostRecent = 'v2.0.1'
+const mostRecent = 'v2.0.2'
 
 
 const versionInformation = [
@@ -319,6 +319,19 @@ const versionInformation = [
         ],
         bugs: [
            'Fixed issue where 3C added "last_known_position_info" to the deals response'
+        ],
+        new: [
+           
+        ]
+    },
+    {
+        version: 'v2.0.2',
+        link: 'https://docs.3cpm.io/changelog#v-2-0-1',
+        enhancements: [
+            
+        ],
+        bugs: [
+           'Fixed bug with API key naming from 3Commas including a "?".'
         ],
         new: [
            
