@@ -310,14 +310,20 @@ async function deals(offset: number, type: string, profileData: Type_Profile) {
       active_safety_orders_count: deal.active_safety_orders_count,
       created_at: deal.created_at,
       updated_at: deal.updated_at,
-      closed_at: deal?.closed_at,
+      closed_at,
       closed_at_iso_string: (activeDeal) ? null : new Date(closed_at).getTime(),
-      finished: deal?.finished,
+
+      //@ts-ignore
+      finished: deal['finished?'],
       current_active_safety_orders_count: deal.current_active_safety_orders_count,
       current_active_safety_orders: deal.current_active_safety_orders,
       completed_safety_orders_count: deal.completed_safety_orders_count,
-      cancellable: deal?.cancellable,
-      panic_sellable: deal?.panic_sellable,
+
+      //@ts-ignore
+      cancellable: deal['cancellable?'],
+
+      //@ts-ignore
+      panic_sellable: deal['panic_sellable?'],
       trailing_enabled: deal?.trailing_enabled,
       tsl_enabled: deal?.tsl_enabled,
       stop_loss_timeout_enabled: deal?.stop_loss_timeout_enabled,
