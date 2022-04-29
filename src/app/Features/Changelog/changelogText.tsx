@@ -1,5 +1,5 @@
 
-const mostRecent = 'v2.0.0'
+const mostRecent = 'v2.0.1'
 
 
 const versionInformation = [
@@ -311,6 +311,19 @@ const versionInformation = [
             'Added UST'
         ]
     },
+    {
+        version: 'v2.0.1',
+        link: 'https://docs.3cpm.io/changelog#v-2-0-1',
+        enhancements: [
+            
+        ],
+        bugs: [
+           'Fixed issue where 3C added "last_known_position_info" to the deals response'
+        ],
+        new: [
+           
+        ]
+    }
 ]
 
 export {

@@ -23,8 +23,8 @@ const createWindow = (): void => {
       spellcheck: true,
       nodeIntegration: false, // is default value after Electron v5
       contextIsolation: true, // protect against prototype pollution
-      enableRemoteModule: false, // turn off remote
-      worldSafeExecuteJavaScript: true,
+      // enableRemoteModule: false, // turn off remote
+      // worldSafeExecuteJavaScript: true,
       preload: path.join(__dirname, 'preload.js'),
     },
     // icon: appIcon
