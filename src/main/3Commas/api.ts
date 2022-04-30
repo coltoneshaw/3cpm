@@ -49,10 +49,10 @@ async function bots(profileData: Type_Profile) {
 
   let responseArray = [];
   let response: Bots[];
-  let offsetMax = 5000;
   let perOffset = 100;
-
-  for (let offset = 0; offset < offsetMax; offset += perOffset) {
+  
+  // Fetch bots indefinitely until server has no more bots to provide.
+  for (let offset = 0; true; offset += perOffset) {
     response = await api.getBots({ limit: 100, sort_by: 'updated_at', sort_direction: 'desc', offset });
     if (response.length > 0) { responseArray.push(...response) }
     if (response.length != perOffset) break
